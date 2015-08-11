@@ -1,0 +1,129 @@
+@model MyTeam.Models.WeekReportMain
+
+@{
+    ViewBag.Title = "重点项目和工作";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>WeekReportMain</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ReportDate)
+        </div>
+        <div class="editor-field">
+            <input type="text" id="ReportDate" name="ReportDate" onfocus="GetTheDate('@ViewBag.Dates')" />
+            @Html.ValidationMessageFor(model => model.ReportDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WorkName)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.WorkName)
+            @Html.ValidationMessageFor(model => model.WorkName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WorkStage)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.WorkStage)
+            @Html.ValidationMessageFor(model => model.WorkStage)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WorkMission)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.WorkMission)
+            @Html.ValidationMessageFor(model => model.WorkMission)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Person)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Person)
+            @Html.ValidationMessageFor(model => model.Person)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WorkTarget)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.WorkTarget)
+            @Html.ValidationMessageFor(model => model.WorkTarget)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PlanDeadLine)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.PlanDeadLine)
+            @Html.ValidationMessageFor(model => model.PlanDeadLine)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Progress)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Progress)
+            @Html.ValidationMessageFor(model => model.Progress)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.WorkTime)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.WorkTime)
+            @Html.ValidationMessageFor(model => model.WorkTime)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Remark)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Remark)
+            @Html.ValidationMessageFor(model => model.Remark)
+        </div>
+
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script>
+    //$(document).ready(function () { $("#ReportDate").focus().autocomplete("/WeekReport/GetReportDate"); });
+    function GetTheDate(data)
+    {
+        //var s = ["2015年0809", "2015年0905", "2014年0102", "2014年0202", "2014年0302"]
+        var s = data.split(",");
+        $("#ReportDate").autocomplete({
+            //source: "/WeekReport/GetReportDate",
+            source: s,
+            minLength: 0,
+            create: function (event, ui) {
+                $(this).bind("click", function () {
+                    var active = $(this).data("autocomplete").menu.active; //没有这一行，鼠标选择选项时，会触发输入的click事件，导致提示框不能关闭
+                    if (!active) {
+                        $(this).autocomplete("search", "");
+                    }
+                });
+            },
+        });
+    }
+</script>

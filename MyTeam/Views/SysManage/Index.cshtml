@@ -1,0 +1,109 @@
+﻿@model IEnumerable<MyTeam.Models.RetailSystem>
+
+@{
+    ViewBag.Title = "零售条线系统管理";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+
+<p>
+    @Html.ActionLink("添加系统", "Create", null, new { @class= "btn btn-primary"})
+</p>
+
+
+<script>
+    function doDelete(id, name) {
+        if (confirm("确定要删除【" + name + "】？")) {
+            //window.location.href = "/SysManage/Delete/" + id;
+            var url = "/SysManage/Delete/" + id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function (msg) {
+                    alert(msg);
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("处理失败，请联系管理员");
+                }
+            });
+        }
+    }
+</script>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SysNO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SysName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SysShortName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HostDept)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SecondDept)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BusiPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DevCenter)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DevPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqPersonID)
+        </th>       
+        <th>操作</th>     
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SysNO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SysName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SysShortName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HostDept)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SecondDept)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BusiPerson)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DevCenter)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DevPerson)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReqPersonName)
+            </td>
+
+
+            <td>
+                @Html.ActionLink("编辑", "Edit", new { id = item.SysID })
+                @if ((bool)ViewBag.IsAdmin)
+                {
+                    <!--只有管理员可以删除-->
+                    <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysShortName')">删除</a></span>
+                }
+            </td>
+        </tr>
+    }  
+
+</table> 

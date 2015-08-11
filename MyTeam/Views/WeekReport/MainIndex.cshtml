@@ -1,0 +1,103 @@
+﻿@model IEnumerable<MyTeam.Models.WeekReportMain>
+
+@{
+    ViewBag.Title = "重点项目与工作";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<p>
+    @Html.ActionLink("添加", "AddMain", null, new { @class= "btn btn-primary"})
+</p>
+
+<!-- Ajax删除 -->
+<script>
+    function doDelete(id) {
+        if (confirm("确定要删除？")) {
+            var url = "/WeekReport/Delete/" + id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function (msg) {
+                    alert(msg);
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("处理失败，请联系管理员");
+                }
+            });
+        }
+    }
+</script>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkStage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkMission)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Person)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkTarget)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlanDeadLine)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Progress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+       
+        <th>操作</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkStage)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkMission)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Person)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkTarget)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PlanDeadLine)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Progress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+      
+        <td>
+            @Html.ActionLink("编辑", "EditMain", new { id=item.WRMainID }) |
+            <a href="#" onclick="doDelete('@item.WRMainID')">删除</a>
+        </td>
+    </tr>
+}
+
+</table>

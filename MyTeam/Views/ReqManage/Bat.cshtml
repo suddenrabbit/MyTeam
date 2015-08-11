@@ -1,0 +1,211 @@
+﻿@{
+    ViewBag.Title = "批量处理";
+}
+
+<h2>@ViewBag.Title。</h2>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#myTab a:first").tab('show')
+    });
+
+    function check() {
+        $("#success").html("");
+        $("#err").html("");
+        var reqs = $("#Reqs");
+        // 需求编号不能为空
+        if (reqs.val().length < 1) {
+            $("#err").html("需求编号不能为空！");
+            //reqs.attr("style", "border-color:red");
+            reqs.focus();
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    // 批量更新出池信息
+    function OutPool() {
+        var reqs = $("#Reqs").val();
+        var version = $("#Version").val();
+        var outDate = $("#OutDate").val();
+        var planRlsDate = $("#PlanRlsDate").val();
+        if (check() && confirm("确定要批量出池吗？")) {
+            var outPoolProtect = $("#OutPoolProtect").is(":checked");
+            var url = "/ReqManage/OutPool";
+            var data = "reqs=" + reqs + "&version=" + version + "&outDate=" + outDate + "&planRlsDate=" + planRlsDate + "&outPoolProtect=" + outPoolProtect;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (msg) {
+                    $("#success").html("执行结果：" + msg);
+                },
+                error: function () {
+                    $("#err").html("出错了，请联系管理员");
+                }
+            });
+
+        }
+    }
+    // 批量更新下发通知编号
+    function BatRlsNo() {
+        var reqs = $("#Reqs").val();
+        var rlsNo = $("#RlsNo").val();
+
+        if (check() && confirm("确定要批量更新下发通知编号吗？")) {
+            var rlsNoProtect = $("#RlsNoProtect").is(":checked");
+            var url = "/ReqManage/BatRlsNo";
+            var data = "reqs=" + reqs + "&rlsNo=" + rlsNo + "&rlsNoProtect=" + rlsNoProtect;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (msg) {
+                    $("#success").html("执行结果：" + msg);
+                },
+                error: function () {
+                    $("#err").html("出错了，请联系管理员");
+                }
+            });
+
+        }
+    }
+    // 批量更新实际下发日期
+    function BatRlsDate() {
+        var reqs = $("#Reqs").val();
+        var rlsDate = $("#RlsDate").val();
+
+        if (check() && confirm("确定要批量更新实际下发日期吗？")) {
+            var rlsDateProtect = $("#RlsDateProtect").is(":checked");
+            var url = "/ReqManage/BatRlsDate";
+            var data = "reqs=" + reqs + "&rlsDate=" + rlsDate + "&rlsDateProtect=" + rlsDateProtect;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (msg) {
+                    $("#success").html("执行结果：" + msg);
+                },
+                error: function () {
+                    $("#err").html("出错了，请联系管理员");
+                }
+            });
+
+        }
+    }
+    // 批量删除
+    function BatDel() {
+        var reqs = $("#Reqs").val();
+
+        if (check() && confirm("确定要批量删除吗？")) {
+            var url = "/ReqManage/BatDel";
+            var data = "reqs=" + reqs;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (msg) {
+                    $("#success").html("执行结果：" + msg);
+                },
+                error: function () {
+                    $("#err").html("出错了，请联系管理员");
+                }
+            });
+
+        }
+    }
+</script>
+<div class="row">
+    <div class="col-md-10">
+        <form class="form-horizontal" role="form">
+            <p><label for="Reqs" class="control-label">待处理的需求编号</label></p>
+            <p>
+                <textarea id="Reqs" name="Reqs" style="width:380px" class="form-control" rows="5"></textarea>
+            </p>
+            <p>
+                <span class="text-success" id="success"></span>
+                <span class="text-danger" id="err"></span>
+            </p>
+
+            <ul class="nav nav-tabs" id="myTab">
+                <li><a href="#tabs1" data-toggle="tab">批量出池</a></li>
+                <li><a href="#tabs2" data-toggle="tab">下发通知编号</a></li>
+                <li><a href="#tabs3" data-toggle="tab">实际下发日期</a></li>
+                <li><a href="#tabs4" data-toggle="tab">批量删除</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tabs1" class="tab-pane fade in active">
+                    <div class="form-group">
+                        <label for="Version" class="col-md-2 control-label">版本号</label>
+                        <div class="col-md-10">
+                            <input id="Version" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="OutDate" class="col-md-2 control-label">出池日期</label>
+                        <div class="col-md-10">
+                            <input id="OutDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/MM/dd' })" readonly="readonly" placeholder="点击选择日期" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="PlanRlsDate" class="col-md-2 control-label">计划下发日期</label>
+                        <div class="col-md-10">
+                            <input id="PlanRlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/MM/dd' })" readonly="readonly" placeholder="点击选择日期" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="button" value="出池" onclick="OutPool()" class="btn btn-primary" />&nbsp;&nbsp;
+                            <input type="checkbox" checked="checked" id="OutPoolProtect" />仅更新未出池需求
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tabs2" class="tab-pane fade in active">
+                    <div class="form-group">
+                        <label for="RlsNo" class="col-md-2 control-label">下发通知编号</label>
+                        <div class="col-md-10">
+                            <input id="RlsNo" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="button" value="更新" onclick="BatRlsNo()" class="btn btn-primary" />&nbsp;&nbsp;
+                            <input type="checkbox" checked="checked" id="RlsNoProtect" />仅更新已出池需求
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tabs3" class="tab-pane fade in active">
+                    <div class="form-group">
+                        <label for="RlsDate" class="col-md-2 control-label">实际下发日期</label>
+                        <div class="col-md-10">
+                            <input id="RlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/MM/dd' })" readonly="readonly" placeholder="点击选择日期" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="button" value="更新" onclick="BatRlsDate()" class="btn btn-primary" />&nbsp;&nbsp;
+                            <input type="checkbox" checked="checked" id="RlsDateProtect" />仅更新已出池需求
+                        </div>
+                    </div>
+                </div>
+                <div id="tabs4" class="tab-pane fade in active">
+                    <div class="form-group">
+                         <input type="button" value="删除" onclick="BatDel()" class="btn btn-primary" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="tips">
+                <p>TIPS</p>
+                <p>1、维护需求编号每行一个；</p>
+                <p>2、下方的输入框若留空，则会将相应的值更新为空值。</p>
+            </div>
+
+        </form>
+    </div>
+</div>

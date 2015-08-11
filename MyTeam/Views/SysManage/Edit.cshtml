@@ -1,0 +1,128 @@
+﻿@model MyTeam.Models.RetailSystem
+
+@{
+    ViewBag.Title = "修改系统信息";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<div class="row">
+    <div class="col-md-8">
+
+        @using (Html.BeginForm("Edit", "SysManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            if (Model.SysID == 0)
+            {
+                <div class="form-group">
+                    <div class="col-md-2">
+                        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                    </div>
+                </div>
+            }
+
+            else 
+            {
+                @Html.HiddenFor(model => model.SysID);
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SysNO, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.SysNO, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SysNO, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SysName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.SysName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SysName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SysShortName, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.SysShortName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SysShortName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.HostDept, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.HostDept, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.HostDept, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecondDept, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.SecondDept, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SecondDept, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BusiPerson, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.BusiPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BusiPerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DevCenter, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    <select id="DevCenter" name="DevCenter" class="form-control">
+                        <option value="上海研发">上海研发</option>
+                        <option value="福州研发">福州研发</option>
+                        <option value="成都研发">成都研发</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DevPerson, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.DevPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DevPerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqPersonID, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ReqPersonID, ViewBag.ReqPersonList as SelectList, new { @class = "form-control" })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="新增" class="btn btn-primary" />
+                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+            }
+
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    // 选中 研发中心下拉列表
+    $(function () {
+        $("#DevCenter").val('@Model.DevCenter');
+    });
+</script>

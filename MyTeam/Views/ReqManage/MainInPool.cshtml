@@ -1,0 +1,172 @@
+﻿@model MyTeam.Models.MainInPoolReq
+
+@{
+    ViewBag.Title = "批量入池-第一步";
+}
+
+<h2>@ViewBag.Title。</h2>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    // 日期控件
+    $(document).ready(function () {
+        $("#AcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
+        $("#DevAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
+        $("#DevEvalDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-8">
+	
+	@using (Html.BeginForm("DetailInPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+				new { @class = "form-horizontal", role = "form" , id="MyForm"}))
+		{
+			@Html.AntiForgeryToken()
+			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+			<!--系统下拉选择-->
+			<div class="form-group">
+                @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
+			<div class="form-group">
+                @Html.LabelFor(model => model.AcptDate, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.AcptDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.AcptDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+			
+			<div class="form-group">
+                @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+			
+			<div class="form-group">
+                @Html.LabelFor(model => model.ReqReason, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ReqReason, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqReason, "", new { @class = "text-danger" })
+                </div>
+            </div>
+			
+			<!--需求发起单位下拉选择-->
+			<div class="form-group">
+                @Html.LabelFor(model => model.ReqFromDept, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ReqFromDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
+			<div class="form-group">
+                @Html.LabelFor(model => model.ReqFromPerson, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ReqFromPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqFromPerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+			
+			<!--需求受理人下拉选择-->
+			<div class="form-group">
+                @Html.LabelFor(model => model.ReqAcptPerson, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.UserList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
+			<div class="form-group">
+                @Html.LabelFor(model => model.ReqDevPerson, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ReqDevPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqDevPerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+			
+			<div class="form-group">
+                @Html.LabelFor(model => model.ReqBusiTestPerson, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ReqBusiTestPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqBusiTestPerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+			
+			<div class="form-group">
+                @Html.LabelFor(model => model.DevAcptDate, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.DevAcptDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DevAcptDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+			
+			<div class="form-group">
+                @Html.LabelFor(model => model.DevEvalDate, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.DevEvalDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DevEvalDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+			<div class="form-group">
+                @Html.LabelFor(model => model.FirstReqDetailNo, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.FirstReqDetailNo, new { @class = "form-control" })
+                    <div class="text-info">（系统可以据此自动计算出后续的需求编号）</div>
+                    @Html.ValidationMessageFor(model => model.FirstReqDetailNo, "", new { @class = "text-danger" })
+					
+                </div>
+            </div>
+
+			<div class="form-group">
+                @Html.LabelFor(model => model.ReqAmt, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ReqAmt, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqAmt, "", new { @class = "text-danger" })
+                </div>
+            </div>
+			
+			<div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" value="下一步" class="btn btn-primary" onclick="Check()"/>
+                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+		}
+	</div>
+ </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script>
+    // 检查首条维护需求编号格式，然后再submit
+    function Check() {
+        var reqNo = $("#FirstReqDetailNo").val();
+        if (reqNo.length > 0) {
+            // ajax 检查
+            $.ajax({
+                type: "GET",
+                url: "/ReqManage/CheckFirstReqDetailNo/" + reqNo,
+                success: function (msg) {
+                    if (msg != "S") {
+                        alert("首条维护需求编号格式不正确");
+                        return;
+                    }
+                },
+                error: function () {
+                    alert("检查初始需求编号格式失败，请联系管理员");
+                    return;
+                }
+            });
+        }
+
+        $("#MyForm").submit();
+    }
+</script>

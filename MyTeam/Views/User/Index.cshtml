@@ -1,0 +1,65 @@
+﻿@model IEnumerable<MyTeam.Models.User>
+
+@{
+    ViewBag.Title = "用户管理";
+}
+
+<h2>用户管理</h2>
+
+@Html.ValidationSummary()
+
+@if (Model != null)
+{
+    <p>
+        @Html.ActionLink("添加用户", "Create", null, new { @class= "btn btn-primary"})
+    </p>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Realname)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.IsAdmin)
+            </th>
+
+            <th>操作</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Realname)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAdmin)
+                </td>
+                
+                <td>
+                    @Html.ActionLink("编辑", "Edit", new { id = item.UID })
+                </td>
+                
+            </tr>
+        }
+
+    </table>
+}
