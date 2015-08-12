@@ -9,6 +9,9 @@ using System.Text;
 
 namespace MyTeam.Controllers
 {
+#if RELEASE
+    [Authorize]
+#endif
     public class ProjController : BaseController
     {
         //

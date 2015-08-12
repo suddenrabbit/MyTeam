@@ -13,6 +13,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "周报日期")]
+        [DataType(DataType.Date)]
         public string RptDate { get; set; }
 
         [Required]

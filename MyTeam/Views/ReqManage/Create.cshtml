@@ -11,12 +11,12 @@
 <script>
     // 日期控件
     $(document).ready(function () {
-        $("#AcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
-        $("#DevAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
-        $("#DevEvalDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
-        $("#OutDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
-        $("#PlanRlsDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
-        $("#RlsDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", readonly: "readonly", placeholder: "点击选择日期" });
+        $("#AcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
+        $("#DevAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
+        $("#DevEvalDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
+        $("#OutDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
+        $("#PlanRlsDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
+        $("#RlsDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
     });
 </script>
 
@@ -210,8 +210,7 @@
 			<div class="form-group">
                 @Html.LabelFor(model => model.IsSysAsso, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.IsSysAsso, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.IsSysAsso, "", new { @class = "text-danger" })
+                    @Html.CheckBoxFor(model => model.IsSysAsso, new { @class = "checkbox" })
                 </div>
             </div>
 			
