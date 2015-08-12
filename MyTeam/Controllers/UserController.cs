@@ -16,8 +16,9 @@ namespace MyTeam.Controllers
 
         // 显示会员登陆页面
         [AllowAnonymous]
-        public ActionResult Login()
+        public ActionResult Login(string ReturnUrl)
         {
+            ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
 

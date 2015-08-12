@@ -13,12 +13,13 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "周报日期")]
+        [DataType(DataType.Date)]
         public string RptDate { get; set; }
         
         [Required]
         [Display(Name = "工作任务")]
-        public string WorkMission { get; set; }
-
+        public string WorkMission { get; set; }          
+       
         [Required]
         [Display(Name = "工作内容")]
         public string WorkDetail { get; set; }
@@ -33,7 +34,7 @@ namespace MyTeam.Models
        
         [Required]
         [Display(Name = "完成情况")]
-        public string WorkStage { get; set; }
+        public string WorkStat { get; set; }
 
         [Required]
         [Display(Name = "占用工时（人小时）")]

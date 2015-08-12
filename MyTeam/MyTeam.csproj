@@ -300,6 +300,8 @@
     <Content Include="Views\ReqManage\InPoolResult.cshtml" />
     <Content Include="Views\WeekReport\MainIndex.cshtml" />
     <Content Include="Views\WeekReport\EditMain.cshtml" />
+    <Content Include="Views\WeekReport\DetailIndex.cshtml" />
+    <Content Include="Views\WeekReport\AddDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -42,6 +42,16 @@ namespace MyTeam.Utils
         /// 任务阶段列表
         /// </summary>
         public static List<string> WorkStageList = new List<string>() { "/", "调研小组成立", "需求调研", "需求大纲开发", "需求大纲审核", "业务可行性分析", "技术可行性分析", "技术方案编写", "技术方案审核", "实施方案汇报", "已立项", "业务需求开发", "业务需求评审", "招标准备", "软件需求开发", "系统设计", "系统编码", "系统测试", "上线配合", "暂缓", "完成" };
+        
+        /// <summary>
+        /// 工作任务列表
+        /// </summary>
+        public static List<string> WorkMissionList = new List<string>() { "领导交办", "项目调研", "维护需求" };
+
+        /// <summary>
+        /// 工作完成情况列表
+        /// </summary>
+        public static List<string> WorkStatList = new List<string>() { "计划", "部分完成", "暂停", "完成" };
 
     }
 }
