@@ -309,12 +309,16 @@
     <Content Include="Views\WeekReport\MainIndex.cshtml" />
     <Content Include="Views\WeekReport\EditMain.cshtml" />
     <Content Include="Views\WeekReport\DetailIndex.cshtml" />
-    <Content Include="Views\WeekReport\AddDetail.cshtml" />
     <Content Include="Views\Ver\Create.cshtml" />
     <Content Include="Views\Ver\Edit.cshtml" />
     <Content Include="Views\Ver\Index.cshtml" />
     <Content Include="Views\Proj\Create.cshtml" />
     <Content Include="Views\Proj\Index.cshtml" />
+    <Content Include="Views\WeekReport\RiskIndex.cshtml" />
+    <Content Include="Views\WeekReport\EditRisk.cshtml" />
+    <Content Include="Views\WeekReport\AddRisk.cshtml" />
+    <Content Include="Views\WeekReport\AddDetail.cshtml" />
+    <Content Include="Views\WeekReport\EditDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

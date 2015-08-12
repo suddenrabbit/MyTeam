@@ -46,5 +46,8 @@ namespace MyTeam.Models
         [Required]
         [Display(Name = "填报人")]
         public int RptPersonID { get; set; }
+
+        // 后台字段，表示该任务是否附属于“重点任务”
+        public bool IsWithMain { get; set; }
     }
 }

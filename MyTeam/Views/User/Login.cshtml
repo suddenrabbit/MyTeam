@@ -1,46 +1,71 @@
-﻿@model MyTeam.Models.UserLogin
-
-@{
+﻿@{
+    Layout = null;
     ViewBag.Title = "登录";
 }
 
-<h2>@ViewBag.Title。</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - MyTeam(beta)</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 
-<div class="row">
-    <div class="col-md-8">
+</head>
+<body>
+    <div class="container body-content">
 
-        @using (Html.BeginForm("Login", "User", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        @model MyTeam.Models.UserLogin
+
+        <h2>@ViewBag.Title。</h2>
+
+        <div class="row">
+            <div class="col-md-8">
+
+                @using (Html.BeginForm("Login", "User", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
                 new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Username, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Username, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Password, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="登录" class="btn btn-primary" />
+                        </div>
+                    </div>
+
+                }
             </div>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Password, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="登录" class="btn btn-default" />
-                </div>
-            </div>
-
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
         }
-    </div>
-</div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Made by Zhou Meng</p>
+        </footer>
+    </div>
+</body>
+</html>

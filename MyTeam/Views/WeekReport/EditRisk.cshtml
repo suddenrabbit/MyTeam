@@ -1,0 +1,62 @@
+﻿@model MyTeam.Models.WeekReportRisk
+
+@{
+    ViewBag.Title = "编辑风险与待协调问题";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("EditRisk", "WeekReport", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+            @Html.HiddenFor(model => model.WRRiskID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.RptDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.RiskDetail, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.RiskDetail, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.RiskDetail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Solution, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Solution, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Solution, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            @Html.HiddenFor(model => model.RptPersonID, new { @class = "form-control" })
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

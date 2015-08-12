@@ -1,0 +1,84 @@
+﻿@model IEnumerable<MyTeam.Models.WeekReportRisk>
+
+
+@{
+    ViewBag.Title = "风险与待协调问题";
+
+}
+
+<h2>@ViewBag.Title。</h2>
+
+
+<p>
+    <p>
+    @Html.ActionLink("添加风险与待协调问题", "AddRisk", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("重点项目与工作", "MainIndex", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("每周工作", "DetailIndex", null, new { @class = "btn btn-default" })
+</p>
+</p>
+
+<!-- Ajax删除 -->
+<script>
+    function doDelete(id) {
+        if (confirm("确定要删除？")) {
+            var url = "/WeekReport/DeleteRisk/" + id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function (msg) {
+                    alert(msg);
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("处理失败，请联系管理员");
+                }
+            });
+        }
+    }
+</script>
+
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.RptDate)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.RiskDetail)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Solution)
+        </th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.RptDate)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.RiskDetail)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Solution)
+        </td>
+
+        <td>
+            @Html.ActionLink("编辑", "EditRisk", new { id=item.WRRiskID }) |
+			<a href="#" onclick="doDelete('@item.WRRiskID')">删除</a>
+        </td>
+
+    </tr>
+}
+
+</table>
+
+
+
