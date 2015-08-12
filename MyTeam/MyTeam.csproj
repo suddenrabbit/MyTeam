@@ -137,9 +137,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProjController.cs" />
     <Compile Include="Controllers\ReqManageController.cs" />
     <Compile Include="Controllers\SysManageController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VerController.cs" />
     <Compile Include="Controllers\WeekReportController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -149,7 +151,9 @@
       <DependentUpon>201508030152034_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Proj\Proj.cs" />
     <Compile Include="Models\ReqManage\MainInPoolReq.cs" />
+    <Compile Include="Models\ReqManage\ReqMeeting.cs" />
     <Compile Include="Models\ReqManage\ReqQuery.cs" />
     <Compile Include="Models\System\RetailSystem.cs" />
     <Compile Include="Models\User\ChangePsw.cs" />
@@ -157,6 +161,7 @@
     <Compile Include="Models\ReqManage\Req.cs" />
     <Compile Include="Models\User\User.cs" />
     <Compile Include="Models\User\UserLogin.cs" />
+    <Compile Include="Models\Ver\Ver.cs" />
     <Compile Include="Models\WeekReport\WeekReportDetail.cs" />
     <Compile Include="Models\WeekReport\WeekReportMain.cs" />
     <Compile Include="Models\WeekReport\WeekReportRisk.cs" />
@@ -300,6 +305,11 @@
     <Content Include="Views\ReqManage\InPoolResult.cshtml" />
     <Content Include="Views\WeekReport\MainIndex.cshtml" />
     <Content Include="Views\WeekReport\EditMain.cshtml" />
+    <Content Include="Views\Ver\Create.cshtml" />
+    <Content Include="Views\Ver\Edit.cshtml" />
+    <Content Include="Views\Ver\Index.cshtml" />
+    <Content Include="Views\Proj\Create.cshtml" />
+    <Content Include="Views\Proj\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

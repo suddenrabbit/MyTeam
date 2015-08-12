@@ -31,14 +31,14 @@
 						
 			 <!--系统下拉选择-->
 			 <div class="form-group">
-                @Html.LabelFor(model => model.SysId, new { @class = "control-label" })
+                @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.AcptDate, new { @class = "control-label" })
+                @Html.LabelFor(model => model.AcptDate, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.AcptDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.AcptDate, "", new { @class = "text-danger" })
@@ -46,7 +46,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqNo, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
@@ -54,7 +54,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqReason, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqReason, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.ReqReason, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqReason, "", new { @class = "text-danger" })
@@ -63,14 +63,14 @@
 			
 			<!--需求发起单位下拉选择-->
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqFromDept, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqFromDept, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownListFor(model => model.ReqFromDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqFromPerson, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqFromPerson, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.ReqFromPerson, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqFromPerson, "", new { @class = "text-danger" })
@@ -79,7 +79,7 @@
 			
 			<!--需求受理人下拉选择-->
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqAcptPerson, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqAcptPerson, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.UserList as SelectList, new { @class = "form-control" })
 
@@ -87,7 +87,7 @@
             </div>
 						
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqDevPerson, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqDevPerson, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.ReqDevPerson, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqDevPerson, "", new { @class = "text-danger" })
@@ -95,7 +95,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqBusiTestPerson, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqBusiTestPerson, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.ReqBusiTestPerson, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqBusiTestPerson, "", new { @class = "text-danger" })
@@ -103,7 +103,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.DevAcptDate, new { @class = "control-label" })
+                @Html.LabelFor(model => model.DevAcptDate, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.DevAcptDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.DevAcptDate, "", new { @class = "text-danger" })
@@ -111,7 +111,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.DevEvalDate, new { @class = "control-label" })
+                @Html.LabelFor(model => model.DevEvalDate, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.DevEvalDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.DevEvalDate, "", new { @class = "text-danger" })
@@ -119,7 +119,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqDetailNo, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqDetailNo, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.ReqDetailNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqDetailNo, "", new { @class = "text-danger" })
@@ -127,7 +127,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.Version, new { @class = "control-label" })
+                @Html.LabelFor(model => model.Version, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Version, "", new { @class = "text-danger" })
@@ -135,7 +135,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.BusiReqNo, new { @class = "control-label" })
+                @Html.LabelFor(model => model.BusiReqNo, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.BusiReqNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.BusiReqNo, "", new { @class = "text-danger" })
@@ -143,7 +143,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqDesc, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqDesc, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.ReqDesc, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqDesc, "", new { @class = "text-danger" })
@@ -152,7 +152,7 @@
 			
 			<!--需求类型下拉选择-->
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqType, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqType, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownListFor(model => model.ReqType, ViewBag.ReqTypeList as SelectList, new { @class = "form-control" })
 
@@ -160,7 +160,7 @@
             </div>
 						
 			<div class="form-group">
-                @Html.LabelFor(model => model.DevWorkload, new { @class = "control-label" })
+                @Html.LabelFor(model => model.DevWorkload, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.DevWorkload, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.DevWorkload, "", new { @class = "text-danger" })
@@ -169,14 +169,14 @@
 			
 			<!--需求状态下拉选择-->
 			<div class="form-group">
-                @Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })
+                @Html.LabelFor(model => model.ReqStat, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.OutDate, new { @class = "control-label" })
+                @Html.LabelFor(model => model.OutDate, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.OutDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.OutDate, "", new { @class = "text-danger" })
@@ -184,7 +184,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.PlanRlsDate, new { @class = "control-label" })
+                @Html.LabelFor(model => model.PlanRlsDate, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.PlanRlsDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.PlanRlsDate, "", new { @class = "text-danger" })
@@ -192,7 +192,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.RlsDate, new { @class = "control-label" })
+                @Html.LabelFor(model => model.RlsDate, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.RlsDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.RlsDate, "", new { @class = "text-danger" })
@@ -200,7 +200,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.RlsNo, new { @class = "control-label" })
+                @Html.LabelFor(model => model.RlsNo, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.RlsNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.RlsNo, "", new { @class = "text-danger" })
@@ -208,7 +208,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.IsSysAsso, new { @class = "control-label" })
+                @Html.LabelFor(model => model.IsSysAsso, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.IsSysAsso, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.IsSysAsso, "", new { @class = "text-danger" })
@@ -216,7 +216,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.AssoSysName, new { @class = "control-label" })
+                @Html.LabelFor(model => model.AssoSysName, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.AssoSysName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.AssoSysName, "", new { @class = "text-danger" })
@@ -224,7 +224,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.AssoReqNo, new { @class = "control-label" })
+                @Html.LabelFor(model => model.AssoReqNo, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.AssoReqNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.AssoReqNo, "", new { @class = "text-danger" })
@@ -232,7 +232,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.AssoRlsDesc, new { @class = "control-label" })
+                @Html.LabelFor(model => model.AssoRlsDesc, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.AssoRlsDesc, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.AssoRlsDesc, "", new { @class = "text-danger" })
@@ -240,7 +240,7 @@
             </div>
 			
 			<div class="form-group">
-                @Html.LabelFor(model => model.Remark, new { @class = "control-label" })
+                @Html.LabelFor(model => model.Remark, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })

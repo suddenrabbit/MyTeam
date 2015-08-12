@@ -1,0 +1,90 @@
+﻿@model IEnumerable<MyTeam.Models.Proj>
+
+@{
+    ViewBag.Title = "项目状态跟踪管理";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<p>
+    @Html.ActionLink("添加项目状态跟踪", "Create", null, new { @class= "btn btn-primary"})
+</p>
+
+<!-- Ajax删除 -->
+<script>
+    function doDelete(id) {
+        if (confirm("确定要删除？")) {
+            var url = "/Proj/Delete/" + id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function (msg) {
+                    alert(msg);
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("处理失败，请联系管理员");
+                }
+            });
+        }
+    }
+</script>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HostDept)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqAnalysisID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BusiPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjManager)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Architect)
+        </th>
+        <th>操作</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HostDept)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReqAnalysisID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BusiPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjManager)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Architect)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id=item.ProjID }) |
+            @Html.ActionLink("详情", "Details", new { id = item.ProjID }) |
+			<a href="#" onclick="doDelete('@item.ProjID')">删除</a>
+        </td>
+    </tr>
+}
+
+</table>

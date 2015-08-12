@@ -37,7 +37,7 @@ if (!String.IsNullOrEmpty(mvcHost.MasterPageFile)) {
 #>
 }
 
-<h2><#= mvcHost.ViewName#></h2>
+<h2>@ViewBag.Title。</h2>
 
 <#
 } else {

@@ -141,7 +141,7 @@ namespace MyTeam.Models
 
                 return r == null ? "未知" : r.ToString();
             }
-            set { this.SysName = value; }
+            set { this.ReqAcptPersonNamePhone = value; }
         }
 
     }

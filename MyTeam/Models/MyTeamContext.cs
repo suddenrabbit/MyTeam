@@ -31,6 +31,9 @@
         public DbSet<WeekReportMain> WeekReportMains { get; set; }
         public DbSet<WeekReportDetail> WeekReportDetails { get; set; }
         public DbSet<WeekReportRisk> WeekReportRisks { get; set; }
+
+        public DbSet<Ver> Vers { get; set; }
+        public DbSet<Proj> Projs { get; set; }
   
     }
 

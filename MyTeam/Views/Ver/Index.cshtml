@@ -1,0 +1,102 @@
+﻿@model IEnumerable<MyTeam.Models.Ver>
+
+@{
+    ViewBag.Title = "年度版本下发计划管理";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<p>
+    @Html.ActionLink("添加年度版本下发计划", "Create", null, new { @class= "btn btn-primary"})
+</p>
+
+<!-- Ajax删除 -->
+<script>
+    function doDelete(id) {
+        if (confirm("确定要删除？")) {
+            var url = "/Ver/Delete/" + id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function (msg) {
+                    alert(msg);
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("处理失败，请联系管理员");
+                }
+            });
+        }
+    }
+</script>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SysId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VerYear)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReleaseFreq)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PublishTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VerNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DraftTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DraftPersonID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VerType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th>操作</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SysName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VerYear)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReleaseFreq)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PublishTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VerNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DraftTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DraftPersonName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VerType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id=item.VerID }) |
+           
+			<a href="#" onclick="doDelete('@item.VerID')">删除</a>
+        </td>
+    </tr>
+}
+
+</table>
