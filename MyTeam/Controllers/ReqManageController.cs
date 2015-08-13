@@ -296,10 +296,10 @@ namespace MyTeam.Controllers
                 // 拼出sql中的in条件
                 string whereIn = this.GetWhereIn(reqs);
 
-                string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat='出池' where ReqDetailNo in ({3})", version, outDate, planRlsDate, whereIn);
+                string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat=N'出池' where ReqDetailNo in ({3})", version, outDate, planRlsDate, whereIn);
                 if (outPoolProtect == "true")
                 {
-                    sql += " and ReqStat <> '出池'";
+                    sql += " and ReqStat <> N'出池'";
                 }
 
                 // 批量更新，直接执行SQL
@@ -325,7 +325,7 @@ namespace MyTeam.Controllers
                 string sql = string.Format("update Reqs set RlsNo='{0}' where ReqDetailNo in ({1})", rlsNo, whereIn);
                 if (RlsNoProtect == "true")
                 {
-                    sql += " and ReqStat = '出池'";
+                    sql += " and ReqStat = N'出池'";
                 }
 
                 // 批量更新，直接执行SQL
@@ -351,7 +351,7 @@ namespace MyTeam.Controllers
                 string sql = string.Format("update Reqs set RlsDate='{0}' where ReqDetailNo in ({1})", rlsDate, whereIn);
                 if (RlsDateProtect == "true")
                 {
-                    sql += " and ReqStat = '出池'";
+                    sql += " and ReqStat = N'出池'";
                 }
 
                 // 批量更新，直接执行SQL
@@ -451,8 +451,13 @@ namespace MyTeam.Controllers
          */
         public ActionResult Edit(int id)
         {
-            Req req = dbContext.Reqs.Where(a => a.RID == id).FirstOrDefault<Req>();
-
+            Req req = dbContext.Reqs.ToList().Find(a => a.RID == id);
+            if(req == null)
+            {
+                ModelState.AddModelError("","无此记录");
+                return View();
+            }
+           
             // 下拉框预处理
             // 1、生成系统列表
             List<RetailSystem> ls1 = this.GetSysList();
@@ -480,20 +485,20 @@ namespace MyTeam.Controllers
             return View(req);
         }
 
-        // ajax调用
         [HttpPost]
-        public string Edit(Req req)
+        public ActionResult Edit(Req req)
         {
             try
             {
                 dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return "修改成功";
+                return RedirectToAction("Index");
             }
             catch (Exception e1)
             {
-                return "出错了: " + e1.Message;
+                ModelState.AddModelError("", "出错了: " + e1.Message);
+                return View();
             }
         }
 

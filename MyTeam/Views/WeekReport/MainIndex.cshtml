@@ -97,7 +97,7 @@
             </td>
 
             <td>
-                @Html.ActionLink("对应每周工作", "EditDetailForMain", new { id = item.WRMainID}) |               
+                @Html.ActionLink("对应每周工作", "DetailIndex", new { id = item.WRMainID, forMain = true}) |               
                 @Html.ActionLink("编辑", "EditMain", new { id = item.WRMainID }) |
                 <a href="#" onclick="doDelete('@item.WRMainID')">删除</a>                 
             </td>

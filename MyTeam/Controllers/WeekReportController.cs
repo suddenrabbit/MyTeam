@@ -137,13 +137,11 @@ namespace MyTeam.Controllers
             }
         }
 
-        /* 重点工作对应的每周工作 */
-
 
         /* 每周工作 */
 
         // 每周工作页面
-        public ActionResult DetailIndex()
+        public ActionResult DetailIndex(string id, bool forMain = false)
         {
             var ls = from a in dbContext.WeekReportDetails select a;
             // 若非管理员只显示负责人中含有自己姓名的记录
@@ -156,15 +154,53 @@ namespace MyTeam.Controllers
                 }
                 ls = ls.Where(a => a.Person.Contains(user.Realname));
             }
-            // 此处只显示与“重点任务”无关的
-            ls = ls.Where(a => a.IsWithMain != true);
+            // 根据forMain判断是否与重点任务有关
+            if (forMain)
+            {
+                int mainId = 0;
+                if (!int.TryParse(id, out mainId))
+                {
+                    ViewBag.ErrMsg = "参数不正确！";
+                    return View();
+                }
+                WeekReportMain main = dbContext.WeekReportMains.ToList().Find(a => a.WRMainID == mainId);
+                if (main == null)
+                {
+                    ViewBag.ErrMsg = "参数不正确！";
+                    return View();
+                }
+                string workName = main.WorkName;
+                // 此处只显示与“重点任务”有关的
+                ls = ls.Where(a => a.IsWithMain == true && a.WorkMission == id.ToString());
+                // 按照RptDate倒序显示
+                ls = ls.OrderByDescending(a => a.RptDate);
+
+                // workMission中的ID转为中文
+                foreach (var r in ls)
+                {
+                    r.WorkMission = workName;
+                }
+
+                ViewBag.Title = workName + "-每周工作";
+            }
+            else
+            {
+                // 此处只显示与“重点任务”无关的
+                ls = ls.Where(a => a.IsWithMain != true);
+            }
+
             // 按照RptDate倒序显示
             ls = ls.OrderByDescending(a => a.RptDate);
+
+            ViewBag.ForMain = forMain;
+
+            ViewBag.MainId = id;
+
             return View(ls.ToList());
         }
 
         // 添加每周工作
-        public ActionResult AddDetail()
+        public ActionResult AddDetail(string id, bool forMain = false)
         {
             // 当前用户
             User user = this.GetSessionCurrentUser();
@@ -184,7 +220,7 @@ namespace MyTeam.Controllers
                 rptDates = rptDates.Substring(0, rptDates.Length - 1);
             ViewBag.RptDates = rptDates;
 
-            // 工作任务：默认“领导交办”，可自由填写            
+            // 工作任务：默认为ID，不允许填写            
 
             // 完成情况的下拉列表
             ViewBag.WorkStatList = MyTools.GetSelectList(Constants.WorkStatList);
@@ -193,9 +229,13 @@ namespace MyTeam.Controllers
             {
                 Person = user.Realname,
                 RptPersonID = user.UID,
-                WorkMission = "领导交办",
-                IsWithMain = false
+                WorkMission = forMain ? id : "领导交办",
+                IsWithMain = forMain
             };
+
+            ViewBag.ForMain = forMain;
+
+            ViewBag.MainId = id;
 
             return View(detail);
         }
@@ -218,6 +258,10 @@ namespace MyTeam.Controllers
                 ViewBag.WorkStatList = MyTools.GetSelectList(Constants.WorkStatList);
                 return View(detail);
             }
+            if (detail.IsWithMain)
+            {
+                return RedirectToAction("DetailIndex", new { id = detail.WorkMission, forMain = detail.IsWithMain });
+            }
             return RedirectToAction("DetailIndex");
         }
 
@@ -227,8 +271,8 @@ namespace MyTeam.Controllers
             WeekReportDetail detail = dbContext.WeekReportDetails.ToList().Find(a => a.WRDetailID == id);
             if (detail == null)
             {
-                ModelState.AddModelError("", "无此记录");
-                detail = new WeekReportDetail();
+                ViewBag.ErrMsg = "无此记录！";
+                return View();
             }
             // 任务阶段下拉列表
             SelectList sl = MyTools.GetSelectList(Constants.WorkStatList, false, true, detail.WorkStat);
@@ -246,6 +290,10 @@ namespace MyTeam.Controllers
                     dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
 
+                    if (detail.IsWithMain)
+                    {
+                        return RedirectToAction("DetailIndex", new { id = detail.WorkMission, forMain = detail.IsWithMain });
+                    }
                     return RedirectToAction("DetailIndex");
                 }
             }
@@ -395,6 +443,18 @@ namespace MyTeam.Controllers
             string result = "2015年0709-0712,2015年0715-0719,2015年0722-0726";
 
             return result;
+        }
+
+        // Main表的WorkTime根据Detail表计算，每次插入、编辑、删除Detail时均重新计算
+        private void UpdateWorkTime(int mainId)
+        {
+            var all = (from a in dbContext.WeekReportDetails
+                      where a.WorkMission == mainId.ToString() && a.IsWithMain == true
+                      select a.WorkTime).Sum();
+            WeekReportMain main = dbContext.WeekReportMains.ToList().Find(a => a.WRMainID == mainId);
+            main.WorkTime = all;
+            dbContext.Entry(main).State = System.Data.Entity.EntityState.Modified;
+            dbContext.SaveChanges();
         }
     }
 }
