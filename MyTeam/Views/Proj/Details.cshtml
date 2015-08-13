@@ -6,287 +6,269 @@
 
 <h2>@ViewBag.Title。</h2>
 
-
-
 <div class="row">
-    <div class="col-md-8">
-        @using (Html.BeginForm("Create", "Proj", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-                new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-            <fieldset>
-                <legend>项目信息</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ProjName, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ProjName, new { @class = "form-control" })
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ProjNo, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ProjNo, new { @class = "form-control" })
-                       
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.HostDept, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.HostDept, new { @class = "form-control" })
-                    </div>
-
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ProjLevel, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ProjLevel, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.IsReqTrack, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.IsReqTrack, new { @class = "form-control checkbox" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReqAnalysisID, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ReqAnalysisName, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BusiPerson, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.BusiPerson, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ProjManager, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ProjManager, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Architect, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.Architect, new { @class = "form-control" })
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>项目调研</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ProAcptDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ProAcptDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SurveyGroupFoundDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.SurveyGroupFoundDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SurveyFinishDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.SurveyFinishDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SurveyRemark, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.SurveyRemark, new { @class = "form-control" })
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>需求大纲</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OutlineWriter, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.OutlineWriter, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OutlineStartDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.OutlineStartDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OutlineEndDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.OutlineEndDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OutlineAuditPerson, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.OutlineAuditPerson, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OutlinePublishDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.OutlinePublishDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OutlineRemark, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.OutlineRemark, new { @class = "form-control" })
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>业需开发</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReqWriter, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ReqWriter, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReqStartDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ReqStartDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReviewAcptDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ReviewAcptDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReviewMeetingDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ReviewMeetingDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReqPublishDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ReqPublishDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReqRemark, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ReqRemark, new { @class = "form-control" })
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>项目章程发布</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.RulesStartDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.RulesStartDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.RulesPublishDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.RulesPublishDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.RulesRemark, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.RulesRemark, new { @class = "form-control" })
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>项目验收</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ProjCheckAcptDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ProjCheckAcptDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ProjPublishDate, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.ProjPublishDate, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.CheckResult, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.CheckResult, new { @class = "form-control" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Remark, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.Remark, new { @class = "form-control" })
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>项目工时记录</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.WorkTimeAtt, new { @class = "col-md-2 control-label" })
-
-                    <div class="col-md-10">
-                        @Html.DisplayFor(model => model.WorkTimeAtt, new { @class = "form-control" })
-                    </div>
-                </div>
-            </fieldset>
-
-
+    <div class="col-md-8 form-horizontal">
+        <fieldset>
+            <legend>项目信息</legend>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="新增" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                @Html.LabelFor(model => model.ProjName, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ProjName)
+
                 </div>
             </div>
-        }
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProjNo, new { @class = "col-md-2 control-label" })
 
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ProjNo)
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.HostDept, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.HostDept)
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProjLevel, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ProjLevel)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsReqTrack, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.IsReqTrack)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqAnalysisID, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ReqAnalysisName)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.BusiPerson, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.BusiPerson)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProjManager, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ProjManager)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Architect, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.Architect)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>项目调研</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProAcptDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ProAcptDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.SurveyGroupFoundDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.SurveyGroupFoundDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.SurveyFinishDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.SurveyFinishDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.SurveyRemark, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.SurveyRemark)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>需求大纲</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.OutlineWriter, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.OutlineWriter)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.OutlineStartDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.OutlineStartDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.OutlineEndDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.OutlineEndDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.OutlineAuditPerson, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.OutlineAuditPerson)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.OutlinePublishDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.OutlinePublishDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.OutlineRemark, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.OutlineRemark)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>业需开发</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqWriter, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ReqWriter)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqStartDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ReqStartDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReviewAcptDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ReviewAcptDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReviewMeetingDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ReviewMeetingDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqPublishDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ReqPublishDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqRemark, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ReqRemark)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>项目章程发布</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.RulesStartDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.RulesStartDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.RulesPublishDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.RulesPublishDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.RulesRemark, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.RulesRemark)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>项目验收</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProjCheckAcptDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ProjCheckAcptDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ProjPublishDate, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.ProjPublishDate)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.CheckResult, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.CheckResult)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Remark, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.Remark)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>项目工时记录</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkTimeAtt, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10 form-control-static">
+                    @Html.DisplayFor(model => model.WorkTimeAtt)
+                </div>
+            </div>
+        </fieldset>
     </div>
 </div>
 

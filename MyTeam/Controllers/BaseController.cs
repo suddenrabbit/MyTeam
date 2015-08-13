@@ -23,7 +23,7 @@ namespace MyTeam.Controllers
             User user = null;
             try
             {
-                user = this.GetUserList().Where(a => a.UID == (int)Session["UID"]).FirstOrDefault();
+                user = this.GetUserList().Find(a => a.UID == (int)Session["UID"]);
             }
             catch
             {

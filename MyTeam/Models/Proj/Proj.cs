@@ -157,7 +157,7 @@ namespace MyTeam.Models
             {
                 var r = (from a in Constants.UserList
                          where a.UID == this.ReqAnalysisID
-                         select a.NamePhone).FirstOrDefault();
+                         select a.Realname).FirstOrDefault();
 
                 return r == null ? "未知" : r.ToString();
             }

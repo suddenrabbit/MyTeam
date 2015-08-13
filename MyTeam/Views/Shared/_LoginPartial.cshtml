@@ -1,0 +1,23 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                你好， @User.Identity.Name 
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="/User/ChangePsw">修改密码</a></li>
+                <li><a href="/User/Edit">修改信息</a></li>
+                <li><a href="/User/Logout">注销</a></li>
+            </ul>
+        </li>
+    </ul>
+
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("登录", "Login", "User")</li>
+    </ul>
+}

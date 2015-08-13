@@ -329,6 +329,7 @@
     <Content Include="Views\ReqSurv\Edit.cshtml" />
     <Content Include="Views\ReqMeeting\Create.cshtml" />
     <Content Include="Views\ReqMeeting\Index.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
