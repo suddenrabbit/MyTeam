@@ -1,17 +1,32 @@
 ﻿@model IEnumerable<MyTeam.Models.WeekReportDetail>
-
 @{
-    ViewBag.Title = "每周工作";
+    if (!string.IsNullOrEmpty(ViewBag.ErrMsg))
+    {
+        <h3 class="text-danger">@ViewBag.ErrMsg</h3>
+        return;
+    }
+
+    bool forMain = (bool)ViewBag.ForMain;
+    if (!forMain)
+    {
+        ViewBag.Title = "每周工作";
+    }
 }
-
 <h2>@ViewBag.Title。</h2>
-
 <p>
-    @Html.ActionLink("添加每周工作", "AddDetail", null, new { @class = "btn btn-primary" })
-    @Html.ActionLink("重点项目与工作", "MainIndex", null, new { @class = "btn btn-default" })
-    @Html.ActionLink("风险与待协调问题", "RiskIndex", null, new { @class = "btn btn-default" })
-</p>
+    @Html.ActionLink("添加每周工作", "AddDetail", new { id = ViewBag.MainId, forMain = forMain }, new { @class = "btn btn-primary" })
 
+    @if (!forMain)
+    {
+        @Html.ActionLink("重点项目与工作", "MainIndex", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("风险与待协调问题", "RiskIndex", null, new { @class = "btn btn-default" })
+    }
+    else
+    {
+        @Html.ActionLink("返回", "MainIndex", null, new { @class = "btn btn-default" })
+    }
+
+</p>
 <!-- Ajax删除 -->
 <script>
     function doDelete(id) {
@@ -31,15 +46,18 @@
         }
     }
 </script>
-
 <table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.RptDate)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WorkMission)
-        </th>
+        @if (!forMain)
+        {
+            <th>
+                @Html.DisplayNameFor(model => model.WorkMission)
+            </th>
+        }
+
         <th>
             @Html.DisplayNameFor(model => model.WorkDetail)
         </th>
@@ -60,38 +78,41 @@
         </th>
         <th></th>
     </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.RptDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WorkMission)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WorkDetail)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WorkTarget)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Person)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WorkStat)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.WorkTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Remark)
-        </td>
-        <td>
-            @Html.ActionLink("编辑", "EditDetail", new { id=item.WRDetailID }) |
-			<a href="#" onclick="doDelete('@item.WRDetailID')">删除</a>
-        </td>
-    </tr>
-}
-
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RptDate)
+            </td>
+            @if(!forMain)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.WorkMission)
+                </td>
+            }
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkDetail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkTarget)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Person)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkStat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remark)
+            </td>
+            <td>
+                @Html.ActionLink("编辑", "EditDetail", new { id = item.WRDetailID }) |
+                <a href="#" onclick="doDelete('@item.WRDetailID')">删除</a>
+            </td>
+        </tr>
+    }
 </table>
