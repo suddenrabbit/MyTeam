@@ -139,6 +139,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProjController.cs" />
     <Compile Include="Controllers\ReqManageController.cs" />
+    <Compile Include="Controllers\ReqMeetingController.cs" />
+    <Compile Include="Controllers\ReqSurvController.cs" />
     <Compile Include="Controllers\SysManageController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VerController.cs" />
@@ -151,6 +153,7 @@
       <DependentUpon>201508030152034_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Proj\ReqSurv.cs" />
     <Compile Include="Models\Proj\Proj.cs" />
     <Compile Include="Models\ReqManage\MainInPoolReq.cs" />
     <Compile Include="Models\ReqManage\ReqMeeting.cs" />
@@ -319,6 +322,13 @@
     <Content Include="Views\WeekReport\AddRisk.cshtml" />
     <Content Include="Views\WeekReport\AddDetail.cshtml" />
     <Content Include="Views\WeekReport\EditDetail.cshtml" />
+    <Content Include="Views\Proj\Edit.cshtml" />
+    <Content Include="Views\Proj\Details.cshtml" />
+    <Content Include="Views\ReqSurv\Create.cshtml" />
+    <Content Include="Views\ReqSurv\Index.cshtml" />
+    <Content Include="Views\ReqSurv\Edit.cshtml" />
+    <Content Include="Views\ReqMeeting\Create.cshtml" />
+    <Content Include="Views\ReqMeeting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

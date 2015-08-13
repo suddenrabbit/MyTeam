@@ -1,0 +1,151 @@
+﻿
+@model IEnumerable<MyTeam.Models.ReqSurv>
+
+
+@{
+    ViewBag.Title = "需求调研管理";
+
+}
+
+<h2>@ViewBag.Title。</h2>
+
+
+<p>
+    @Html.ActionLink("添加需求调研记录", "Create", null, new { @class= "btn btn-primary"})
+</p>
+
+<!-- Ajax删除 -->
+<script>
+    function doDelete(id) {
+        if (confirm("确定要删除？")) {
+            var url = "/ReqSurv/Delete/" + id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function (msg) {
+                    alert(msg);
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("处理失败，请联系管理员");
+                }
+            });
+        }
+    }
+</script>
+
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.ProjID)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.SurveyWay)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.SurveyTime)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.SurveyContent)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.SurveyTarget)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.WorkTarget)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.HostPerson)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.JoinPerson)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.SatisfactionDegree)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjName)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SurveyWay)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.StartTime)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.EndTime)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SurveyTime)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SurveyContent)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SurveyTarget)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkTarget)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.HostPerson)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.JoinPerson)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.SatisfactionDegree)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id=item.SurvID }) |
+			<a href="#" onclick="doDelete('@item.SurvID')">删除</a>
+        </td>
+    </tr>
+}
+</table>
+
+
+

@@ -186,6 +186,11 @@ namespace MyTeam.Controllers
                 user = this.GetUserList().Find(a => a.UID == uid);
             }
 
+            if(user == null)
+            {
+                ModelState.AddModelError("", "无此用户");
+            }
+
             return View(user);
         }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using MyTeam.Utils;
 
 namespace MyTeam.Models
 {
@@ -46,12 +48,15 @@ namespace MyTeam.Models
         public String Architect { get; set; }
 
         [Display(Name = "项目调研受理日期")]
+        [DataType(DataType.Date)]
         public DateTime? ProAcptDate { get; set; }
 
         [Display(Name = "调研小组成立日期")]
+        [DataType(DataType.Date)]
         public DateTime? SurveyGroupFoundDate { get; set; }
 
         [Display(Name = "需求调研完成日期")]
+        [DataType(DataType.Date)]
         public DateTime? SurveyFinishDate { get; set; }
 
         [Display(Name = "需求调研备注")]
@@ -61,9 +66,11 @@ namespace MyTeam.Models
         public String OutlineWriter { get; set; }
 
         [Display(Name = "需求大纲编写开始日期")]
+        [DataType(DataType.Date)]
         public DateTime? OutlineStartDate { get; set; }
 
         [Display(Name = "需求大纲编写完成日期")]
+        [DataType(DataType.Date)]
         public DateTime? OutlineEndDate { get; set; }
 
 
@@ -72,6 +79,7 @@ namespace MyTeam.Models
 
 
         [Display(Name = "需求大纲发布日期")]
+        [DataType(DataType.Date)]
         public DateTime? OutlinePublishDate { get; set; }
 
 
@@ -84,18 +92,22 @@ namespace MyTeam.Models
 
 
         [Display(Name = "业需开发开始日期")]
+        [DataType(DataType.Date)]
         public DateTime? ReqStartDate { get; set; }
 
 
         [Display(Name = "评审受理日期")]
+        [DataType(DataType.Date)]
         public DateTime? ReviewAcptDate { get; set; }
 
 
         [Display(Name = "评审会召开日期")]
+        [DataType(DataType.Date)]
         public DateTime? ReviewMeetingDate { get; set; }
 
 
         [Display(Name = "业需发布日期")]
+        [DataType(DataType.Date)]
         public DateTime? ReqPublishDate { get; set; }
 
 
@@ -104,10 +116,12 @@ namespace MyTeam.Models
 
 
         [Display(Name = "章程发起日期")]
+        [DataType(DataType.Date)]
         public DateTime? RulesStartDate { get; set; }
 
 
         [Display(Name = "章程发布日期")]
+        [DataType(DataType.Date)]
         public DateTime? RulesPublishDate { get; set; }
 
 
@@ -116,10 +130,12 @@ namespace MyTeam.Models
 
 
         [Display(Name = "项目验收受理日期")]
+        [DataType(DataType.Date)]
         public DateTime? ProjCheckAcptDate { get; set; }
 
 
         [Display(Name = "项目发布日期")]
+        [DataType(DataType.Date)]
         public DateTime? ProjPublishDate { get; set; }
 
 
@@ -134,5 +150,18 @@ namespace MyTeam.Models
         [Display(Name = "工时记录附件（文件链接）")]
         public String WorkTimeAtt { get; set; }
 
+        [NotMapped]
+        public string ReqAnalysisName
+        {
+            get
+            {
+                var r = (from a in Constants.UserList
+                         where a.UID == this.ReqAnalysisID
+                         select a.NamePhone).FirstOrDefault();
+
+                return r == null ? "未知" : r.ToString();
+            }
+            set { this.ReqAnalysisName = value; }
+        }
     }
 }

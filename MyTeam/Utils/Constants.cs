@@ -24,7 +24,7 @@ namespace MyTeam.Utils
         public static List<RetailSystem> SysList;
 
         /// <summary>
-        /// 需求发起部门列表
+        /// 需求发起部门列表/主办部门列表
         /// </summary>
         public static List<string> ReqFromDeptList = new List<string>() { "零售银行总部", "信息科技部", "电子银行部", "信用卡中心", "支付结算部", "私人银行部", "审计部" };
 
@@ -47,6 +47,11 @@ namespace MyTeam.Utils
         /// 工作完成情况列表
         /// </summary>
         public static List<string> WorkStatList = new List<string>() { "计划", "部分完成", "暂停", "完成" };
+
+        /// <summary>
+        /// 调研方式列表
+        /// </summary>
+        public static List<string> SurveyWayList = new List<string>() { "理论研究", "专题讨论", "供应商交流", "同业调研", "用户访谈", "现场观摩", "调查问卷" };
 
     }
 }

@@ -116,26 +116,7 @@ namespace MyTeam.Controllers
         [HttpPost]
         public ActionResult Edit(Ver ver)
         {
-            List<RetailSystem> ls1 = this.GetSysList();
-
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
-
-            ViewBag.SysList = sl1;
-
-            SelectList sl2 = null;
-
-            User user = this.GetSessionCurrentUser();
-            if (user != null)
-            {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
-            }
-            else
-            {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
-            }
-
-            ViewBag.ReqPersonList = sl2;
-
+            
             try
             {
                 dbContext.Entry(ver).State = System.Data.Entity.EntityState.Modified;

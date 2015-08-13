@@ -1,7 +1,7 @@
 ﻿@model MyTeam.Models.Proj
 
 @{
-    ViewBag.Title = "添加项目状态跟踪";
+    ViewBag.Title = "项目状态跟踪编辑";
 }
 
 <h2>@ViewBag.Title。</h2>
@@ -24,16 +24,21 @@
         $("#RulesPublishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
         $("#ProjCheckAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
         $("#ProjPublishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/MM/dd' })", placeholder: "点击选择日期" });
+        
     });
 </script>
 
 <div class="row">
     <div class="col-md-8">
-        @using (Html.BeginForm("Create", "Proj", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        @using (Html.BeginForm("Edit", "Proj", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
                 new { @class = "form-horizontal", role = "form" }))
-        { 
+		{
 		@Html.AntiForgeryToken()
 		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            if (Model != null) { 
+
+        @Html.HiddenFor(model => model.ProjID)
 
         <fieldset>
             <legend>项目信息</legend>
@@ -60,9 +65,7 @@
                     <!--主办部门下拉选择-->
                     @Html.DropDownListFor(model => model.HostDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control" })
                 </div>
-
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.ProjLevel, new { @class = "col-md-2 control-label" })
 
@@ -78,6 +81,7 @@
                     @Html.CheckBoxFor(model => model.IsReqTrack, new { @class = "form-control checkbox" })
                 </div>
             </div>
+
             <div class="form-group">
                 @Html.LabelFor(model => model.ReqAnalysisID, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
@@ -86,6 +90,7 @@
                 </div>
 
             </div>
+
             <div class="form-group">
                 @Html.LabelFor(model => model.BusiPerson, new { @class = "col-md-2 control-label" })
 
@@ -110,8 +115,8 @@
                     @Html.ValidationMessageFor(model => model.Architect, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </fieldset>
-            
+            </fieldset>
+
         <fieldset>
             <legend>项目调研</legend>
             <div class="form-group">
@@ -146,9 +151,9 @@
                     @Html.ValidationMessageFor(model => model.SurveyRemark, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </fieldset>
-			
-	    <fieldset>
+            </fieldset>
+
+        <fieldset>
             <legend>需求大纲</legend>
             <div class="form-group">
                 @Html.LabelFor(model => model.OutlineWriter, new { @class = "col-md-2 control-label" })
@@ -198,8 +203,8 @@
                     @Html.ValidationMessageFor(model => model.OutlineRemark, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </fieldset>
-			
+            </fieldset>
+
         <fieldset>
             <legend>业需开发</legend>
             <div class="form-group">
@@ -250,8 +255,8 @@
                     @Html.ValidationMessageFor(model => model.ReqRemark, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </fieldset>
-		
+            </fieldset>
+
         <fieldset>
             <legend>项目章程发布</legend>
             <div class="form-group">
@@ -278,8 +283,8 @@
                     @Html.ValidationMessageFor(model => model.RulesRemark, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </fieldset >
-			
+            </fieldset>
+
         <fieldset>
             <legend>项目验收</legend>
             <div class="form-group">
@@ -314,28 +319,29 @@
                     @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </fieldset>
-        
-        <fieldset>
-            <legend>项目工时记录</legend>
+            </fieldset>
+
+    <fieldset>
+        <legend>项目工时记录</legend>
+        <div class="form-group">
+            @Html.LabelFor(model => model.WorkTimeAtt, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.WorkTimeAtt, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.WorkTimeAtt, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </fieldset>
             <div class="form-group">
-				@Html.LabelFor(model => model.WorkTimeAtt, new { @class = "col-md-2 control-label" })
-					
-			<div class="col-md-10">
-					@Html.TextBoxFor(model => model.WorkTimeAtt, new { @class = "form-control" })
-					@Html.ValidationMessageFor(model => model.WorkTimeAtt, "", new { @class = "text-danger" })
-			</div>
-		</div>
-        </fieldset>
-			<div class="form-group">
-			<div class="col-md-offset-2 col-md-10">
-				<input type="submit" value="新增" class="btn btn-primary" />
-				@Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
-			</div>
-		</div>
-	}
-	
-		</div>
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+            }
+       }
+
+</div>
 </div>
 
 @section Scripts {

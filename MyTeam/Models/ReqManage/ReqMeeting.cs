@@ -64,5 +64,8 @@ namespace MyTeam.Models
         [Display(Name = "备注")]
         public String Remark { get; set; }
 
+        [NotMapped]
+        public string ProjName { get; set; }
+
     }
 }
