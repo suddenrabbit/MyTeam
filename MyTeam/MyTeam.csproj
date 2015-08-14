@@ -46,6 +46,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>F:\Users\zhoumeng\Downloads\EPPlus 4.0.2\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -155,6 +158,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Proj\ReqSurv.cs" />
     <Compile Include="Models\Proj\Proj.cs" />
+    <Compile Include="Models\ReqManage\OutPoolQuery.cs" />
+    <Compile Include="Models\ReqManage\OutPoolResult.cs" />
     <Compile Include="Models\ReqManage\MainInPoolReq.cs" />
     <Compile Include="Models\ReqManage\ReqMeeting.cs" />
     <Compile Include="Models\ReqManage\ReqQuery.cs" />
@@ -249,6 +254,14 @@
     <Content Include="CodeTemplates\AddView\CSHTML\Edit.tt" />
     <Content Include="CodeTemplates\AddView\CSHTML\Empty.tt" />
     <Content Include="CodeTemplates\AddView\CSHTML\List.tt" />
+    <Content Include="Content\templates\baobiaoReportT.xlsx" />
+    <Content Include="Content\templates\baobiaoSecondReportT.xlsx" />
+    <Content Include="Content\templates\chuchiReportT.xlsx" />
+    <Content Include="Content\templates\huiyiReportT.xlsx" />
+    <Content Include="Content\templates\weihuReportT.xlsx" />
+    <Content Include="Content\templates\xuqiuReportT.xlsx" />
+    <Content Include="Content\templates\zhoubaoReportT.xlsx" />
+    <Content Include="Content\templates\zhuangtaiReportT.xlsx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -330,6 +343,8 @@
     <Content Include="Views\ReqMeeting\Create.cshtml" />
     <Content Include="Views\ReqMeeting\Index.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\ReqManage\OutPool.cshtml" />
+    <Content Include="Views\ReqManage\View1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

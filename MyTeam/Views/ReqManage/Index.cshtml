@@ -36,7 +36,7 @@
 
     <fieldset>
         <legend>查询</legend>
-        <table class="table query-table">
+        <table class="table-condensed query-table">
             <tr>
                 <td>@Html.LabelFor(model => model.SysId, new { @class = "control-label" })</td>
                 <td>
@@ -98,7 +98,7 @@
         }
         else
         {
-            <table class="table query-result-table">
+            <table class="table" style="width:3000px">
                 <tr>
                     <th></th>
                     <th>

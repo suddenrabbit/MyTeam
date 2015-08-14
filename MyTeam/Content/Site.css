@@ -40,9 +40,4 @@ textarea {
     border:none!important;
     border-color:none!important;
 }
-.query-result-table{
-    width:3000px;
-}
-.query-result-table td {
-    border-width:1px;
-}
+

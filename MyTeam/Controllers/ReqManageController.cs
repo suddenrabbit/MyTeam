@@ -225,7 +225,7 @@ namespace MyTeam.Controllers
             }
             if (!string.IsNullOrEmpty(query.AcptMonth))
             {
-                ls = ls.Where(p => (p.AcptDate.Value.Year.ToString() + p.AcptDate.Value.Month.ToString()) == query.AcptMonth.Replace("/", ""));
+                ls = ls.Where(p => (p.AcptDate.Year.ToString() + p.AcptDate.Month.ToString()) == query.AcptMonth.Replace("/", ""));
             }
             if (!string.IsNullOrEmpty(query.ReqNo))
             {
@@ -289,7 +289,7 @@ namespace MyTeam.Controllers
 
         // Ajax调用，批量出池       
         [HttpPost]
-        public string OutPool(string reqs, string version, string outDate, string planRlsDate, string outPoolProtect)
+        public string BatOutPool(string reqs, string version, string outDate, string planRlsDate, string outPoolProtect)
         {
             try
             {
@@ -523,15 +523,90 @@ namespace MyTeam.Controllers
             }
         }
 
-        // 导出出池计划
+        // 出池计划
+        public ActionResult OutPool()
+        {
+            // 系统列表下拉
+            List<RetailSystem> ls1 = this.GetSysList();
+            // 加上“全部”
+            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
+            ViewBag.SysList = sl1;
+            return View(new OutPoolQuery());
+        }
 
+        [HttpPost]
+        public ActionResult OutPool(OutPoolQuery query, bool isExcel = false)
+        {
+            // 系统列表下拉
+            List<RetailSystem> ls1 = this.GetSysList();
+            // 加上“全部”
+            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysId);
+            ViewBag.SysList = sl1;
 
+            // 根据query条件查询结果
+            var ls = from a in dbContext.Reqs
+                     select a;
+            if (query.SysId != 0)
+            {
+                ls = ls.Where(p => p.SysId == query.SysId);
+            }
+            if(!string.IsNullOrEmpty(query.Version))
+            {
+                // 版本号
+                string[] vers = query.Version.Split(',');
+                ls = from b in ls
+                     where vers.Contains(b.Version)
+                     select b;
+            }
+            if(!string.IsNullOrEmpty(query.MaintainYear))
+            {
+                ls = ls.Where(p => p.AcptDate.Year.ToString() == query.MaintainYear);
+            }
 
+            // 将查询结果转换为OutPoolResult
+            List<OutPoolResult> resultList = new List<OutPoolResult>();
+            foreach(Req req in ls)
+            {
+                OutPoolResult res = new OutPoolResult()
+                {
+                    AcptMonth = req.AcptDate.ToString("yyyy/M"),
+                    SysName = req.SysName,
+                    Version = req.Version,
+                    ReqNo = req.ReqNo,
+                    ReqDetailNo = req.ReqDetailNo,
+                    ReqReason = req.ReqReason,
+                    ReqDesc = req.ReqDesc,
+                    DevWorkload = req.DevWorkload,
+                    ReqDevPerson = req.ReqDevPerson,
+                    ReqBusiTestPerson = req.ReqBusiTestPerson,
+                    ReqType = req.ReqType,
+                    PlanRlsDate = req.PlanRlsDate,
+                    RlsDate = req.RlsDate,
+                    Remark = req.Remark
+                };
+                resultList.Add(res);
+            }
 
+            // 若isExcel为true，导出Excel
+            if(isExcel)
+            {
+                string targetFileName = "零售条线出池计划";
+                if (query.SysId != 0)
+                    targetFileName += "_" + resultList[0].SysName;
+                if (!string.IsNullOrEmpty(query.Version))
+                    targetFileName += "_" + query.Version;
+                if (!string.IsNullOrEmpty(query.MaintainYear))
+                    targetFileName += "_" + query.MaintainYear;
+                return this.makeExcel<OutPoolResult>("chuchiReportT", targetFileName, resultList);
+            }
+            query.ResultList = resultList;
 
-        // 维护需求导出
+            return View(query);
+        }
 
-
+  
         // 自动生成维护需求编号
         private string GetReqNum(string[] firstReqNum, int changeNum)
         {

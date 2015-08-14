@@ -33,7 +33,7 @@
         var planRlsDate = $("#PlanRlsDate").val();
         if (check() && confirm("确定要批量出池吗？")) {
             var outPoolProtect = $("#OutPoolProtect").is(":checked");
-            var url = "/ReqManage/OutPool";
+            var url = "/ReqManage/BatOutPool";
             var data = "reqs=" + reqs + "&version=" + version + "&outDate=" + outDate + "&planRlsDate=" + planRlsDate + "&outPoolProtect=" + outPoolProtect;
             $.ajax({
                 type: 'POST',

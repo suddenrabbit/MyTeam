@@ -1,0 +1,179 @@
+﻿@model MyTeam.Models.OutPoolQuery
+
+@{
+    ViewBag.Title = "出池计划报表";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    // 日期控件
+    $(document).ready(function () {
+        $("#MaintainYear").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy' })", placeholder: "点击选择日期" });
+    });
+
+    // 导出excel
+    function doExport()
+    {
+        $('#myForm').attr("action", "/ReqManage/OutPool?isExcel=True");
+        $('#myForm').submit();
+        $('#myForm').attr("action", "/ReqManage/OutPool");
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("OutPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                new { @class = "form-horizontal", role = "form", id="myForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10">
+                    <!--系统下拉选择-->
+                    @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Version, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
+                    <div class="text-info">（查询多个版本请用英文半角逗号隔开，留空表示查询所有版本）</div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.MaintainYear, new { @class = "col-md-2 control-label" })
+
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.MaintainYear)
+                    <div class="text-info">（留空表示不作为查询条件）</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="查询" class="btn btn-default" />
+                    <input type="button" value="导出Excel" class="btn btn-primary" onclick="doExport()"/>
+                </div>
+            </div>
+
+        }
+
+        @if (Model.ResultList != null)
+        {
+            if (Model.ResultList.Count < 1)
+            {
+                <p class="text-warning">没有符合条件的结果！</p>
+            }
+            else
+            {
+                <table class="table" style="width:1500px">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].AcptMonth)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].SysName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Version)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model.ResultList)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AcptMonth)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SysName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Version)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqDetailNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqReason)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqDesc)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DevWorkload)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqDevPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PlanRlsDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RlsDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>
+
+                        </tr>
+                    }
+
+                </table>
+            }
+        }
+
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

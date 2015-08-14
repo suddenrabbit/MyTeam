@@ -1,0 +1,132 @@
+﻿@model IEnumerable<MyTeam.Models.OutPoolResult>
+
+@{
+    ViewBag.Title = "View1";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<p>
+    @Html.ActionLink("添加", "Create", null, new { @class= "btn btn-primary"})
+</p>
+
+<!-- Ajax删除 -->
+<script>
+    function doDelete(id) {
+        if (confirm("确定要删除？")) {
+            var url = "/控制器名称/Delete/" + id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                success: function (msg) {
+                    alert(msg);
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("处理失败，请联系管理员");
+                }
+            });
+        }
+    }
+</script>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.AcptMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SysName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Version)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqDetailNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqReason)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DevWorkload)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqDevPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqBusiTestPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReqType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlanRlsDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RlsDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remark)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.AcptMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SysName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Version)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReqNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReqDetailNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReqReason)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReqDesc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DevWorkload)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReqDevPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReqType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PlanRlsDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RlsDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("详情", "Details", new { /* id=item.PrimaryKey */ }) |
+			<a href="#" onclick="doDelete('@item.PrimaryKey')">删除</a>
+        </td>
+    </tr>
+}
+
+</table>
