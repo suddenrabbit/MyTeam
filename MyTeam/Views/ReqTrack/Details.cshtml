@@ -1,0 +1,132 @@
+﻿@model MyTeam.Models.ReqTrack
+
+@{
+    ViewBag.Title = "业需软需状态跟踪详情";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<div class="row">
+    <div class="col-md-8 form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.ProjID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.ReqNo)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReqName, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.ReqName)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Priority, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.Priority)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReqWriter, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.ReqWriter)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.PlanDeadLine)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RealDeadLine, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.RealDeadLine)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ChangeChar, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.ChangeChar)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ApprovePerson, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.ApprovePerson)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ApproveDate, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.ApproveDate)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SoftReqNo, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.SoftReqNo)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SoftReqName, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.SoftReqName)
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReqStat, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10 form-control-static">
+                @Html.DisplayFor(model => model.ReqStat)
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("编辑", "Edit", new { id = Model.TrackID }) |
+    @Html.ActionLink("返回列表", "Index")
+</p>

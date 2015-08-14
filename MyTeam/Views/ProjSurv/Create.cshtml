@@ -1,4 +1,4 @@
-﻿@model MyTeam.Models.ReqSurv
+﻿@model MyTeam.Models.ProjSurv
 
 @{
     ViewBag.Title = "添加需求调研记录";
@@ -17,7 +17,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        @using (Html.BeginForm("Create", "ReqSurv", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        @using (Html.BeginForm("Create", "ProjSurv", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
                 new { @class = "form-horizontal", role = "form" }))
 		{
 		@Html.AntiForgeryToken()

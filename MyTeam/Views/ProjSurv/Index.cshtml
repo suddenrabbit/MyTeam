@@ -1,5 +1,5 @@
 ﻿
-@model IEnumerable<MyTeam.Models.ReqSurv>
+@model IEnumerable<MyTeam.Models.ProjSurv>
 
 
 @{
@@ -18,7 +18,7 @@
 <script>
     function doDelete(id) {
         if (confirm("确定要删除？")) {
-            var url = "/ReqSurv/Delete/" + id;
+            var url = "/ProjSurv/Delete/" + id;
             $.ajax({
                 type: 'POST',
                 url: url,

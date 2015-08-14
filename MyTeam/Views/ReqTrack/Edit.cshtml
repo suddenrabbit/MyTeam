@@ -1,0 +1,146 @@
+﻿@model MyTeam.Models.ReqTrack
+
+@{
+    ViewBag.Title = "业需软需状态跟踪记录编辑";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    // 日期控件
+    $(document).ready(function () {
+        $("#PlanDeadLine").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
+        $("#RealDeadLine").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
+        $("#ApproveDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Edit", "ReqTrack", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                new { @class = "form-horizontal", role = "form" }))
+		{
+		@Html.AntiForgeryToken()
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.TrackID)
+            if (Model != null)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ProjID, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ProjID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReqName, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ReqName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ReqName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Priority, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        <!--优先级列表-->
+                        @Html.DropDownListFor(model => model.Priority, ViewBag.PriorityList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReqWriter, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ReqWriter, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ReqWriter, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.PlanDeadLine, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PlanDeadLine, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RealDeadLine, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.RealDeadLine, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RealDeadLine, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ChangeChar, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        <!--变更标识列表-->
+                        @Html.DropDownListFor(model => model.ChangeChar, ViewBag.ChangeCharList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ApprovePerson, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ApprovePerson, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApprovePerson, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ApproveDate, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ApproveDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApproveDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SoftReqNo, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.SoftReqNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SoftReqNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SoftReqName, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.SoftReqName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SoftReqName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReqStat, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        <!--需求状态列表-->
+                        @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqSoftStatList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="保存" class="btn btn-primary" />
+                        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                    </div>
+                </div>
+            }
+        }
+
+	</div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

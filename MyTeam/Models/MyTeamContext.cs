@@ -35,9 +35,11 @@
         public DbSet<Ver> Vers { get; set; }
         public DbSet<Proj> Projs { get; set; }
 
-        public DbSet<ReqSurv> ReqSurvs { get; set; }
+        public DbSet<ProjSurv> ProjSurvs { get; set; }
 
-        public DbSet<ReqMeeting> ReqMeetings { get; set; }
+        public DbSet<ProjMeeting> ProjMeetings { get; set; }
+
+        public DbSet<ReqTrack> ReqTracks { get; set; }
   
     }
 

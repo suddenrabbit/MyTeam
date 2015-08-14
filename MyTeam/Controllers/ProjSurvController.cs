@@ -9,16 +9,16 @@ using System.Text;
 
 namespace MyTeam.Controllers
 {
-    public class ReqSurvController : BaseController
+    public class ProjSurvController : BaseController
     {
         //
         // GET: /ReqSurvey/
 
         public ActionResult Index()
         {
-            List<ReqSurv> ls = dbContext.ReqSurvs.ToList();
+            List<ProjSurv> ls = dbContext.ProjSurvs.ToList();
             List<Proj> projLs = dbContext.Projs.ToList();
-            foreach(ReqSurv rs in ls)
+            foreach(ProjSurv rs in ls)
             {
                 Proj p = projLs.Find(a => a.ProjID == rs.ProjID);
                 rs.ProjName = p == null ? "未知" : p.ProjName;
@@ -41,10 +41,10 @@ namespace MyTeam.Controllers
         {
             //项目列表
             List<Proj> ls = dbContext.Projs.ToList();
-            SelectList sl2 = null;
-            sl2 = new SelectList(ls, "ProjID","ProjName");
+            SelectList sl = null;
+            sl = new SelectList(ls, "ProjID","ProjName");
 
-            ViewBag.ProjList = sl2;
+            ViewBag.ProjList = sl;
 
             // 调研方式
             ViewBag.SurveyWayList = MyTools.GetSelectList(Constants.SurveyWayList);
@@ -56,13 +56,13 @@ namespace MyTeam.Controllers
         // POST: /ReqSurvey/Create
 
         [HttpPost]
-        public ActionResult Create(ReqSurv reqSurv)
+        public ActionResult Create(ProjSurv reqSurv)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    dbContext.ReqSurvs.Add(reqSurv);
+                    dbContext.ProjSurvs.Add(reqSurv);
                     dbContext.SaveChanges();
                 }
                 return RedirectToAction("Index");
@@ -90,8 +90,8 @@ namespace MyTeam.Controllers
             // 调研方式列表
             ViewBag.SurveyWayList = MyTools.GetSelectList(Constants.SurveyWayList);
 
-            List<ReqSurv> ls2 = dbContext.ReqSurvs.ToList();
-            ReqSurv reqSur = ls2.Find(a => a.SurvID == id);
+            List<ProjSurv> ls2 = dbContext.ProjSurvs.ToList();
+            ProjSurv reqSur = ls2.Find(a => a.SurvID == id);
 
             if (reqSur == null)
             {
@@ -105,7 +105,7 @@ namespace MyTeam.Controllers
         // POST: /ReqSurvey/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(ReqSurv reqSurv)
+        public ActionResult Edit(ProjSurv reqSurv)
         {
             try
             {
@@ -128,8 +128,8 @@ namespace MyTeam.Controllers
         {
             try
             {
-                List<ReqSurv> ls = dbContext.ReqSurvs.ToList();
-                ReqSurv reqSurv = ls.Find(a => a.SurvID == id);
+                List<ProjSurv> ls = dbContext.ProjSurvs.ToList();
+                ProjSurv reqSurv = ls.Find(a => a.SurvID == id);
 
                 dbContext.Entry(reqSurv).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();

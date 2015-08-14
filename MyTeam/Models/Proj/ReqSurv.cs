@@ -8,14 +8,14 @@ using MyTeam.Utils;
 
 namespace MyTeam.Models
 {
-    public class ReqSurv
+    public class ProjSurv
     {
 
         [Key]
         public int SurvID { get; set; }
 
         [Required]
-        [Display(Name = "项目ID")]
+        [Display(Name = "项目名称")]
         public int ProjID { get; set; }
 
         [Required]

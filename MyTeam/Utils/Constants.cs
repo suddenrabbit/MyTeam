@@ -49,9 +49,39 @@ namespace MyTeam.Utils
         public static List<string> WorkStatList = new List<string>() { "计划", "部分完成", "暂停", "完成" };
 
         /// <summary>
-        /// 调研方式列表
+        /// 需求调研方式列表
         /// </summary>
         public static List<string> SurveyWayList = new List<string>() { "理论研究", "专题讨论", "供应商交流", "同业调研", "用户访谈", "现场观摩", "调查问卷" };
 
+        /// <summary>
+        /// 需求会议类型列表
+        /// </summary>
+        public static List<string> MeetingTypeList = new List<string>() { "需求研讨会", "业务部门交流会", "上线评审会", "业务需求评审会", "业务需求内部评审会", "软件需求评审会", "其他会议" };
+
+        /// <summary>
+        /// 需求会议评审结果列表
+        /// </summary>
+        public static List<string> ReviewConclusionList = new List<string>() { "通过", "有条件通过", "不通过", "不适用"};
+
+        /// <summary>
+        /// 需求会议当前状态列表
+        /// </summary>
+        public static List<string> StatList = new List<string>() { "计划", "进行中", "办结" };
+
+        /// <summary>
+        /// 业需软需状态跟踪优先级列表
+        /// </summary>
+        public static List<string> PriorityList = new List<string>() { "高", "中", "低" };
+
+        /// <summary>
+        /// 业需软需状态跟踪变更标识列表
+        /// </summary>
+        public static List<string> ChangeCharList = new List<string>() { "原始", "修改", "增加", "删除" };
+
+        /// <summary>
+        /// 业需软需状态跟踪需求状态列表
+        /// </summary>
+        public static List<string> ReqSoftStatList = new List<string>() { "设计", "编码", "测试", "完成", "作废" };
+      
     }
 }

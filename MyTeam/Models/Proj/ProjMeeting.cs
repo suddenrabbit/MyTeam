@@ -4,17 +4,18 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MyTeam.Utils;
 
 namespace MyTeam.Models
 {
-    public class ReqMeeting
+    public class ProjMeeting
     {
 
         [Key]
         public int MeetingID { get; set; }
 
         [Required]
-        [Display(Name = "项目ID")]
+        [Display(Name = "项目名称")]
         public int ProjID { get; set; }
 
         [Required]
@@ -43,6 +44,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "会议日期")]
+        [DataType(DataType.Date)]
         public DateTime MeetingDate { get; set; }
 
 

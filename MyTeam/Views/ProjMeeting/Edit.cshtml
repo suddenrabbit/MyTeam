@@ -1,0 +1,148 @@
+﻿@model MyTeam.Models.ProjMeeting
+
+@{
+    ViewBag.Title = "需求会议记录编辑";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    // 日期控件
+    $(document).ready(function () {
+        $("#MeetingDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
+        });
+</script>
+
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Edit", "ProjMeeting", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                new { @class = "form-horizontal", role = "form" }))
+		{
+		@Html.AntiForgeryToken()
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            
+        @Html.HiddenFor(model => model.MeetingID)
+
+            if (Model != null)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ProjID, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ProjID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MeetingTopic, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.MeetingTopic, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MeetingTopic, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MeetingType, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        <!--需求会议类型列表-->
+                        @Html.DropDownListFor(model => model.MeetingType, ViewBag.MeetingTypeList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.HostDept, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.HostDept, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.HostDept, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.HostPerson, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.HostPerson, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.HostPerson, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReviewExpert, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ReviewExpert, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ReviewExpert, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Participants, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Participants, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Participants, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MeetingDate, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.MeetingDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MeetingDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NoticeNo, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.NoticeNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.NoticeNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReviewConclusion, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        <!--需求会议评审结果列表-->
+                        @Html.DropDownListFor(model => model.ReviewConclusion, ViewBag.ReviewConclusionList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MeetingConclusion, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.MeetingConclusion, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MeetingConclusion, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Stat, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        <!--需求会议当前状态列表-->
+                        @Html.DropDownListFor(model => model.Stat, ViewBag.StatList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Remark, new { @class = "col-md-2 control-label" })
+
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="保存" class="btn btn-primary" />
+                        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                    </div>
+                </div>
+            }
+        }
+
+	</div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
