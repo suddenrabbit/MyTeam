@@ -50,6 +50,12 @@
       <HintPath>..\packages\EPPlus\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -157,12 +163,13 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Proj\ProjMeeting.cs" />
-    <Compile Include="Models\Proj\ReqSurv.cs" />
+    <Compile Include="Models\Proj\ProjSurv.cs" />
     <Compile Include="Models\Proj\Proj.cs" />
     <Compile Include="Models\Proj\ReqTrack.cs" />
     <Compile Include="Models\ReqManage\OutPoolQuery.cs" />
     <Compile Include="Models\ReqManage\OutPoolResult.cs" />
     <Compile Include="Models\ReqManage\MainInPoolReq.cs" />
+    <Compile Include="Models\ReqManage\ReqExcel.cs" />
     <Compile Include="Models\ReqManage\ReqQuery.cs" />
     <Compile Include="Models\System\RetailSystem.cs" />
     <Compile Include="Models\User\ChangePsw.cs" />
@@ -179,12 +186,14 @@
     <Compile Include="Utils\MyTools.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\bloodhound.min.js" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -203,12 +212,14 @@
     <Content Include="CodeTemplates\AddView\CSHTML\List.tt" />
     <Content Include="Content\templates\baobiaoReportT.xlsx" />
     <Content Include="Content\templates\baobiaoSecondReportT.xlsx" />
-    <Content Include="Content\templates\chuchiReportT.xlsx" />
+    <Content Include="Content\templates\OutPoolReportT.xlsx" />
     <Content Include="Content\templates\huiyiReportT.xlsx" />
-    <Content Include="Content\templates\weihuReportT.xlsx" />
+    <Content Include="Content\templates\ReqReportT.xlsx" />
     <Content Include="Content\templates\xuqiuReportT.xlsx" />
-    <Content Include="Content\templates\zhoubaoReportT.xlsx" />
+    <Content Include="Content\templates\WeekReportT.xlsx" />
     <Content Include="Content\templates\zhuangtaiReportT.xlsx" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -234,10 +245,9 @@
     <Content Include="Scripts\My97DatePicker\skin\whyGreen\datepicker.css" />
     <Content Include="Scripts\My97DatePicker\skin\whyGreen\img.gif" />
     <Content Include="Scripts\My97DatePicker\WdatePicker.js" />
+    <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\typeahead.bundle.min.js" />
-    <Content Include="Scripts\typeahead.jquery.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -287,11 +297,13 @@
     <Content Include="Views\ReqSurv\Create.cshtml" />
     <Content Include="Views\ReqSurv\Index.cshtml" />
     <Content Include="Views\ReqSurv\Edit.cshtml" />
-    <Content Include="Views\ReqMeeting\Create.cshtml" />
-    <Content Include="Views\ReqMeeting\Index.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\ReqManage\OutPool.cshtml" />
     <Content Include="Views\ReqManage\View1.cshtml" />
+    <Content Include="Views\ProjMeeting\Create.cshtml" />
+    <Content Include="Views\ProjMeeting\Details.cshtml" />
+    <Content Include="Views\ProjMeeting\Edit.cshtml" />
+    <Content Include="Views\ProjMeeting\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

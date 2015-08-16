@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 
 namespace MyTeam.Controllers
 {
@@ -172,13 +173,13 @@ namespace MyTeam.Controllers
                     }
                     dbContext.SaveChanges();
 
-                    r = "<p style='color:green'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
+                    r = "<p class='text-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
                 }
-               
+
             }
             catch (Exception e1)
             {
-                r = "<p style='color:red'>入池失败！" + e1.Message + "</p>";
+                r = "<p class='text-danger'>入池失败！" + e1.Message + "</p>";
             }
 
             ViewBag.Msg = r;
@@ -192,69 +193,68 @@ namespace MyTeam.Controllers
          */
 
         // 默认页为查询页
-        public ActionResult Index()
+        // 按照查询条件查询结果：为使用分页功能，GET模式查询
+        public ActionResult Index(ReqQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            // 系统列表下拉
-            List<RetailSystem> ls1 = this.GetSysList();
-            // 加上“全部”
-            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
-            ViewBag.SysList = sl1;
+            if (isQuery)
+            {
+                var ls = from a in dbContext.Reqs
+                         select a;
+                if (query.SysId != 0)
+                {
+                    ls = ls.Where(p => p.SysId == query.SysId);
+                }
+                if (!string.IsNullOrEmpty(query.AcptMonth))
+                {
+                    ls = ls.Where(p => (p.AcptDate.Value.Year.ToString() + p.AcptDate.Value.Month.ToString()) == query.AcptMonth.Replace("/", ""));
+                }
+                if (!string.IsNullOrEmpty(query.ReqNo))
+                {
+                    ls = ls.Where(p => p.ReqNo == query.ReqNo);
+                }
+                if (!string.IsNullOrEmpty(query.ReqDetailNo))
+                {
+                    ls = ls.Where(p => p.ReqDetailNo == query.ReqDetailNo);
+                }
+                if (!string.IsNullOrEmpty(query.Version))
+                {
+                    ls = ls.Where(p => p.Version == query.Version);
+                }
+                if (!string.IsNullOrEmpty(query.Version))
+                {
+                    ls = ls.Where(p => p.Version == query.Version);
+                }
+                if (query.ReqStat != "全部")
+                {
+                    ls = ls.Where(p => p.ReqStat == query.ReqStat);
+                }
+                if (query.ReqAcptPerson != 0)
+                {
+                    ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
+                }
 
-            // 需求受理人下拉
-            List<User> ls2 = this.GetUserList();
-            // 加上“全部”
-            ls2.Insert(0, new User() { UID = 0, Realname = "全部" });
-            ViewBag.ReqAcptPerson = new SelectList(ls2, "UID", "Realname");
+               
 
-            // 需求状态下拉
-            ViewBag.ReqStatList = MyTools.GetSelectList(sourceList: Constants.ReqStatList, forQuery: true);
+                // 若isExcel为true，导出Excel
+                if (isExcel)
+                {
+                    string targetFileName = "维护需求查询_" + DateTime.Now.ToString("yyyyMMddHHmmss");
 
-            return View(new ReqQuery());
-        }
-
-        // 按照查询条件查询结果
-        [HttpPost]
-        public ActionResult Index(ReqQuery query)
-        {
-            var ls = from a in dbContext.Reqs
-                     select a;
-            if (query.SysId != 0)
-            {
-                ls = ls.Where(p => p.SysId == query.SysId);
+                    // 需要对list修改以适应Excel模板
+                    List<ReqExcel> excelList = this.GetExcelList(ls);
+                    return this.makeExcel<ReqExcel>("ReqReportT", targetFileName, excelList);
+                }
+                else
+                {
+                    var list = ls.ToList();
+                    // 分页
+                    query.ResultList = list.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
+                }
             }
-            if (!string.IsNullOrEmpty(query.AcptMonth))
+            else
             {
-                ls = ls.Where(p => (p.AcptDate.Year.ToString() + p.AcptDate.Month.ToString()) == query.AcptMonth.Replace("/", ""));
+                query = new ReqQuery();
             }
-            if (!string.IsNullOrEmpty(query.ReqNo))
-            {
-                ls = ls.Where(p => p.ReqNo == query.ReqNo);
-            }
-            if (!string.IsNullOrEmpty(query.ReqDetailNo))
-            {
-                ls = ls.Where(p => p.ReqDetailNo == query.ReqDetailNo);
-            }
-            if (!string.IsNullOrEmpty(query.Version))
-            {
-                ls = ls.Where(p => p.Version == query.Version);
-            }
-            if (!string.IsNullOrEmpty(query.Version))
-            {
-                ls = ls.Where(p => p.Version == query.Version);
-            }
-            if (query.ReqStat != "全部")
-            {
-                ls = ls.Where(p => p.ReqStat == query.ReqStat);
-            }
-            if (query.ReqAcptPerson != 0)
-            {
-                ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
-            }
-
-            var list = ls.ToList();
-
-            query.ResultList = list;
 
             // 为了保证查询部分正常显示，对下拉列表处理
 
@@ -275,7 +275,6 @@ namespace MyTeam.Controllers
 
             return View(query);
         }
-
 
         /*
          * 【3】批处理
@@ -452,12 +451,12 @@ namespace MyTeam.Controllers
         public ActionResult Edit(int id)
         {
             Req req = dbContext.Reqs.ToList().Find(a => a.RID == id);
-            if(req == null)
+            if (req == null)
             {
-                ModelState.AddModelError("","无此记录");
+                ModelState.AddModelError("", "无此记录");
                 return View();
             }
-           
+
             // 下拉框预处理
             // 1、生成系统列表
             List<RetailSystem> ls1 = this.GetSysList();
@@ -523,21 +522,79 @@ namespace MyTeam.Controllers
             }
         }
 
-        // 出池计划
-        public ActionResult OutPool()
+        /*
+         * 7、出池计划查询与导出
+         */
+        public ActionResult OutPool(OutPoolQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
         {
-            // 系统列表下拉
-            List<RetailSystem> ls1 = this.GetSysList();
-            // 加上“全部”
-            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
-            ViewBag.SysList = sl1;
-            return View(new OutPoolQuery());
-        }
+            if (isQuery)
+            {
+                // 根据query条件查询结果
+                var ls = from a in dbContext.Reqs
+                         select a;
+                if (query.SysId != 0)
+                {
+                    ls = ls.Where(p => p.SysId == query.SysId);
+                }
+                if (!string.IsNullOrEmpty(query.Version))
+                {
+                    // 版本号
+                    string[] vers = query.Version.Split(',');
+                    ls = from b in ls
+                         where vers.Contains(b.Version)
+                         select b;
+                }
+                if (!string.IsNullOrEmpty(query.MaintainYear))
+                {
+                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.MaintainYear);
+                }
 
-        [HttpPost]
-        public ActionResult OutPool(OutPoolQuery query, bool isExcel = false)
-        {
+                // 将查询结果转换为OutPoolResult
+                List<OutPoolResult> resultList = new List<OutPoolResult>();
+                foreach (Req req in ls)
+                {
+                    OutPoolResult res = new OutPoolResult()
+                    {
+                        AcptMonth = req.AcptDate.Value.ToString("yyyy/M"),
+                        SysName = req.SysName,
+                        Version = req.Version,
+                        ReqNo = req.ReqNo,
+                        ReqDetailNo = req.ReqDetailNo,
+                        ReqReason = req.ReqReason,
+                        ReqDesc = req.ReqDesc,
+                        DevWorkload = req.DevWorkload,
+                        ReqDevPerson = req.ReqDevPerson,
+                        ReqBusiTestPerson = req.ReqBusiTestPerson,
+                        ReqType = req.ReqType,
+                        PlanRlsDate = req.PlanRlsDate,
+                        RlsDate = req.RlsDate,
+                        Remark = req.Remark
+                    };
+                    resultList.Add(res);
+                }
+                // 若isExcel为true，导出Excel
+                if (isExcel)
+                {
+                    string targetFileName = "零售条线出池计划";
+                    if (query.SysId != 0)
+                        targetFileName += "_" + resultList[0].SysName;
+                    if (!string.IsNullOrEmpty(query.Version))
+                        targetFileName += "_" + query.Version;
+                    if (!string.IsNullOrEmpty(query.MaintainYear))
+                        targetFileName += "_" + query.MaintainYear;
+                    return this.makeExcel<OutPoolResult>("OutPoolReportT", targetFileName, resultList);
+                }
+                else
+                {
+                    // 分页
+                    query.ResultList = resultList.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
+                }
+            }
+            else
+            {
+                query = new OutPoolQuery();
+            }
+
             // 系统列表下拉
             List<RetailSystem> ls1 = this.GetSysList();
             // 加上“全部”
@@ -545,68 +602,10 @@ namespace MyTeam.Controllers
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysId);
             ViewBag.SysList = sl1;
 
-            // 根据query条件查询结果
-            var ls = from a in dbContext.Reqs
-                     select a;
-            if (query.SysId != 0)
-            {
-                ls = ls.Where(p => p.SysId == query.SysId);
-            }
-            if(!string.IsNullOrEmpty(query.Version))
-            {
-                // 版本号
-                string[] vers = query.Version.Split(',');
-                ls = from b in ls
-                     where vers.Contains(b.Version)
-                     select b;
-            }
-            if(!string.IsNullOrEmpty(query.MaintainYear))
-            {
-                ls = ls.Where(p => p.AcptDate.Year.ToString() == query.MaintainYear);
-            }
-
-            // 将查询结果转换为OutPoolResult
-            List<OutPoolResult> resultList = new List<OutPoolResult>();
-            foreach(Req req in ls)
-            {
-                OutPoolResult res = new OutPoolResult()
-                {
-                    AcptMonth = req.AcptDate.ToString("yyyy/M"),
-                    SysName = req.SysName,
-                    Version = req.Version,
-                    ReqNo = req.ReqNo,
-                    ReqDetailNo = req.ReqDetailNo,
-                    ReqReason = req.ReqReason,
-                    ReqDesc = req.ReqDesc,
-                    DevWorkload = req.DevWorkload,
-                    ReqDevPerson = req.ReqDevPerson,
-                    ReqBusiTestPerson = req.ReqBusiTestPerson,
-                    ReqType = req.ReqType,
-                    PlanRlsDate = req.PlanRlsDate,
-                    RlsDate = req.RlsDate,
-                    Remark = req.Remark
-                };
-                resultList.Add(res);
-            }
-
-            // 若isExcel为true，导出Excel
-            if(isExcel)
-            {
-                string targetFileName = "零售条线出池计划";
-                if (query.SysId != 0)
-                    targetFileName += "_" + resultList[0].SysName;
-                if (!string.IsNullOrEmpty(query.Version))
-                    targetFileName += "_" + query.Version;
-                if (!string.IsNullOrEmpty(query.MaintainYear))
-                    targetFileName += "_" + query.MaintainYear;
-                return this.makeExcel<OutPoolResult>("chuchiReportT", targetFileName, resultList);
-            }
-            query.ResultList = resultList;
-
             return View(query);
         }
 
-  
+
         // 自动生成维护需求编号
         private string GetReqNum(string[] firstReqNum, int changeNum)
         {
@@ -640,6 +639,51 @@ namespace MyTeam.Controllers
             string result = sb.ToString();
             result = result.Substring(0, result.Length - 1);
             return result;
+        }
+
+        /// <summary>
+        /// 生成用于Excel输出的list
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        private List<ReqExcel> GetExcelList(IQueryable<Req> list)
+        {
+            List<ReqExcel> rl = new List<ReqExcel>();
+            foreach (Req s in list)
+            {
+                ReqExcel reqExcel = new ReqExcel()
+                {
+                    SysName = s.SysName,
+                    AcptDate = s.AcptDate,
+                    ReqNo = s.ReqNo,
+                    ReqReason = s.ReqReason,
+                    ReqFromDept = s.ReqFromDept,
+                    ReqFromPerson = s.ReqFromPerson,
+                    ReqAcptPerson = s.ReqAcptPersonNamePhone,
+                    ReqDevPerson = s.ReqDevPerson,
+                    ReqBusiTestPerson = s.ReqBusiTestPerson,
+                    DevAcptDate = s.DevAcptDate,
+                    DevEvalDate = s.DevEvalDate,
+                    ReqDetailNo = s.ReqDetailNo,
+                    Version = s.Version,
+                    BusiReqNo = s.BusiReqNo,
+                    ReqDesc = s.ReqDesc,
+                    ReqType = s.ReqType,
+                    DevWorkload = s.DevWorkload,
+                    ReqStat = s.ReqStat,
+                    OutDate = s.OutDate,
+                    PlanRlsDate = s.PlanRlsDate,
+                    RlsDate = s.RlsDate,
+                    RlsNo = s.RlsNo,
+                    IsSysAsso = (s.IsSysAsso!=null && s.IsSysAsso) ? "是" : "",
+                    AssoSysName = s.AssoSysName,
+                    AssoReqNo = s.AssoReqNo,
+                    AssoRlsDesc = s.AssoRlsDesc,
+                    Remark = s.Remark
+                };
+                rl.Add(reqExcel);
+            }
+            return rl;
         }
 
     }

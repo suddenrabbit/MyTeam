@@ -40,7 +40,7 @@
                 </div>
 
                 <!--只有管理员可以控制用户是否为管理员-->
-                if ((bool)ViewBag.IsAdmin)
+                if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
                 {
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">

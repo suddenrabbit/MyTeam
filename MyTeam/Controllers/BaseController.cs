@@ -39,15 +39,7 @@ namespace MyTeam.Controllers
         // 判断当前用户是否为管理员
         protected bool IsAdminNow()
         {
-            User user = this.GetSessionCurrentUser();
-            if (user != null)
-            {
-                return user.IsAdmin;
-            }
-            else
-            {
-                return false;
-            }
+            return Session["IsAdmin"] != null && (bool)Session["IsAdmin"];
         }
 
         // 更新内存

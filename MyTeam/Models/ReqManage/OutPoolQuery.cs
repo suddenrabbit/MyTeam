@@ -1,7 +1,9 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace MyTeam.Models
@@ -17,6 +19,14 @@ namespace MyTeam.Models
         [Display(Name = "维护年度")]
         public string MaintainYear { get; set; }
 
-        public List<OutPoolResult> ResultList { get; set; }
+        public IPagedList<OutPoolResult> ResultList { get; set; }
+
+        public string ToQueryString()
+        {
+            return new StringBuilder("&SysId=").Append(this.SysId)
+                .Append("&Version=").Append(this.Version)
+                .Append("&MaintainYear=").Append(this.MaintainYear)
+                .Append("&isQuery=True").ToString();
+        }
     }
 }

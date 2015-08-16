@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using PagedList;
 
 namespace MyTeam.Models
 {
@@ -33,7 +34,19 @@ namespace MyTeam.Models
         [Display(Name = "需求受理人")]
         public int ReqAcptPerson { get; set; }
 
-        public List<Req> ResultList { get; set; }
+        public IPagedList<Req> ResultList { get; set; }
+
+        public string ToQueryString()
+        {
+            return new StringBuilder("&SysId=").Append(this.SysId)
+                .Append("&AcptMonth=").Append(this.AcptMonth)
+                .Append("&ReqNo=").Append(this.ReqNo)
+                .Append("&ReqDetailNo=").Append(this.ReqDetailNo)
+                .Append("&Version=").Append(this.Version)
+                .Append("&ReqStat=").Append(this.ReqStat)
+                .Append("&ReqAcptPerson=").Append(this.ReqAcptPerson)
+                .Append("&isQuery=True").ToString();
+        }
 
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 
 namespace MyTeam.Controllers
 {
@@ -20,11 +21,11 @@ namespace MyTeam.Controllers
         //
         // GET: /SysManage/
 
-        public ActionResult Index()
-        {            
-            ViewBag.IsAdmin = this.IsAdminNow();
-
-            return View(this.GetSysList());
+        public ActionResult Index(int pageNum=1)
+        {
+            // 分页
+            var ls = this.GetSysList().ToPagedList(pageNum, Constants.PAGE_SIZE);
+            return View(ls);
         }
 
         //
@@ -69,14 +70,12 @@ namespace MyTeam.Controllers
 
         public ActionResult Edit(int id)
         {
-            ViewBag.IsAdmin = this.IsAdminNow();
-
             RetailSystem sys = this.GetSysList().Find(a => a.SysID == id);
 
             if(sys==null)
             {
-                ModelState.AddModelError("", "不存在该系统！");
-                sys = new RetailSystem();
+                ModelState.AddModelError("", "无此记录！");
+                return View();
             }
 
 

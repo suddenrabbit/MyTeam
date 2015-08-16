@@ -1,11 +1,10 @@
-﻿@model MyTeam.Models.ReqQuery
-
+﻿@using PagedList
+@using PagedList.Mvc
+@model MyTeam.Models.ReqQuery
 @{
     ViewBag.Title = "维护需求管理";
 }
-
 <h2>@ViewBag.Title。</h2>
-
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     function doDelete(id) {
@@ -24,270 +23,271 @@
             });
         }
     }
-</script>
 
+    // 导出excel
+    function doExport() {
+        $('#isExcel').val(true);
+        $('#myForm').submit();
+        $('#isExcel').val(false);
+    }
+</script>
 <div class="row">
     <div class="col-md-8">
-@using (Html.BeginForm("Index", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-				new { @class = "form-horizontal", role = "form" }))
-		{
-			@Html.AntiForgeryToken()
-			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-    <fieldset>
-        <legend>查询</legend>
-        <table class="table-condensed query-table">
-            <tr>
-                <td>@Html.LabelFor(model => model.SysId, new { @class = "control-label" })</td>
-                <td>
-                    <!--系统下拉选择-->
-					@Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
-                </td>
-                <td>@Html.LabelFor(model => model.AcptMonth, new { @class = "control-label" })</td>
-                <td>
-                    <input id="AcptMonth" name="AcptMonth" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M' })" value="@Model.AcptMonth" readonly="readonly" placeholder="点击选择日期" />
-                </td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(model => model.ReqNo, new { @class = "control-label" })</td>
-                <td>
-					@Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
-                </td>
-                <td>@Html.LabelFor(model => model.ReqDetailNo, new { @class = "control-label" })</td>
-                <td>
-                    @Html.TextBoxFor(model => model.ReqDetailNo, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ReqDetailNo, "", new { @class = "text-danger" })
-                </td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(model => model.Version, new { @class = "control-label" })</td>
-                <td>
-                    @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Version, "", new { @class = "text-danger" })
-                </td>
-                <td>@Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })</td>
-                <td>
-                    <!--需求状态下拉选择-->
-                    @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
-                </td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(model => model.ReqAcptPerson, new { @class = "control-label" })</td>
-                <td>
-                    <!--需求受理人下拉选择-->
-                    @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.ReqAcptPersonList as SelectList, new { @class = "form-control" })
-                </td>
-               
-                <td colspan="2"><input type="submit" value="查询" class="btn btn-primary" />
-                <input type="button" value="导出Excel" class="btn btn-default" /></td>
-            </tr>            
-        </table>
-
-    </fieldset>
-}
-
-@if (Model.ResultList != null)
-{
-    <fieldset>
-        <legend>查询结果</legend>
-
-        @if (Model.ResultList.Count < 1)
+        @using (Html.BeginForm("Index", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
-            <p>没有符合条件的结果！</p>
-        }
-        else
-        {
-            <table class="table" style="width:3000px">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <input type="hidden" name="isQuery" value="True" />
+            <input type="hidden" id="isExcel" name="isExcel" value="False" />
+
+            <table class="table table-condensed query-table">
                 <tr>
-                    <th></th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].SysId)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqFromDept)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqFromPerson)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqAcptPerson)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].DevAcptDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].DevEvalDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].Version)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].BusiReqNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].OutDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].RlsNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].IsSysAsso)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].AssoSysName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].AssoReqNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].AssoRlsDesc)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                    </th>
-
+                    <td>@Html.LabelFor(model => model.SysId, new { @class = "control-label" })</td>
+                    <td>
+                        <!--系统下拉选择-->
+                        @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                    </td>
+                    <td>@Html.LabelFor(model => model.AcptMonth, new { @class = "control-label" })</td>
+                    <td>
+                        <input id="AcptMonth" name="AcptMonth" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M' })" value="@Model.AcptMonth" readonly="readonly" placeholder="点击选择日期" />
+                    </td>
                 </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.ReqNo, new { @class = "control-label" })</td>
+                    <td>
+                        @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
+                    </td>
+                    <td>@Html.LabelFor(model => model.ReqDetailNo, new { @class = "control-label" })</td>
+                    <td>
+                        @Html.TextBoxFor(model => model.ReqDetailNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ReqDetailNo, "", new { @class = "text-danger" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Version, new { @class = "control-label" })</td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Version, "", new { @class = "text-danger" })
+                    </td>
+                    <td>@Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })</td>
+                    <td>
+                        <!--需求状态下拉选择-->
+                        @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.ReqAcptPerson, new { @class = "control-label" })</td>
+                    <td>
+                        <!--需求受理人下拉选择-->
+                        @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.ReqAcptPersonList as SelectList, new { @class = "form-control" })
+                    </td>
 
-                @foreach (var item in Model.ResultList)
-                {
-                    var trid = "resultTR" + item.RID;
-                    <tr id="@trid">
-                        <td>
-                            @Html.ActionLink("编辑", "Edit", new { id = item.RID }) |
-                            <a href="#" onclick="doDelete('@item.RID')">删除</a>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SysName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AcptDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqReason)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqFromDept)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqFromPerson)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqAcptPersonNamePhone)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqDevPerson)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DevAcptDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DevEvalDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqDetailNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Version)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BusiReqNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqDesc)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqType)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DevWorkload)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqStat)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OutDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PlanRlsDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RlsDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RlsNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IsSysAsso)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AssoSysName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AssoReqNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AssoRlsDesc)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Remark)
-                        </td>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="查询" class="btn btn-primary" />
+                        <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
+                        <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/ReqManage/Create'" />
+                    </td>
+                </tr>
+            </table>
+        }
+        @if (Model.ResultList != null)
+        {
+            if (Model.ResultList.Count < 1)
+            {
+                <p class="text-warning">没有符合条件的结果！</p>
+            }
+            else
+            {
+                <table class="table table-condensed" style="width:2500px;font-size:12px">
+                    <tr>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].SysId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Version)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].BusiReqNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqFromDept)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqFromPerson)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqAcptPerson)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].DevAcptDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].DevEvalDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].OutDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].RlsNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].IsSysAsso)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].AssoSysName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].AssoReqNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].AssoRlsDesc)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                        </th>
 
                     </tr>
-                }
 
-            </table>
+                    @foreach (var item in Model.ResultList)
+                    {
+                        var trid = "resultTR" + item.RID;
+                        <tr id="@trid">
+                            <td>
+                                @Html.ActionLink("编辑", "Edit", new { id = item.RID }) |
+                                <a href="#" onclick="doDelete('@item.RID')">删除</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SysName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AcptDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqDetailNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Version)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BusiReqNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqReason)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqDesc)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqFromDept)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqFromPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqAcptPersonNamePhone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqDevPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DevAcptDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DevEvalDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DevWorkload)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqStat)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OutDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PlanRlsDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RlsDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RlsNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsSysAsso)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssoSysName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssoReqNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssoRlsDesc)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>
+
+                        </tr>
+                    }
+
+                </table>
+                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Req>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+            }
 
         }
-
-    </fieldset>
-}
     </div>
 </div>
-
-
 
 
 @section Scripts {

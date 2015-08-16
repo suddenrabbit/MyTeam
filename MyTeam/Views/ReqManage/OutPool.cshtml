@@ -1,11 +1,10 @@
-﻿@model MyTeam.Models.OutPoolQuery
-
+﻿@using PagedList
+@using PagedList.Mvc
+@model MyTeam.Models.OutPoolQuery
 @{
     ViewBag.Title = "出池计划报表";
 }
-
 <h2>@ViewBag.Title。</h2>
-
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     // 日期控件
@@ -14,25 +13,23 @@
     });
 
     // 导出excel
-    function doExport()
-    {
-        $('#myForm').attr("action", "/ReqManage/OutPool?isExcel=True");
+    function doExport() {
+        $('#isExcel').val(true);
         $('#myForm').submit();
-        $('#myForm').attr("action", "/ReqManage/OutPool");
+        $('#isExcel').val(false);
     }
 </script>
-
 <div class="row">
     <div class="col-md-8">
-        @using (Html.BeginForm("OutPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-                new { @class = "form-horizontal", role = "form", id="myForm" }))
+        @using (Html.BeginForm("OutPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
-            @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+            <input type="hidden" name="isQuery" value="True" />
+            <input type="hidden" id="isExcel" name="isExcel" value="False" />
             <div class="form-group">
                 @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     <!--系统下拉选择-->
                     @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
@@ -40,7 +37,6 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.Version, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
                     <div class="text-info">（查询多个版本请用英文半角逗号隔开，留空表示查询所有版本）</div>
@@ -48,7 +44,6 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.MaintainYear, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.MaintainYear)
                     <div class="text-info">（留空表示不作为查询条件）</div>
@@ -57,12 +52,11 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="查询" class="btn btn-default" />
-                    <input type="button" value="导出Excel" class="btn btn-primary" onclick="doExport()"/>
+                    <input type="button" value="导出Excel" class="btn btn-primary" onclick="doExport()" />
                 </div>
             </div>
 
         }
-
         @if (Model.ResultList != null)
         {
             if (Model.ResultList.Count < 1)
@@ -116,7 +110,6 @@
                             @Html.DisplayNameFor(model => model.ResultList[0].Remark)
                         </th>
                     </tr>
-
                     @foreach (var item in Model.ResultList)
                     {
                         <tr>
@@ -162,17 +155,15 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Remark)
                             </td>
-
                         </tr>
                     }
-
                 </table>
+                var data = Model.ResultList as PagedList.IPagedList<MyTeam.Models.OutPoolResult>;
+                @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
             }
         }
-
     </div>
 </div>
-
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -38,6 +38,8 @@ namespace MyTeam.Controllers
             {
                 // 先用Session记录UID
                 this.SetSessionCurrentUser(user.UID);
+                // 控制部分菜单显示，session记录是否为管理员
+                Session["IsAdmin"] = user.IsAdmin;
                 FormsAuthentication.RedirectFromLoginPage(username, false);
                 // return RedirectToAction("Index", "Home");
             }
@@ -162,10 +164,6 @@ namespace MyTeam.Controllers
             }
 
             // 为避免直接访问/Edit或传入的id不正确，默认id为当前登陆用户
-
-            // 传递是否为管理员到页面，控制是否显示“是否管理员”这个选项
-            ViewBag.IsAdmin = user.IsAdmin;
-
             int uid;
             try
             {

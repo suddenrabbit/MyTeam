@@ -16,12 +16,6 @@ namespace MyTeam.Controllers
 
         public ActionResult Index()
         {
-            User user = this.GetSessionCurrentUser();
-            if(user == null)
-            {
-                return RedirectToAction("Login", "User");
-            }
-            ViewBag.Message = user.Realname;
             return View();
         }
 

@@ -82,6 +82,10 @@ namespace MyTeam.Utils
         /// 业需软需状态跟踪需求状态列表
         /// </summary>
         public static List<string> ReqSoftStatList = new List<string>() { "设计", "编码", "测试", "完成", "作废" };
-      
+
+        /// <summary>
+        /// 分页的每页记录数
+        /// </summary>
+        public const int PAGE_SIZE = 10;
     }
 }
