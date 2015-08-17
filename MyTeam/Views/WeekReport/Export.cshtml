@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "导出周报";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<script>
+    function doSubmit() {
+        var obj = $("#thisWeek").find("option:selected").next();
+        if (typeof (obj) != "undefined") {
+            $("#lastWeek").val(obj.val());
+        }
+        $("#myForm").submit();
+    }
+
+</script>
+
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Export", "WeekReport", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                new { @class = "form-horizontal", role = "form", id="myForm" }))
+        {
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="rptDate">周报日期</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("thisWeek", ViewBag.RptDateList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" value="导出Excel" class="btn btn-primary" onclick="doSubmit()"/>
+                </div>
+            </div>
+            @Html.Hidden("lastWeek");
+        }
+    </div>
+</div>

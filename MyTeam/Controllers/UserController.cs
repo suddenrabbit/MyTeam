@@ -160,7 +160,7 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user == null)
             {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/User/Edit/id" });
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/User/Edit/"+id });
             }
 
             // 为避免直接访问/Edit或传入的id不正确，默认id为当前登陆用户
@@ -202,16 +202,16 @@ namespace MyTeam.Controllers
                 {
                     dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
+                    ViewBag.Message = "修改成功";
                     // 更新内存
                     this.Update();
                 }
-                return RedirectToAction("Index");
             }
             catch (Exception e1)
             {
                 ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View(user);
             }
+            return View(user);
         }
 
     }
