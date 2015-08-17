@@ -6,6 +6,13 @@
 
 <h2>@ViewBag.Title。</h2>
 
+<script>
+    function changeRptDate()
+    {
+        $('#RptDate').val($('#chooseRptDate').val());
+    }
+</script>
+
 <div class="row">
     <div class="col-md-8">
         @using (Html.BeginForm("AddRisk", "WeekReport", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
@@ -17,9 +24,13 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.RptDate, new { @class = "col-md-2 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-5">
                     @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-5">
+                    @Html.DropDownList("chooseRptDate", ViewBag.RptDateList as SelectList, new { @class = "form-control", id = "chooseRptDate", onchange = "changeRptDate()" })
+                    （下拉选择已经存在的周报日期）
                 </div>
             </div>
             <div class="form-group">

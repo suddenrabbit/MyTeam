@@ -304,6 +304,7 @@
     <Content Include="Views\ProjMeeting\Details.cshtml" />
     <Content Include="Views\ProjMeeting\Edit.cshtml" />
     <Content Include="Views\ProjMeeting\Index.cshtml" />
+    <Content Include="Views\WeekReport\Export.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

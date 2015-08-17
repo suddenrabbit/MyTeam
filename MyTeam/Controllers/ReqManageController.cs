@@ -675,7 +675,7 @@ namespace MyTeam.Controllers
                     PlanRlsDate = s.PlanRlsDate,
                     RlsDate = s.RlsDate,
                     RlsNo = s.RlsNo,
-                    IsSysAsso = (s.IsSysAsso!=null && s.IsSysAsso) ? "是" : "",
+                    IsSysAsso = (s.IsSysAsso && s.IsSysAsso) ? "是" : "",
                     AssoSysName = s.AssoSysName,
                     AssoReqNo = s.AssoReqNo,
                     AssoRlsDesc = s.AssoRlsDesc,

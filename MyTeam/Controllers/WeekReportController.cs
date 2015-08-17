@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using MyTeam.Models;
 using MyTeam.Utils;
+using OfficeOpenXml;
+using System.IO;
 
 namespace MyTeam.Controllers
 {
@@ -210,15 +212,14 @@ namespace MyTeam.Controllers
             }
 
             // RptDate备选（取最近的5个）
-            var r = dbContext.WeekReportDetails.OrderByDescending(a => a.RptDate).Take(5);
-            string rptDates = "";
-            foreach (var s in r)
-            {
-                rptDates += s.RptDate + ",";
-            }
-            if (rptDates.Length > 1)
-                rptDates = rptDates.Substring(0, rptDates.Length - 1);
-            ViewBag.RptDates = rptDates;
+            var r =  from a in dbContext.WeekReportDetails
+                     orderby a.RptDate descending
+                     select a.RptDate;
+            List<string> ls = r.Take(5).Distinct().ToList<string>();
+            ls.Insert(0, DateTime.Now.Year + "年");
+            SelectList sl = MyTools.GetSelectList(ls);
+            
+            ViewBag.RptDateList = sl;
 
             // 工作任务：默认为ID，不允许填写            
 
@@ -227,6 +228,7 @@ namespace MyTeam.Controllers
 
             WeekReportDetail detail = new WeekReportDetail()
             {
+                RptDate = DateTime.Now.Year + "年",
                 Person = user.Realname,
                 RptPersonID = user.UID,
                 WorkMission = forMain ? id : "领导交办",
@@ -260,6 +262,11 @@ namespace MyTeam.Controllers
             }
             if (detail.IsWithMain)
             {
+                // 自动计算工时
+                if (detail.IsWithMain)
+                {
+                    this.UpdateWorkTime(detail.WorkMission);
+                }
                 return RedirectToAction("DetailIndex", new { id = detail.WorkMission, forMain = detail.IsWithMain });
             }
             return RedirectToAction("DetailIndex");
@@ -277,6 +284,13 @@ namespace MyTeam.Controllers
             // 任务阶段下拉列表
             SelectList sl = MyTools.GetSelectList(Constants.WorkStatList, false, true, detail.WorkStat);
             ViewBag.WorkStatList = sl;
+            
+            // RptDate备选（取最近的5个）
+            List<string> ls = this.GetRptDateList();
+            ls.Insert(0, DateTime.Now.Year + "年");
+            SelectList sl2 = MyTools.GetSelectList(ls,false, true, detail.RptDate);
+            ViewBag.RptDateList = sl2;
+
             return View(detail);
         }
 
@@ -292,6 +306,11 @@ namespace MyTeam.Controllers
 
                     if (detail.IsWithMain)
                     {
+                        // 自动计算工时
+                        if (detail.IsWithMain)
+                        {
+                            this.UpdateWorkTime(detail.WorkMission);
+                        }
                         return RedirectToAction("DetailIndex", new { id = detail.WorkMission, forMain = detail.IsWithMain });
                     }
                     return RedirectToAction("DetailIndex");
@@ -304,7 +323,11 @@ namespace MyTeam.Controllers
                 // 用户列表
                 SelectList sl = MyTools.GetSelectList(Constants.WorkStatList, false, true, detail.WorkStat);
                 ViewBag.WorkStatList = sl;
-
+                // RptDate备选（取最近的5个）
+                List<string> ls = this.GetRptDateList();
+                ls.Insert(0, DateTime.Now.Year + "年");
+                SelectList sl2 = MyTools.GetSelectList(ls, false, true, detail.RptDate);
+                ViewBag.RptDateList = sl2;
             }
             return View(detail);
         }
@@ -319,6 +342,12 @@ namespace MyTeam.Controllers
                 WeekReportDetail detail = dbContext.WeekReportDetails.ToList().Find(a => a.WRDetailID == id);
                 dbContext.Entry(detail).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
+
+                // 自动计算工时
+                if(detail.IsWithMain)
+                {
+                    this.UpdateWorkTime(detail.WorkMission);
+                }
 
                 return "删除成功";
             }
@@ -359,7 +388,13 @@ namespace MyTeam.Controllers
                 return RedirectToAction("Login", "User", new { ReturnUrl = "/WeekReport/AddRisk" });
             }
 
-            WeekReportRisk risk = new WeekReportRisk() { RptPersonID = user.UID };
+            // RptDate备选（取最近的5个）
+            List<string> ls = this.GetRptDateList();
+            ls.Insert(0, DateTime.Now.Year + "年");
+            SelectList sl2 = MyTools.GetSelectList(ls);
+            ViewBag.RptDateList = sl2;
+
+            WeekReportRisk risk = new WeekReportRisk() { RptDate = DateTime.Now.Year + "年", RptPersonID = user.UID };
             return View(risk);
         }
 
@@ -393,6 +428,12 @@ namespace MyTeam.Controllers
                 ModelState.AddModelError("", "未找到该记录");
                 risk = new WeekReportRisk();
             }
+
+            // RptDate备选（取最近的5个）
+            List<string> ls = this.GetRptDateList();
+            ls.Insert(0, DateTime.Now.Year + "年");
+            SelectList sl = MyTools.GetSelectList(ls, false, true, risk.RptDate);
+            ViewBag.RptDateList = sl;
 
             return View(risk);
         }
@@ -437,24 +478,158 @@ namespace MyTeam.Controllers
             }
         }
 
-        // 获取最新的5个周报日期列表        
-        public string GetRptDate()
-        {
-            string result = "2015年0709-0712,2015年0715-0719,2015年0722-0726";
-
-            return result;
-        }
-
         // Main表的WorkTime根据Detail表计算，每次插入、编辑、删除Detail时均重新计算
-        private void UpdateWorkTime(int mainId)
+        private void UpdateWorkTime(string mainId)
         {
-            var all = (from a in dbContext.WeekReportDetails
-                      where a.WorkMission == mainId.ToString() && a.IsWithMain == true
-                      select a.WorkTime).Sum();
-            WeekReportMain main = dbContext.WeekReportMains.ToList().Find(a => a.WRMainID == mainId);
-            main.WorkTime = all;
-            dbContext.Entry(main).State = System.Data.Entity.EntityState.Modified;
-            dbContext.SaveChanges();
+            dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkMission = m.WRMainID) where WRMainID=" + mainId);
         }
+
+        /*导出周报（因周报格式较为特殊，不使用通用方法导出）*/
+        // 页面
+        public ActionResult Export()
+        {
+            // 获取周报日期列表：取最近的5个
+            SelectList sl = MyTools.GetSelectList(this.GetRptDateList());
+            ViewBag.RptDateList = sl;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Export(string thisWeek, string lastWeek)
+        {
+            // 读取模板
+            string tmpFilePath = System.Web.HttpContext.Current.Server.MapPath("~/Content/templates/WeekReportT.xlsx");
+            // POIFSFileSystem fs = new POIFSFileSystem(new FileStream(tmpFilePath, FileMode.OpenOrCreate));
+            using (ExcelPackage ep = new ExcelPackage(new FileInfo(tmpFilePath)))
+            {
+                ExcelWorkbook wb = ep.Workbook;
+                // 第一个sheet生成本周内容
+                procWorkbook(wb, thisWeek, 1);
+                // 第二个sheet生成上周内容
+                if (!string.IsNullOrEmpty(lastWeek))
+                {
+                    procWorkbook(wb, lastWeek, 2);
+                }
+
+                // 下载
+                // 文件名中文处理
+                string targetFileName = HttpUtility.UrlEncode("零售团队工作周报" + thisWeek.Substring(0, 4) + thisWeek.Substring(thisWeek.Length - 4));
+
+                return File(ep.GetAsByteArray(), "application/excel", targetFileName + ".xlsx");
+            }
+        }
+
+        // 生成ExcelWorkBook
+        private void procWorkbook(ExcelWorkbook wb, string week, int sheetNum)
+        {
+            // 分别读取每周工作、重点工作、项目风险三部分内容
+            var detailList = dbContext.WeekReportDetails.Where(a => a.RptDate == week);
+            // 重点工作通过每周工作读取
+            string[] detailWithMainList = detailList.Where(a => a.IsWithMain == true).Select(a=>a.WorkMission).ToArray<string>();
+            var mainList = from a in dbContext.WeekReportMains
+                           where detailWithMainList.Contains(a.WRMainID.ToString())
+                           select a;
+            var riskList = dbContext.WeekReportRisks.Where(a => a.RptDate == week);
+        
+
+            // 根据sheetNum处理
+            ExcelWorksheet sheet = wb.Worksheets[sheetNum];
+            sheet.Name = week; //sheet名称设为报表日期
+
+            // 游标：标记目前需要操作的行号
+            int cursor = 3; //先从第三行开始操作
+
+            // 1、每周工作
+            int size = detailList.Count();
+            // 在cursor+1位置插入size-1行
+            sheet.InsertRow(cursor + 1, size - 1, cursor);
+
+            // 插入数据
+            foreach (var s in detailList)
+            {
+                // 需要对第3、4个单元格进行合并
+                sheet.Cells[cursor, 3, cursor, 4].Merge = true;
+                // 9、10两个个单元格合并
+                sheet.Cells[cursor, 9, cursor, 10].Merge = true;
+                // 第一列是序号
+                sheet.Cells[cursor, 1].Value = cursor - 2;
+                sheet.Cells[cursor, 2].Value = s.IsWithMain ? mainList.Where(a => a.WRMainID.ToString() == s.WorkMission).FirstOrDefault().WorkName : s.WorkMission;
+                sheet.Cells[cursor, 3].Value = s.WorkDetail;
+                sheet.Cells[cursor, 5].Value = s.Person;
+                sheet.Cells[cursor, 6].Value = s.WorkTarget;
+                sheet.Cells[cursor, 7].Value = s.WorkStat;
+                sheet.Cells[cursor, 8].Value = s.WorkTime;
+                sheet.Cells[cursor, 9].Value = s.Remark;
+
+                // 下移一行
+                cursor++;
+            }
+
+            // 游标下移2行，因为有2个标题行
+            cursor += 2;
+
+            // 2、重点工作
+            size = mainList.Count();
+            // 在cursor+1位置插入size-1行
+            sheet.InsertRow(cursor + 1, size - 1, cursor);
+            // 插入数据
+            int num = 1; //序号
+            foreach (var s in mainList)
+            {
+                // 第一列是序号
+                sheet.Cells[cursor, 1].Value = num;
+                sheet.Cells[cursor, 2].Value = s.WorkName;
+                sheet.Cells[cursor, 3].Value = s.WorkStage;
+                sheet.Cells[cursor, 4].Value = s.WorkMission;
+                sheet.Cells[cursor, 5].Value = s.Person;
+                sheet.Cells[cursor, 6].Value = s.WorkTarget;
+                sheet.Cells[cursor, 7].Value = s.PlanDeadLine;
+                sheet.Cells[cursor, 8].Value = s.WorkTime;
+                sheet.Cells[cursor, 9].Value = s.Progress;
+                sheet.Cells[cursor, 10].Value = s.Remark;
+
+                // 下移一行
+                cursor++;
+                // 序号+1
+                num++;
+            }
+
+            // 游标下移2行，因为有2个标题行
+            cursor += 2;
+
+            //3、项目风险
+            size = riskList.Count();
+            // 在cursor+1位置插入size-1行
+            sheet.InsertRow(cursor + 1, size - 1, cursor);
+
+            // 插入数据
+            // 序号
+            num = 1;
+            foreach (var s in riskList)
+            {
+                // 需要对第2-4单元格进行合并
+                sheet.Cells[cursor, 2, cursor, 4].Merge = true;
+                // 5-10单元格合并
+                sheet.Cells[cursor, 5, cursor, 10].Merge = true;
+                // 第一列是序号
+                sheet.Cells[cursor, 1].Value = num;
+                sheet.Cells[cursor, 2].Value = s.RiskDetail;
+                sheet.Cells[cursor, 5].Value = s.Solution;
+
+                // 下移一行
+                cursor++;
+                // 序号+1
+                num++;
+            }
+
+        }
+
+        // 获取RptDate列表
+        private List<string> GetRptDateList()
+        {
+            return dbContext.Database.SqlQuery<string>("select distinct top 5 RptDate from WeekReportDetails order by RptDate desc").ToList<string>();
+        }
+        
     }
 }
