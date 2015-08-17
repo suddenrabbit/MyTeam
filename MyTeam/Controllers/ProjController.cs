@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MyTeam.Utils;
 using MyTeam.Models;
 using System.Text;
+using PagedList;
 
 namespace MyTeam.Controllers
 {
@@ -17,10 +18,12 @@ namespace MyTeam.Controllers
         //
         // GET: /Proj/
 
-        public ActionResult Index()
+        public ActionResult Index(int pageNum = 1)
         {
+            // 分页
             List<Proj> ls = dbContext.Projs.ToList();
-            return View(ls);
+            var ls1 = ls.ToPagedList(pageNum, Constants.PAGE_SIZE);
+            return View(ls1);
         } 
 
         // GET: /Proj/Details/5

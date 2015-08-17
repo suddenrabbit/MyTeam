@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MyTeam.Utils;
 using MyTeam.Models;
 using System.Text;
+using PagedList;
 
 namespace MyTeam.Controllers
 {
@@ -14,11 +15,19 @@ namespace MyTeam.Controllers
         //
         // GET: /ReqTrack/
 
-        public ActionResult Index()
+        public ActionResult Index(int pageNum = 1)
         {
             List<ReqTrack> ls = dbContext.ReqTracks.ToList();
 
-            return View(ls);
+            List<Proj> projLs = dbContext.Projs.ToList();
+            foreach (ReqTrack rm in ls)
+            {
+                Proj p = projLs.Find(a => a.ProjID == rm.ProjID);
+                rm.ProjName = p == null ? "未知" : p.ProjName;
+            }
+
+            var ls1 = ls.ToPagedList(pageNum, Constants.PAGE_SIZE);
+            return View(ls1);
         }
 
         //
@@ -34,6 +43,11 @@ namespace MyTeam.Controllers
                 ModelState.AddModelError("", "不存在该业需软需状态跟踪记录！");
                 reqTrack = new ReqTrack();
             }
+
+            List<Proj> projLs = dbContext.Projs.ToList();
+            Proj p = projLs.Find(a => a.ProjID == reqTrack.ProjID);
+            reqTrack.ProjName = p == null ? "未知" : p.ProjName;
+
             return View(reqTrack);
         }
 
@@ -48,6 +62,7 @@ namespace MyTeam.Controllers
             sl = new SelectList(ls, "ProjID", "ProjName");
 
             ViewBag.ProjList = sl;
+
             // 优先级列表
             ViewBag.PriorityList = MyTools.GetSelectList(Constants.PriorityList);
 

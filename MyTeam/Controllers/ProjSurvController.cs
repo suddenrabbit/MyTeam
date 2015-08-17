@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MyTeam.Utils;
 using MyTeam.Models;
 using System.Text;
+using PagedList;
 
 namespace MyTeam.Controllers
 {
@@ -14,7 +15,7 @@ namespace MyTeam.Controllers
         //
         // GET: /ReqSurvey/
 
-        public ActionResult Index()
+        public ActionResult Index(int pageNum = 1)
         {
             List<ProjSurv> ls = dbContext.ProjSurvs.ToList();
             List<Proj> projLs = dbContext.Projs.ToList();
@@ -23,7 +24,10 @@ namespace MyTeam.Controllers
                 Proj p = projLs.Find(a => a.ProjID == rs.ProjID);
                 rs.ProjName = p == null ? "未知" : p.ProjName;
             }
-            return View(ls);
+
+            // 分页
+            var ls1 = ls.ToPagedList(pageNum, Constants.PAGE_SIZE);
+            return View(ls1);
         }
 
         //

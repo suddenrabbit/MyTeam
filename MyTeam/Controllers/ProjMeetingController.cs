@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MyTeam.Utils;
 using MyTeam.Models;
 using System.Text;
+using PagedList;
 
 namespace MyTeam.Controllers
 {
@@ -14,16 +15,64 @@ namespace MyTeam.Controllers
         //
         // GET: /ReqMeeting/
 
-        public ActionResult Index()
+        public ActionResult Index(ProjMeetingQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            List<ProjMeeting> ls = dbContext.ProjMeetings.ToList();
+            if (isQuery)
+            {
+                var ls = from a in dbContext.ProjMeetings
+                         select a;
+                if (query.ProjID != 0)
+                {
+                    ls = ls.Where(p => p.ProjID == query.ProjID);
+                }
+                if (!string.IsNullOrEmpty(query.MeetingType))
+                {
+                    ls = ls.Where(p => p.MeetingType == query.MeetingType);
+                }
+                if (!string.IsNullOrEmpty(query.MeetingDateStart) && !string.IsNullOrEmpty(query.MeetingDateEnd))
+                {
+                    //ls = ls.Where(p=>p.MeetingDate)
+                        
+                }
+               
+                
+                // 若isExcel为true，导出Excel
+                
+                else
+                {
+                    var list = ls.ToList();
+                    // 分页
+                    //query.ResultList = list.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
+                }
+            }
+            else
+            {
+                query = new ProjMeetingQuery();
+            }
+
+            // 为了保证查询部分正常显示，对下拉列表处理
+
+            List<ProjMeeting> pmls = dbContext.ProjMeetings.ToList();
+            // 获取项目下拉列表
             List<Proj> projLs = dbContext.Projs.ToList();
-            foreach (ProjMeeting rm in ls)
+            ViewBag.ProjList = projLs;
+
+            // 根据项目ID获得项目名称
+            foreach (ProjMeeting rm in pmls)
             {
                 Proj p = projLs.Find(a => a.ProjID == rm.ProjID);
                 rm.ProjName = p == null ? "未知" : p.ProjName;
             }
-            return View(ls);
+
+            // 加上“全部”
+            pmls.Insert(0, new ProjMeeting() { MeetingID = 0, ProjName = "全部" });
+            ViewBag.pmls = new SelectList(pmls, "MeetingID", "ProjName", query.ProjID); ;
+
+            // 会议类型列表
+            ViewBag.MeetingTypeList = MyTools.GetSelectList(Constants.MeetingTypeList);
+
+            return View(query);
+
         }
 
         //
@@ -39,6 +88,11 @@ namespace MyTeam.Controllers
                 ModelState.AddModelError("", "不存在该需求会议记录！");
                 reqMeeting = new ProjMeeting();
             }
+
+            List<Proj> projLs = dbContext.Projs.ToList();
+            Proj p = projLs.Find(a => a.ProjID == reqMeeting.ProjID);
+            reqMeeting.ProjName = p == null ? "未知" : p.ProjName;
+           
             return View(reqMeeting);
         }
 
@@ -152,6 +206,90 @@ namespace MyTeam.Controllers
             {
                 return "出错了: " + e1.Message;
             }
+        }
+
+
+        /*
+         * 7、出池计划查询与导出
+         */
+        public ActionResult OutPool(OutPoolQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
+        {
+            if (isQuery)
+            {
+                // 根据query条件查询结果
+                var ls = from a in dbContext.Reqs
+                         select a;
+                if (query.SysId != 0)
+                {
+                    ls = ls.Where(p => p.SysId == query.SysId);
+                }
+                if (!string.IsNullOrEmpty(query.Version))
+                {
+                    // 版本号
+                    string[] vers = query.Version.Split(',');
+                    ls = from b in ls
+                         where vers.Contains(b.Version)
+                         select b;
+                }
+                if (!string.IsNullOrEmpty(query.MaintainYear))
+                {
+                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.MaintainYear);
+                }
+
+                // 将查询结果转换为OutPoolResult
+                List<OutPoolResult> resultList = new List<OutPoolResult>();
+                foreach (Req req in ls)
+                {
+                    OutPoolResult res = new OutPoolResult()
+                    {
+                        AcptMonth = req.AcptDate.Value.ToString("yyyy/M"),
+                        SysName = req.SysName,
+                        Version = req.Version,
+                        ReqNo = req.ReqNo,
+                        ReqDetailNo = req.ReqDetailNo,
+                        ReqReason = req.ReqReason,
+                        ReqDesc = req.ReqDesc,
+                        DevWorkload = req.DevWorkload,
+                        ReqDevPerson = req.ReqDevPerson,
+                        ReqBusiTestPerson = req.ReqBusiTestPerson,
+                        ReqType = req.ReqType,
+                        PlanRlsDate = req.PlanRlsDate,
+                        RlsDate = req.RlsDate,
+                        Remark = req.Remark
+                    };
+                    resultList.Add(res);
+                }
+                // 若isExcel为true，导出Excel
+                if (isExcel)
+                {
+                    string targetFileName = "零售条线出池计划";
+                    if (query.SysId != 0)
+                        targetFileName += "_" + resultList[0].SysName;
+                    if (!string.IsNullOrEmpty(query.Version))
+                        targetFileName += "_" + query.Version;
+                    if (!string.IsNullOrEmpty(query.MaintainYear))
+                        targetFileName += "_" + query.MaintainYear;
+                    return this.makeExcel<OutPoolResult>("OutPoolReportT", targetFileName, resultList);
+                }
+                else
+                {
+                    // 分页
+                    query.ResultList = resultList.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
+                }
+            }
+            else
+            {
+                query = new OutPoolQuery();
+            }
+
+            // 系统列表下拉
+            List<RetailSystem> ls1 = this.GetSysList();
+            // 加上“全部”
+            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysId);
+            ViewBag.SysList = sl1;
+
+            return View(query);
         }
 
     }

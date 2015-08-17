@@ -1,4 +1,7 @@
-﻿@model IEnumerable<MyTeam.Models.Ver>
+﻿@using PagedList
+@using PagedList.Mvc
+@model IEnumerable<MyTeam.Models.Ver>
+
 
 @{
     ViewBag.Title = "年度版本下发计划管理";
@@ -12,22 +15,31 @@
 
 <!-- Ajax删除 -->
 <script>
-    function doDelete(id) {
-        if (confirm("确定要删除？")) {
-            var url = "/Ver/Delete/" + id;
-            $.ajax({
-                type: 'POST',
-                url: url,
-                success: function (msg) {
-                    alert(msg);
-                    window.location.reload();
-                },
-                error: function () {
-                    alert("处理失败，请联系管理员");
-                }
-            });
-        }
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal();
     }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/Ver/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal();
+            }
+        });
+    }
+
 </script>
 
 <table class="table">
@@ -94,9 +106,66 @@
         <td>
             @Html.ActionLink("编辑", "Edit", new { id=item.VerID }) |
            
-			<a href="#" onclick="doDelete('@item.VerID')">删除</a>
+            <a href="#" onclick="doDelete('@item.VerID','@item.SysName 年度版本计划')">删除</a>
         </td>
     </tr>
 }
 
 </table>
+
+<!--分页-->
+@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.Ver>,
+generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+    aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

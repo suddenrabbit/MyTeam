@@ -1,19 +1,11 @@
-﻿@model IEnumerable<MyTeam.Models.ProjMeeting>
-
-
+﻿@using PagedList
+@using PagedList.Mvc
+@model MyTeam.Models.ProjMeetingQuery
 @{
-    ViewBag.Title = "添加需求会议记录";
-
+    ViewBag.Title = "项目会议管理";
 }
-
 <h2>@ViewBag.Title。</h2>
-
-
-<p>
-    @Html.ActionLink("添加需求会议记录", "Create", null, new { @class= "btn btn-primary"})
-</p>
-
-<!-- Ajax删除 -->
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     function doDelete(id) {
         if (confirm("确定要删除？")) {
@@ -23,7 +15,7 @@
                 url: url,
                 success: function (msg) {
                     alert(msg);
-                    window.location.reload();
+                    $("#resultTR" + id).remove();
                 },
                 error: function () {
                     alert("处理失败，请联系管理员");
@@ -31,75 +23,166 @@
             });
         }
     }
+
+    // 导出excel
+    function doExport() {
+        $('#isExcel').val(true);
+        $('#myForm').submit();
+        $('#isExcel').val(false);
+    }
 </script>
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "ProjMeeting", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<table class="table">
-    <tr>
+            <input type="hidden" name="isQuery" value="True" />
+            <input type="hidden" id="isExcel" name="isExcel" value="False" />
 
-        <th>
-            @Html.DisplayNameFor(model => model.ProjID)
-        </th>
+            <table class="table table-condensed query-table">
+                <tr>
+                    <td>@Html.LabelFor(model => model.ProjID, new { @class = "control-label" })</td>
+                    <td>
+                        <!--项目下拉选择-->
+                        @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.MeetingType, new { @class = "control-label" })</td>
+                    <td>
+                        <!--会议类型下拉选择-->
+                        @Html.DropDownListFor(model => model.MeetingType, ViewBag.MeetingTypeList as SelectList, new { @class = "form-control" })
+                    </td>
+                </tr>
+                <tr>
+                    <td><label class="control-label">会议日期</label></td>
+                    <td>
+                        <input id="MeetingDateStart" name="MeetingDateStart" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.MeetingDateStart" placeholder="点击选择日期" />
+                        -
+                        <input id="MeetingDateEnd" name="MeetingDateEnd" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.MeetingDateStart" placeholder="点击选择日期" />
 
-        <th>
-            @Html.DisplayNameFor(model => model.MeetingTopic)
-        </th>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="查询" class="btn btn-primary" />
+                        <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
+                        <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/ProjMeeting/Create'" />
+                    </td>
+                </tr>
+            </table>
+        }
+        @if (Model.ResultList != null)
+        {
+            if (Model.ResultList.Count < 1)
+            {
+                <p class="text-warning">没有符合条件的结果！</p>
+            }
+            else
+            {
+                <table class="table table-condensed" style="width:2500px;font-size:12px">
+                    <tr>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ProjName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].MeetingTopic)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].MeetingType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].HostDept)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].HostPerson)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReviewExpert)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Participants)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].MeetingDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].NoticeNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReviewConclusion)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].MeetingConclusion)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Stat)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                        </th>
+                    </tr>
 
-        <th>
-            @Html.DisplayNameFor(model => model.MeetingType)
-        </th>
+                    @foreach (var item in Model.ResultList)
+                    {
+                        var trid = "resultTR" + item.MeetingID;
+                        <tr id="@trid">
+                            <td>
+                                @Html.ActionLink("编辑", "Edit", new { id = item.MeetingID }) |
+                                <a href="#" onclick="doDelete('@item.MeetingID')">删除</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MeetingTopic)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MeetingType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HostDept)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HostPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewExpert)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Participants)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MeetingDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NoticeNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewConclusion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MeetingConclusion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Stat)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>
+                        </tr>
+                    }
 
-        <th>
-            @Html.DisplayNameFor(model => model.MeetingDate)
-        </th>
+                </table>
+                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ProjMeeting>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+            }
+        }
+    </div>
+</div>
 
-        <th>
-            @Html.DisplayNameFor(model => model.ReviewConclusion)
-        </th>
-
-        <th>
-            @Html.DisplayNameFor(model => model.Stat)
-        </th>
-
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjName)
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.MeetingTopic)
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.MeetingType)
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.MeetingDate)
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.ReviewConclusion)
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.Stat)
-        </td>
-
-        <td>
-            @Html.ActionLink("编辑", "Edit", new { id=item.MeetingID }) |
-            @Html.ActionLink("详情", "Details", new { id=item.MeetingID }) |
-			<a href="#" onclick="doDelete('@item.MeetingID')">删除</a>
-        </td>
-
-    </tr>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }
-
-</table>
-
-
-

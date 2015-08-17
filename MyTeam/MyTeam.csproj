@@ -150,6 +150,7 @@
     <Compile Include="Controllers\ProjMeetingController.cs" />
     <Compile Include="Controllers\ProjSurvController.cs" />
     <Compile Include="Controllers\ReqManageController.cs" />
+    <Compile Include="Controllers\ReqTrackController.cs" />
     <Compile Include="Controllers\SysManageController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VerController.cs" />
@@ -162,6 +163,8 @@
       <DependentUpon>201508030152034_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Proj\ProjMeetingResult.cs" />
+    <Compile Include="Models\Proj\ProjMeetingQuery.cs" />
     <Compile Include="Models\Proj\ProjMeeting.cs" />
     <Compile Include="Models\Proj\ProjSurv.cs" />
     <Compile Include="Models\Proj\Proj.cs" />
@@ -210,14 +213,12 @@
     <Content Include="CodeTemplates\AddView\CSHTML\Edit.tt" />
     <Content Include="CodeTemplates\AddView\CSHTML\Empty.tt" />
     <Content Include="CodeTemplates\AddView\CSHTML\List.tt" />
-    <Content Include="Content\templates\baobiaoReportT.xlsx" />
-    <Content Include="Content\templates\baobiaoSecondReportT.xlsx" />
     <Content Include="Content\templates\OutPoolReportT.xlsx" />
-    <Content Include="Content\templates\huiyiReportT.xlsx" />
+    <Content Include="Content\templates\ProjMeetingReportT.xlsx" />
     <Content Include="Content\templates\ReqReportT.xlsx" />
-    <Content Include="Content\templates\xuqiuReportT.xlsx" />
+    <Content Include="Content\templates\BusiReqReportT.xlsx" />
     <Content Include="Content\templates\WeekReportT.xlsx" />
-    <Content Include="Content\templates\zhuangtaiReportT.xlsx" />
+    <Content Include="Content\templates\ProjReportT.xlsx" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -294,9 +295,6 @@
     <Content Include="Views\WeekReport\EditDetail.cshtml" />
     <Content Include="Views\Proj\Edit.cshtml" />
     <Content Include="Views\Proj\Details.cshtml" />
-    <Content Include="Views\ReqSurv\Create.cshtml" />
-    <Content Include="Views\ReqSurv\Index.cshtml" />
-    <Content Include="Views\ReqSurv\Edit.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\ReqManage\OutPool.cshtml" />
     <Content Include="Views\ReqManage\View1.cshtml" />
@@ -304,6 +302,13 @@
     <Content Include="Views\ProjMeeting\Details.cshtml" />
     <Content Include="Views\ProjMeeting\Edit.cshtml" />
     <Content Include="Views\ProjMeeting\Index.cshtml" />
+    <Content Include="Views\ProjSurv\Create.cshtml" />
+    <Content Include="Views\ProjSurv\Edit.cshtml" />
+    <Content Include="Views\ProjSurv\Index.cshtml" />
+    <Content Include="Views\ReqTrack\Create.cshtml" />
+    <Content Include="Views\ReqTrack\Details.cshtml" />
+    <Content Include="Views\ReqTrack\Edit.cshtml" />
+    <Content Include="Views\ReqTrack\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

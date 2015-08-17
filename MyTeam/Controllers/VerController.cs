@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MyTeam.Utils;
 using MyTeam.Models;
 using System.Text;
+using PagedList;
 
 namespace MyTeam.Controllers
 {
@@ -17,9 +18,13 @@ namespace MyTeam.Controllers
     {
         //
         // GET: /Ver/
-        public ActionResult Index()
+       
+
+        public ActionResult Index(int pageNum = 1)
         {
-            List<Ver> ls = dbContext.Vers.ToList();
+            // 分页
+            List<Ver> ls1 = dbContext.Vers.ToList();
+            var ls = ls1.ToPagedList(pageNum, Constants.PAGE_SIZE);
             return View(ls);
         }
 
