@@ -84,25 +84,5 @@ namespace MyTeam.Models
 
             set { this.ProjName = value; }
         }
-
-        public IPagedList<ProjMeeting> ResultList { get; set; }
-
-        public string ToQueryString()
-        {
-            return new StringBuilder("&ProjID=").Append(this.ProjID)
-                .Append("&MeetingTopic=").Append(this.MeetingTopic)
-                .Append("&MeetingType=").Append(this.MeetingType)
-                .Append("&HostDept=").Append(this.HostDept)
-                .Append("&HostPerson=").Append(this.HostPerson)
-                .Append("&ReviewExpert=").Append(this.ReviewExpert)
-                .Append("&Participants=").Append(this.Participants)
-                .Append("&MeetingTopic=").Append(this.MeetingDate)
-                .Append("&MeetingType=").Append(this.NoticeNo)
-                .Append("&HostDept=").Append(this.ReviewConclusion)
-                .Append("&HostPerson=").Append(this.MeetingConclusion)
-                .Append("&ReviewExpert=").Append(this.Stat)
-                .Append("&Participants=").Append(this.Remark)
-                .Append("&isQuery=True").ToString();
-        }
     }
 }

@@ -40,6 +40,8 @@
         public DbSet<ProjMeeting> ProjMeetings { get; set; }
 
         public DbSet<ReqTrack> ReqTracks { get; set; }
+
+        public DbSet<BusiReq> BusiReqs { get; set; }
   
     }
 

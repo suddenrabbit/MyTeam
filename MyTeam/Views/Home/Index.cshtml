@@ -1,16 +1,20 @@
 ﻿@{
     ViewBag.Title = "欢迎";
 }
-
 <div class="jumbotron">
-    <h2>零售团队管理系统</h2>
-    
-    <h3>常用任务：</h3>
-    <ul>
+    <h1 style="font-weight:bold">零售团队管理系统<span style="font-size:12px">(Beta)</span></h1>
+</div>
+
+<fieldset>
+    <legend>你好。当前尚未出池的需求情况：</legend>
+</fieldset>
+
+<fieldset>
+    <legend>常用任务</legend>
+    <ul style="font-size:16px" class="list-inline">
         <li>@Html.ActionLink("维护需求入池", "MainInPool", "ReqManage")</li>
         <li>@Html.ActionLink("维护需求管理", "Index", "ReqManage")</li>
         <li>@Html.ActionLink("周报填写", "MainIndex", "WeekReport")</li>
-        <li>@Html.ActionLink("周报导出", "Export", "WeekReport")</li>        
+        <li>@Html.ActionLink("周报导出", "Export", "WeekReport")</li>
     </ul>
-    
-</div>
+</fieldset>
