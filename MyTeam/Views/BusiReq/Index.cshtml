@@ -1,0 +1,192 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model MyTeam.Models.BusiReqQuery
+@{
+    ViewBag.Title = "业务需求管理";
+}
+<h2>@ViewBag.Title。</h2>
+
+<script>
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal();
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/BusiReq/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal();
+            }
+        });
+    }
+
+    function doExport() {
+        var projID = $('#ProjID').val();
+        if (projID == 0) {
+            alert("导出跟踪表时项目不能选择【全部】！");
+            return;
+        }
+        window.location.href = "/BusiReq/Export/" + projID;
+    }
+</script>
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "BusiReq", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <input type="hidden" name="isQuery" value="True" />
+            <table class="table table-condensed query-table">
+                <tr>
+                    <td>@Html.LabelFor(model => model.ProjID, new { @class = "control-label" })</td>
+                    <td>
+                        <!--项目下拉选择-->
+                        @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
+                    </td>
+                    <td>
+                        <input type="submit" value="查询" class="btn btn-primary" />
+                        @Html.ActionLink("添加记录", "Create", null, new { @class = "btn btn-default" })
+                        @Html.ActionLink("批量导入", "Import", null, new { @class = "btn btn-default" })
+                        <a href="#" class="btn btn-default" onclick="doExport()">导出需求变更跟踪表</a>
+                    </td>
+                </tr>
+            </table>
+
+        }
+    </div>
+    <div class="col-md-12">
+        @if (Model.ResultList != null)
+        {
+            if (Model.ResultList.Count < 1)
+            {
+                <p class="text-warning">没有符合条件的结果！</p>
+            }
+            else
+            {
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].BusiReqNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].BusiReqName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Desc)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].CreateDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Stat)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                        </th>
+                        <th></th>
+                    </tr>
+                    @foreach (var item in Model.ResultList)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BusiReqNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BusiReqName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Desc)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreateDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Stat)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("编辑", "Edit", new { id = item.BRID })
+                                | <a href="#" onclick="doDelete('@item.BRID','@item.BusiReqNo')">删除</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <!--分页-->
+                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.BusiReq>,
+    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+            }
+        }
+    </div>
+</div>
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

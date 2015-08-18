@@ -20,7 +20,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/Home/Index">零售团队管理系统</a>
+                <a class="navbar-brand" href="/Home/Index" style="font-weight:bold">零售团队管理系统</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -68,6 +68,7 @@
                             <li><a href="/ProjSurv">项目调研管理</a></li>
                             <li><a href="/ProjMeeting">项目会议管理</a></li>
                             <li><a href="/ReqTrack">业需软需状态跟踪管理</a></li>
+                            <li><a href="/BusiReq">业务需求管理</a></li>
                         </ul>
                     </li>
                     @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
@@ -92,7 +93,8 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Made by Zhou Meng</p>
+            <p class="text-left">&copy; @DateTime.Now.Year - 兴业银行信息科技部需求中心零售团队</p>
+            <p class="text-right" style="font-size:12px; font-style:italic">Made by ZhouMeng & ZhangJuan</p>
         </footer>
     </div>
 </body>

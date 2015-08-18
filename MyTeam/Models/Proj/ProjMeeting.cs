@@ -70,6 +70,19 @@ namespace MyTeam.Models
         public String Remark { get; set; }
 
         [NotMapped]
-        public string ProjName { get; set; }
+        public string ProjName
+        {
+            get
+            {
+                // ProjID转name
+                using (MyTeamContext dbContext = new MyTeamContext())
+                {
+                    var p = dbContext.Projs.ToList().Find(a => a.ProjID == this.ProjID);
+                    return p == null ? "未知" : p.ProjName;
+                }
+            }
+
+            set { this.ProjName = value; }
+        }
     }
 }

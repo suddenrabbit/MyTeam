@@ -145,6 +145,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BusiReqController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProjController.cs" />
     <Compile Include="Controllers\ProjMeetingController.cs" />
@@ -165,6 +166,9 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Proj\ProjResult.cs" />
     <Compile Include="Models\Proj\ProjQuery.cs" />
+    <Compile Include="Models\Proj\BusiReqExcel.cs" />
+    <Compile Include="Models\Proj\BusiReqQuery.cs" />
+    <Compile Include="Models\Proj\BusiReq.cs" />
     <Compile Include="Models\Proj\ProjMeetingResult.cs" />
     <Compile Include="Models\Proj\ProjMeetingQuery.cs" />
     <Compile Include="Models\Proj\ProjMeeting.cs" />
@@ -311,6 +315,9 @@
     <Content Include="Views\ReqTrack\Details.cshtml" />
     <Content Include="Views\ReqTrack\Edit.cshtml" />
     <Content Include="Views\ReqTrack\Index.cshtml" />
+    <Content Include="Views\BusiReq\Create.cshtml" />
+    <Content Include="Views\BusiReq\Edit.cshtml" />
+    <Content Include="Views\BusiReq\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
