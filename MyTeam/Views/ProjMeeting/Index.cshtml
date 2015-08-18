@@ -7,21 +7,40 @@
 <h2>@ViewBag.Title。</h2>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
-    function doDelete(id) {
-        if (confirm("确定要删除？")) {
-            var url = "/ProjMeeting/Delete/" + id;
-            $.ajax({
-                type: 'POST',
-                url: url,
-                success: function (msg) {
-                    alert(msg);
-                    $("#resultTR" + id).remove();
-                },
-                error: function () {
-                    alert("处理失败，请联系管理员");
-                }
-            });
+    function check() {
+        var a1 = document.getElementById('MeetingDateStart').value;
+        var a2 = document.getElementById('MeetingDateEnd').value;
+
+        if ((a1 != '' && a2 == '') || (a1 == '' && a2 != '')) {
+            alert("会议日期必须提供时间区间！");
+        } else {
+            $('#myForm').submit();
         }
+    }
+
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal();
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/ProjMeeting/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal();
+            }
+        });
     }
 
     // 导出excel
@@ -60,13 +79,12 @@
                     <td colspan="3" class="form-inline">
                         <input id="MeetingDateStart" name="MeetingDateStart" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.MeetingDateStart" placeholder="点击选择日期" />
                         -
-                        <input id="MeetingDateEnd" name="MeetingDateEnd" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.MeetingDateStart" placeholder="点击选择日期" />
-
+                        <input id="MeetingDateEnd" name="MeetingDateEnd" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.MeetingDateEnd" placeholder="点击选择日期" />
                     </td>
                 </tr>
                 <tr>
                     <td colspan="4">
-                        <input type="submit" value="查询" class="btn btn-primary" />
+                        <input type="button" value="查询" class="btn btn-primary" onclick="check()"/>
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
                         <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/ProjMeeting/Create'" />
                     </td>
@@ -105,25 +123,7 @@
                             @Html.DisplayNameFor(model => model.ResultList[0].ReviewExpert)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].Participants)
-                        </th>
-                        <th>
                             @Html.DisplayNameFor(model => model.ResultList[0].MeetingDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].NoticeNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReviewConclusion)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].MeetingConclusion)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].Stat)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
                         </th>
                     </tr>
 
@@ -133,7 +133,8 @@
                         <tr id="@trid">
                             <td>
                                 @Html.ActionLink("编辑", "Edit", new { id = item.MeetingID }) |
-                                <a href="#" onclick="doDelete('@item.MeetingID')">删除</a>
+                                @Html.ActionLink("详情", "Details", new { id = item.MeetingID }) |
+                                <a href="#" onclick="doDelete('@item.MeetingID','@item.ProjName 的项目会议记录')">删除</a>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ProjName)
@@ -154,25 +155,7 @@
                                 @Html.DisplayFor(modelItem => item.ReviewExpert)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Participants)
-                            </td>
-                            <td>
                                 @Html.DisplayFor(modelItem => item.MeetingDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.NoticeNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReviewConclusion)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MeetingConclusion)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Stat)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Remark)
                             </td>
                         </tr>
                     }
@@ -187,3 +170,56 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

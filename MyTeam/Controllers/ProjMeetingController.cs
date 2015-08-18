@@ -39,7 +39,11 @@ namespace MyTeam.Controllers
                 // 若isExcel为true，导出Excel
                 if (isExcel)
                 {
+                    string targetFileName = "项目会议查询_" + DateTime.Now.ToString("yyyyMMddHHmmss");
 
+                    // 需要对list修改以适应Excel模板
+                    List<ProjMeetingResult> excelList = this.GetExcelList(ls);
+                    return this.makeExcel<ProjMeetingResult>("ProjMeetingReportT", targetFileName, excelList);
                 }
                 else
                 {
@@ -198,89 +202,35 @@ namespace MyTeam.Controllers
             }
         }
 
-
-        /*
-         * 7、出池计划查询与导出
-         */
-        public ActionResult OutPool(OutPoolQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
+        /// <summary>
+        /// 生成用于Excel输出的list
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        private List<ProjMeetingResult> GetExcelList(IQueryable<ProjMeeting> list)
         {
-            if (isQuery)
+            List<ProjMeetingResult> rl = new List<ProjMeetingResult>();
+            foreach (ProjMeeting s in list)
             {
-                // 根据query条件查询结果
-                var ls = from a in dbContext.Reqs
-                         select a;
-                if (query.SysId != 0)
+                ProjMeetingResult ProjMeetingExcel = new ProjMeetingResult()
                 {
-                    ls = ls.Where(p => p.SysId == query.SysId);
-                }
-                if (!string.IsNullOrEmpty(query.Version))
-                {
-                    // 版本号
-                    string[] vers = query.Version.Split(',');
-                    ls = from b in ls
-                         where vers.Contains(b.Version)
-                         select b;
-                }
-                if (!string.IsNullOrEmpty(query.MaintainYear))
-                {
-                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.MaintainYear);
-                }
-
-                // 将查询结果转换为OutPoolResult
-                List<OutPoolResult> resultList = new List<OutPoolResult>();
-                foreach (Req req in ls)
-                {
-                    OutPoolResult res = new OutPoolResult()
-                    {
-                        AcptMonth = req.AcptDate.Value.ToString("yyyy/M"),
-                        SysName = req.SysName,
-                        Version = req.Version,
-                        ReqNo = req.ReqNo,
-                        ReqDetailNo = req.ReqDetailNo,
-                        ReqReason = req.ReqReason,
-                        ReqDesc = req.ReqDesc,
-                        DevWorkload = req.DevWorkload,
-                        ReqDevPerson = req.ReqDevPerson,
-                        ReqBusiTestPerson = req.ReqBusiTestPerson,
-                        ReqType = req.ReqType,
-                        PlanRlsDate = req.PlanRlsDate,
-                        RlsDate = req.RlsDate,
-                        Remark = req.Remark
-                    };
-                    resultList.Add(res);
-                }
-                // 若isExcel为true，导出Excel
-                if (isExcel)
-                {
-                    string targetFileName = "零售条线出池计划";
-                    if (query.SysId != 0)
-                        targetFileName += "_" + resultList[0].SysName;
-                    if (!string.IsNullOrEmpty(query.Version))
-                        targetFileName += "_" + query.Version;
-                    if (!string.IsNullOrEmpty(query.MaintainYear))
-                        targetFileName += "_" + query.MaintainYear;
-                    return this.makeExcel<OutPoolResult>("OutPoolReportT", targetFileName, resultList);
-                }
-                else
-                {
-                    // 分页
-                    query.ResultList = resultList.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
-                }
+                    ProjName = s.ProjName,
+                    MeetingTopic = s.MeetingTopic,
+                    MeetingType = s.MeetingType,
+                    HostDept = s.HostDept,
+                    HostPerson = s.HostPerson,
+                    ReviewExpert = s.ReviewExpert,
+                    Participants = s.Participants,
+                    MeetingDate = s.MeetingDate,
+                    NoticeNo = s.NoticeNo,
+                    ReviewConclusion = s.ReviewConclusion,
+                    MeetingConclusion = s.MeetingConclusion,
+                    Stat = s.Stat,
+                    Remark = s.Remark
+                };
+                rl.Add(ProjMeetingExcel);
             }
-            else
-            {
-                query = new OutPoolQuery();
-            }
-
-            // 系统列表下拉
-            List<RetailSystem> ls1 = this.GetSysList();
-            // 加上“全部”
-            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysId);
-            ViewBag.SysList = sl1;
-
-            return View(query);
+            return rl;
         }
-
     }
 }

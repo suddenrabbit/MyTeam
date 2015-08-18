@@ -163,6 +163,8 @@
       <DependentUpon>201508030152034_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Proj\ProjResult.cs" />
+    <Compile Include="Models\Proj\ProjQuery.cs" />
     <Compile Include="Models\Proj\ProjMeetingResult.cs" />
     <Compile Include="Models\Proj\ProjMeetingQuery.cs" />
     <Compile Include="Models\Proj\ProjMeeting.cs" />

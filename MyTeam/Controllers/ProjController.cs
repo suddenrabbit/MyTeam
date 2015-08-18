@@ -17,15 +17,53 @@ namespace MyTeam.Controllers
     {
         //
         // GET: /Proj/
-
-        public ActionResult Index(int pageNum = 1)
+        public ActionResult Index(ProjQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            // 分页
-            List<Proj> ls = dbContext.Projs.ToList();
-            var ls1 = ls.ToPagedList(pageNum, Constants.PAGE_SIZE);
-            return View(ls1);
-        } 
+            if (isQuery)
+            {
+                var ls = from a in dbContext.Projs
+                         select a;
 
+                if (!string.IsNullOrEmpty(query.ProAcptDate))
+                {
+                    DateTime ProAcptDate = DateTime.Parse(query.ProAcptDate);
+                    ls = ls.Where(p => p.ProAcptDate == ProAcptDate);
+                }
+                if (!string.IsNullOrEmpty(query.RulesPublishDate))
+                {
+                    DateTime RulesPublishDate = DateTime.Parse(query.RulesPublishDate);
+                    ls = ls.Where(p => p.RulesPublishDate == RulesPublishDate);
+                }
+                var result = ls.ToList();
+                // 若isExcel为true，导出Excel
+                if (isExcel)
+                {
+                    string targetFileName = "项目状态跟踪表查询_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+
+                    // 需要对list修改以适应Excel模板
+                    List<ProjResult> excelList = this.GetExcelList(ls);
+                    return this.makeExcel<ProjResult>("ProjReportT", targetFileName, excelList , 2);
+                }
+                else
+                {
+                    // 分页
+                    query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
+                }
+            }
+            else
+            {
+                query = new ProjQuery();
+            }
+
+            // 需求分析师显示用户名不是显示ID
+            List<User> userLs = this.GetUserList();
+
+            // 是否跟踪需求变更的正常显示
+
+            return View(query);
+
+        }
+        
         // GET: /Proj/Details/5
 
         public ActionResult Details(int id)
@@ -165,6 +203,63 @@ namespace MyTeam.Controllers
             {
                 return "出错了: " + e1.Message;
             }
+        }
+
+        /// <summary>
+        /// 生成用于Excel输出的list
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        private List<ProjResult> GetExcelList(IQueryable<Proj> list)
+        {
+            List<ProjResult> rl = new List<ProjResult>();
+
+            List<User> userLs = this.GetUserList();
+            User user = new User();
+            
+            foreach (Proj s in list)
+            {
+                user = userLs.Find(a => a.UID == s.ReqAnalysisID);
+
+                ProjResult ProjResult = new ProjResult()
+                {
+                    ProjName = s.ProjName,
+                    ProjNo = s.ProjNo,
+                    HostDept = s.HostDept,
+                    ProjLevel = s.ProjLevel,
+                    IsReqTrack = (s.IsReqTrack) ? "是" : "否",
+                    ReqAnalysisID = user.Realname,
+                    BusiPerson = s.BusiPerson,
+                    ProjManager = s.ProjManager,
+                    Architect = s.Architect,
+                    ProAcptDate = s.ProAcptDate,
+                    SurveyGroupFoundDate = s.SurveyGroupFoundDate,
+                    SurveyFinishDate = s.SurveyFinishDate,
+                    SurveyRemark = s.SurveyRemark,
+                    OutlineWriter = s.OutlineWriter,
+                    OutlineStartDate = s.OutlineStartDate,
+                    OutlineEndDate = s.OutlineEndDate,
+                    OutlineAuditPerson = s.OutlineAuditPerson,
+                    OutlinePublishDate = s.OutlinePublishDate,
+                    OutlineRemark = s.OutlineRemark,
+                    ReqWriter = s.ReqWriter,
+                    ReqStartDate = s.ReqStartDate,
+                    ReviewAcptDate = s.ReviewAcptDate,
+                    ReviewMeetingDate = s.ReviewMeetingDate,
+                    ReqPublishDate = s.ReqPublishDate,
+                    ReqRemark = s.ReqRemark,
+                    RulesStartDate = s.RulesStartDate,
+                    RulesPublishDate = s.RulesPublishDate,
+                    RulesRemark = s.RulesRemark,
+                    ProjCheckAcptDate = s.ProjCheckAcptDate,
+                    ProjPublishDate = s.ProjPublishDate,
+                    CheckResult = s.CheckResult,
+                    Remark = s.Remark,
+                    WorkTimeAtt = s.WorkTimeAtt
+                };
+                rl.Add(ProjResult);
+            }
+            return rl;
         }
     }
 }

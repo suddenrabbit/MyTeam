@@ -1,18 +1,11 @@
 ﻿@using PagedList
 @using PagedList.Mvc
-@model IEnumerable<MyTeam.Models.Proj>
-
+@model MyTeam.Models.ProjQuery
 @{
     ViewBag.Title = "项目状态跟踪管理";
 }
-
 <h2>@ViewBag.Title。</h2>
-
-<p>
-    @Html.ActionLink("添加项目状态跟踪", "Create", null, new { @class= "btn btn-primary"})
-</p>
-
-<!-- Ajax删除 -->
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     function doDelete(id, name) {
         $('#toDelName').html(name);
@@ -38,69 +31,121 @@
             }
         });
     }
+    
+
+    // 导出excel
+    function doExport() {
+        $('#isExcel').val(true);
+        $('#myForm').submit();
+        $('#isExcel').val(false);
+    }
 </script>
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "Proj", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.ProjName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProjNo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.HostDept)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ReqAnalysisID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.BusiPerson)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProjManager)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Architect)
-        </th>
-        <th></th>
-    </tr>
+            <input type="hidden" name="isQuery" value="True" />
+            <input type="hidden" id="isExcel" name="isExcel" value="False" />
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.HostDept)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReqAnalysisName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BusiPerson)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjManager)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Architect)
-        </td>
-        <td>
-            @Html.ActionLink("编辑", "Edit", new { id=item.ProjID }) |
-            @Html.ActionLink("详情", "Details", new { id = item.ProjID }) |
-			<a href="#" onclick="doDelete('@item.ProjID','@item.ProjName 的项目状态记录')">删除</a>
-        </td>
-    </tr>
+            <table class="table table-condensed query-table">
+                <tr>
+                    <td><label class="control-label">项目调研受理日期</label></td>
+                    <td colspan="3" class="form-inline">
+                        <input id="ProAcptDate" name="ProAcptDate" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.ProAcptDate" placeholder="点击选择日期" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><label class="control-label">项目章程发布日期</label></td>
+                    <td colspan="3" class="form-inline">
+                        <input id="RulesPublishDate" name="RulesPublishDate" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.RulesPublishDate" placeholder="点击选择日期" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="submit" value="查询" class="btn btn-primary" />
+                        <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
+                        <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/Proj/Create'" />
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+    <div class="col-md-12">
+        @if (Model.ResultList != null)
+        {
+            if (Model.ResultList.Count < 1)
+            {
+                <p class="text-warning">没有符合条件的结果！</p>
+            }
+            else
+            {
+                <table class="table table-condensed" style="font-size:12px">
+                    <tr>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ProjName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ProjNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].HostDept)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ProjLevel)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].IsReqTrack)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqAnalysisID)
+                        </th>
+                        
+                    </tr>
+
+                    @foreach (var item in Model.ResultList)
+                    {
+                        var trid = "resultTR" + item.ProjID;
+                        <tr id="@trid">
+                            <td>
+                                @Html.ActionLink("编辑", "Edit", new { id = item.ProjID }) |
+                                @Html.ActionLink("详情", "Details", new { id = item.ProjID }) |
+                                <a href="#" onclick="doDelete('@item.ProjID','@item.ProjName 的项目状态记录')">删除</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HostDept)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjLevel)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsReqTrack)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqAnalysisName)
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Proj>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }
-</table>
-
-<!--分页-->
-@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.Proj>,
-generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -154,4 +199,3 @@ generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
         </div>
     </div>
 </div>
-
