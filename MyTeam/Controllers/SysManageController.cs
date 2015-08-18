@@ -44,25 +44,25 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Create
 
         [HttpPost]
-        public ActionResult Create(RetailSystem sys)
+        public ContentResult Create(RetailSystem sys)
         {            
             try
             {
                 if (ModelState.IsValid)
                 {
-
                     dbContext.RetailSystems.Add(sys);
                     dbContext.SaveChanges();
                     // 更新内存
                     this.Update();
                 }
-                return RedirectToAction("Index");
+                return Content("<p class='alert alert-success'>添加成功</p>");
+                
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return Content("<p class='alert alert-danger'>出错了: " + e1.Message + "</p>");
             }
+
         }
 
         //
@@ -74,10 +74,8 @@ namespace MyTeam.Controllers
 
             if(sys==null)
             {
-                ModelState.AddModelError("", "无此记录！");
                 return View();
             }
-
 
             // 用户列表
             SelectList sl = new SelectList(this.GetUserList(), "UID", "Realname", sys.ReqPersonID); // 选中当前值
@@ -91,7 +89,7 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(RetailSystem sys)
+        public ContentResult Edit(RetailSystem sys)
         {            
             try
             {
@@ -100,15 +98,11 @@ namespace MyTeam.Controllers
                 // 更新内存
                 this.Update();
 
-                return RedirectToAction("Index");
+                return Content("<p class='alert alert-success'>更新成功</p>");
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                // 为了正常显示页面，重新生成select list
-                // 用户列表
-                SelectList sl = new SelectList(this.GetUserList(), "UID", "Realname", sys.ReqPersonID);
-                return View(sys);
+                return Content("<p class='alert alert-danger'>出错了: " + e1.Message + "</p>");
             }
         }
 

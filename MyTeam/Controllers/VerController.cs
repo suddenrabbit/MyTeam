@@ -17,8 +17,7 @@ namespace MyTeam.Controllers
     public class VerController : BaseController
     {
         //
-        // GET: /Ver/
-       
+        // GET: /Ver/     
 
         public ActionResult Index(int pageNum = 1)
         {
@@ -61,9 +60,8 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Create
 
         [HttpPost]
-        public ActionResult Create(Ver ver)
-        {
-         
+        public string Create(Ver ver)
+        {        
             try
             {
                 if (ModelState.IsValid)
@@ -72,18 +70,25 @@ namespace MyTeam.Controllers
                     dbContext.SaveChanges();
                     
                 }
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>新增成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 
 
         public ActionResult Edit(int id)
         {
+            List<Ver> ls = dbContext.Vers.ToList();
+            Ver ver = ls.Find(a => a.VerID == id);
+
+            if (ver == null)
+            {
+                return View();
+            }
+
             List<RetailSystem> ls1 = this.GetSysList();
 
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
@@ -104,14 +109,6 @@ namespace MyTeam.Controllers
 
             ViewBag.ReqPersonList = sl2;
 
-            List<Ver> ls = dbContext.Vers.ToList();
-            Ver ver = ls.Find(a => a.VerID == id);
-
-            if (ver == null)
-            {
-                ModelState.AddModelError("", "不存在该年度版本计划！");
-                ver = new Ver();
-            }
             return View(ver);
         }
 
@@ -119,20 +116,18 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Ver ver)
-        {
-            
+        public string Edit(Ver ver)
+        {            
             try
             {
                 dbContext.Entry(ver).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>更新成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 

@@ -65,29 +65,28 @@ namespace MyTeam.Controllers
         // 普通用户修改自己的密码页面
         public ActionResult ChangePsw()
         {
-            return View();
-        }
-
-        // 修改密码
-        [HttpPost]
-        public ActionResult ChangePsw(ChangePsw changePsw)
-        {
-
             User user = this.GetSessionCurrentUser();
             if (user == null)
             {
                 return RedirectToAction("Login", "User", new { ReturnUrl = "/User/ChangePsw" });
             }
+            return View();
+        }
+
+        // 修改密码:ajax调用
+        [HttpPost]
+        public ContentResult ChangePsw(ChangePsw changePsw)
+        {
+            User user = this.GetSessionCurrentUser();   
 
             user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(changePsw.NewPsw, "MD5");
             dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
             dbContext.SaveChanges();
-            // 提示更新成功
-            ViewBag.Message = "您已成功修改密码";
+
             // 更新内存
             this.Update();
 
-            return View();
+            return Content("<p class='alert alert-success'>您已成功修改密码</p>", "text/html");
         }
 
         // 管理页面
@@ -118,9 +117,9 @@ namespace MyTeam.Controllers
             return View();
         }
 
-        // 新增用户
+        // 新增用户:ajax调用
         [HttpPost]
-        public ActionResult Create(User user)
+        public ContentResult Create(User user)
         {
             try
             {
@@ -132,8 +131,7 @@ namespace MyTeam.Controllers
                     var ls = this.GetUserList().Where(a => a.Username == user.Username);
                     if (ls.Count() > 0)
                     {
-                        ModelState.AddModelError("", "该用户名已存在，无法添加");
-                        return View();
+                        return Content("<p class='alert alert-danger'>该用户名已存在，无法添加！</p>", "text/html");
                     }
                     else
                     {
@@ -144,12 +142,11 @@ namespace MyTeam.Controllers
                     }
 
                 }
-                return RedirectToAction("Index");
+                return Content("<p class='alert alert-success'>添加成功！</p>", "text/html");
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View(user);
+                return Content("<p class='alert alert-danger'>出错了: " + e1.Message + "</p>", "text/html");
             }
 
         }
@@ -186,7 +183,7 @@ namespace MyTeam.Controllers
 
             if(user == null)
             {
-                ModelState.AddModelError("", "无此用户");
+                ViewBag.ErrMsg = "无此用户！";
             }
 
             return View(user);
@@ -194,7 +191,7 @@ namespace MyTeam.Controllers
 
         // 更新用户信息
         [HttpPost]
-        public ActionResult Edit(User user)
+        public ContentResult Edit(User user)
         {
             try
             {
@@ -202,16 +199,16 @@ namespace MyTeam.Controllers
                 {
                     dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
-                    ViewBag.Message = "修改成功";
+                    
                     // 更新内存
                     this.Update();
                 }
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
+                return Content("<p class='alert alert-danger'>出错了: " + e1.Message + "</p>", "text/html");
             }
-            return View(user);
+            return Content("<p class='alert alert-success'>修改成功！</p>", "text/html");
         }
 
     }

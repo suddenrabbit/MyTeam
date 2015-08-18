@@ -303,7 +303,6 @@
     <Content Include="Views\Proj\Details.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\ReqManage\OutPool.cshtml" />
-    <Content Include="Views\ReqManage\View1.cshtml" />
     <Content Include="Views\ProjMeeting\Create.cshtml" />
     <Content Include="Views\ProjMeeting\Details.cshtml" />
     <Content Include="Views\ProjMeeting\Edit.cshtml" />

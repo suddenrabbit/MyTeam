@@ -17,7 +17,8 @@
 </script>
 <div class="row">
     <div class="col-md-8">
-        @using (Html.BeginForm("Create", "Ver", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Create", "Ver", null, new AjaxOptions { UpdateTargetId = "info" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()

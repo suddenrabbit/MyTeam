@@ -6,27 +6,23 @@
 
 <h2>@ViewBag.Title。</h2>
 
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>
+    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+    return;
+}
+
 <div class="row">
     <div class="col-md-8">
-
-        @using (Html.BeginForm("Edit", "SysManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Edit", "SysManage", null, new AjaxOptions { UpdateTargetId = "info" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            if (Model.SysID == 0)
-            {
-                <div class="form-group">
-                    <div class="col-md-2">
-                        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
-                    </div>
-                </div>
-            }
-
-            else 
-            {
-                @Html.HiddenFor(model => model.SysID);
+            @Html.HiddenFor(model => model.SysID);
 
             <div class="form-group">
                 @Html.LabelFor(model => model.SysNO, new { @class = "col-md-2 control-label" })
@@ -105,11 +101,11 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="新增" class="btn btn-primary" />
+                    <input type="submit" value="保存" class="btn btn-primary" />
                     @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
                 </div>
             </div>
-            }
+
 
         }
 

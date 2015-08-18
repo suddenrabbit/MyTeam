@@ -13,7 +13,7 @@ namespace MyTeam.Controllers
     public class ProjSurvController : BaseController
     {
         //
-        // GET: /ReqSurvey/
+        // GET: /ProjSurv/
 
         public ActionResult Index(int pageNum = 1)
         {
@@ -31,15 +31,7 @@ namespace MyTeam.Controllers
         }
 
         //
-        // GET: /ReqSurvey/Details/5
-
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        //
-        // GET: /ReqSurvey/Create
+        // GET: /ProjSurv/Create
 
         public ActionResult Create()
         {
@@ -57,10 +49,10 @@ namespace MyTeam.Controllers
         }
 
         //
-        // POST: /ReqSurvey/Create
+        // POST: /ProjSurv/Create
 
         [HttpPost]
-        public ActionResult Create(ProjSurv reqSurv)
+        public string Create(ProjSurv reqSurv)
         {
             try
             {
@@ -69,20 +61,26 @@ namespace MyTeam.Controllers
                     dbContext.ProjSurvs.Add(reqSurv);
                     dbContext.SaveChanges();
                 }
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>新增成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 
         //
-        // GET: /ReqSurvey/Edit/5
+        // GET: /ProjSurv/Edit/5
 
         public ActionResult Edit(int id)
         {
+            List<ProjSurv> ls2 = dbContext.ProjSurvs.ToList();
+            ProjSurv reqSur = ls2.Find(a => a.SurvID == id);
+
+            if (reqSur == null)
+            {
+                return View();
+            }
 
             //项目列表
             List<Proj> ls1 = dbContext.Projs.ToList();
@@ -93,40 +91,31 @@ namespace MyTeam.Controllers
 
             // 调研方式列表
             ViewBag.SurveyWayList = MyTools.GetSelectList(Constants.SurveyWayList);
-
-            List<ProjSurv> ls2 = dbContext.ProjSurvs.ToList();
-            ProjSurv reqSur = ls2.Find(a => a.SurvID == id);
-
-            if (reqSur == null)
-            {
-                ModelState.AddModelError("", "不存在该需求调研记录！");
-            }
-
+            
             return View(reqSur);
         }
 
         //
-        // POST: /ReqSurvey/Edit/5
+        // POST: /ProjSurv/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(ProjSurv reqSurv)
+        public string Edit(ProjSurv reqSurv)
         {
             try
             {
                 dbContext.Entry(reqSurv).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>更新成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 
         //
-        // GET: /ReqSurvey/Delete/5
+        // GET: /ProjSurv/Delete/5
 
         public string Delete(int id)
         {

@@ -437,11 +437,11 @@ namespace MyTeam.Controllers
                     dbContext.SaveChanges();
                 }
 
-                return "新增成功";
+                return "<p class='alert alert-success'>新增成功</p>";
             }
             catch (Exception e1)
             {
-                return "出错了: " + e1.Message;
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 
@@ -453,7 +453,6 @@ namespace MyTeam.Controllers
             Req req = dbContext.Reqs.ToList().Find(a => a.RID == id);
             if (req == null)
             {
-                ModelState.AddModelError("", "无此记录");
                 return View();
             }
 
@@ -485,19 +484,18 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Req req)
+        public string Edit(Req req)
         {
             try
             {
                 dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>更新成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 

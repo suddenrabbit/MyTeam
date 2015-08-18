@@ -74,8 +74,7 @@ namespace MyTeam.Controllers
 
             if (proj == null)
             {
-                ModelState.AddModelError("", "不存在该年度版本计划！");
-                proj = new Proj();
+                return View();
             }
             return View(proj);
         }
@@ -109,7 +108,7 @@ namespace MyTeam.Controllers
         // POST: /Proj/Create
 
         [HttpPost]
-        public ActionResult Create(Proj proj)
+        public string Create(Proj proj)
         {
             try
             {
@@ -118,12 +117,11 @@ namespace MyTeam.Controllers
                     dbContext.Projs.Add(proj);
                     dbContext.SaveChanges();
                 }
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>新增成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
            
         }
@@ -133,6 +131,14 @@ namespace MyTeam.Controllers
 
         public ActionResult Edit(int id)
         {
+            List<Proj> ls = dbContext.Projs.ToList();
+            Proj proj = ls.Find(a => a.ProjID == id);
+
+            if (proj == null)
+            {
+                return View();
+            }
+
             SelectList sl2 = null;
 
             User user = this.GetSessionCurrentUser();
@@ -150,13 +156,6 @@ namespace MyTeam.Controllers
             // 主办部门
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
 
-            List<Proj> ls = dbContext.Projs.ToList();
-            Proj proj = ls.Find(a => a.ProjID == id);
-
-            if (proj == null)
-            {
-                ModelState.AddModelError("", "不存在该年度版本计划！");
-            }
             return View(proj);
         }
 
@@ -164,20 +163,18 @@ namespace MyTeam.Controllers
         // POST: /Proj/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(Proj proj)
-        {
-            
+        public string Edit(Proj proj)
+        {            
             try
             {
                 dbContext.Entry(proj).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>更新成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 

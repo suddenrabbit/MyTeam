@@ -6,6 +6,13 @@
 
 <h2>@ViewBag.Title。</h2>
 
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>
+    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+    return;
+}
+
 <div class="row">
     <div class="col-md-8 form-horizontal">
         <fieldset>

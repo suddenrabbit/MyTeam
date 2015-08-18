@@ -19,13 +19,6 @@ namespace MyTeam.Controllers
         {
             List<ReqTrack> ls = dbContext.ReqTracks.ToList();
 
-            List<Proj> projLs = dbContext.Projs.ToList();
-            foreach (ReqTrack rm in ls)
-            {
-                Proj p = projLs.Find(a => a.ProjID == rm.ProjID);
-                rm.ProjName = p == null ? "未知" : p.ProjName;
-            }
-
             var ls1 = ls.ToPagedList(pageNum, Constants.PAGE_SIZE);
             return View(ls1);
         }
@@ -40,13 +33,8 @@ namespace MyTeam.Controllers
 
             if (reqTrack == null)
             {
-                ModelState.AddModelError("", "不存在该业需软需状态跟踪记录！");
-                reqTrack = new ReqTrack();
+                return View();
             }
-
-            List<Proj> projLs = dbContext.Projs.ToList();
-            Proj p = projLs.Find(a => a.ProjID == reqTrack.ProjID);
-            reqTrack.ProjName = p == null ? "未知" : p.ProjName;
 
             return View(reqTrack);
         }
@@ -79,7 +67,7 @@ namespace MyTeam.Controllers
         // POST: /ReqTrack/Create
 
         [HttpPost]
-        public ActionResult Create(ReqTrack reqTrack)
+        public string Create(ReqTrack reqTrack)
         {
             try
             {
@@ -88,12 +76,11 @@ namespace MyTeam.Controllers
                     dbContext.ReqTracks.Add(reqTrack);
                     dbContext.SaveChanges();
                 }
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>新增成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 
@@ -102,6 +89,14 @@ namespace MyTeam.Controllers
 
         public ActionResult Edit(int id)
         {
+            List<ReqTrack> rm = dbContext.ReqTracks.ToList();
+            ReqTrack reqTrack = rm.Find(a => a.TrackID == id);
+
+            if (reqTrack == null)
+            {
+                return View();
+            }
+
             // 优先级列表
             ViewBag.PriorityList = MyTools.GetSelectList(Constants.PriorityList);
 
@@ -111,13 +106,6 @@ namespace MyTeam.Controllers
             // 需求状态列表
             ViewBag.ReqSoftStatList = MyTools.GetSelectList(Constants.ReqSoftStatList);
 
-            List<ReqTrack> rm = dbContext.ReqTracks.ToList();
-            ReqTrack reqTrack = rm.Find(a => a.TrackID == id);
-
-            if (reqTrack == null)
-            {
-                ModelState.AddModelError("", "不存在该业需软需状态跟踪记录！");
-            }
             return View(reqTrack);
         }
 
@@ -125,19 +113,18 @@ namespace MyTeam.Controllers
         // POST: /ReqTrack/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(ReqTrack reqTrack)
+        public string Edit(ReqTrack reqTrack)
         {
             try
             {
                 dbContext.Entry(reqTrack).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>更新成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 

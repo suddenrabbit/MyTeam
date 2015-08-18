@@ -13,7 +13,7 @@ namespace MyTeam.Controllers
     public class ProjMeetingController : BaseController
     {
         //
-        // GET: /ReqMeeting/
+        // GET: /projMeeting/
 
         public ActionResult Index(ProjMeetingQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
@@ -70,28 +70,23 @@ namespace MyTeam.Controllers
         }
 
         //
-        // GET: /ReqMeeting/Details/5
+        // GET: /projMeeting/Details/5
 
         public ActionResult Details(int id)
         {
             List<ProjMeeting> ls = dbContext.ProjMeetings.ToList();
-            ProjMeeting reqMeeting = ls.Find(a => a.MeetingID == id);
+            ProjMeeting projMeeting = ls.Find(a => a.MeetingID == id);
 
-            if (reqMeeting == null)
+            if (projMeeting == null)
             {
-                ModelState.AddModelError("", "不存在该需求会议记录！");
-                reqMeeting = new ProjMeeting();
+                return View();
             }
 
-            List<Proj> projLs = dbContext.Projs.ToList();
-            Proj p = projLs.Find(a => a.ProjID == reqMeeting.ProjID);
-            reqMeeting.ProjName = p == null ? "未知" : p.ProjName;
-
-            return View(reqMeeting);
+            return View(projMeeting);
         }
 
         //
-        // GET: /ReqMeeting/Create
+        // GET: /projMeeting/Create
 
         public ActionResult Create()
         {
@@ -115,32 +110,39 @@ namespace MyTeam.Controllers
         }
 
         //
-        // POST: /ReqMeeting/Create
+        // POST: /projMeeting/Create
 
         [HttpPost]
-        public ActionResult Create(ProjMeeting reqMeeting)
+        public string Create(ProjMeeting projMeeting)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    dbContext.ProjMeetings.Add(reqMeeting);
+                    dbContext.ProjMeetings.Add(projMeeting);
                     dbContext.SaveChanges();
                 }
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>新增成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 
         //
-        // GET: /ReqMeeting/Edit/5
+        // GET: /projMeeting/Edit/5
 
         public ActionResult Edit(int id)
         {
+            List<ProjMeeting> rm = dbContext.ProjMeetings.ToList();
+            ProjMeeting projMeeting = rm.Find(a => a.MeetingID == id);
+
+            if (projMeeting == null)
+            {
+                return View();
+            }
+
             // 会议类型列表
             ViewBag.MeetingTypeList = MyTools.GetSelectList(Constants.MeetingTypeList);
 
@@ -150,48 +152,39 @@ namespace MyTeam.Controllers
             // 需求会议当前状态列表
             ViewBag.StatList = MyTools.GetSelectList(Constants.StatList);
 
-            List<ProjMeeting> rm = dbContext.ProjMeetings.ToList();
-            ProjMeeting reqMeeting = rm.Find(a => a.MeetingID == id);
-
-            if (reqMeeting == null)
-            {
-                ModelState.AddModelError("", "不存在该需求会议记录！");
-            }
-
-            return View(reqMeeting);
+            return View(projMeeting);
         }
 
         //
-        // POST: /ReqMeeting/Edit/5
+        // POST: /projMeeting/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(ProjMeeting reqMeeting)
+        public string Edit(ProjMeeting projMeeting)
         {
             try
             {
-                dbContext.Entry(reqMeeting).State = System.Data.Entity.EntityState.Modified;
+                dbContext.Entry(projMeeting).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>更新成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 
         //
-        // GET: /ReqMeeting/Delete/5
+        // GET: /projMeeting/Delete/5
 
         public string Delete(int id)
         {
             try
             {
                 List<ProjMeeting> ls = dbContext.ProjMeetings.ToList();
-                ProjMeeting reqMeeting = ls.Find(a => a.MeetingID == id);
+                ProjMeeting projMeeting = ls.Find(a => a.MeetingID == id);
 
-                dbContext.Entry(reqMeeting).State = System.Data.Entity.EntityState.Deleted;
+                dbContext.Entry(projMeeting).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
 
                 return "删除成功";

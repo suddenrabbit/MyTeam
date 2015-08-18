@@ -1,11 +1,14 @@
 ﻿@model MyTeam.Models.BusiReq
-
 @{
     ViewBag.Title = "修改业务需求";
 }
-
 <h2>@ViewBag.Title。</h2>
-
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>
+    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+    return;
+}
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     // 日期控件
@@ -13,28 +16,17 @@
         $("#CreateDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
     });
 </script>
-
 <div class="row">
     <div class="col-md-8">
-
-        @using (Html.BeginForm("Edit", "BusiReq", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Edit", "BusiReq", null, new AjaxOptions { UpdateTargetId = "info" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            if (Model.BRID == 0)
-            {
-                <div class="form-group">
-                    <div class="col-md-2">
-                        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
-                    </div>
-                </div>
-            }
 
-            else
-            {
-                @Html.HiddenFor(model => model.BRID);
+            @Html.HiddenFor(model => model.BRID);
 
             <div class="form-group">
                 @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
@@ -98,13 +90,9 @@
                     @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
                 </div>
             </div>
-            }
-
         }
-
     </div>
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

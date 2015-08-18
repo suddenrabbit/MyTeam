@@ -113,7 +113,7 @@
                             <td>
                                 @Html.ActionLink("编辑", "Edit", new { id = item.ProjID }) |
                                 @Html.ActionLink("详情", "Details", new { id = item.ProjID }) |
-                                <a href="#" onclick="doDelete('@item.ProjID','@item.ProjName 的项目状态记录')">删除</a>
+                                <a href="#" onclick="doDelete('@item.ProjID','@item.ProjName')">删除</a>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ProjName)

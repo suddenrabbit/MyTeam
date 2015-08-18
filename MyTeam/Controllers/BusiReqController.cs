@@ -65,7 +65,7 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Create
 
         [HttpPost]
-        public ActionResult Create(BusiReq br)
+        public string Create(BusiReq br)
         {
             try
             {
@@ -75,13 +75,12 @@ namespace MyTeam.Controllers
                     dbContext.BusiReqs.Add(br);
                     dbContext.SaveChanges();                    
                 }
-                return RedirectToAction("Index");
+                 return "<p class='alert alert-success'>新增成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                return View();
-            }
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+            }            
         }
 
         //
@@ -93,7 +92,6 @@ namespace MyTeam.Controllers
 
             if (br == null)
             {
-                ModelState.AddModelError("", "无此记录！");
                 return View();
             }
 
@@ -111,27 +109,19 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Edit/5
 
         [HttpPost]
-        public ActionResult Edit(BusiReq br)
+        public string Edit(BusiReq br)
         {
             try
             {
                 dbContext.Entry(br).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
              
-                return RedirectToAction("Index");
+                return "<p class='alert alert-success'>更新成功</p>";
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                // 为了正常显示页面，重新生成select list
-                // 项目列表
-                var ls = dbContext.Projs.ToList();
-                ViewBag.ProjList = new SelectList(ls, "ProjID", "ProjName", br.ProjID);
-
-                // 需求来源及状态的下拉列表
-                ViewBag.StatList = MyTools.GetSelectList(Constants.BusiReqStat, false, true, br.Stat);
-                return View(br);
-            }
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+            }            
         }
 
         // AJAX调用
