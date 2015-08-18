@@ -48,8 +48,7 @@
                         <!--项目下拉选择-->
                         @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
                     </td>
-                </tr>
-                <tr>
+
                     <td>@Html.LabelFor(model => model.MeetingType, new { @class = "control-label" })</td>
                     <td>
                         <!--会议类型下拉选择-->
@@ -58,7 +57,7 @@
                 </tr>
                 <tr>
                     <td><label class="control-label">会议日期</label></td>
-                    <td>
+                    <td colspan="3" class="form-inline">
                         <input id="MeetingDateStart" name="MeetingDateStart" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.MeetingDateStart" placeholder="点击选择日期" />
                         -
                         <input id="MeetingDateEnd" name="MeetingDateEnd" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.MeetingDateStart" placeholder="点击选择日期" />
@@ -66,7 +65,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="4">
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
                         <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/ProjMeeting/Create'" />
@@ -74,6 +73,8 @@
                 </tr>
             </table>
         }
+    </div>
+    <div class="col-md-12">
         @if (Model.ResultList != null)
         {
             if (Model.ResultList.Count < 1)
@@ -82,11 +83,11 @@
             }
             else
             {
-                <table class="table table-condensed" style="width:2500px;font-size:12px">
+                <table class="table table-condensed" style="font-size:12px">
                     <tr>
                         <th></th>
                         <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ProjName)
+                            @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.ResultList[0].MeetingTopic)

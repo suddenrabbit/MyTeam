@@ -25,24 +25,26 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ProjID == query.ProjID);
                 }
-                if (!string.IsNullOrEmpty(query.MeetingType))
+                if (query.MeetingType != "全部")
                 {
                     ls = ls.Where(p => p.MeetingType == query.MeetingType);
                 }
                 if (!string.IsNullOrEmpty(query.MeetingDateStart) && !string.IsNullOrEmpty(query.MeetingDateEnd))
                 {
-                    //ls = ls.Where(p=>p.MeetingDate)
-                        
+                    DateTime startDate = DateTime.Parse(query.MeetingDateStart);
+                    DateTime endDate = DateTime.Parse(query.MeetingDateEnd);
+                    ls = ls.Where(p => p.MeetingDate.CompareTo(startDate) >= 0 && p.MeetingDate.CompareTo(endDate) <= 0);
                 }
-               
-                
+                var result = ls.ToList();
                 // 若isExcel为true，导出Excel
-                
+                if (isExcel)
+                {
+
+                }
                 else
                 {
-                    var list = ls.ToList();
                     // 分页
-                    //query.ResultList = list.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
+                    query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
                 }
             }
             else
@@ -50,26 +52,14 @@ namespace MyTeam.Controllers
                 query = new ProjMeetingQuery();
             }
 
-            // 为了保证查询部分正常显示，对下拉列表处理
-
-            List<ProjMeeting> pmls = dbContext.ProjMeetings.ToList();
+            // 为了保证查询部分正常显示，对下拉列表处理           
             // 获取项目下拉列表
             List<Proj> projLs = dbContext.Projs.ToList();
-            ViewBag.ProjList = projLs;
-
-            // 根据项目ID获得项目名称
-            foreach (ProjMeeting rm in pmls)
-            {
-                Proj p = projLs.Find(a => a.ProjID == rm.ProjID);
-                rm.ProjName = p == null ? "未知" : p.ProjName;
-            }
-
             // 加上“全部”
-            pmls.Insert(0, new ProjMeeting() { MeetingID = 0, ProjName = "全部" });
-            ViewBag.pmls = new SelectList(pmls, "MeetingID", "ProjName", query.ProjID); ;
-
+            projLs.Insert(0, new Proj() { ProjID = 0, ProjName = "全部" });
+            ViewBag.ProjList = new SelectList(projLs, "ProjID", "ProjName", query.ProjID);
             // 会议类型列表
-            ViewBag.MeetingTypeList = MyTools.GetSelectList(Constants.MeetingTypeList);
+            ViewBag.MeetingTypeList = MyTools.GetSelectList(Constants.MeetingTypeList,true);
 
             return View(query);
 
@@ -92,7 +82,7 @@ namespace MyTeam.Controllers
             List<Proj> projLs = dbContext.Projs.ToList();
             Proj p = projLs.Find(a => a.ProjID == reqMeeting.ProjID);
             reqMeeting.ProjName = p == null ? "未知" : p.ProjName;
-           
+
             return View(reqMeeting);
         }
 

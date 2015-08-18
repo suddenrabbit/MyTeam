@@ -14,7 +14,7 @@ namespace MyTeam.Models
     {
         [Required]
         [Display(Name = "项目名称")]
-        public int ProjName { get; set; }
+        public string ProjName { get; set; }
 
         [Required]
         [Display(Name = "会议议题")]
