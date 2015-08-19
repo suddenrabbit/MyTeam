@@ -37,37 +37,25 @@ namespace MyTeam.Models
         [Display(Name = "发布版本号")]
         public string VerNo { get; set; }
 
-        [Required]
+        
         [Display(Name = "版本计划制定时间")]
         [DataType(DataType.Date)]
         public DateTime? DraftTime { get; set; }
 
-        [Required]
+        
         [Display(Name = "版本计划制定人")]
         public int DraftPersonID { get; set; }
 
-        [Required]
+        
         [Display(Name = "版本类别")]
         public string VerType { get; set; }
 
-        [Required]
         [Display(Name = "备注")]
         public string Remark { get; set; }
 
         [NotMapped]
-        public string SysName
-        {
-            get
-            {
-                var r = (from a in Constants.SysList
-                         where a.SysID == this.SysId
-                         select a.SysName).FirstOrDefault();
-
-                return r == null ? "未知" : r.ToString();
-            }
-            set { this.SysName = value; }
-        }
-
+        public string SysName { get; set; }
+ 
         [NotMapped]
         public string DraftPersonName
         {

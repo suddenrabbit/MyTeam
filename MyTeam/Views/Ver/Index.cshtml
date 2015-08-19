@@ -1,19 +1,11 @@
 ﻿@using PagedList
 @using PagedList.Mvc
-@model IEnumerable<MyTeam.Models.Ver>
-
-
+@model MyTeam.Models.VerQuery
 @{
-    ViewBag.Title = "年度版本下发计划管理";
+    ViewBag.Title = "年度版本下发记录管理";
 }
-
 <h2>@ViewBag.Title。</h2>
-
-<p>
-    @Html.ActionLink("添加年度版本下发计划", "Create", null, new { @class= "btn btn-primary"})
-</p>
-
-<!-- Ajax删除 -->
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     function doDelete(id, name) {
         $('#toDelName').html(name);
@@ -40,86 +32,146 @@
         });
     }
 
+    // 导出excel
+    function doExport() {
+        $('#isExcel').val(true);
+        $('#myForm').submit();
+        $('#isExcel').val(false);
+    }
+    
+    // 日期控件
+    $(document).ready(function () {
+        $("#VerYear").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy' })", placeholder: "点击选择日期" });
+    });
+
 </script>
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "Ver", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.SysId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.VerYear)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ReleaseFreq)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PublishTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.VerNo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DraftTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DraftPersonID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.VerType)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Remark)
-        </th>
-        <th></th>
-    </tr>
+            <input type="hidden" name="isQuery" value="True" />
+            <input type="hidden" id="isExcel" name="isExcel" value="False" />
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.SysName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.VerYear)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReleaseFreq)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PublishTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.VerNo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DraftTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DraftPersonName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.VerType)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Remark)
-        </td>
-        <td>
-            @Html.ActionLink("编辑", "Edit", new { id=item.VerID }) |
-           
-            <a href="#" onclick="doDelete('@item.VerID','@item.SysName 年度版本计划')">删除</a>
-        </td>
-    </tr>
+            <table class="table table-condensed query-table">
+                <tr>
+                    <td>@Html.LabelFor(model => model.SysId, new { @class = "control-label" })</td>
+                    <td>
+                        <!--项目下拉选择-->
+                        @Html.DropDownListFor(model => model.SysId, ViewBag.sysList as SelectList, new { @class = "form-control" })
+                    </td>
+                    <td>@Html.LabelFor(model => model.VerYear, new { @class = "control-label" })</td>
+                    <td>
+                        <!--版本年度-->
+                        @Html.TextBoxFor(model => model.VerYear, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.VerYear, "", new { @class = "text-danger" })
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="submit" value="查询" class="btn btn-primary" />
+                        <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
+                        <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/Ver/Create'" />
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+    <div class="col-md-12">
+        @if (Model.ResultList != null)
+        {
+            if (Model.ResultList.Count < 1)
+            {
+                <p class="text-warning">没有符合条件的结果！</p>
+            }
+            else
+            {
+                <table class="table table-condensed" style="font-size:12px">
+                    <tr>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].SysId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].VerYear)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReleaseFreq)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].PublishTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].VerNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].DraftTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].DraftPersonID)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].VerType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model.ResultList)
+                    {
+                        var trid = "resultTR" + item.VerID;
+                        <tr id="@trid">
+                            <td>
+                                @Html.ActionLink("编辑", "Edit", new { id = item.VerID }) |
+                                <a href="#" onclick="doDelete('@item.VerID','@item.SysName 的年度版本下发记录')">删除</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SysName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VerYear)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReleaseFreq)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PublishTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VerNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DraftTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DraftPersonName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VerType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Ver>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }
-
-</table>
-
-<!--分页-->
-@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.Ver>,
-generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel" aria-hidden="true">
+     aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -150,7 +202,7 @@ generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
 
 <!-- 对话框2：删除完成 -->
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
-    aria-labelledby="myModal2Label" aria-hidden="true">
+     aria-labelledby="myModal2Label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

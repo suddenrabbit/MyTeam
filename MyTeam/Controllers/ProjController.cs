@@ -110,6 +110,14 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Create(Proj proj)
         {
+            // 判断是否有重复的项目名称，如有重复不允许新增
+            List<Proj> projLs = dbContext.Projs.ToList();
+            foreach(Proj p in projLs){
+                if(p.ProjName == proj.ProjName){
+                    return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目跟踪状态已存在，不允许重复添加！" + "</p>";
+                }
+            }
+
             try
             {
                 if (ModelState.IsValid)
@@ -164,7 +172,17 @@ namespace MyTeam.Controllers
 
         [HttpPost]
         public string Edit(Proj proj)
-        {            
+        {
+            // 判断是否有重复的项目名称，如有重复不允许新增
+            List<Proj> projLs = dbContext.Projs.ToList();
+            foreach (Proj p in projLs)
+            {
+                if (p.ProjName == proj.ProjName)
+                {
+                    return "<p class='alert alert-danger'>出错了: " + "项目名称重复，不允许修改！" + "</p>";
+                }
+            }
+
             try
             {
                 dbContext.Entry(proj).State = System.Data.Entity.EntityState.Modified;

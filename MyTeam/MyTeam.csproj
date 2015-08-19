@@ -186,6 +186,8 @@
     <Compile Include="Models\ReqManage\Req.cs" />
     <Compile Include="Models\User\User.cs" />
     <Compile Include="Models\User\UserLogin.cs" />
+    <Compile Include="Models\Ver\VerResult.cs" />
+    <Compile Include="Models\Ver\VerQuery.cs" />
     <Compile Include="Models\Ver\Ver.cs" />
     <Compile Include="Models\WeekReport\WeekReportDetail.cs" />
     <Compile Include="Models\WeekReport\WeekReportMain.cs" />
@@ -227,6 +229,7 @@
     <Content Include="Content\templates\ProjReportT.xlsx" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\templates\VerReportT.xlsx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

@@ -161,7 +161,10 @@ namespace MyTeam.Controllers
         [HttpPost]
         public ActionResult InPoolResult(List<Req> reqList)
         {
+            List<Req> reqLs = dbContext.Reqs.ToList();
             string r = "";
+            int errorNo = 0;
+
             try
             {
                 if (ModelState.IsValid)
@@ -169,11 +172,19 @@ namespace MyTeam.Controllers
                     // 入库
                     foreach (Req req in reqList)
                     {
+                        foreach (Req req1 in reqLs)
+                        {
+                            if (req1.ReqDetailNo == req.ReqDetailNo)
+                            {
+                                r = "<p class='text-danger'>入池失败！" + "</p>";
+                                errorNo = errorNo + 1;
+                            }
+                        }
                         dbContext.Reqs.Add(req);
                     }
                     dbContext.SaveChanges();
 
-                    r = "<p class='text-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
+                    r = "<p class='text-success'>入池成功！失败数" + errorNo + "</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
                 }
 
             }
@@ -429,6 +440,16 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Create(Req req)
         {
+            // 判断是否有重复的项目名称，如有重复不允许新增
+            List<Req> reqLs = dbContext.Reqs.ToList();
+            foreach (Req r in reqLs)
+            {
+                if (r.ReqDetailNo == req.ReqDetailNo)
+                {
+                    return "<p class='alert alert-danger'>出错了: " + "需求编号已存在，不允许重复添加！" + "</p>";
+                }
+            }
+
             try
             {
                 if (ModelState.IsValid)
@@ -486,6 +507,7 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Edit(Req req)
         {
+            
             try
             {
                 dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;

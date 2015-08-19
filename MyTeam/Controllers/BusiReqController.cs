@@ -150,29 +150,37 @@ namespace MyTeam.Controllers
         /// <returns></returns>
         public ActionResult Export(string ProjID)
         {
+            List<Proj> projLs = dbContext.Projs.ToList();
+            string pName = " ";
+            foreach(Proj p in projLs){
+                if(p.ProjID.ToString() == ProjID){
+                    pName = p.ProjName;
+                }
+            }
+
             // 联立查询 BusiReqs 和 Reqs
             var ls = from br in dbContext.BusiReqs
                      join req in dbContext.Reqs
-                     on br.BusiReqNo equals req.BusiReqNo into results                    
-                     from rr in results.DefaultIfEmpty()
+                     on br.BusiReqNo equals req.BusiReqNo
                      where br.ProjID.ToString() == ProjID
+
                      select new BusiReqExcel
                      {
-                         ProjName = "项目",
+                         ProjName = pName.ToString(),
                          BusiReqNo = br.BusiReqNo,
                          BusiReqName = br.BusiReqName,
                          Desc = br.Desc,
                          CreateDate = br.CreateDate,
                          Stat = br.Stat,
-                         AcptDate = rr.AcptDate,
-                         ReqNo = rr.ReqNo,
-                         ReqDetailNo = rr.ReqDetailNo,
-                         Version = rr.Version,
-                         ReqReason = rr.ReqReason,
-                         ReqDesc = rr.ReqDesc,
-                         ReqFromPerson = rr.ReqFromPerson,
-                         ReqType = rr.ReqType,
-                         RlsDate = rr.RlsDate
+                         AcptDate = req.AcptDate,
+                         ReqNo = req.ReqNo,
+                         ReqDetailNo = req.ReqDetailNo,
+                         Version = req.Version,
+                         ReqReason = req.ReqReason,
+                         ReqDesc = req.ReqDesc,
+                         ReqFromPerson = req.ReqFromPerson,
+                         ReqType = req.ReqType,
+                         RlsDate = req.RlsDate
                      };
             return this.makeExcel<BusiReqExcel>("BusiReqReportT", "业务需求变更跟踪", ls.ToList<BusiReqExcel>(), 2);
                         

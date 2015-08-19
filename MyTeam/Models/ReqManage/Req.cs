@@ -62,7 +62,7 @@ namespace MyTeam.Models
         public DateTime? DevEvalDate { get; set; }
 
         // detail
-
+        [Required]
         [Display(Name = "需求编号")]
         public string ReqDetailNo { get; set; }
 

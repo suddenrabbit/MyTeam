@@ -89,5 +89,11 @@ namespace MyTeam.Utils
         public const int PAGE_SIZE = 10;
 
         public static List<string> BusiReqStat = new List<string>() { "一期原始需求", "二期原始需求", "三期原始需求", "新增维护需求", "需求已作废", "文档更新增补" };
+
+        /// <summary>
+        /// 年度版本下发计划发布频率列表
+        /// </summary>
+        public static List<string> ReleaseFreqList = new List<string>() { "1", "2", "3", "6", "12" };
+
     }
 }
