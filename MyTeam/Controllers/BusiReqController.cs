@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using PagedList;
 using MyTeam.Utils;
 using MyTeam.Models;
+using System.IO;
+using OfficeOpenXml;
 
 namespace MyTeam.Controllers
 {
@@ -20,12 +22,12 @@ namespace MyTeam.Controllers
         //
         // GET: /BusiReq/
 
-        public ActionResult Index(BusiReqQuery query,  int pageNum = 1, bool isQuery = false)
+        public ActionResult Index(BusiReqQuery query, int pageNum = 1, bool isQuery = false)
         {
             var ls = from a in dbContext.BusiReqs select a;
-            if(isQuery)
+            if (isQuery)
             {
-                if(query.ProjID!=0)
+                if (query.ProjID != 0)
                 {
                     ls = ls.Where(p => p.ProjID == query.ProjID);
                 }
@@ -40,7 +42,7 @@ namespace MyTeam.Controllers
             // 项目列表
             var r = dbContext.Projs.ToList();
             // 添加全部
-            r.Insert(0, new Proj(){ProjID = 0, ProjName = "全部"});
+            r.Insert(0, new Proj() { ProjID = 0, ProjName = "全部" });
             ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName", query.ProjID);
 
             return View(query);
@@ -184,6 +186,122 @@ namespace MyTeam.Controllers
                      };
             return this.makeExcel<BusiReqExcel>("BusiReqReportT", "业务需求变更跟踪", ls.ToList<BusiReqExcel>(), 2);
                         
+        }
+
+        /// <summary>
+        /// 导入Excel
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Import()
+        {
+            // 项目列表
+            var r = dbContext.Projs.ToList();
+
+            ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName");
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Import(HttpPostedFileBase file, int ProjID)
+        {
+            if (file == null)
+            {
+                ViewBag.Msg = "<p class='alert alert-danger'>未获取到文件</p>";
+            }
+            else
+            {
+                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Upload/temp"), Path.GetFileName(file.FileName));
+                try
+                {
+                    file.SaveAs(filePath);
+                    // 读取Excel文件
+                    FileInfo excelFile = new FileInfo(filePath);
+
+                    using (ExcelPackage ep = new ExcelPackage(excelFile))
+                    {
+                        ExcelWorksheet worksheet = ep.Workbook.Worksheets[1];
+
+                        //int colStart = worksheet.Dimension.Start.Column;  //工作区开始列
+                        //int colEnd = worksheet.Dimension.End.Column;       //工作区结束列
+                        int rowStart = worksheet.Dimension.Start.Row;       //工作区开始行号
+                        int rowEnd = worksheet.Dimension.End.Row;       //工作区结束行号
+
+                        var ls = dbContext.BusiReqs.ToList();
+
+                        int skipNum = 0;
+
+                        for (int row = rowStart + 1; row <= rowEnd; row++)
+                        {
+                            string busiReqNo = worksheet.Cells[row, 1].GetValue<string>();
+
+                            // ProjID+BusiReqNo重复的不导入
+                            if (ls.Find(a => a.ProjID == ProjID && a.BusiReqNo == busiReqNo) != null)
+                            {
+                                skipNum++;
+                                continue;
+                            }
+
+                            BusiReq br = new BusiReq();
+                            // 按列赋值
+                            br.ProjID = ProjID;
+                            br.BusiReqNo = busiReqNo;
+                            br.BusiReqName = worksheet.Cells[row, 2].GetValue<string>();
+                            br.Desc = worksheet.Cells[row, 3].GetValue<string>();
+                            // 创建日期若为空则记录为当前时间
+                            string createDate = worksheet.Cells[row, 4].GetValue<string>();
+                            DateTime tmp = new DateTime();
+                            if (!string.IsNullOrEmpty(createDate) && DateTime.TryParse(createDate, out tmp))
+                            {
+                                br.CreateDate = tmp;
+                            } 
+                            else
+                            {
+                                br.CreateDate = DateTime.Now;
+                            }
+                            br.Stat = worksheet.Cells[row, 5].GetValue<string>();
+
+                            dbContext.BusiReqs.Add(br);
+                        }
+                        // 保存
+                        dbContext.SaveChanges();
+
+                        string s = string.Format("<p class='alert alert-success'>《{0}》处理成功！共{1}条数据，忽略{2}条数据</p>", file.FileName, rowEnd - rowStart, skipNum);
+
+                        ViewBag.Msg = s;
+                    }
+                }
+                catch (Exception e1)
+                {
+                    ViewBag.Msg = "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+                }
+                finally
+                {
+                    // 完成后删除文件
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
+
+            // 项目列表
+            var r = dbContext.Projs.ToList();
+
+            ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName", ProjID);
+
+            return View();
+        }
+
+        /// <summary>
+        /// 下载模板
+        /// </summary>
+        /// <returns></returns>
+        public FileResult DownTemplate()
+        {
+            string fileName = "BusiReqImportT.xlsx";
+            string tmpFilePath = System.Web.HttpContext.Current.Server.MapPath("~/Content/templates/" + fileName);
+            return File(tmpFilePath, "application/excel", fileName);
         }
     }
 }

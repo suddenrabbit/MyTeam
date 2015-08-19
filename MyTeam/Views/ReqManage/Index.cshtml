@@ -72,9 +72,12 @@
                         @Html.ValidationMessageFor(model => model.Version, "", new { @class = "text-danger" })
                     </td>
                     <td>@Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })</td>
-                    <td>
+                    <td class="form-inline">
                         <!--需求状态下拉选择-->
                         @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
+                        <!-- 勾选不等于 -->
+                        @Html.CheckBoxFor(model => model.NotEqual, new { @class="checkbox" })
+                        @Html.LabelFor(model => model.NotEqual)
                     </td>
                 </tr>
                 <tr>

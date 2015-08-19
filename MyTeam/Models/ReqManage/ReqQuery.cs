@@ -34,6 +34,9 @@ namespace MyTeam.Models
         [Display(Name = "需求受理人")]
         public int ReqAcptPerson { get; set; }
 
+        [Display(Name = "不等于")]
+        public bool NotEqual { get; set; }
+
         public IPagedList<Req> ResultList { get; set; }
 
         public string ToQueryString()
@@ -45,6 +48,7 @@ namespace MyTeam.Models
                 .Append("&Version=").Append(this.Version)
                 .Append("&ReqStat=").Append(this.ReqStat)
                 .Append("&ReqAcptPerson=").Append(this.ReqAcptPerson)
+                .Append("&NotEqual=").Append(this.NotEqual)
                 .Append("&isQuery=True").ToString();
         }
 

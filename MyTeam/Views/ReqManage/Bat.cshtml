@@ -120,22 +120,23 @@
 <div class="row">
     <div class="col-md-10">
         <form class="form-horizontal" role="form">
-            <p><label for="Reqs" class="control-label">待处理的需求编号</label></p>
-            <p>
-                <textarea id="Reqs" name="Reqs" style="width:380px" class="form-control" rows="5"></textarea>
-            </p>
+            <div class="form-group">
+                <label for="Reqs" class="control-label col-md-2">待处理的需求编号</label>
+                <div class="col-md-10">
+                    <textarea id="Reqs" name="Reqs" style="width:380px" class="form-control" rows="5"></textarea>
+                </div>
+            </div>
             <p>
                 <span class="text-success" id="success"></span>
                 <span class="text-danger" id="err"></span>
             </p>
-
             <ul class="nav nav-tabs" id="myTab">
                 <li><a href="#tabs1" data-toggle="tab">批量出池</a></li>
                 <li><a href="#tabs2" data-toggle="tab">下发通知编号</a></li>
                 <li><a href="#tabs3" data-toggle="tab">实际下发日期</a></li>
                 <li><a href="#tabs4" data-toggle="tab">批量删除</a></li>
             </ul>
-            <div class="tab-content">
+            <div class="tab-content" style="margin-top:20px">
                 <div id="tabs1" class="tab-pane fade in active">
                     <div class="form-group">
                         <label for="Version" class="col-md-2 control-label">版本号</label>
@@ -194,18 +195,19 @@
                     </div>
                 </div>
                 <div id="tabs4" class="tab-pane fade in active">
-                    <div class="form-group">
-                         <input type="button" value="删除" onclick="BatDel()" class="btn btn-primary" />
+                    <div class="form-group">                        
+                         <input type="button" value="删除" onclick="BatDel()" class="btn btn-primary col-md-offset-1" />
                     </div>
                 </div>
-
             </div>
-            <div class="tips">
-                <p>TIPS</p>
-                <p>1、维护需求编号每行一个；</p>
-                <p>2、下方的输入框若留空，则会将相应的值更新为空值。</p>
-            </div>
-
         </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">TIPS</div>
+    <div class="panel-body">
+        1、维护需求编号每行一个；<br />
+        2、下方的输入框若留空，则会将相应的值更新为空值。
     </div>
 </div>

@@ -164,6 +164,7 @@
       <DependentUpon>201508030152034_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Home\HomeResult.cs" />
     <Compile Include="Models\Proj\ProjResult.cs" />
     <Compile Include="Models\Proj\ProjQuery.cs" />
     <Compile Include="Models\Proj\BusiReqExcel.cs" />
@@ -229,6 +230,7 @@
     <Content Include="Content\templates\ProjReportT.xlsx" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\templates\BusiReqImportT.xlsx" />
     <Content Include="Content\templates\VerReportT.xlsx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -320,9 +322,11 @@
     <Content Include="Views\BusiReq\Create.cshtml" />
     <Content Include="Views\BusiReq\Edit.cshtml" />
     <Content Include="Views\BusiReq\Index.cshtml" />
+    <Content Include="Views\BusiReq\Import.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Upload\temp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
