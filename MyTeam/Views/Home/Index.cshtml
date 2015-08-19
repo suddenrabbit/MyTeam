@@ -1,20 +1,35 @@
-﻿@{
+﻿@using MyTeam.Models
+
+@{
     ViewBag.Title = "欢迎";
 }
 <div class="jumbotron">
     <h1 style="font-weight:bold">零售团队管理系统<span style="font-size:12px">(Beta)</span></h1>
 </div>
+<div class="row">
+    <fieldset class="col-md-6">
+        <legend>@ViewBag.Name 你好。当前尚未出池的需求情况：</legend>
+        <div class="list-group">
+            @foreach (HomeResult r in ViewBag.ResultList)
+            {
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=出池&NotEqual=True&SysId=" + r.SysId;
+                <a class="list-group-item" href=@s>
+                    <span class="badge">@r.ReqNum</span>
+                    @r.SysName
+                </a>
+            }
+        </div>
 
-<fieldset>
-    <legend>你好。当前尚未出池的需求情况：</legend>
-</fieldset>
+    </fieldset>
 
-<fieldset>
-    <legend>常用任务</legend>
-    <ul style="font-size:16px" class="list-inline">
-        <li>@Html.ActionLink("维护需求入池", "MainInPool", "ReqManage")</li>
-        <li>@Html.ActionLink("维护需求管理", "Index", "ReqManage")</li>
-        <li>@Html.ActionLink("周报填写", "MainIndex", "WeekReport")</li>
-        <li>@Html.ActionLink("周报导出", "Export", "WeekReport")</li>
-    </ul>
+    <fieldset class="col-md-6">
+        <legend>常用任务</legend>
+        <div class="list-group">
+            @Html.ActionLink("维护需求入池", "MainInPool", "ReqManage", new { @class = "list-group-item" })
+            @Html.ActionLink("维护需求管理", "Index", "ReqManage", new { @class = "list-group-item" })
+            @Html.ActionLink("周报填写", "MainIndex", "WeekReport", new { @class = "list-group-item" })
+            @Html.ActionLink("周报导出", "Export", "WeekReport", new { @class = "list-group-item" })
+         </div>
 </fieldset>
+</div>
+

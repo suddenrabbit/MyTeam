@@ -226,7 +226,15 @@ namespace MyTeam.Controllers
                 }
                 if (query.ReqStat != "全部")
                 {
-                    ls = ls.Where(p => p.ReqStat == query.ReqStat);
+                    // 分『等于』和『不等于』2种情况
+                    if(query.NotEqual)
+                    {
+                        ls = ls.Where(p => p.ReqStat != query.ReqStat);
+                    }
+                    else
+                    {
+                        ls = ls.Where(p => p.ReqStat == query.ReqStat);
+                    }
                 }
                 if (query.ReqAcptPerson != 0)
                 {

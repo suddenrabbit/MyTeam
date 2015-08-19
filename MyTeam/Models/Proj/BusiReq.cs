@@ -29,11 +29,10 @@ namespace MyTeam.Models
         [Display(Name = "功能描述")]
         public string Desc { get; set; }
 
-        [Required]
         [Display(Name = "创建日期")]
+        [DataType(DataType.Date)]
         public DateTime CreateDate { get; set; }
 
-        [Required]
         [Display(Name = "需求来源及状态")]
         public string Stat { get; set; }
 

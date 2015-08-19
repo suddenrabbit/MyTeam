@@ -1,5 +1,6 @@
-﻿@model IEnumerable<MyTeam.Models.WeekReportRisk>
-
+﻿@using PagedList
+@using PagedList.Mvc
+@model IEnumerable<MyTeam.Models.WeekReportRisk>
 
 @{
     ViewBag.Title = "风险与待协调问题";
@@ -8,13 +9,10 @@
 
 <h2>@ViewBag.Title。</h2>
 
-
 <p>
-    <p>
     @Html.ActionLink("添加风险与待协调问题", "AddRisk", null, new { @class = "btn btn-primary" })
     @Html.ActionLink("重点项目与工作", "MainIndex", null, new { @class = "btn btn-default" })
     @Html.ActionLink("每周工作", "DetailIndex", null, new { @class = "btn btn-default" })
-</p>
 </p>
 
 <!-- Ajax删除 -->
@@ -77,8 +75,9 @@
 
     </tr>
 }
-
 </table>
-
+<!--分页-->
+@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.WeekReportRisk>,
+    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
 
 

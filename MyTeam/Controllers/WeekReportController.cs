@@ -7,6 +7,7 @@ using MyTeam.Models;
 using MyTeam.Utils;
 using OfficeOpenXml;
 using System.IO;
+using PagedList;
 
 namespace MyTeam.Controllers
 {
@@ -22,7 +23,7 @@ namespace MyTeam.Controllers
         /* 重点工作 */
 
         // 重点工作页面
-        public ActionResult MainIndex()
+        public ActionResult MainIndex(int pageNum = 1)
         {
             var ls = from a in dbContext.WeekReportMains select a;
             // 若非管理员只显示负责人中含有自己姓名的记录
@@ -37,7 +38,7 @@ namespace MyTeam.Controllers
             }
             // 按照『进度』升序
             ls = ls.OrderBy(a => a.Progress);
-            return View(ls.ToList());
+            return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }
 
         // 填报:重点工作
@@ -143,7 +144,7 @@ namespace MyTeam.Controllers
         /* 每周工作 */
 
         // 每周工作页面
-        public ActionResult DetailIndex(string id, bool forMain = false)
+        public ActionResult DetailIndex(string id, bool forMain = false, int pageNum = 1)
         {
             var ls = from a in dbContext.WeekReportDetails select a;
             // 若非管理员只显示负责人中含有自己姓名的记录
@@ -198,7 +199,7 @@ namespace MyTeam.Controllers
 
             ViewBag.MainId = id;
 
-            return View(ls.ToList());
+            return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }
 
         // 添加每周工作
@@ -360,7 +361,7 @@ namespace MyTeam.Controllers
         /* 风险与待协调问题 */
 
         // 风险与待协调问题页面
-        public ActionResult RiskIndex()
+        public ActionResult RiskIndex(int pageNum = 1)
         {
             var ls = from a in dbContext.WeekReportRisks select a;
             // 若非管理员只显示自己填报的记录
@@ -375,7 +376,7 @@ namespace MyTeam.Controllers
             }
             // 按照RptDate倒序显示
             ls = ls.OrderByDescending(a => a.RptDate);
-            return View(ls.ToList());
+            return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }
 
         // 填报:风险与待协调问题
