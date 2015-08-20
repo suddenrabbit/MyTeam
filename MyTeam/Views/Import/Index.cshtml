@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "数据导入";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        @if (!string.IsNullOrEmpty(ViewBag.Msg))
+        {
+            @Html.Raw(ViewBag.Msg);
+        }
+        @using (Html.BeginForm("Index", "Import", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+        {
+            <div class="form-group">
+                <label for="file" class="control-label col-md-2">上传文件</label>
+                <div class="col-md-10">
+                    <input type="file" name="file" id="file" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="type" class="control-label col-md-2">文件类型</label>
+                <div class="col-md-10">
+                    <select id="type" name="type" class="form-control">
+                        <option value="1">维护需求</option>
+                        <option value="2">项目跟踪</option>
+                        <option value="3">项目会议</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="上传" class="btn btn-primary" />
+                </div>
+            </div>
+        }
+    </div>
+</div>

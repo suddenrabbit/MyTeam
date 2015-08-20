@@ -45,11 +45,9 @@ namespace MyTeam.Models
         [Display(Name = "需求受理人/联系电话")]
         public int ReqAcptPerson { get; set; } //数据库存储UID，页面显示根据User表
 
-        [Required]
         [Display(Name = "研发联系人/联系电话")]
         public string ReqDevPerson { get; set; }
 
-        [Required]
         [Display(Name = "业务测试人/联系电话")]
         public string ReqBusiTestPerson { get; set; }
 
@@ -62,7 +60,6 @@ namespace MyTeam.Models
         public DateTime? DevEvalDate { get; set; }
 
         // detail
-        [Required]
         [Display(Name = "需求编号")]
         public string ReqDetailNo { get; set; }
 

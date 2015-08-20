@@ -38,5 +38,15 @@ namespace MyTeam.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 更新内存
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UpdateMemory()
+        {
+            this.Update();
+            return Content("已更新内存");
+        }
+
     }
 }

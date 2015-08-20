@@ -40,7 +40,7 @@ namespace MyTeam.Controllers
             }
 
             // 项目列表
-            var r = dbContext.Projs.ToList();
+            var r = dbContext.Projs.Where(a => a.IsReqTrack == true).ToList();
             // 添加全部
             r.Insert(0, new Proj() { ProjID = 0, ProjName = "全部" });
             ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName", query.ProjID);
@@ -54,7 +54,7 @@ namespace MyTeam.Controllers
         public ActionResult Create()
         {
             // 项目列表
-            var ls = dbContext.Projs.ToList();
+            var ls = dbContext.Projs.Where(a => a.IsReqTrack == true).ToList();
             ViewBag.ProjList = new SelectList(ls, "ProjID", "ProjName");
 
             // 需求来源及状态的下拉列表
@@ -98,7 +98,7 @@ namespace MyTeam.Controllers
             }
 
             // 项目列表
-            var ls = dbContext.Projs.ToList();
+            var ls = dbContext.Projs.Where(a => a.IsReqTrack == true).ToList();
             ViewBag.ProjList = new SelectList(ls, "ProjID", "ProjName", br.ProjID);
 
             // 需求来源及状态的下拉列表
@@ -152,7 +152,7 @@ namespace MyTeam.Controllers
         /// <returns></returns>
         public ActionResult Export(string ProjID)
         {
-            List<Proj> projLs = dbContext.Projs.ToList();
+            List<Proj> projLs = dbContext.Projs.Where(a => a.IsReqTrack == true).ToList();
             string pName = " ";
             foreach(Proj p in projLs){
                 if(p.ProjID.ToString() == ProjID){
@@ -195,7 +195,7 @@ namespace MyTeam.Controllers
         public ActionResult Import()
         {
             // 项目列表
-            var r = dbContext.Projs.ToList();
+            var r = dbContext.Projs.Where(a => a.IsReqTrack == true).ToList();
 
             ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName");
 
@@ -286,7 +286,7 @@ namespace MyTeam.Controllers
             }
 
             // 项目列表
-            var r = dbContext.Projs.ToList();
+            var r = dbContext.Projs.Where(a => a.IsReqTrack == true).ToList();
 
             ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName", ProjID);
 

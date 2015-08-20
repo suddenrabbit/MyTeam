@@ -147,6 +147,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusiReqController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\ProjController.cs" />
     <Compile Include="Controllers\ProjMeetingController.cs" />
     <Compile Include="Controllers\ProjSurvController.cs" />
@@ -324,6 +325,7 @@
     <Content Include="Views\BusiReq\Index.cshtml" />
     <Content Include="Views\BusiReq\Import.cshtml" />
     <Content Include="Views\Ver\QuickVer.cshtml" />
+    <Content Include="Views\Import\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
