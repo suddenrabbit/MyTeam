@@ -37,12 +37,12 @@ namespace MyTeam.Models
 
         [Display(Name = "计划完成日期")]
         [DataType(DataType.Date)]
-        public DateTime PlanDeadLine { get; set; }
+        public DateTime? PlanDeadLine { get; set; }
 
 
         [Display(Name = "实际完成日期")]
         [DataType(DataType.Date)]
-        public DateTime RealDeadLine { get; set; }
+        public DateTime? RealDeadLine { get; set; }
 
 
         [Display(Name = "变更标识")]
@@ -55,7 +55,7 @@ namespace MyTeam.Models
 
         [Display(Name = "批准日期")]
         [DataType(DataType.Date)]
-        public DateTime ApproveDate { get; set; }
+        public DateTime? ApproveDate { get; set; }
 
 
         [Display(Name = "软需编号")]

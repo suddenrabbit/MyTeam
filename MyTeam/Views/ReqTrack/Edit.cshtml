@@ -33,14 +33,13 @@
 
             @Html.HiddenFor(model => model.TrackID)
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
 
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.ProjID, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ProjID, "", new { @class = "text-danger" })
-                </div>
-            </div>
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
+        </div>
+    </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-2 control-label" })
 

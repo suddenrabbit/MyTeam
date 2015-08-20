@@ -184,6 +184,7 @@ namespace MyTeam.Controllers
                          ReqType = req.ReqType,
                          RlsDate = req.RlsDate
                      };
+
             return this.makeExcel<BusiReqExcel>("BusiReqReportT", "业务需求变更跟踪", ls.ToList<BusiReqExcel>(), 2);
                         
         }
@@ -229,8 +230,6 @@ namespace MyTeam.Controllers
 
                         var ls = dbContext.BusiReqs.ToList();
 
-                        int skipNum = 0;
-
                         for (int row = rowStart + 1; row <= rowEnd; row++)
                         {
                             string busiReqNo = worksheet.Cells[row, 1].GetValue<string>();
@@ -238,7 +237,6 @@ namespace MyTeam.Controllers
                             // ProjID+BusiReqNo重复的不导入
                             if (ls.Find(a => a.ProjID == ProjID && a.BusiReqNo == busiReqNo) != null)
                             {
-                                skipNum++;
                                 continue;
                             }
 
@@ -264,16 +262,19 @@ namespace MyTeam.Controllers
                             dbContext.BusiReqs.Add(br);
                         }
                         // 保存
-                        dbContext.SaveChanges();
+                        int realNum = dbContext.SaveChanges();
 
-                        string s = string.Format("<p class='alert alert-success'>《{0}》处理成功！共{1}条数据，忽略{2}条数据</p>", file.FileName, rowEnd - rowStart, skipNum);
+                        string s = string.Format("<p class='alert alert-success'>《{0}》处理成功！共{1}条数据，实际导入{2}条数据</p>", file.FileName, rowEnd - rowStart, realNum);
 
                         ViewBag.Msg = s;
                     }
                 }
                 catch (Exception e1)
                 {
-                    ViewBag.Msg = "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+                    string errMsg = e1.Message;
+                    if (e1.InnerException != null)
+                        errMsg = e1.InnerException.Message;
+                    ViewBag.Msg = "<p class='alert alert-danger'>出错了: " + errMsg + "</p>";
                 }
                 finally
                 {

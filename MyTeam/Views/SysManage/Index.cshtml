@@ -103,7 +103,7 @@
                 @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
                 {
                     <!--只有管理员可以删除-->
-                    <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysShortName')">删除</a></span>
+                    <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysName')">删除</a></span>
                 }
             </td>
         </tr>

@@ -166,6 +166,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Home\HomeResult.cs" />
+    <Compile Include="Models\Proj\ReqTrackQuery.cs" />
     <Compile Include="Models\Proj\ProjResult.cs" />
     <Compile Include="Models\Proj\ProjQuery.cs" />
     <Compile Include="Models\Proj\BusiReqExcel.cs" />
@@ -233,6 +234,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\templates\BusiReqImportT.xlsx" />
     <Content Include="Content\templates\VerReportT.xlsx" />
+    <Content Include="Content\templates\ReqTrackImportT.xlsx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -325,6 +327,7 @@
     <Content Include="Views\BusiReq\Index.cshtml" />
     <Content Include="Views\BusiReq\Import.cshtml" />
     <Content Include="Views\Ver\QuickVer.cshtml" />
+    <Content Include="Views\ReqTrack\Import.cshtml" />
     <Content Include="Views\Import\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
