@@ -127,7 +127,7 @@
 
                             <td>
                                 @Html.ActionLink("编辑", "Edit", new { id = item.BRID })
-                                | <a href="#" onclick="doDelete('@item.BRID','@item.BusiReqNo')">删除</a>
+                                | <a href="#" onclick="doDelete('@item.BRID','@item.ProjName 的业务需求管理记录 @item.BusiReqName')">删除</a>
                             </td>
                         </tr>
                     }

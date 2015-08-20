@@ -173,16 +173,6 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Edit(Proj proj)
         {
-            // 判断是否有重复的项目名称，如有重复不允许新增
-            List<Proj> projLs = dbContext.Projs.ToList();
-            foreach (Proj p in projLs)
-            {
-                if (p.ProjName == proj.ProjName)
-                {
-                    return "<p class='alert alert-danger'>出错了: " + "项目名称重复，不允许修改！" + "</p>";
-                }
-            }
-
             try
             {
                 dbContext.Entry(proj).State = System.Data.Entity.EntityState.Modified;

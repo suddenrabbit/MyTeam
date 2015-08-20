@@ -143,6 +143,13 @@ namespace MyTeam.Controllers
                 return View();
             }
 
+            //项目列表
+            List<Proj> ls1 = dbContext.Projs.ToList();
+            SelectList sl2 = null;
+            sl2 = new SelectList(ls1, "ProjID", "ProjName");
+
+            ViewBag.ProjList = sl2;
+
             // 会议类型列表
             ViewBag.MeetingTypeList = MyTools.GetSelectList(Constants.MeetingTypeList);
 
