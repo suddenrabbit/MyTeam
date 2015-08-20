@@ -323,6 +323,7 @@
     <Content Include="Views\BusiReq\Edit.cshtml" />
     <Content Include="Views\BusiReq\Index.cshtml" />
     <Content Include="Views\BusiReq\Import.cshtml" />
+    <Content Include="Views\Ver\QuickVer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

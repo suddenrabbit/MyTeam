@@ -1,0 +1,73 @@
+﻿@model MyTeam.Models.Ver
+@{
+    ViewBag.Title = "批量制定年度版本计划";
+}
+<h2>@ViewBag.Title。</h2>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    // 日期控件
+    $(document).ready(function () {
+        $("#VerYear").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M' })", placeholder: "点击选择日期" });
+    });
+</script>
+<div class="row">
+    <div class="col-md-8">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("QuickVer", "Ver", null, new AjaxOptions { UpdateTargetId = "info" },
+                new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="VerYear" class="col-md-2 control-label">起始年月</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.VerYear, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.VerYear, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="VerNo" class="col-md-2 control-label">起始版本号</label>
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.VerNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.VerNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReleaseFreq, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.ReleaseFreq, ViewBag.ReleaseFreqList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DraftPersonID, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    <!--版本计划指定人下拉选择-->
+                    @Html.DropDownListFor(model => model.DraftPersonID, ViewBag.ReqPersonList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="新增" class="btn btn-primary" />
+                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

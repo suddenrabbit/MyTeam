@@ -68,8 +68,8 @@ namespace MyTeam.Controllers
 
             return View(query);
         }
-        
-        
+
+
         //
         // GET: /SysManage/Create
 
@@ -108,8 +108,6 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Create(Ver ver)
         {
-            
-
             try
             {
                 if (ModelState.IsValid)
@@ -187,7 +185,6 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Delete(int id)
         {
-
             try
             {
                 List<Ver> ls = dbContext.Vers.ToList();
@@ -220,8 +217,10 @@ namespace MyTeam.Controllers
 
             foreach (Ver s in list)
             {
-                foreach(RetailSystem r in rs){
-                    if(s.SysId == r.SysID){
+                foreach (RetailSystem r in rs)
+                {
+                    if (s.SysId == r.SysID)
+                    {
                         s.SysName = r.SysName;
                         sysNO = r.SysNO;
                     }
@@ -238,6 +237,86 @@ namespace MyTeam.Controllers
                 rl.Add(VerExcel);
             }
             return rl;
+        }
+
+
+        /*
+         * 快速生成版本计划：
+         * 根据起始版本号、起始日期，按照频率计算当年的版本计划
+         */
+        public ActionResult QuickVer()
+        {
+            List<RetailSystem> ls1 = this.GetSysList();
+
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
+
+            ViewBag.SysList = sl1;
+
+            SelectList sl2 = null;
+
+            User user = this.GetSessionCurrentUser();
+            if (user != null)
+            {
+                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+            }
+            else
+            {
+                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+            }
+
+            ViewBag.ReqPersonList = sl2;
+
+            // 发布频率列表
+            ViewBag.ReleaseFreqList = MyTools.GetSelectList(Constants.ReleaseFreqList);
+
+            return View();
+        }
+
+        [HttpPost]
+        public string QuickVer(Ver ver)
+        {
+            try
+            {
+                // 根据起始日期和频率，确定要制定多少条
+                string[] firstDate = ver.VerYear.Split('/');
+                string verYear = firstDate[0];
+                int verMonth = int.Parse(firstDate[1]);
+                int freq = ver.ReleaseFreq;
+
+                int num = (12 - verMonth) / freq + 1; // 版本数量
+
+                string[] verNos = ver.VerNo.Split('.');
+                int changeVerNo = int.Parse(verNos[1]); //要变化的版本号为小数点后的数字
+
+                for (int i = 0; i < num; i++)
+                {
+                    Ver v = new Ver()
+                    {
+                        SysId = ver.SysId,
+                        VerYear = verYear,
+                        ReleaseFreq = freq,
+                        PublishTime = DateTime.Parse(verYear + "/" + verMonth + "/1"),
+                        VerNo = verNos[0] + "." + changeVerNo,
+                        DraftPersonID = ver.DraftPersonID
+                    };
+                    dbContext.Vers.Add(v);
+
+                    // 月份变化
+                    verMonth += freq;
+                    // 版本号变化
+                    changeVerNo++;
+                }
+
+                dbContext.SaveChanges();
+
+                return "<p class='alert alert-success'>版本计划制定成功</p>";
+            }
+
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+            }
+
         }
     }
 }

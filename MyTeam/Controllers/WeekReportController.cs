@@ -132,6 +132,9 @@ namespace MyTeam.Controllers
                 dbContext.Entry(main).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
 
+                // 同时删除重点工作对应的每周工作
+                dbContext.Database.ExecuteSqlCommand("delete from WeekReportDetails where WorkMission = @p0 and IsWithMain = 1", id.ToString());
+
                 return "删除成功";
             }
             catch (Exception e1)

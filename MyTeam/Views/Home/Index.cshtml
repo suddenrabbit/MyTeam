@@ -25,11 +25,10 @@
     <fieldset class="col-md-6">
         <legend>常用任务</legend>
         <div class="list-group">
-            @Html.ActionLink("维护需求入池", "MainInPool", "ReqManage", new { @class = "list-group-item" })
-            @Html.ActionLink("维护需求管理", "Index", "ReqManage", new { @class = "list-group-item" })
-            @Html.ActionLink("周报填写", "MainIndex", "WeekReport", new { @class = "list-group-item" })
-            @Html.ActionLink("周报导出", "Export", "WeekReport", new { @class = "list-group-item" })
-         </div>
-</fieldset>
+            @Html.ActionLink("维护需求入池", "MainInPool", "ReqManage", null, new { @class = "list-group-item" })
+            @Html.ActionLink("维护需求管理", "Index", "ReqManage", null, new { @class = "list-group-item" })
+            @Html.ActionLink("周报填写", "MainIndex", "WeekReport", null, new { @class = "list-group-item" })
+            @Html.ActionLink("周报导出", "Export", "WeekReport", null, new { @class = "list-group-item" })
+        </div>
+    </fieldset>
 </div>
-

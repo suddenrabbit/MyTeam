@@ -17,7 +17,7 @@
 <!-- Ajax删除 -->
 <script>
     function doDelete(id) {
-        if (confirm("确定要删除？")) {
+        if (confirm("确定要删除？（会同时删除所有相关的每周工作！）")) {
             var url = "/WeekReport/DeleteMain/" + id;
             $.ajax({
                 type: 'POST',
