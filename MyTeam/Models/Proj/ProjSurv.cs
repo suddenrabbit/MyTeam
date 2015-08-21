@@ -20,6 +20,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "调研方式")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public String SurveyWay { get; set; }
 
 
@@ -34,7 +35,7 @@ namespace MyTeam.Models
 
 
         [Display(Name = "调研使用人天")]
-        public String SurveyTime { get; set; }
+        public int SurveyTime { get; set; }
 
 
         [Display(Name = "调研内容")]

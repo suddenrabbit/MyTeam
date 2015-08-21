@@ -22,10 +22,12 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "会议议题")]
+        [StringLength(128, ErrorMessage = "不能超过128位")]
         public String MeetingTopic { get; set; }
 
         [Required]
         [Display(Name = "会议类型")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public String MeetingType { get; set; }
 
 

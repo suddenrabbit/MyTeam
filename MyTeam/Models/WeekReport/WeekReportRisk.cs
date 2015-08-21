@@ -13,7 +13,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "周报日期")]
-        [DataType(DataType.Date)]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string RptDate { get; set; }
 
         [Required]

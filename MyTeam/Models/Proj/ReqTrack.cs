@@ -20,18 +20,22 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "业需编号")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public String ReqNo { get; set; }
 
 
         [Display(Name = "业需名称")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public String ReqName { get; set; }
 
 
         [Display(Name = "优先级")]
+        [StringLength(4, ErrorMessage = "不能超过4位")]
         public String Priority { get; set; }
 
 
         [Display(Name = "需求编写人")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public String ReqWriter { get; set; }
 
 
@@ -46,10 +50,12 @@ namespace MyTeam.Models
 
 
         [Display(Name = "变更标识")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public string ChangeChar { get; set; }
 
 
         [Display(Name = "变更批准人")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public String ApprovePerson { get; set; }
 
 
@@ -59,14 +65,17 @@ namespace MyTeam.Models
 
 
         [Display(Name = "软需编号")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public String SoftReqNo { get; set; }
 
 
         [Display(Name = "软需名称")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public String SoftReqName { get; set; }
 
 
         [Display(Name = "需求状态")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public String ReqStat { get; set; }
 
         [NotMapped]

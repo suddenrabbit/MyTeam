@@ -13,10 +13,12 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "任务名称")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string WorkName { get; set; }
 
         [Required]
         [Display(Name = "任务阶段")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public string WorkStage { get; set; }
 
         [Required]
@@ -25,6 +27,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "负责人")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string Person { get; set; }        
 
         [Required]

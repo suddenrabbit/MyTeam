@@ -16,17 +16,21 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "项目名称")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string ProjName { get; set; }
 
         
         [Display(Name = "项目编号")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public String ProjNo { get; set; }
 
         
         [Display(Name = "主办部门")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public String HostDept { get; set; }
 
         [Display(Name = "项目等级")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public String ProjLevel { get; set; }
 
         

@@ -19,10 +19,12 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "业需编号")]
+        [StringLength(32, ErrorMessage = "业需编号不能超过32位")]
         public string BusiReqNo { get; set; }
 
         [Required]
         [Display(Name = "业需名称")]
+        [StringLength(32, ErrorMessage = "业需名称不能超过32位")]
         public string BusiReqName { get; set; }
 
         [Required]
@@ -34,6 +36,7 @@ namespace MyTeam.Models
         public DateTime CreateDate { get; set; }
 
         [Display(Name = "需求来源及状态")]
+        [StringLength(16)]
         public string Stat { get; set; }
 
         [Display(Name = "备注")]
