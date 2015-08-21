@@ -27,6 +27,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "申请编号")]
+        [StringLength(32, ErrorMessage = "申请编号不能超过32位")]
         public string ReqNo { get; set; }
 
         [Required]
@@ -35,10 +36,12 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "需求发起单位")]
+        [StringLength(16)]
         public string ReqFromDept { get; set; }
 
         [Required]
         [Display(Name = "需求发起人/联系电话")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string ReqFromPerson { get; set; }
 
         [Required]
@@ -46,9 +49,11 @@ namespace MyTeam.Models
         public int ReqAcptPerson { get; set; } //数据库存储UID，页面显示根据User表
 
         [Display(Name = "研发联系人/联系电话")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string ReqDevPerson { get; set; }
 
         [Display(Name = "业务测试人/联系电话")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string ReqBusiTestPerson { get; set; }
 
         [Display(Name = "研发受理日期")]
@@ -61,12 +66,15 @@ namespace MyTeam.Models
 
         // detail
         [Display(Name = "维护需求编号")]
+        [StringLength(32, ErrorMessage = "维护需求编号不能超过32位")]
         public string ReqDetailNo { get; set; }
 
         [Display(Name = "下发版本号")]
+        [StringLength(8, ErrorMessage = "下发版本号不能超过8位")]
         public string Version { get; set; }
 
         [Display(Name = "关联业需编号")]
+        [StringLength(32, ErrorMessage = "关联业需编号不能超过32位")]
         public string BusiReqNo { get; set; }
 
 
@@ -75,12 +83,14 @@ namespace MyTeam.Models
 
 
         [Display(Name = "需求类型")]
+        [StringLength(8)]
         public string ReqType { get; set; }
 
         [Display(Name = "研发评估工作量")]
         public int? DevWorkload { get; set; }
 
         [Display(Name = "需求状态")]
+        [StringLength(8)]
         public string ReqStat { get; set; }
 
         [Display(Name = "出池日期")]
@@ -96,6 +106,7 @@ namespace MyTeam.Models
         public DateTime? RlsDate { get; set; }
 
         [Display(Name = "下发通知编号")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string RlsNo { get; set; }
 
         [Display(Name = "是否有关联系统")]

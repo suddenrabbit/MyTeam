@@ -22,6 +22,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "版本年度")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public string VerYear { get; set; }
 
         [Required]
@@ -35,6 +36,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "发布版本号")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public string VerNo { get; set; }
 
         
@@ -48,6 +50,7 @@ namespace MyTeam.Models
 
         
         [Display(Name = "版本类别")]
+        [StringLength(8, ErrorMessage = "不能超过8位")]
         public string VerType { get; set; }
 
         [Display(Name = "备注")]

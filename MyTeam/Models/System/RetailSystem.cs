@@ -15,33 +15,41 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "系统编号")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string SysNO { get; set; }
 
         [Required]
         [Display(Name = "系统名称")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string SysName { get; set; }
 
         [Required]
         [Display(Name = "系统简称")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string SysShortName { get; set; }
 
         [Required]
         [Display(Name = "主办部门")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string HostDept { get; set; }
 
         [Display(Name = "二级部门")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string SecondDept { get; set; }
 
         [Required]
         [Display(Name = "业务联系人")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string BusiPerson { get; set; }
 
         [Required]
         [Display(Name = "研发中心")]
+        [StringLength(8)]
         public string DevCenter { get; set; }
 
         [Required]
         [Display(Name = "研发联系人")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
         public string DevPerson { get; set; }
 
         [Required]
