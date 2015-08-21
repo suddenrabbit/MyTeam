@@ -448,16 +448,12 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Create(Req req)
         {
-            // 判断是否有重复的项目名称，如有重复不允许新增
-            List<Req> reqLs = dbContext.Reqs.ToList();
-            foreach (Req r in reqLs)
-            {
-                if (r.ReqDetailNo == req.ReqDetailNo)
-                {
-                    return "<p class='alert alert-danger'>出错了: " + "需求编号已存在，不允许重复添加！" + "</p>";
-                }
+            // 判断是否有重复的维护需求编号，如有重复不允许新增
+            Req r = dbContext.Reqs.ToList().Find(a => a.ReqDetailNo == req.ReqDetailNo);
+            if(r != null){
+                return "<p class='alert alert-danger'>出错了: 维护需求编号" + req.ReqDetailNo + "已存在，不允许重复添加！" + "</p>";
             }
-
+           
             try
             {
                 if (ModelState.IsValid)
@@ -509,13 +505,23 @@ namespace MyTeam.Controllers
             // 6、需求状态下拉列表
             ViewBag.ReqStatList = MyTools.GetSelectList(Constants.ReqStatList, false, true, req.ReqStat);
 
+            req.OldReqDetailNo = req.ReqDetailNo;
             return View(req);
         }
 
         [HttpPost]
         public string Edit(Req req)
         {
-            
+            if (req.ReqDetailNo != req.OldReqDetailNo)
+            {
+                // 若项目名称改变，则判断新改的系统名称是否有重复，如有重复不允许新增
+                Req r = dbContext.Reqs.Where(a => a.ReqDetailNo == req.ReqDetailNo).FirstOrDefault();
+                if (r != null)
+                {
+                    return "<p class='alert alert-danger'>出错了: 维护需求编号" + r.ReqDetailNo + "已存在，不允许更新！" + "</p>";
+                }
+            }   
+
             try
             {
                 dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;
@@ -712,6 +718,19 @@ namespace MyTeam.Controllers
                 rl.Add(reqExcel);
             }
             return rl;
+        }
+
+        public ActionResult Details(int id)
+        {
+            List<Req> ls = dbContext.Reqs.ToList();
+            Req req = ls.Find(a => a.RID == id);
+
+            if (req == null)
+            {
+                return View();
+            }
+
+            return View(req);
         }
 
     }

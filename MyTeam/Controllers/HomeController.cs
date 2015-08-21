@@ -28,11 +28,11 @@ namespace MyTeam.Controllers
             // 若为管理员，则显示全部
             if(user.IsAdmin)
             {
-                ViewBag.ResultList = dbContext.Database.SqlQuery<HomeResult>("select t.SysId, count(1) as ReqNum from Reqs t where t.ReqStat != N'出池' group by t.SysId");
+                ViewBag.ResultList = dbContext.Database.SqlQuery<HomeResult>("select t.SysId, count(1) as ReqNum from Reqs t where t.ReqStat = N'入池' group by t.SysId");
             }
             else
             {
-                ViewBag.ResultList = dbContext.Database.SqlQuery<HomeResult>("select t.SysId, count(1) as ReqNum from Reqs t where t.ReqStat != N'出池' and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID);
+                ViewBag.ResultList = dbContext.Database.SqlQuery<HomeResult>("select t.SysId, count(1) as ReqNum from Reqs t where t.ReqStat = N'入池' and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID);
             }
 
             return View();

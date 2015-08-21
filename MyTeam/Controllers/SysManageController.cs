@@ -1,11 +1,11 @@
-﻿using MyTeam.Models;
-using MyTeam.Utils;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MyTeam.Utils;
+using MyTeam.Models;
+using System.Text;
 using PagedList;
 
 namespace MyTeam.Controllers
@@ -45,7 +45,14 @@ namespace MyTeam.Controllers
 
         [HttpPost]
         public ContentResult Create(RetailSystem sys)
-        {            
+        {
+            // 判断是否有重复的系统名称，如有重复不允许新增
+            RetailSystem rs = this.GetSysList().Find(a => a.SysName == sys.SysName);
+            if (rs != null)
+            {
+                return Content("<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许重复添加！" + "</p>");
+            }
+
             try
             {
                 if (ModelState.IsValid)
@@ -77,6 +84,8 @@ namespace MyTeam.Controllers
                 return View();
             }
 
+            sys.OldSysName = sys.SysName;
+
             // 用户列表
             SelectList sl = new SelectList(this.GetUserList(), "UID", "Realname", sys.ReqPersonID); // 选中当前值
 
@@ -90,7 +99,18 @@ namespace MyTeam.Controllers
 
         [HttpPost]
         public ContentResult Edit(RetailSystem sys)
-        {            
+        {
+
+            if(sys.SysName != sys.OldSysName)
+            {
+                // 若系统名称改变，则判断新改的系统名称是否有重复，如有重复不允许新增
+                RetailSystem rs = this.GetSysList().Find(a => a.SysName == sys.SysName);
+                if (rs != null)
+                {
+                    return Content("<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许更新！" + "</p>");
+                }
+            }            
+
             try
             {
                 dbContext.Entry(sys).State = System.Data.Entity.EntityState.Modified;

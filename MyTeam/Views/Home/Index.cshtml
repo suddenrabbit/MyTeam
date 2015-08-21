@@ -12,7 +12,7 @@
         <div class="list-group">
             @foreach (HomeResult r in ViewBag.ResultList)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=出池&NotEqual=True&SysId=" + r.SysId;
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SysId=" + r.SysId;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName

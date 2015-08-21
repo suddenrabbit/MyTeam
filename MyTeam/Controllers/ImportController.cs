@@ -109,8 +109,8 @@ namespace MyTeam.Controllers
 
                 // 第4列，维护需求编号
                 string reqDetailNo = worksheet.Cells[row, 4].GetValue<string>();
-                // SysId + ReqDetailNo 重复的不导入
-                if (ls.Find(a => a.SysId == sysId && a.ReqDetailNo == reqDetailNo) != null)
+                // ReqDetailNo 重复的不导入
+                if (ls.Find(a => a.ReqDetailNo == reqDetailNo) != null)
                 {
                     continue;
                 }
@@ -219,7 +219,7 @@ namespace MyTeam.Controllers
                 r.CheckResult = worksheet.Cells[row, 30].GetValue<string>();
                 r.Remark = worksheet.Cells[row, 31].GetValue<string>();
                 r.IsReqTrack = false; // 默认赋值false  
-            
+
                 // 对于可能为空的日期单独处理
                 string ProAcptDate = worksheet.Cells[row, 9].GetValue<string>();
                 string SurveyGroupFoundDate = worksheet.Cells[row, 10].GetValue<string>();
@@ -260,7 +260,7 @@ namespace MyTeam.Controllers
 
                 if (!string.IsNullOrEmpty(ProjCheckAcptDate)) r.ProjCheckAcptDate = DateTime.Parse(worksheet.Cells[row, 28].GetValue<string>());
                 if (!string.IsNullOrEmpty(ProjPublishDate)) r.ProjPublishDate = DateTime.Parse(worksheet.Cells[row, 29].GetValue<string>());
-                
+
                 dbContext.Projs.Add(r);
             }
 
@@ -279,7 +279,7 @@ namespace MyTeam.Controllers
         /// <returns></returns>
         private string ProjMeetingExcel(ExcelWorksheet worksheet, string fileName)
         {
-             int rowStart = worksheet.Dimension.Start.Row;       //工作区开始行号
+            int rowStart = worksheet.Dimension.Start.Row;       //工作区开始行号
             int rowEnd = worksheet.Dimension.End.Row;       //工作区结束行号
 
             var ls = dbContext.Projs.ToList();
@@ -300,7 +300,7 @@ namespace MyTeam.Controllers
                 r.HostPerson = worksheet.Cells[row, 5].GetValue<string>();
                 r.ReviewExpert = worksheet.Cells[row, 6].GetValue<string>();
                 r.Participants = worksheet.Cells[row, 7].GetValue<string>();
-                
+
                 r.NoticeNo = worksheet.Cells[row, 9].GetValue<string>();
                 r.ReviewConclusion = worksheet.Cells[row, 10].GetValue<string>();
                 r.MeetingConclusion = worksheet.Cells[row, 11].GetValue<string>();

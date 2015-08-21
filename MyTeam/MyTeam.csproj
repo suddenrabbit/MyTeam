@@ -329,6 +329,7 @@
     <Content Include="Views\Ver\QuickVer.cshtml" />
     <Content Include="Views\ReqTrack\Import.cshtml" />
     <Content Include="Views\Import\Index.cshtml" />
+    <Content Include="Views\ReqManage\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

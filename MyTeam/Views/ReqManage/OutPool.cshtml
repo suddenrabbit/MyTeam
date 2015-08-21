@@ -57,113 +57,114 @@
             </div>
 
         }
-        @if (Model.ResultList != null)
-        {
-            if (Model.ResultList.Count < 1)
-            {
-                <p class="text-warning">没有符合条件的结果！</p>
-            }
-            else
-            {
-                <table class="table" style="width:1500px">
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].AcptMonth)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].SysName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].Version)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                        </th>
-                    </tr>
-                    @foreach (var item in Model.ResultList)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.AcptMonth)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SysName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Version)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqDetailNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqReason)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqDesc)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DevWorkload)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqDevPerson)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqType)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PlanRlsDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RlsDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Remark)
-                            </td>
-                        </tr>
-                    }
-                </table>
-                var data = Model.ResultList as PagedList.IPagedList<MyTeam.Models.OutPoolResult>;
-                @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
-            }
-        }
     </div>
 </div>
+@if (Model.ResultList != null)
+{
+    if (Model.ResultList.Count < 1)
+    {
+        <p class="text-warning">没有符合条件的结果！</p>
+    }
+    else
+    {
+        <table class="table table-condensed" style="font-size:12px">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].AcptMonth)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].SysName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].Version)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                </th>
+            </tr>
+            @foreach (var item in Model.ResultList)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AcptMonth)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SysName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Version)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReqNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReqDetailNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReqReason)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReqDesc)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DevWorkload)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReqDevPerson)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReqType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PlanRlsDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RlsDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Remark)
+                    </td>
+                </tr>
+            }
+        </table>
+        var data = Model.ResultList as PagedList.IPagedList<MyTeam.Models.OutPoolResult>;
+        @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+    }
+}
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

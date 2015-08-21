@@ -36,8 +36,9 @@
         });
     }
 </script>
-<table class="table table-condensed">
+<table class="table table-condensed" style="font-size:12px">
     <tr>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.SysNO)
         </th>
@@ -65,11 +66,18 @@
         <th>
             @Html.DisplayNameFor(model => model.ReqPersonID)
         </th>
-        <th></th>
     </tr>
     @foreach (var item in Model)
     {
         <tr>
+            <td>
+                @Html.ActionLink("编辑", "Edit", new { id = item.SysID })
+                @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+                {
+                    <!--只有管理员可以删除-->
+                    <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysName')">删除</a></span>
+                }
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SysNO)
             </td>
@@ -96,15 +104,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ReqPersonName)
-            </td>
-
-            <td>
-                @Html.ActionLink("编辑", "Edit", new { id = item.SysID })
-                @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
-                {
-                    <!--只有管理员可以删除-->
-                    <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysName')">删除</a></span>
-                }
             </td>
         </tr>
     }

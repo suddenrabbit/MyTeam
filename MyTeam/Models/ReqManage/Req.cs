@@ -60,7 +60,7 @@ namespace MyTeam.Models
         public DateTime? DevEvalDate { get; set; }
 
         // detail
-        [Display(Name = "需求编号")]
+        [Display(Name = "维护需求编号")]
         public string ReqDetailNo { get; set; }
 
         [Display(Name = "下发版本号")]
@@ -140,6 +140,9 @@ namespace MyTeam.Models
             }
             set { this.ReqAcptPersonNamePhone = value; }
         }
+
+        [NotMapped]
+        public string OldReqDetailNo { get; set; }
 
     }
 }

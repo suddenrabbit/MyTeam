@@ -23,6 +23,7 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             @Html.HiddenFor(model => model.SysID);
+            @Html.HiddenFor(model => model.OldSysName);
 
             <div class="form-group">
                 @Html.LabelFor(model => model.SysNO, new { @class = "col-md-2 control-label" })

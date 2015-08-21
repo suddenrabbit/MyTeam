@@ -44,6 +44,7 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             @Html.HiddenFor(model => model.ProjID)
+            @Html.HiddenFor(model => model.OldProjName);
 
             <fieldset>
                 <legend>项目信息</legend>

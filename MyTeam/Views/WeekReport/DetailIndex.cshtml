@@ -56,8 +56,9 @@
         });
     }
 </script>
-<table class="table">
+<table class="table table-condensed" style="font-size:12px">
     <tr>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.RptDate)
         </th>
@@ -67,7 +68,6 @@
                 @Html.DisplayNameFor(model => model.WorkMission)
             </th>
         }
-
         <th>
             @Html.DisplayNameFor(model => model.WorkDetail)
         </th>
@@ -86,21 +86,25 @@
         <th>
             @Html.DisplayNameFor(model => model.Remark)
         </th>
-        <th></th>
+
     </tr>
     @foreach (var item in Model)
     {
         <tr>
             <td>
+                @Html.ActionLink("编辑", "EditDetail", new { id = item.WRDetailID }) |
+                <a href="#" onclick="doDelete('@item.WRDetailID','@item.RptDate 的工作任务')">删除</a>
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.RptDate)
             </td>
-            @if(!forMain)
+            @if (!forMain)
             {
                 <td>
                     @Html.DisplayFor(modelItem => item.WorkMission)
                 </td>
             }
-            
+
             <td>
                 @Html.DisplayFor(modelItem => item.WorkDetail)
             </td>
@@ -119,10 +123,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Remark)
             </td>
-            <td>
-                @Html.ActionLink("编辑", "EditDetail", new { id = item.WRDetailID }) |
-                <a href="#" onclick="doDelete('@item.WRDetailID','@item.RptDate 的工作任务')">删除</a>
-            </td>
+
         </tr>
     }
 </table>

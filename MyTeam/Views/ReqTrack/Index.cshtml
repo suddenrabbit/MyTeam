@@ -67,6 +67,7 @@
             {
                 <table class="table table-condensed" style="font-size:12px">
                     <tr>
+                        <th></th>
                         <th>
                             @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
                         </th>
@@ -111,11 +112,14 @@
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
                         </th>
 
-                        <th></th>
                     </tr>
                     @foreach (var item in Model.ResultList)
                     {
                         <tr>
+                            <td>
+                                @Html.ActionLink("编辑", "Edit", new { id = item.TrackID })
+                                | <a href="#" onclick="doDelete('@item.TrackID','@item.ProjName 的业需软需状态跟踪记录')">删除</a>
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ProjName)
                             </td>
@@ -159,10 +163,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReqStat)
                             </td>
-                            <td>
-                                @Html.ActionLink("编辑", "Edit", new { id = item.TrackID })
-                                | <a href="#" onclick="doDelete('@item.TrackID','@item.ProjName 的业需软需状态跟踪记录')">删除</a>
-                            </td>
+
                         </tr>
                     }
                 </table>

@@ -106,7 +106,7 @@
             }
             else
             {
-                <table class="table table-condensed" style="width:2500px;font-size:12px">
+                <table class="table table-condensed" style="font-size:12px">
                     <tr>
                         <th></th>
                         <th>
@@ -125,80 +125,25 @@
                             @Html.DisplayNameFor(model => model.ResultList[0].Version)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].BusiReqNo)
-                        </th>
-                        <th>
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqFromDept)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqFromPerson)
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqAcptPerson)
                         </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].DevAcptDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].DevEvalDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].OutDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].RlsNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].IsSysAsso)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].AssoSysName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].AssoReqNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].AssoRlsDesc)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                        </th>
-
                     </tr>
-
                     @foreach (var item in Model.ResultList)
                     {
                         var trid = "resultTR" + item.RID;
                         <tr id="@trid">
                             <td>
                                 @Html.ActionLink("编辑", "Edit", new { id = item.RID }) |
+                                @Html.ActionLink("详情", "Details", new { id = item.RID }, new { target = "_blank" }) |
                                 <a href="#" onclick="doDelete('@item.RID')">删除</a>
                             </td>
                             <td>
@@ -217,75 +162,19 @@
                                 @Html.DisplayFor(modelItem => item.Version)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.BusiReqNo)
-                            </td>
-                            <td>
                                 @Html.DisplayFor(modelItem => item.ReqReason)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReqDesc)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ReqFromDept)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqFromPerson)
+                                @Html.DisplayFor(modelItem => item.ReqStat)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReqAcptPersonNamePhone)
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqDevPerson)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqType)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DevAcptDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DevEvalDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DevWorkload)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqStat)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.OutDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PlanRlsDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RlsDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RlsNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.IsSysAsso)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.AssoSysName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.AssoReqNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.AssoRlsDesc)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Remark)
-                            </td>
-
                         </tr>
                     }
-
                 </table>
                 @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Req>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
             }

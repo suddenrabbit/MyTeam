@@ -40,9 +40,10 @@
     }
 </script>
 
-<table class="table">
+<table class="table table-condensed" style="font-size:12px">
     <tr>
 
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.ProjID)
         </th>
@@ -91,66 +92,64 @@
             @Html.DisplayNameFor(model => model.Remark)
         </th>
 
-        <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink("编辑", "Edit", new { id = item.SurvID }) |
+                <a href="#" onclick="doDelete('@item.SurvID','@item.ProjName 的项目调研记录')">删除</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjName)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjName)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveyWay)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.SurveyWay)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.StartTime)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.EndTime)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveyTime)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.SurveyTime)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveyContent)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.SurveyContent)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveyTarget)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.SurveyTarget)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkTarget)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.WorkTarget)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HostPerson)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.HostPerson)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JoinPerson)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.JoinPerson)
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SatisfactionDegree)
+            </td>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.SatisfactionDegree)
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.Remark)
-        </td>
-
-        <td>
-            @Html.ActionLink("编辑", "Edit", new { id=item.SurvID }) |
-			<a href="#" onclick="doDelete('@item.SurvID','@item.ProjName 的项目调研记录')">删除</a>
-        </td>
-    </tr>
-}
+            <td>
+                @Html.DisplayFor(modelItem => item.Remark)
+            </td>
+        </tr>
+    }
 </table>
 
 <!--分页-->

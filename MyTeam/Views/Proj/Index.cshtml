@@ -112,7 +112,7 @@
                         <tr id="@trid">
                             <td>
                                 @Html.ActionLink("编辑", "Edit", new { id = item.ProjID }) |
-                                @Html.ActionLink("详情", "Details", new { id = item.ProjID }) |
+                                @Html.ActionLink("详情", "Details", new { id = item.ProjID }, new { target = "_blank" }) |
                                 <a href="#" onclick="doDelete('@item.ProjID','@item.ProjName')">删除</a>
                             </td>
                             <td>

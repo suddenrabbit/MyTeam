@@ -163,5 +163,8 @@ namespace MyTeam.Models
             }
             set { this.ReqAnalysisName = value; }
         }
+
+        [NotMapped]
+        public string OldProjName { get; set; }
     }
 }

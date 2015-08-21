@@ -63,5 +63,8 @@ namespace MyTeam.Models
                 this.ReqPersonName = value;
             }
         } //用于显示UID对应的名字
+
+        [NotMapped]
+        public string OldSysName { get; set; }
     }
 }

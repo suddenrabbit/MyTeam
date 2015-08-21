@@ -133,7 +133,7 @@
                         <tr id="@trid">
                             <td>
                                 @Html.ActionLink("编辑", "Edit", new { id = item.MeetingID }) |
-                                @Html.ActionLink("详情", "Details", new { id = item.MeetingID }) |
+                                @Html.ActionLink("详情", "Details", new { id = item.MeetingID }, new { target = "_blank" }) |
                                 <a href="#" onclick="doDelete('@item.MeetingID','@item.ProjName 的项目会议记录')">删除</a>
                             </td>
                             <td>

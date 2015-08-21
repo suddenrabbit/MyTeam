@@ -258,10 +258,7 @@ namespace MyTeam.Controllers
                 }
                 catch (Exception e1)
                 {
-                    string errMsg = e1.Message;
-                    if (e1.InnerException != null)
-                        errMsg = e1.InnerException.Message;
-                    ViewBag.Msg = "<p class='alert alert-danger'>出错了: " + errMsg + "</p>";
+                    ViewBag.Msg = "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
                 }
                 finally
                 {
