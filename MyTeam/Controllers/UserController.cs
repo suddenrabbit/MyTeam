@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using MyTeam.Models;
+using MyTeam.Utils;
 
 namespace MyTeam.Controllers
 {
@@ -119,7 +120,7 @@ namespace MyTeam.Controllers
 
         // 新增用户:ajax调用
         [HttpPost]
-        public ContentResult Create(User user)
+        public string Create(User user)
         {
             try
             {
@@ -131,7 +132,7 @@ namespace MyTeam.Controllers
                     var ls = this.GetUserList().Where(a => a.Username == user.Username);
                     if (ls.Count() > 0)
                     {
-                        return Content("<p class='alert alert-danger'>该用户名已存在，无法添加！</p>", "text/html");
+                        return"<p class='alert alert-danger'>该用户名已存在，无法添加！</p>";
                     }
                     else
                     {
@@ -142,11 +143,11 @@ namespace MyTeam.Controllers
                     }
 
                 }
-                return Content("<p class='alert alert-success'>添加成功！</p>", "text/html");
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
-                return Content("<p class='alert alert-danger'>出错了: " + e1.Message + "</p>", "text/html");
+                return"<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
 
         }
@@ -191,7 +192,7 @@ namespace MyTeam.Controllers
 
         // 更新用户信息
         [HttpPost]
-        public ContentResult Edit(User user)
+        public string Edit(User user)
         {
             try
             {
@@ -206,9 +207,9 @@ namespace MyTeam.Controllers
             }
             catch (Exception e1)
             {
-                return Content("<p class='alert alert-danger'>出错了: " + e1.Message + "</p>", "text/html");
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return Content("<p class='alert alert-success'>修改成功！</p>", "text/html");
+            return Constants.AJAX_EDIT_SUCCESS_RETURN; ;
         }
 
     }

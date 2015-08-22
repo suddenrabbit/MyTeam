@@ -61,7 +61,7 @@ namespace MyTeam.Controllers
                     dbContext.ProjSurvs.Add(reqSurv);
                     dbContext.SaveChanges();
                 }
-                return "<p class='alert alert-success'>新增成功</p>";
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
@@ -106,7 +106,7 @@ namespace MyTeam.Controllers
                 dbContext.Entry(reqSurv).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return "<p class='alert alert-success'>更新成功</p>";
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {

@@ -43,7 +43,7 @@ namespace MyTeam.Controllers
 
                     // 需要对list修改以适应Excel模板
                     List<ProjMeetingResult> excelList = this.GetExcelList(ls);
-                    return this.makeExcel<ProjMeetingResult>("ProjMeetingReportT", targetFileName, excelList);
+                    return this.MakeExcel<ProjMeetingResult>("ProjMeetingReportT", targetFileName, excelList);
                 }
                 else
                 {
@@ -122,7 +122,7 @@ namespace MyTeam.Controllers
                     dbContext.ProjMeetings.Add(projMeeting);
                     dbContext.SaveChanges();
                 }
-                return "<p class='alert alert-success'>新增成功</p>";
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
@@ -173,7 +173,7 @@ namespace MyTeam.Controllers
                 dbContext.Entry(projMeeting).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return "<p class='alert alert-success'>更新成功</p>";
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {

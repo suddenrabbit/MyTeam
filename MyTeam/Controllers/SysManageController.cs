@@ -44,13 +44,13 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Create
 
         [HttpPost]
-        public ContentResult Create(RetailSystem sys)
+        public string Create(RetailSystem sys)
         {
             // 判断是否有重复的系统名称，如有重复不允许新增
             RetailSystem rs = this.GetSysList().Find(a => a.SysName == sys.SysName);
             if (rs != null)
             {
-                return Content("<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许重复添加！" + "</p>");
+                return "<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许重复添加！" + "</p>";
             }
 
             try
@@ -62,12 +62,12 @@ namespace MyTeam.Controllers
                     // 更新内存
                     this.Update();
                 }
-                return Content("<p class='alert alert-success'>添加成功</p>");
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
                 
             }
             catch (Exception e1)
             {
-                return Content("<p class='alert alert-danger'>出错了: " + e1.Message + "</p>");
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
 
         }
@@ -98,7 +98,7 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Edit/5
 
         [HttpPost]
-        public ContentResult Edit(RetailSystem sys)
+        public string Edit(RetailSystem sys)
         {
 
             if(sys.SysName != sys.OldSysName)
@@ -107,7 +107,7 @@ namespace MyTeam.Controllers
                 RetailSystem rs = this.GetSysList().Find(a => a.SysName == sys.SysName);
                 if (rs != null)
                 {
-                    return Content("<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许更新！" + "</p>");
+                    return "<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许更新！" + "</p>";
                 }
             }            
 
@@ -118,11 +118,11 @@ namespace MyTeam.Controllers
                 // 更新内存
                 this.Update();
 
-                return Content("<p class='alert alert-success'>更新成功</p>");
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
-                return Content("<p class='alert alert-danger'>出错了: " + e1.Message + "</p>");
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 

@@ -22,10 +22,16 @@
         $("#ApproveDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
     });
 </script>
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
+</script>
 
 <div class="row">
     <div class="col-md-8">
-        @using (Ajax.BeginForm("Edit", "ReqTrack", null, new AjaxOptions { UpdateTargetId = "info" },
+        @using (Ajax.BeginForm("Edit", "ReqTrack", null, new AjaxOptions { UpdateTargetId = "info", OnComplete="hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()

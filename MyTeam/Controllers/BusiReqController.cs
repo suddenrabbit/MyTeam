@@ -77,7 +77,7 @@ namespace MyTeam.Controllers
                     dbContext.BusiReqs.Add(br);
                     dbContext.SaveChanges();                    
                 }
-                 return "<p class='alert alert-success'>新增成功</p>";
+                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
@@ -118,7 +118,7 @@ namespace MyTeam.Controllers
                 dbContext.Entry(br).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
              
-                return "<p class='alert alert-success'>更新成功</p>";
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
@@ -185,7 +185,7 @@ namespace MyTeam.Controllers
                          RlsDate = req.RlsDate
                      };
 
-            return this.makeExcel<BusiReqExcel>("BusiReqReportT", "业务需求变更跟踪", ls.ToList<BusiReqExcel>(), 2);
+            return this.MakeExcel<BusiReqExcel>("BusiReqReportT", "业务需求变更跟踪", ls.ToList<BusiReqExcel>(), 2);
                         
         }
 

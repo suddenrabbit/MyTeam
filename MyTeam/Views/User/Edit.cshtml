@@ -8,6 +8,14 @@
     <div class="alert alert-danger" role="alert">@ViewBag.ErrMsg</div>
     return;
 }
+
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
+</script>
+
 <div class="row">
     <div class="col-md-8">
         @if (!string.IsNullOrEmpty(ViewBag.Message))
@@ -15,7 +23,7 @@
             <div class="alert alert-success" role="alert">@ViewBag.Message</div>
         }
         <div id="info"></div>
-        @using (Ajax.BeginForm("Edit", "User", null, new AjaxOptions { UpdateTargetId = "info", HttpMethod = "POST" },
+        @using (Ajax.BeginForm("Edit", "User", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
                  new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()

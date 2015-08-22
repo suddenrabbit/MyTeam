@@ -261,7 +261,7 @@ namespace MyTeam.Controllers
 
                     // 需要对list修改以适应Excel模板
                     List<ReqExcel> excelList = this.GetExcelList(ls);
-                    return this.makeExcel<ReqExcel>("ReqReportT", targetFileName, excelList);
+                    return this.MakeExcel<ReqExcel>("ReqReportT", targetFileName, excelList);
                 }
                 else
                 {
@@ -462,7 +462,7 @@ namespace MyTeam.Controllers
                     dbContext.SaveChanges();
                 }
 
-                return "<p class='alert alert-success'>新增成功</p>";
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
@@ -527,7 +527,7 @@ namespace MyTeam.Controllers
                 dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return "<p class='alert alert-success'>更新成功</p>";
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
@@ -616,7 +616,7 @@ namespace MyTeam.Controllers
                         targetFileName += "_" + query.Version;
                     if (!string.IsNullOrEmpty(query.MaintainYear))
                         targetFileName += "_" + query.MaintainYear;
-                    return this.makeExcel<OutPoolResult>("OutPoolReportT", targetFileName, resultList);
+                    return this.MakeExcel<OutPoolResult>("OutPoolReportT", targetFileName, resultList);
                 }
                 else
                 {

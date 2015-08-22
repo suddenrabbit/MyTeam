@@ -95,5 +95,14 @@ namespace MyTeam.Utils
         /// </summary>
         public static List<string> ReleaseFreqList = new List<string>() { "1", "2", "3", "6", "12" };
 
+        /// <summary>
+        /// AJAX新增成功后统一返回HTML值
+        /// </summary>
+        public static string AJAX_CREATE_SUCCESS_RETURN = "<p class='alert alert-success'>添加成功！<a href='Create'>继续添加</a> <a href='Index'>返回</a></p>";
+
+        /// <summary>
+        /// AJAX编辑成功后统一返回HTML值
+        /// </summary>
+        public static string AJAX_EDIT_SUCCESS_RETURN = "<p class='alert alert-success'>修改成功！<a href='Index'>返回</a></p>";
     }
 }

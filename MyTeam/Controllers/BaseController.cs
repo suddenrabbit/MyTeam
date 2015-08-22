@@ -68,7 +68,7 @@ namespace MyTeam.Controllers
         }
 
         // 生成Excel
-        protected FileContentResult makeExcel<T>(String templateFileName, String targetFileName,
+        protected FileContentResult MakeExcel<T>(String templateFileName, String targetFileName,
             List<T> ls, int headSize = 1)
         {
             // 读取模板
