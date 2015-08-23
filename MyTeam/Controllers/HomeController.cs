@@ -42,6 +42,7 @@ namespace MyTeam.Controllers
         /// 更新内存
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         public ActionResult UpdateMemory()
         {
             this.Update();

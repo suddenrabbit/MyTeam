@@ -42,13 +42,34 @@ namespace MyTeam.Controllers
             return Session["IsAdmin"] != null && (bool)Session["IsAdmin"];
         }
 
-        // 更新内存
-        protected void Update()
+        /// <summary>
+        /// 更新内存
+        /// </summary>
+        /// <param name="type">0-全部 1-用户 2-系统 3-项目</param>
+        protected void Update(int type = 0)
         {
-            Constants.UserList = dbContext.Users.ToList<User>();
-            Constants.SysList = dbContext.RetailSystems.ToList<RetailSystem>();
+            switch (type)
+            {
+                case 1:
+                    Constants.UserList = dbContext.Users.ToList<User>();
+                    break;
+                case 2:
+                    Constants.SysList = dbContext.RetailSystems.ToList<RetailSystem>();
+                    break;
+                case 3:
+                    Constants.ProjList = dbContext.Projs.ToList<Proj>();
+                    break;
+                default:
+                    Constants.UserList = dbContext.Users.ToList<User>();
+                    Constants.SysList = dbContext.RetailSystems.ToList<RetailSystem>();
+                    Constants.ProjList = dbContext.Projs.ToList<Proj>();
+                    break;
+            }
         }
-
+        /// <summary>
+        /// 获取内存中的用户列表
+        /// </summary>
+        /// <returns></returns>
         protected List<User> GetUserList()
         {
             if (Constants.UserList == null)
@@ -58,6 +79,10 @@ namespace MyTeam.Controllers
             return new List<User>(Constants.UserList.ToArray()); //生成一个新的list对象，防止改变内存中的静态值，下同
         }
 
+        /// <summary>
+        /// 获取内存中的系统列表
+        /// </summary>
+        /// <returns></returns>
         protected List<RetailSystem> GetSysList()
         {
             if (Constants.SysList == null)
@@ -65,6 +90,18 @@ namespace MyTeam.Controllers
                 Constants.SysList = dbContext.RetailSystems.ToList<RetailSystem>();
             }
             return new List<RetailSystem>(Constants.SysList.ToArray());
+        }
+        /// <summary>
+        /// 获取内存中的项目列表
+        /// </summary>
+        /// <returns></returns>
+        protected List<Proj> GetProjList()
+        {
+            if (Constants.ProjList == null)
+            {
+                Constants.ProjList = dbContext.Projs.ToList<Proj>();
+            }
+            return new List<Proj>(Constants.ProjList.ToArray());
         }
 
         // 生成Excel
@@ -108,10 +145,10 @@ namespace MyTeam.Controllers
         private string GetPropertyInfoValue<T>(PropertyInfo pi, T m)
         {
             object obj = pi.GetValue(m, null);
-            if(obj == null)
+            if (obj == null)
                 return "";
 
-            if(pi.PropertyType == typeof(DateTime))
+            if (pi.PropertyType == typeof(DateTime))
             {
                 return ((DateTime)obj).ToShortDateString();
             }

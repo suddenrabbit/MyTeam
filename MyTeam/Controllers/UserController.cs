@@ -85,7 +85,7 @@ namespace MyTeam.Controllers
             dbContext.SaveChanges();
 
             // 更新内存
-            this.Update();
+            this.Update(1);
 
             return Content("<p class='alert alert-success'>您已成功修改密码</p>", "text/html");
         }
@@ -139,7 +139,7 @@ namespace MyTeam.Controllers
                         dbContext.Users.Add(user);
                         dbContext.SaveChanges();
                         // 更新内存
-                        this.Update();
+                        this.Update(1);
                     }
 
                 }
@@ -202,7 +202,7 @@ namespace MyTeam.Controllers
                     dbContext.SaveChanges();
                     
                     // 更新内存
-                    this.Update();
+                    this.Update(1);
                 }
             }
             catch (Exception e1)

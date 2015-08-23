@@ -176,7 +176,7 @@ namespace MyTeam.Controllers
             int rowStart = worksheet.Dimension.Start.Row;       //工作区开始行号
             int rowEnd = worksheet.Dimension.End.Row;       //工作区结束行号
 
-            var ls = dbContext.Projs.ToList();
+            var ls = this.GetProjList();
 
             for (int row = rowStart + 1; row <= rowEnd; row++)
             {
@@ -267,6 +267,9 @@ namespace MyTeam.Controllers
             // 保存
             int realNum = dbContext.SaveChanges();
 
+            // 导入完了要更新内存
+            this.Update(3);
+
             return string.Format("<p class='alert alert-success'>《{0}》处理成功！共{1}条数据，实际导入{2}条数据</p>", fileName, rowEnd - rowStart, realNum);
 
         }
@@ -282,7 +285,7 @@ namespace MyTeam.Controllers
             int rowStart = worksheet.Dimension.Start.Row;       //工作区开始行号
             int rowEnd = worksheet.Dimension.End.Row;       //工作区结束行号
 
-            var ls = dbContext.Projs.ToList();
+            var ls = this.GetProjList();
 
             for (int row = rowStart + 1; row <= rowEnd; row++)
             {

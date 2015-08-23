@@ -41,7 +41,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "需求发起人/联系电话")]
-        [StringLength(16, ErrorMessage = "不能超过16位")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string ReqFromPerson { get; set; }
 
         [Required]
@@ -49,11 +49,11 @@ namespace MyTeam.Models
         public int ReqAcptPerson { get; set; } //数据库存储UID，页面显示根据User表
 
         [Display(Name = "研发联系人/联系电话")]
-        [StringLength(16, ErrorMessage = "不能超过16位")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string ReqDevPerson { get; set; }
 
         [Display(Name = "业务测试人/联系电话")]
-        [StringLength(16, ErrorMessage = "不能超过16位")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string ReqBusiTestPerson { get; set; }
 
         [Display(Name = "研发受理日期")]
@@ -106,7 +106,7 @@ namespace MyTeam.Models
         public DateTime? RlsDate { get; set; }
 
         [Display(Name = "下发通知编号")]
-        [StringLength(16, ErrorMessage = "不能超过16位")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public string RlsNo { get; set; }
 
         [Display(Name = "是否有关联系统")]

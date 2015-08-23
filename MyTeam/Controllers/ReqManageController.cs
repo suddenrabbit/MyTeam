@@ -161,9 +161,10 @@ namespace MyTeam.Controllers
         [HttpPost]
         public ActionResult InPoolResult(List<Req> reqList)
         {
-            List<Req> reqLs = dbContext.Reqs.ToList();
+            List<Req> ls = dbContext.Reqs.ToList();
             string r = "";
-            int errorNo = 0;
+            int skipNum = 0;
+            string repeatReqDetailNo = "";
 
             try
             {
@@ -172,25 +173,30 @@ namespace MyTeam.Controllers
                     // 入库
                     foreach (Req req in reqList)
                     {
-                        foreach (Req req1 in reqLs)
+                        if (!string.IsNullOrEmpty(req.ReqDetailNo) && ls.Find(a => a.ReqDetailNo == req.ReqDetailNo) != null)
                         {
-                            if (req1.ReqDetailNo == req.ReqDetailNo)
-                            {
-                                r = "<p class='text-danger'>入池失败！" + "</p>";
-                                errorNo = errorNo + 1;
-                            }
+                            skipNum++;
+                            repeatReqDetailNo = repeatReqDetailNo + req.ReqDetailNo + " ";
+                            continue;
                         }
                         dbContext.Reqs.Add(req);
                     }
                     dbContext.SaveChanges();
 
-                    r = "<p class='text-success'>入池成功！失败数" + errorNo + "</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
+                    if(skipNum > 0)
+                    {
+                        r = string.Format("<p class='alert alert-warning'>有{0}条因维护需求编号重复未能入池：{1}</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>", skipNum, repeatReqDetailNo);
+                    }
+                    else
+                    {
+                        r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
+                    }
                 }
 
             }
             catch (Exception e1)
             {
-                r = "<p class='text-danger'>入池失败！" + e1.Message + "</p>";
+                r = "<p class='alert alert-danger'>入池失败！" + e1.Message + "</p>";
             }
 
             ViewBag.Msg = r;

@@ -60,7 +60,7 @@ namespace MyTeam.Controllers
                     dbContext.RetailSystems.Add(sys);
                     dbContext.SaveChanges();
                     // 更新内存
-                    this.Update();
+                    this.Update(2);
                 }
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
                 
@@ -116,7 +116,7 @@ namespace MyTeam.Controllers
                 dbContext.Entry(sys).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
                 // 更新内存
-                this.Update();
+                this.Update(2);
 
                 return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
@@ -137,7 +137,7 @@ namespace MyTeam.Controllers
                 dbContext.Entry(sys).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
                 // 更新内存
-                this.Update();
+                this.Update(2);
 
                 return "删除成功";
             }

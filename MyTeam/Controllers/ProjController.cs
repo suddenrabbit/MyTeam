@@ -21,7 +21,7 @@ namespace MyTeam.Controllers
         {
             if (isQuery)
             {
-                var ls = from a in dbContext.Projs
+                var ls = from a in this.GetProjList()
                          select a;
 
                 if (!string.IsNullOrEmpty(query.ProAcptDate))
@@ -68,9 +68,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Details(int id)
         {
-            
-            List<Proj> ls = dbContext.Projs.ToList();
-            Proj proj = ls.Find(a => a.ProjID == id);
+            Proj proj = this.GetProjList().Find(a => a.ProjID == id);
 
             if (proj == null)
             {
@@ -111,7 +109,7 @@ namespace MyTeam.Controllers
         public string Create(Proj proj)
         {
             // 判断是否有重复的项目名称，如有重复不允许新增
-            Proj p = dbContext.Projs.ToList().Find(a => a.ProjName == proj.ProjName);
+            Proj p = this.GetProjList().Find(a => a.ProjName == proj.ProjName);
             if(p != null){
                 return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目跟踪状态已存在，不允许重复添加！" + "</p>";
             }
@@ -124,6 +122,9 @@ namespace MyTeam.Controllers
                 {
                     dbContext.Projs.Add(proj);
                     dbContext.SaveChanges();
+
+                    // 更新内存
+                    this.Update(3);
                 }
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
@@ -139,8 +140,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Edit(int id)
         {
-            List<Proj> ls = dbContext.Projs.ToList();
-            Proj proj = ls.Find(a => a.ProjID == id);
+            Proj proj = this.GetProjList().Find(a => a.ProjID == id);
 
             if (proj == null)
             {
@@ -176,7 +176,7 @@ namespace MyTeam.Controllers
             if (proj.ProjName != proj.OldProjName)
             {
                 // 若项目名称改变，则判断新改的系统名称是否有重复，如有重复不允许新增
-                Proj p = dbContext.Projs.Where(a => a.ProjName == proj.ProjName).FirstOrDefault();
+                Proj p = this.GetProjList().Find(a => a.ProjName == proj.ProjName);
                 if (p != null)
                 {
                     return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目跟踪状态已存在，不允许更新！" + "</p>";
@@ -187,6 +187,9 @@ namespace MyTeam.Controllers
             {
                 dbContext.Entry(proj).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
+
+                // 更新内存
+                this.Update(3);
 
                 return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
@@ -201,16 +204,14 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Delete(int id)
         {
-
             try
             {
-                List<Proj> ls = dbContext.Projs.ToList();
-                Proj proj = ls.Find(a => a.ProjID == id);
+                Proj proj = this.GetProjList().Find(a => a.ProjID == id);
 
                 dbContext.Entry(proj).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
                 // 更新内存
-                this.Update();
+                this.Update(3);
 
                 return "删除成功";
             }

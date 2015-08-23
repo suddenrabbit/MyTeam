@@ -24,6 +24,11 @@ namespace MyTeam.Utils
         public static List<RetailSystem> SysList;
 
         /// <summary>
+        /// 获取内存中的项目列表
+        /// </summary>
+        public static List<Proj> ProjList;
+
+        /// <summary>
         /// 需求发起部门列表/主办部门列表
         /// </summary>
         public static List<string> ReqFromDeptList = new List<string>() { "零售银行总部", "信息科技部", "电子银行部", "信用卡中心", "支付结算部", "私人银行部", "审计部" };

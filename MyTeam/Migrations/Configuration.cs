@@ -11,7 +11,7 @@ namespace MyTeam.Migrations
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
-            ContextKey = "MyTeam.Models.MyTeamContext";
+            ContextKey = "MyTeamDB";
         }
 
         protected override void Seed(MyTeam.Models.MyTeamContext context)

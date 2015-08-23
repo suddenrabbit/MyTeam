@@ -192,9 +192,7 @@ namespace MyTeam.Controllers
 
                 dbContext.Entry(ver).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
-                // 更新内存
-                this.Update();
-
+               
                 return "删除成功";
             }
             catch (Exception e1)
