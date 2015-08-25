@@ -16,6 +16,9 @@ namespace MyTeam.Models
         [Display(Name = "系统名称")]
         public int SysId { get; set; }
 
+        [Display(Name = "受理年度")]
+        public string AcptYear { get; set; }
+
         [Display(Name = "受理月份")]
         public string AcptMonth { get; set; }
 

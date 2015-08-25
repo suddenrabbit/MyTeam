@@ -221,9 +221,13 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.SysId == query.SysId);
                 }
-                if (!string.IsNullOrEmpty(query.AcptMonth))
+                if (!string.IsNullOrEmpty(query.AcptYear))
                 {
-                    ls = ls.Where(p => (p.AcptDate.Value.Year.ToString() + p.AcptDate.Value.Month.ToString()) == query.AcptMonth.Replace("/", ""));
+                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.AcptYear);
+                }
+                if (!string.IsNullOrEmpty(query.AcptMonth))
+                {                    
+                    ls = ls.Where(p =>p.AcptDate.Value.Month.ToString() == query.AcptMonth);
                 }
                 if (!string.IsNullOrEmpty(query.ReqNo))
                 {
@@ -256,9 +260,10 @@ namespace MyTeam.Controllers
                 if (query.ReqAcptPerson != 0)
                 {
                     ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
-                }
-
-               
+                } 
+                
+                // 统一按照受理日期倒序
+                ls = ls.OrderByDescending(p => p.AcptDate);
 
                 // 若isExcel为true，导出Excel
                 if (isExcel)
@@ -329,11 +334,11 @@ namespace MyTeam.Controllers
                 // 批量更新，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
-                return "已更新" + r + "条记录!";
+                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
             }
             catch (Exception e1)
             {
-                return e1.Message;
+                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
             }
         }
 
@@ -355,11 +360,11 @@ namespace MyTeam.Controllers
                 // 批量更新，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
-                return "已更新" + r + "条记录!";
+                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
             }
             catch (Exception e1)
             {
-                return e1.Message;
+                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
             }
         }
 
@@ -381,11 +386,11 @@ namespace MyTeam.Controllers
                 // 批量更新，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
-                return "已更新" + r + "条记录!";
+                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
             }
             catch (Exception e1)
             {
-                return e1.Message;
+                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
             }
         }
 
@@ -403,11 +408,11 @@ namespace MyTeam.Controllers
                 // 批量删除，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
-                return "已更新" + r + "条记录!";
+                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
             }
             catch (Exception e1)
             {
-                return e1.Message;
+                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
             }
         }
 

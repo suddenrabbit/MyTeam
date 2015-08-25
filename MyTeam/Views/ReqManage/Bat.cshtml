@@ -10,12 +10,11 @@
     });
 
     function check() {
-        $("#success").html("");
-        $("#err").html("");
+        $("#info").html("");
         var reqs = $("#Reqs");
         // 需求编号不能为空
         if (reqs.val().length < 1) {
-            $("#err").html("需求编号不能为空！");
+            $("#info").html("<p class='alert alert-danger'>需求编号不能为空！</p>");
             //reqs.attr("style", "border-color:red");
             reqs.focus();
             return false;
@@ -40,10 +39,10 @@
                 url: url,
                 data: data,
                 success: function (msg) {
-                    $("#success").html("执行结果：" + msg);
+                    $("#info").html(msg);
                 },
                 error: function () {
-                    $("#err").html("出错了，请联系管理员");
+                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
                 }
             });
 
@@ -63,10 +62,10 @@
                 url: url,
                 data: data,
                 success: function (msg) {
-                    $("#success").html("执行结果：" + msg);
+                    $("#info").html(msg);
                 },
                 error: function () {
-                    $("#err").html("出错了，请联系管理员");
+                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
                 }
             });
 
@@ -86,10 +85,10 @@
                 url: url,
                 data: data,
                 success: function (msg) {
-                    $("#success").html("执行结果：" + msg);
+                    $("#info").html(msg);
                 },
                 error: function () {
-                    $("#err").html("出错了，请联系管理员");
+                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
                 }
             });
 
@@ -107,10 +106,10 @@
                 url: url,
                 data: data,
                 success: function (msg) {
-                    $("#success").html("执行结果：" + msg);
+                    $("#info").html(msg);
                 },
                 error: function () {
-                    $("#err").html("出错了，请联系管理员");
+                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
                 }
             });
 
@@ -126,10 +125,7 @@
                     <textarea id="Reqs" name="Reqs" style="width:380px" class="form-control" rows="5"></textarea>
                 </div>
             </div>
-            <p>
-                <span class="text-success" id="success"></span>
-                <span class="text-danger" id="err"></span>
-            </p>
+            <div id="info"></div>
             <ul class="nav nav-tabs" id="myTab">
                 <li><a href="#tabs1" data-toggle="tab">批量出池</a></li>
                 <li><a href="#tabs2" data-toggle="tab">下发通知编号</a></li>

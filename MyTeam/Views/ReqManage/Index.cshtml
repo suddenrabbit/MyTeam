@@ -32,7 +32,7 @@
     }
 </script>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-10">
         @using (Html.BeginForm("Index", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
                 new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
@@ -48,9 +48,10 @@
                         <!--系统下拉选择-->
                         @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
                     </td>
-                    <td>@Html.LabelFor(model => model.AcptMonth, new { @class = "control-label" })</td>
-                    <td>
-                        <input id="AcptMonth" name="AcptMonth" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M' })" value="@Model.AcptMonth" readonly="readonly" placeholder="点击选择日期" />
+                    <td><label class="control-label">受理年度/月份</label></td>
+                    <td class="form-inline">
+                        <input id="AcptYear" name="AcptYear" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy' })" value="@Model.AcptYear" placeholder="点击选择日期" />
+                        <input id="AcptMonth" name="AcptMonth" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'M' })" value="@Model.AcptMonth" placeholder="点击选择日期" />
                     </td>
                 </tr>
                 <tr>
@@ -97,12 +98,12 @@
             </table>
         }
     </div>
-    <div>
+    <div class="col-md-12">
         @if (Model.ResultList != null)
         {
             if (Model.ResultList.Count < 1)
             {
-                <p class="text-warning">没有符合条件的结果！</p>
+                <p class="alert alert-warning">没有符合条件的结果！</p>
             }
             else
             {

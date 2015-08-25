@@ -21,7 +21,7 @@ namespace MyTeam.Controllers
         {
             if (isQuery)
             {
-                var ls = from a in this.GetProjList()
+                var ls = from a in dbContext.Projs
                          select a;
 
                 if (!string.IsNullOrEmpty(query.ProAcptDate))
