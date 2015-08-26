@@ -21,7 +21,7 @@ namespace MyTeam.Models
         public string Desc { get; set; }
 
         [Display(Name = "创建日期")]
-        public DateTime CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
 
         [Display(Name = "需求来源及状态")]
         public string Stat { get; set; }

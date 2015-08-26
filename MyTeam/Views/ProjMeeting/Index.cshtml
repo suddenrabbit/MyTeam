@@ -41,6 +41,7 @@
                 $('#myModal2').modal();
             }
         });
+
     }
 
     // 导出excel
@@ -48,6 +49,44 @@
         $('#isExcel').val(true);
         $('#myForm').submit();
         $('#isExcel').val(false);
+    }
+
+    // 在modal中显示详情
+    function showDetail(id, name) {
+        $('#detailName').html(name);
+        var url = "/ProjMeeting/Details/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#detailMain').html(msg);
+            },
+            error: function () {
+                $('#detailMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal();
+            }
+        });
+    }
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        var url = "/ProjMeeting/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
+            }
+        });
     }
 </script>
 <div class="row">
@@ -101,39 +140,38 @@
             }
             else
             {
-                <table class="table table-condensed" style="font-size:12px">
+                <table class="table table-condensed table-bordered" style="table-layout:fixed;font-size:12px" width="100">
                     <tr>
-                        <th></th>
-                        <th>
+                        <th width="11"></th>
+                        <th width="12" align="center">
                             @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
                         </th>
-                        <th>
+                        <th width="28" align="center">
                             @Html.DisplayNameFor(model => model.ResultList[0].MeetingTopic)
                         </th>
-                        <th>
+                        <th width="11" align="center">
                             @Html.DisplayNameFor(model => model.ResultList[0].MeetingType)
                         </th>
-                        <th>
+                        <th width="13" align="center">
                             @Html.DisplayNameFor(model => model.ResultList[0].HostDept)
                         </th>
-                        <th>
+                        <th width="8">
                             @Html.DisplayNameFor(model => model.ResultList[0].HostPerson)
                         </th>
-                        <th>
+                        <th width="11">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReviewExpert)
                         </th>
-                        <th>
+                        <th width="6">
                             @Html.DisplayNameFor(model => model.ResultList[0].MeetingDate)
                         </th>
                     </tr>
-
                     @foreach (var item in Model.ResultList)
                     {
                         var trid = "resultTR" + item.MeetingID;
                         <tr id="@trid">
                             <td>
-                                @Html.ActionLink("编辑", "Edit", new { id = item.MeetingID }) |
-                                @Html.ActionLink("详情", "Details", new { id = item.MeetingID }, new { target = "_blank" }) |
+                                <a href="#" onclick="doEdit('@item.MeetingID','@item.ProjName')">编辑</a> |
+                                <a href="#" onclick="showDetail('@item.ProjID','@item.ProjName')">详情</a> |
                                 <a href="#" onclick="doDelete('@item.MeetingID','@item.ProjName 的项目会议记录')">删除</a>
                             </td>
                             <td>
@@ -159,7 +197,6 @@
                             </td>
                         </tr>
                     }
-
                 </table>
                 @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ProjMeeting>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
             }
@@ -219,6 +256,53 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
                     确定
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框3：展示详情 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="detailName"></span>】的详情
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="detailMain"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：编辑页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】项目会议编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
             </div>
         </div>
     </div>

@@ -1,10 +1,7 @@
-﻿@model MyTeam.Models.RetailSystem
-
-@{
-    ViewBag.Title = "修改系统信息";
+﻿@{
+    Layout = null;
 }
-
-<h2>@ViewBag.Title。</h2>
+@model MyTeam.Models.RetailSystem
 
 @if (Model == null)
 {
@@ -21,7 +18,7 @@
 </script>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("Edit", "SysManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete="hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
@@ -33,56 +30,56 @@
             @Html.HiddenFor(model => model.OldSysName);
 
             <div class="form-group">
-                @Html.LabelFor(model => model.SysNO, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.SysNO, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SysNO, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SysNO, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.SysName, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.SysName, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SysName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SysName, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.SysShortName, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.SysShortName, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SysShortName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SysShortName, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.HostDept, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.HostDept, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.HostDept, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.HostDept, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.SecondDept, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.SecondDept, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SecondDept, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SecondDept, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.BusiPerson, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.BusiPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.BusiPerson, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.BusiPerson, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.DevCenter, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.DevCenter, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     <select id="DevCenter" name="DevCenter" class="form-control">
                         <option value="上海研发">上海研发</option>
                         <option value="福州研发">福州研发</option>
@@ -92,29 +89,28 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.DevPerson, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.DevPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.DevPerson, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.DevPerson, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.ReqPersonID, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.ReqPersonID, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownListFor(model => model.ReqPersonID, ViewBag.ReqPersonList as SelectList, new { @class = "form-control" })
 
                 </div>
             </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="保存" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
-                </div>
-            </div>
-
-
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="保存" class="btn btn-primary" />       
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                关闭
+            </button>
+        </div>
+    </div>
         }
 
     </div>

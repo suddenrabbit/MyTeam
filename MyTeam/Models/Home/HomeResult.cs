@@ -10,7 +10,14 @@ using MyTeam.Utils;
 namespace MyTeam.Models
 {
     public class HomeResult
-    {      
+    {
+        public List<HomeReq> ReqLs { get; set; }
+
+        public List<HomeProj> ProjLs { get; set; }
+    }
+
+    public class HomeReq
+    {
         public int SysId { get; set; }
 
         public int ReqNum { get; set; }
@@ -27,6 +34,14 @@ namespace MyTeam.Models
             }
             set { this.SysName = value; }
         }
- 
+    }
+
+    public class HomeProj
+    {
+        public int ProjID { get; set; }
+
+        public string ProjName { get; set; }
+
+        public string Progress { get; set; }        
     }
 }

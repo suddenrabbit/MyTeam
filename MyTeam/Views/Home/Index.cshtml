@@ -1,16 +1,40 @@
 ﻿@using MyTeam.Models
 
+@model MyTeam.Models.HomeResult
+
 @{
     ViewBag.Title = "欢迎";
 }
+
+<script>
+    // 在modal中显示详情
+    function showDetail(id, name) {
+        $('#detailName').html(name);
+        var url = "/Proj/Details/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#detailMain').html(msg);
+            },
+            error: function () {
+                $('#detailMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal();
+            }
+        });
+    }
+</script>
+
 <div class="jumbotron">
     <h1 style="font-weight:bold">零售团队管理系统<span style="font-size:12px">(Beta)</span></h1>
 </div>
 <div class="row">
     <fieldset class="col-md-6">
-        <legend>@ViewBag.Name 你好。当前尚未出池的需求情况：</legend>
+        <legend>当前尚未出池的需求情况：</legend>
         <div class="list-group">
-            @foreach (HomeResult r in ViewBag.ResultList)
+            @foreach (HomeReq r in Model.ReqLs)
             {
                 string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SysId=" + r.SysId;
                 <a class="list-group-item" href=@s>
@@ -23,12 +47,40 @@
     </fieldset>
 
     <fieldset class="col-md-6">
-        <legend>常用任务</legend>
-        <div class="list-group">
-            @Html.ActionLink("维护需求入池", "MainInPool", "ReqManage", null, new { @class = "list-group-item" })
-            @Html.ActionLink("维护需求管理", "Index", "ReqManage", null, new { @class = "list-group-item" })
-            @Html.ActionLink("周报填写", "MainIndex", "WeekReport", null, new { @class = "list-group-item" })
-            @Html.ActionLink("周报导出", "Export", "WeekReport", null, new { @class = "list-group-item" })
-        </div>
+        <legend>当前未完成的项目情况：</legend>
+           @foreach (HomeProj p in Model.ProjLs)
+           {
+               <span onclick="showDetail('@p.ProjID', '@p.ProjName')" style="cursor:pointer">@p.ProjName</span>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="@p.Progress" aria-valuemin="0" aria-valuemax="100" style="width: @p.Progress%; min-width:2em">
+                    @p.Progress%
+                </div>
+            </div>
+           }
     </fieldset>
+</div>
+<!--用modal展示项目详情-->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="detailName"></span>】的详情
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="detailMain"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

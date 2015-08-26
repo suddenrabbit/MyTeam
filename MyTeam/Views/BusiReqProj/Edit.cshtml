@@ -1,0 +1,54 @@
+﻿@{
+    Layout = null;
+}
+@model MyTeam.Models.BusiReqProj
+
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Edit", "BusiReqProj", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                new { @class = "form-horizontal", role = "form" }))
+        {
+		@Html.AntiForgeryToken()
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.HiddenFor(model => model.BRProjID)
+        @Html.HiddenFor(model => model.OldBRProjName);
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BRProjName, new { @class = "col-md-3 control-label" })
+			
+        <div class="col-md-9">
+            @Html.TextBoxFor(model => model.BRProjName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.BRProjName, "", new { @class = "text-danger" })
+        </div>
+		</div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ReqAnalysisID, new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            <!--需求分析师下拉选择-->
+            @Html.DropDownListFor(model => model.ReqAnalysisID, ViewBag.UserList as SelectList, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="保存" class="btn btn-primary" />
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                关闭
+            </button>
+        </div>
+    </div>
+        }
+
+	</div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

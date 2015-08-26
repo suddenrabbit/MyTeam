@@ -44,6 +44,24 @@
         $("#VerYear").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy' })", placeholder: "点击选择日期" });
     });
 
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        var url = "/Ver/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal();
+            }
+        });
+    }
 </script>
 <div class="row">
     <div class="col-md-8">
@@ -89,7 +107,7 @@
             }
             else
             {
-                <table class="table table-condensed" style="font-size:12px">
+                <table class="table table-condensed table-bordered" style="font-size:12px">
                     <tr>
                         <th></th>
                         <th>
@@ -120,13 +138,12 @@
                             @Html.DisplayNameFor(model => model.ResultList[0].Remark)
                         </th>
                     </tr>
-
                     @foreach (var item in Model.ResultList)
                     {
                         var trid = "resultTR" + item.VerID;
                         <tr id="@trid">
                             <td>
-                                @Html.ActionLink("编辑", "Edit", new { id = item.VerID }) |
+                                <a href="#" onclick="doEdit('@item.VerID','@item.SysName')">编辑</a> |
                                 <a href="#" onclick="doDelete('@item.VerID','@item.SysName 的年度版本下发记录')">删除</a>
                             </td>
                             <td>
@@ -158,7 +175,6 @@
                             </td>
                         </tr>
                     }
-
                 </table>
                 @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Ver>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
             }
@@ -218,6 +234,27 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
                     确定
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框3：编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】年度版本下发记录编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
             </div>
         </div>
     </div>

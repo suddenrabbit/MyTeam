@@ -1,0 +1,70 @@
+﻿@model MyTeam.Models.BusiReq
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@ViewBag.Title。</h2>
+
+<table class="table table-condensed table-bordered" style="font-size:12px">
+    <tr>
+        <th></th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResultList[0].BRProjID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResultList[0].BusiReqNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResultList[0].BusiReqName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResultList[0].Desc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResultList[0].CreateDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResultList[0].Stat)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+        </th>
+    </tr>
+    @foreach (var item in Model.ResultList)
+    {
+        <tr>
+            <td>
+                <a href="#" onclick="doEdit('@item.BRID','@item.ProjName')">编辑</a>
+                | <a href="#" onclick="doDelete('@item.BRID','@item.ProjName @item.BusiReqName')">删除</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BusiReqNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BusiReqName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Desc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Remark)
+            </td>
+
+        </tr>
+    }
+</table>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.BRID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

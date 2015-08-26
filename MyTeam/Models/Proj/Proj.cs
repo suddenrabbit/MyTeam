@@ -33,11 +33,6 @@ namespace MyTeam.Models
         [StringLength(8, ErrorMessage = "不能超过8位")]
         public String ProjLevel { get; set; }
 
-        
-        [Display(Name = "是否跟踪需求变更")]
-        public bool IsReqTrack { get; set; }
-
-        
         [Display(Name = "需求分析师")]
         public int? ReqAnalysisID { get; set; }
 

@@ -9,13 +9,15 @@ namespace MyTeam.Models
 {
     public class BusiReq
     {
-
         [Key]
         public int BRID { get; set; }
 
         [Required]
-        [Display(Name = "项目名称")]
-        public int ProjID { get; set; }
+        [Display(Name = "业需项目名称")]
+        public int BRProjID { get; set; }
+
+        [ForeignKey("BRProjID")]
+        public virtual BusiReqProj BusiReqProj { get; set; }
 
         [Required]
         [Display(Name = "业需编号")]
@@ -33,7 +35,7 @@ namespace MyTeam.Models
 
         [Display(Name = "创建日期")]
         [DataType(DataType.Date)]
-        public DateTime CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
 
         [Display(Name = "需求来源及状态")]
         [StringLength(16)]
@@ -50,8 +52,8 @@ namespace MyTeam.Models
                 // ProjID转name
                 using (MyTeamContext dbContext = new MyTeamContext())
                 {
-                    var p = dbContext.Projs.ToList().Find(a => a.ProjID == this.ProjID);
-                    return p == null ? "未知" : p.ProjName;
+                    var p = dbContext.BusiReqProjs.ToList().Find(a => a.BRProjID == this.BRProjID);
+                    return p == null ? "未知" : p.BRProjName;
                 }
             }
 

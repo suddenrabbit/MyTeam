@@ -1,7 +1,7 @@
 ﻿@model MyTeam.Models.BusiReq
 
 @{
-    ViewBag.Title = "添加业务需求";
+    ViewBag.Title = "添加业务需求明细";
 }
 
 <h2>@ViewBag.Title。</h2>
@@ -31,10 +31,10 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <div class="form-group">
-                @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.BRProjID, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ProjID, "", new { @class = "text-danger" })
+                    <!--业需项目下拉选择-->
+                    @Html.DropDownListFor(model => model.BRProjID, ViewBag.brProjLs as SelectList, new { @class = "form-control" })
                 </div>
             </div>
 

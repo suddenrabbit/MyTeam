@@ -485,7 +485,15 @@ namespace MyTeam.Controllers
         // Main表的WorkTime根据Detail表计算，每次插入、编辑、删除Detail时均重新计算
         private void UpdateWorkTime(string mainId)
         {
-            dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkMission = m.WRMainID) where WRMainID=" + mainId);
+            List<WeekReportDetail> details = dbContext.WeekReportDetails.ToList();
+            WeekReportDetail temp = details.Find(a => a.WorkMission == mainId);
+            if(temp == null){
+                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = 0");
+            }
+            else
+            {
+                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkMission = m.WRMainID) where WRMainID=" + mainId);
+            }
         }
 
         /*导出周报（因周报格式较为特殊，不使用通用方法导出）*/

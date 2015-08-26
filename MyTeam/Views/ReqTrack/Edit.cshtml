@@ -1,10 +1,7 @@
-﻿@model MyTeam.Models.ReqTrack
-
-@{
-    ViewBag.Title = "修改业需软需状态跟踪";
+﻿@{
+    Layout = null;
 }
-
-<h2>@ViewBag.Title。</h2>
+@model MyTeam.Models.ReqTrack
 
 @if (Model == null)
 {
@@ -30,7 +27,7 @@
 </script>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         @using (Ajax.BeginForm("Edit", "ReqTrack", null, new AjaxOptions { UpdateTargetId = "info", OnComplete="hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
         {
@@ -40,113 +37,114 @@
             @Html.HiddenFor(model => model.TrackID)
 
     <div class="form-group">
-        @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(model => model.ProjID, new { @class = "col-md-3 control-label" })
 
-        <div class="col-md-10">
+        <div class="col-md-9">
             @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
         </div>
     </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.ReqName, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.ReqName, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.ReqName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqName, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Priority, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.Priority, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     <!--优先级列表-->
                     @Html.DropDownListFor(model => model.Priority, ViewBag.PriorityList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.ReqWriter, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.ReqWriter, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.ReqWriter, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqWriter, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.PlanDeadLine, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.PlanDeadLine, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.RealDeadLine, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.RealDeadLine, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.RealDeadLine, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.RealDeadLine, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.ChangeChar, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.ChangeChar, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     <!--变更标识列表-->
                     @Html.DropDownListFor(model => model.ChangeChar, ViewBag.ChangeCharList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.ApprovePerson, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.ApprovePerson, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.ApprovePerson, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ApprovePerson, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.ApproveDate, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.ApproveDate, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.ApproveDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ApproveDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.SoftReqNo, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.SoftReqNo, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SoftReqNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SoftReqNo, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.SoftReqName, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.SoftReqName, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SoftReqName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SoftReqName, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.ReqStat, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.ReqStat, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     <!--需求状态列表-->
                     @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqSoftStatList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="保存" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
-                </div>
-            </div>
-
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-12">
+            <input type="submit" value="保存" class="btn btn-primary" />
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                关闭
+            </button>
+        </div>
+    </div>
         }
         <div id="info"></div>
     </div>

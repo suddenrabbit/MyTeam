@@ -87,11 +87,11 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname", user.UID);
             }
             else
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname");
             }
 
             ViewBag.ReqAnalysisList = sl2;
@@ -113,9 +113,7 @@ namespace MyTeam.Controllers
             if(p != null){
                 return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目跟踪状态已存在，不允许重复添加！" + "</p>";
             }
-
-            p.OldProjName = p.ProjName;
-
+            
             try
             {
                 if (ModelState.IsValid)
@@ -152,11 +150,11 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname", user.UID);
             }
             else
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname");
             }
 
             ViewBag.ReqAnalysisList = sl2;
@@ -164,6 +162,7 @@ namespace MyTeam.Controllers
             // 主办部门
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
 
+            proj.OldProjName = proj.ProjName;
             return View(proj);
         }
 
@@ -243,7 +242,6 @@ namespace MyTeam.Controllers
                     ProjNo = s.ProjNo,
                     HostDept = s.HostDept,
                     ProjLevel = s.ProjLevel,
-                    IsReqTrack = (s.IsReqTrack) ? "是" : "否",
                     ReqAnalysisID = user.Realname,
                     BusiPerson = s.BusiPerson,
                     ProjManager = s.ProjManager,

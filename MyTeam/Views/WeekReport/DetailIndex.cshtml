@@ -39,7 +39,7 @@
 
     function realDelete() {
         var id = $('#toDelId').val();
-        var url = "/Proj/Delete/" + id;
+        var url = "/WeekReport/DeleteDetail/" + id;
         $.ajax({
             type: 'POST',
             url: url,
@@ -55,8 +55,27 @@
             }
         });
     }
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        var url = "/WeekReport/EditDetail/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal();
+            }
+        });
+    }
 </script>
-<table class="table table-condensed" style="font-size:12px">
+<table class="table table-condensed table-bordered" style="font-size:12px">
     <tr>
         <th></th>
         <th>
@@ -92,7 +111,7 @@
     {
         <tr>
             <td>
-                @Html.ActionLink("编辑", "EditDetail", new { id = item.WRDetailID }) |
+                <a href="#" onclick="doEdit('@item.WRDetailID','@item.RptDate')">编辑</a> |
                 <a href="#" onclick="doDelete('@item.WRDetailID','@item.RptDate 的工作任务')">删除</a>
             </td>
             <td>
@@ -179,6 +198,27 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
                     确定
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框3：编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
             </div>
         </div>
     </div>

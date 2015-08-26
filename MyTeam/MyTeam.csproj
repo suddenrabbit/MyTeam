@@ -146,6 +146,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusiReqController.cs" />
+    <Compile Include="Controllers\BusiReqProjController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\ProjController.cs" />
@@ -161,13 +162,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BusiReq\BusiReqProj.cs" />
     <Compile Include="Models\Home\HomeResult.cs" />
     <Compile Include="Models\Proj\ReqTrackQuery.cs" />
     <Compile Include="Models\Proj\ProjResult.cs" />
     <Compile Include="Models\Proj\ProjQuery.cs" />
-    <Compile Include="Models\Proj\BusiReqExcel.cs" />
-    <Compile Include="Models\Proj\BusiReqQuery.cs" />
-    <Compile Include="Models\Proj\BusiReq.cs" />
+    <Compile Include="Models\BusiReq\BusiReqExcel.cs" />
+    <Compile Include="Models\BusiReq\BusiReqQuery.cs" />
+    <Compile Include="Models\BusiReq\BusiReq.cs" />
     <Compile Include="Models\Proj\ProjMeetingResult.cs" />
     <Compile Include="Models\Proj\ProjMeetingQuery.cs" />
     <Compile Include="Models\Proj\ProjMeeting.cs" />
@@ -326,6 +328,10 @@
     <Content Include="Views\ReqTrack\Import.cshtml" />
     <Content Include="Views\Import\Index.cshtml" />
     <Content Include="Views\ReqManage\Details.cshtml" />
+    <Content Include="Views\BusiReqProj\Index.cshtml" />
+    <Content Include="Views\BusiReqProj\Create.cshtml" />
+    <Content Include="Views\BusiReqProj\Edit.cshtml" />
+    <Content Include="Views\BusiReqProj\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

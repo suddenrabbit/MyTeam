@@ -35,35 +35,54 @@
             }
         });
     }
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        var url = "/SysManage/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal();
+            }
+        });
+    }
 </script>
-<table class="table table-condensed" style="font-size:12px">
+<table class="table table-condensed table-bordered" style="font-size:12px;table-layout:fixed" width="100">
     <tr>
-        <th></th>
-        <th>
+        <th width="10"></th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.SysNO)
         </th>
-        <th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.SysName)
         </th>
-        <th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.SysShortName)
         </th>
-        <th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.HostDept)
         </th>
-        <th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.SecondDept)
         </th>
-        <th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.BusiPerson)
         </th>
-        <th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.DevCenter)
         </th>
-        <th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.DevPerson)
         </th>
-        <th>
+        <th width="10">
             @Html.DisplayNameFor(model => model.ReqPersonID)
         </th>
     </tr>
@@ -71,7 +90,7 @@
     {
         <tr>
             <td>
-                @Html.ActionLink("编辑", "Edit", new { id = item.SysID })
+                <a href="#" onclick="doEdit('@item.SysID','@item.SysName')">编辑</a> 
                 @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
                 {
                     <!--只有管理员可以删除-->
@@ -111,6 +130,10 @@
 <!--分页-->
 @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.RetailSystem>,
     generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -160,6 +183,27 @@
                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
                     确定
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框3：编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
             </div>
         </div>
     </div>

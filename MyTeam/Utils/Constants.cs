@@ -108,6 +108,6 @@ namespace MyTeam.Utils
         /// <summary>
         /// AJAX编辑成功后统一返回HTML值
         /// </summary>
-        public static string AJAX_EDIT_SUCCESS_RETURN = "<p class='alert alert-success'>修改成功！<a href='Index'>返回</a></p>";
+        public static string AJAX_EDIT_SUCCESS_RETURN = "<p class='alert alert-success'>修改成功！<a href='#' data-dismiss='modal' onclick='javascript:window.location.reload()'>关闭</a></p>";
     }
 }

@@ -73,65 +73,12 @@ namespace MyTeam.Controllers
 
         // 入池：第二步，输入明细信息
 
-        // 提供一个检查FirstReqDetailNo的接口（AJAX调用）
-        public string CheckFirstReqDetailNo(string id)
-        {
-            string[] firstReqNum;
-            int changeNum = 0;
-            try
-            {
-                firstReqNum = id.Split('-');
-                // 第二个是需要变化的数字
-                changeNum = int.Parse(firstReqNum[1]);
-                return "S";
-            }
-            catch
-            {
-                return "error";
-            }
-        }
-
         [HttpPost]
         public ActionResult DetailInPool(MainInPoolReq mainInPoolReq)
         {
-            string firstReqDetailNo = mainInPoolReq.FirstReqDetailNo;
-            int reqAmt = mainInPoolReq.ReqAmt;
-
-            // 根据FirstReqDetailNo计算其他的需求编号，如为空则均为空
-            List<string> reqDetailNoList = new List<string>();
-            reqDetailNoList.Add(firstReqDetailNo);
-            if (!string.IsNullOrEmpty(firstReqDetailNo))
-            {
-                // 判断需求编号是否正确
-                string[] firstReqNum = null;
-                int changeNum = 0;
-                try
-                {
-                    firstReqNum = firstReqDetailNo.Split('-');
-                    // 第二个是需要变化的数字
-                    changeNum = int.Parse(firstReqNum[1]);
-                }
-                catch
-                {
-                    //return ContentResult("起始需求编号输入有误");
-                }
-                for (int i = 0; i < reqAmt - 1; i++)
-                {
-                    changeNum++;
-                    reqDetailNoList.Add(this.GetReqNum(firstReqNum, changeNum));
-                }
-            }
-            else
-            {
-                for (int i = 0; i < reqAmt - 1; i++)
-                {
-                    reqDetailNoList.Add("");
-                }
-            }
-
             // 生成List，添加维护需求编号
             List<Req> reqList = new List<Req>();
-            foreach (string s in reqDetailNoList)
+            for (int i = 0; i < mainInPoolReq.ReqAmt; i++)
             {
                 Req newReq = new Req()
                 {
@@ -145,8 +92,7 @@ namespace MyTeam.Controllers
                     ReqDevPerson = mainInPoolReq.ReqDevPerson,
                     ReqBusiTestPerson = mainInPoolReq.ReqBusiTestPerson,
                     DevAcptDate = mainInPoolReq.DevAcptDate,
-                    DevEvalDate = mainInPoolReq.DevEvalDate,
-                    ReqDetailNo = s
+                    DevEvalDate = mainInPoolReq.DevEvalDate
                 };
                 reqList.Add(newReq);
             }
@@ -183,7 +129,7 @@ namespace MyTeam.Controllers
                     }
                     dbContext.SaveChanges();
 
-                    if(skipNum > 0)
+                    if (skipNum > 0)
                     {
                         r = string.Format("<p class='alert alert-warning'>有{0}条因维护需求编号重复未能入池：{1}</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>", skipNum, repeatReqDetailNo);
                     }
@@ -226,8 +172,8 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.AcptYear);
                 }
                 if (!string.IsNullOrEmpty(query.AcptMonth))
-                {                    
-                    ls = ls.Where(p =>p.AcptDate.Value.Month.ToString() == query.AcptMonth);
+                {
+                    ls = ls.Where(p => p.AcptDate.Value.Month.ToString() == query.AcptMonth);
                 }
                 if (!string.IsNullOrEmpty(query.ReqNo))
                 {
@@ -248,20 +194,20 @@ namespace MyTeam.Controllers
                 if (query.ReqStat != "全部")
                 {
                     // 分『等于』和『不等于』2种情况
-                    if(query.NotEqual)
+                    if (query.NotEqual)
                     {
                         ls = ls.Where(p => p.ReqStat != query.ReqStat);
                     }
                     else
                     {
-                    ls = ls.Where(p => p.ReqStat == query.ReqStat);
-                }
+                        ls = ls.Where(p => p.ReqStat == query.ReqStat);
+                    }
                 }
                 if (query.ReqAcptPerson != 0)
                 {
                     ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
-                } 
-                
+                }
+
                 // 统一按照受理日期倒序
                 ls = ls.OrderByDescending(p => p.AcptDate);
 
@@ -344,7 +290,7 @@ namespace MyTeam.Controllers
 
         // Ajax调用，批量更新下发编号       
         [HttpPost]
-        public string BatRlsNo(string reqs, string rlsNo, string RlsNoProtect)
+        public string BatRlsNo(string reqs, string rlsNo, string rlsNoProtect)
         {
             try
             {
@@ -352,7 +298,7 @@ namespace MyTeam.Controllers
                 string whereIn = this.GetWhereIn(reqs);
 
                 string sql = string.Format("update Reqs set RlsNo='{0}' where ReqDetailNo in ({1})", rlsNo, whereIn);
-                if (RlsNoProtect == "true")
+                if (rlsNoProtect == "true")
                 {
                     sql += " and ReqStat = N'出池'";
                 }
@@ -370,15 +316,26 @@ namespace MyTeam.Controllers
 
         // Ajax调用，批量更新实际下发日期       
         [HttpPost]
-        public string BatRlsDate(string reqs, string rlsDate, string RlsDateProtect)
+        public string BatRlsDate(string reqs, string rlsDate, string rlsDateProtect, string rlsNoToBatRlsDate)
         {
             try
             {
-                // 拼出sql中的in条件
-                string whereIn = this.GetWhereIn(reqs);
+                string sql = "";
+                // 若是需求编号不为空，则按需求编号更新
+                if(!string.IsNullOrEmpty(reqs))
+                {
+                    // 拼出sql中的in条件
+                    string whereIn = this.GetWhereIn(reqs);
+                    sql = string.Format("update Reqs set RlsDate='{0}' where ReqDetailNo in ({1})", rlsDate, whereIn);
+                }
+               
+                // 若是下发通知编号不为空，则按下发通知编号更新
+                if(!string.IsNullOrEmpty(rlsNoToBatRlsDate))
+                {
+                    sql = string.Format("update Reqs set RlsDate='{0}' where RlsNo = ('{1}')", rlsDate, rlsNoToBatRlsDate);
+                }
 
-                string sql = string.Format("update Reqs set RlsDate='{0}' where ReqDetailNo in ({1})", rlsDate, whereIn);
-                if (RlsDateProtect == "true")
+                if (rlsDateProtect == "true")
                 {
                     sql += " and ReqStat = N'出池'";
                 }
@@ -461,10 +418,11 @@ namespace MyTeam.Controllers
         {
             // 判断是否有重复的维护需求编号，如有重复不允许新增
             Req r = dbContext.Reqs.ToList().Find(a => a.ReqDetailNo == req.ReqDetailNo);
-            if(r != null){
+            if (r != null)
+            {
                 return "<p class='alert alert-danger'>出错了: 维护需求编号" + req.ReqDetailNo + "已存在，不允许重复添加！" + "</p>";
             }
-           
+
             try
             {
                 if (ModelState.IsValid)
@@ -531,7 +489,7 @@ namespace MyTeam.Controllers
                 {
                     return "<p class='alert alert-danger'>出错了: 维护需求编号" + r.ReqDetailNo + "已存在，不允许更新！" + "</p>";
                 }
-            }   
+            }
 
             try
             {

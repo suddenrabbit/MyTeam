@@ -1,10 +1,7 @@
-﻿@model MyTeam.Models.Ver
-
-@{
-    ViewBag.Title = "修改年度版本计划";
+﻿@{
+    Layout = null;
 }
-
-<h2>@ViewBag.Title。</h2>
+@model MyTeam.Models.Ver
 
 @if (Model == null)
 {
@@ -31,7 +28,7 @@
 </script>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("Edit", "Ver", null, new AjaxOptions { UpdateTargetId = "info", OnComplete="hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
@@ -42,60 +39,60 @@
             @Html.HiddenFor(model => model.VerID)
 
             <div class="form-group">
-                @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.SysId, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.VerYear, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.VerYear, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.VerYear, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.VerYear, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.ReleaseFreq, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.ReleaseFreq, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.DropDownListFor(model => model.ReleaseFreq, ViewBag.ReleaseFreqList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.PublishTime, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.PublishTime, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.PublishTime, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.PublishTime, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.VerNo, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.VerNo, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.VerNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.VerNo, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.DraftTime, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.DraftTime, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.DraftTime, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.DraftTime, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.DraftPersonID, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.DraftPersonID, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     <!--版本计划指定人下拉选择-->
                     @Html.DropDownListFor(model => model.DraftPersonID, ViewBag.ReqPersonList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.VerType, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.VerType, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     <select id="VerType" name="VerType" class="form-control">
                         <option value="补丁版本">补丁版本</option>
                         <option value="计划版本">计划版本</option>
@@ -103,19 +100,21 @@
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Remark, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="保存" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
-                </div>
-            </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="保存" class="btn btn-primary" />
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                关闭
+            </button>
+        </div>
+    </div>
         }
 
     </div>

@@ -104,7 +104,7 @@ namespace MyTeam.Controllers
 
                 // 第11列，需求受理人，转成UID
                 string reqPerson = worksheet.Cells[row, 11].GetValue<string>();
-                var u = this.GetUserList().Find(a => a.Realname == reqPerson || a.NamePhone == reqPerson);
+                var u = this.GetUserList().Find(a => reqPerson.Contains(reqPerson));
                 int uid = u == null ? 0 : u.UID;
 
                 // 第4列，维护需求编号
@@ -218,7 +218,7 @@ namespace MyTeam.Controllers
 
                 r.CheckResult = worksheet.Cells[row, 30].GetValue<string>();
                 r.Remark = worksheet.Cells[row, 31].GetValue<string>();
-                r.IsReqTrack = false; // 默认赋值false  
+                //r.IsReqTrack = false; // 默认赋值false  
 
                 // 对于可能为空的日期单独处理
                 string ProAcptDate = worksheet.Cells[row, 9].GetValue<string>();

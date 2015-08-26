@@ -25,11 +25,6 @@ namespace MyTeam.Models
         [Display(Name = "项目等级")]
         public String ProjLevel { get; set; }
 
-        
-        [Display(Name = "是否跟踪需求变更")]
-        public string IsReqTrack { get; set; }
-
-        
         [Display(Name = "需求分析师")]
         public string ReqAnalysisID { get; set; }
 

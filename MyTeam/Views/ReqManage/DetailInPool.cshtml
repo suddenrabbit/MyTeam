@@ -1,22 +1,18 @@
 ﻿@model List<MyTeam.Models.Req>
-
 @{
     ViewBag.Title = "批量入池-第二步";
 }
 
-
 <h2>@ViewBag.Title。</h2>
-
 <div class="row">
     <div class="col-md-12">
-
         @using (Html.BeginForm("InPoolResult", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <table>
+            <table class="table table-condensed table-bordered">
                 <tr>
                     <th>
                         @Html.DisplayNameFor(model => model[0].ReqDetailNo)
@@ -36,13 +32,11 @@
                     <th>
                         @Html.DisplayNameFor(model => model[0].ReqStat)
                     </th>
-
                     <th>
                         @Html.DisplayNameFor(model => model[0].Remark)
                     </th>
-                    
-                </tr>
 
+                </tr>
                 @for (int i = 0; i < Model.Count(); i++)
                 {
                     <tr>
@@ -58,7 +52,6 @@
                         @Html.HiddenFor(model => model[i].ReqBusiTestPerson)
                         @Html.HiddenFor(model => model[i].DevAcptDate)
                         @Html.HiddenFor(model => model[i].DevEvalDate)
-
                         <td>
                             @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control" })
                         </td>
@@ -79,7 +72,6 @@
                             <!--需求状态下拉选择-->
                             @Html.DropDownListFor(model => model[i].ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
                         </td>
-
                         <td>
                             @Html.TextBoxFor(model => model[i].Remark, new { @class = "form-control" })
                         </td>
@@ -88,9 +80,7 @@
             </table>
 
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="入池！" class="btn btn-primary" />
-                </div>
+                <input type="submit" value="入池！" class="btn btn-primary" />
             </div>
         }
     </div>

@@ -7,21 +7,30 @@
 <h2>@ViewBag.Title。</h2>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
-    function doDelete(id) {
-        if (confirm("确定要删除？")) {
-            var url = "/ReqManage/Delete/" + id;
-            $.ajax({
-                type: 'POST',
-                url: url,
-                success: function (msg) {
-                    alert(msg);
-                    $("#resultTR" + id).remove();
-                },
-                error: function () {
-                    alert("处理失败，请联系管理员");
-                }
-            });
-        }
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal();
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/ReqManage/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal();
+            }
+        });
+
     }
 
     // 导出excel
@@ -29,6 +38,44 @@
         $('#isExcel').val(true);
         $('#myForm').submit();
         $('#isExcel').val(false);
+    }
+
+    // 在modal中显示详情
+    function showDetail(id, name) {
+        $('#detailName').html(name);
+        var url = "/ReqManage/Details/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#detailMain').html(msg);
+            },
+            error: function () {
+                $('#detailMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal();
+            }
+        });
+    }
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        var url = "/ReqManage/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
+            }
+        });
     }
 </script>
 <div class="row">
@@ -107,34 +154,34 @@
             }
             else
             {
-                <table class="table table-condensed" style="font-size:12px">
+                <table class="table table-condensed table-bordered" style="font-size:12px;table-layout:fixed" width="100">
                     <tr>
-                        <th></th>
-                        <th>
+                        <th width="7"></th>
+                        <th width="10">
                             @Html.DisplayNameFor(model => model.ResultList[0].SysId)
                         </th>
-                        <th>
+                        <th width="6">
                             @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
                         </th>
-                        <th>
+                        <th width="8">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
                         </th>
-                        <th>
+                        <th width="8">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
                         </th>
-                        <th>
+                        <th width="7">
                             @Html.DisplayNameFor(model => model.ResultList[0].Version)
                         </th>
-                        <th>
+                        <th width="10">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
                         </th>
-                        <th>
+                        <th width="20">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
                         </th>
-                        <th>
+                        <th width="8">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
                         </th>
-                        <th>
+                        <th width="10">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqAcptPerson)
                         </th>
                     </tr>
@@ -143,9 +190,9 @@
                         var trid = "resultTR" + item.RID;
                         <tr id="@trid">
                             <td>
-                                @Html.ActionLink("编辑", "Edit", new { id = item.RID }) |
-                                @Html.ActionLink("详情", "Details", new { id = item.RID }, new { target = "_blank" }) |
-                                <a href="#" onclick="doDelete('@item.RID')">删除</a>
+                                <a href="#" onclick="doEdit('@item.RID','@item.SysName')">编辑</a> |
+                                <a href="#" onclick="showDetail('@item.RID','@item.SysName 的维护需求')">详情</a> |
+                                <a href="#" onclick="doDelete('@item.RID','@item.SysName 的维护需求')">删除</a>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.SysName)
@@ -184,7 +231,106 @@
     </div>
 </div>
 
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框3：展示详情 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="detailName"></span>】详情
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="detailMain"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：编辑页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】维护需求管理编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>

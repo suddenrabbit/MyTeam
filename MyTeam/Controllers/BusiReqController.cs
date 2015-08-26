@@ -21,15 +21,14 @@ namespace MyTeam.Controllers
     {
         //
         // GET: /BusiReq/
-
         public ActionResult Index(BusiReqQuery query, int pageNum = 1, bool isQuery = false)
         {
             var ls = from a in dbContext.BusiReqs select a;
             if (isQuery)
             {
-                if (query.ProjID != 0)
+                if (query.BRProjID != 0)
                 {
-                    ls = ls.Where(p => p.ProjID == query.ProjID);
+                    ls = ls.Where(br => br.BRProjID == query.BRProjID);
                 }
                 // 分页
                 query.ResultList = ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE);
@@ -39,11 +38,10 @@ namespace MyTeam.Controllers
                 query = new BusiReqQuery();
             }
 
-            // 项目列表
-            var r = this.GetProjList().Where(a => a.IsReqTrack == true).ToList();
-            // 添加全部
-            r.Insert(0, new Proj() { ProjID = 0, ProjName = "全部" });
-            ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName", query.ProjID);
+            List<BusiReqProj> brProjLs = dbContext.BusiReqProjs.ToList();
+            // 加上“全部”
+            brProjLs.Insert(0, new BusiReqProj() { BRProjID = 0, BRProjName = "全部" });
+            ViewBag.BRProjLs = new SelectList(brProjLs, "BRProjID", "BRProjName", query.BRProjID);
 
             return View(query);
         }
@@ -53,12 +51,11 @@ namespace MyTeam.Controllers
 
         public ActionResult Create()
         {
-            // 项目列表
-            var ls = this.GetProjList().Where(a => a.IsReqTrack == true).ToList();
-            ViewBag.ProjList = new SelectList(ls, "ProjID", "ProjName");
-
             // 需求来源及状态的下拉列表
             ViewBag.StatList = MyTools.GetSelectList(Constants.BusiReqStat);
+
+            List<BusiReqProj> brProjLs = dbContext.BusiReqProjs.ToList();
+            ViewBag.BRProjLs = new SelectList(brProjLs, "BRProjID", "BRProjName");
 
             return View();
         }
@@ -75,14 +72,14 @@ namespace MyTeam.Controllers
                 {
 
                     dbContext.BusiReqs.Add(br);
-                    dbContext.SaveChanges();                    
+                    dbContext.SaveChanges();
                 }
-                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
-            }            
+            }
         }
 
         //
@@ -97,9 +94,8 @@ namespace MyTeam.Controllers
                 return View();
             }
 
-            // 项目列表
-            var ls = this.GetProjList().Where(a => a.IsReqTrack == true).ToList();
-            ViewBag.ProjList = new SelectList(ls, "ProjID", "ProjName", br.ProjID);
+            List<BusiReqProj> brProjLs = dbContext.BusiReqProjs.ToList();
+            ViewBag.BRProjLs = new SelectList(brProjLs, "BRProjID", "BRProjName");
 
             // 需求来源及状态的下拉列表
             ViewBag.StatList = MyTools.GetSelectList(Constants.BusiReqStat, false, true, br.Stat);
@@ -117,13 +113,13 @@ namespace MyTeam.Controllers
             {
                 dbContext.Entry(br).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
-             
+
                 return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
-            }            
+            }
         }
 
         // AJAX调用
@@ -133,10 +129,10 @@ namespace MyTeam.Controllers
         {
             try
             {
-                BusiReq br = dbContext.BusiReqs.ToList().Find(a => a.BRID == id); 
+                BusiReq br = dbContext.BusiReqs.ToList().Find(a => a.BRID == id);
                 dbContext.Entry(br).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
-            
+
                 return "删除成功";
             }
             catch (Exception e1)
@@ -152,23 +148,23 @@ namespace MyTeam.Controllers
         /// <returns></returns>
         public ActionResult Export(string ProjID)
         {
-            List<Proj> projLs = this.GetProjList().Where(a => a.IsReqTrack == true).ToList();
-            string pName = " ";
-            foreach(Proj p in projLs){
-                if(p.ProjID.ToString() == ProjID){
-                    pName = p.ProjName;
-                }
-            }
+            //List<Proj> projLs = this.GetProjList().Where(a => a.IsReqTrack == true).ToList();
+            //string pName = " ";
+            //foreach(Proj p in projLs){
+            //    if(p.ProjID.ToString() == ProjID){
+            //        pName = p.ProjName;
+            //    }
+            // }
 
             // 联立查询 BusiReqs 和 Reqs
             var ls = from br in dbContext.BusiReqs
                      join req in dbContext.Reqs
                      on br.BusiReqNo equals req.BusiReqNo
-                     where br.ProjID.ToString() == ProjID
+                     where br.BRProjID.ToString() == ProjID
 
                      select new BusiReqExcel
                      {
-                         ProjName = pName.ToString(),
+                         ProjName = "".ToString(),
                          BusiReqNo = br.BusiReqNo,
                          BusiReqName = br.BusiReqName,
                          Desc = br.Desc,
@@ -186,7 +182,7 @@ namespace MyTeam.Controllers
                      };
 
             return this.MakeExcel<BusiReqExcel>("BusiReqReportT", "业务需求变更跟踪", ls.ToList<BusiReqExcel>(), 2);
-                        
+
         }
 
         /// <summary>
@@ -195,16 +191,14 @@ namespace MyTeam.Controllers
         /// <returns></returns>
         public ActionResult Import()
         {
-            // 项目列表
-            var r = this.GetProjList().Where(a => a.IsReqTrack == true).ToList();
-
-            ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName");
+            List<BusiReqProj> brProjLs = dbContext.BusiReqProjs.ToList();
+            ViewBag.BRProjLs = new SelectList(brProjLs, "BRProjID", "BRProjName");
 
             return View();
         }
 
         [HttpPost]
-        public ActionResult Import(HttpPostedFileBase file, int ProjID)
+        public ActionResult Import(HttpPostedFileBase file, int BRProjID)
         {
             if (file == null)
             {
@@ -235,14 +229,14 @@ namespace MyTeam.Controllers
                             string busiReqNo = worksheet.Cells[row, 1].GetValue<string>();
 
                             // ProjID+BusiReqNo重复的不导入
-                            if (ls.Find(a => a.ProjID == ProjID && a.BusiReqNo == busiReqNo) != null)
+                            if (ls.Find(a => a.BRProjID == BRProjID && a.BusiReqNo == busiReqNo) != null)
                             {
                                 continue;
                             }
 
                             BusiReq br = new BusiReq();
                             // 按列赋值
-                            br.ProjID = ProjID;
+                            br.BRProjID = BRProjID;
                             br.BusiReqNo = busiReqNo;
                             br.BusiReqName = worksheet.Cells[row, 2].GetValue<string>();
                             br.Desc = worksheet.Cells[row, 3].GetValue<string>();
@@ -252,7 +246,7 @@ namespace MyTeam.Controllers
                             if (!string.IsNullOrEmpty(createDate) && DateTime.TryParse(createDate, out tmp))
                             {
                                 br.CreateDate = tmp;
-                            } 
+                            }
                             else
                             {
                                 br.CreateDate = DateTime.Now;
@@ -283,10 +277,8 @@ namespace MyTeam.Controllers
                 }
             }
 
-            // 项目列表
-            var r = this.GetProjList().Where(a => a.IsReqTrack == true).ToList();
-
-            ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName", ProjID);
+            List<BusiReqProj> brProjLs = dbContext.BusiReqProjs.ToList();
+            ViewBag.BRProjLs = new SelectList(brProjLs, "BRProjID", "BRProjName");
 
             return View();
         }

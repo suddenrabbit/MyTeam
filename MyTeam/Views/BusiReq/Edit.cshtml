@@ -1,8 +1,8 @@
-﻿@model MyTeam.Models.BusiReq
-@{
-    ViewBag.Title = "修改业务需求";
+﻿@{
+    Layout = null;
 }
-<h2>@ViewBag.Title。</h2>
+@model MyTeam.Models.BusiReq
+
 @if (Model == null)
 {
     <div class="alert alert-warning">无此记录</div>
@@ -34,13 +34,13 @@
 
             @Html.HiddenFor(model => model.BRID);
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ProjID, "", new { @class = "text-danger" })
-                </div>
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.BRProjID, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            <!--业需项目下拉选择-->
+            @Html.DropDownListFor(model => model.BRProjID, ViewBag.brProjLs as SelectList, new { @class = "form-control" })
+        </div>
+    </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.BusiReqNo, new { @class = "col-md-2 control-label" })
@@ -90,12 +90,14 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="保存" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
-                </div>
-            </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="保存" class="btn btn-primary" />
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                关闭
+            </button>
+        </div>
+    </div>
         }
     </div>
 </div>

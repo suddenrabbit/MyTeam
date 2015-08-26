@@ -68,7 +68,16 @@
                             <li><a href="/ProjSurv">项目调研管理</a></li>
                             <li><a href="/ProjMeeting">项目会议管理</a></li>
                             <li><a href="/ReqTrack">业需软需状态跟踪管理</a></li>
-                            <li><a href="/BusiReq">业务需求管理</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
+                            业务需求管理
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/BusiReqProj">业务需求项目管理</a></li>
+                            <li><a href="/BusiReq">业务需求明细管理</a></li>
                         </ul>
                     </li>
                     @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])

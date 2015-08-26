@@ -26,12 +26,12 @@ namespace MyTeam.Models
 
         [Display(Name = "开始日期")]
         [DataType(DataType.Date)]
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
 
 
         [Display(Name = "结束日期")]
         [DataType(DataType.Date)]
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
 
         [Display(Name = "调研使用人天")]

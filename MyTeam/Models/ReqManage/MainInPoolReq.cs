@@ -54,10 +54,6 @@ namespace MyTeam.Models
         public DateTime? DevEvalDate { get; set; }
 
         [Required]
-        [Display(Name = "首条维护需求编号")]
-        public string FirstReqDetailNo { get; set; }
-
-        [Required]
         [Range(1,15, ErrorMessage="需求数量必须是1-15之间的数字")]
         [Display(Name = "需求数量")]
         public int ReqAmt { get; set; }

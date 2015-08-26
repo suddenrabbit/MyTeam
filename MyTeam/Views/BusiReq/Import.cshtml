@@ -18,9 +18,9 @@
                 <tr>
                     <td><label class="control-label">项目名称</label></td>
                     <td>
-                        <!--项目下拉选择-->
-                        @Html.DropDownList("ProjID", ViewBag.ProjList as SelectList, new { @class = "form-control" })
-                    </td>                
+                        <!--业需项目下拉选择-->
+                        @Html.DropDownList("BRProjID", ViewBag.BRProjLs as SelectList, new { @class = "form-control" })
+                    </td>   
                     <td class="form-inline">
                         <input type="file" name="file" class="form-control" />
                         <input type="submit" value="上传" class="btn btn-primary" />

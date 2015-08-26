@@ -87,11 +87,11 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname", user.UID);
             }
             else
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname");
             }
 
             ViewBag.ReqPersonList = sl2;
@@ -146,11 +146,11 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname", user.UID);
             }
             else
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname");
             }
 
             ViewBag.ReqPersonList = sl2;
@@ -255,11 +255,11 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname", user.UID);
             }
             else
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                sl2 = new SelectList(this.GetUserList(), "UID", "Realname");
             }
 
             ViewBag.ReqPersonList = sl2;

@@ -111,17 +111,7 @@
                     @Html.TextBoxFor(model => model.DevEvalDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.DevEvalDate, "", new { @class = "text-danger" })
                 </div>
-            </div>
-
-			<div class="form-group">
-                @Html.LabelFor(model => model.FirstReqDetailNo, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.FirstReqDetailNo, new { @class = "form-control" })
-                    <div class="text-info">（系统可以据此自动计算出后续的需求编号）</div>
-                    @Html.ValidationMessageFor(model => model.FirstReqDetailNo, "", new { @class = "text-danger" })
-					
-                </div>
-            </div>
+            </div>		
 
 			<div class="form-group">
                 @Html.LabelFor(model => model.ReqAmt, new { @class = "col-md-2 control-label" })
@@ -133,7 +123,7 @@
 			
 			<div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="button" value="下一步" class="btn btn-primary" onclick="Check()"/>
+                    <input type="submit" value="下一步" class="btn btn-primary" />
                     @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
                 </div>
             </div>
@@ -144,29 +134,3 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-
-<script>
-    // 检查首条维护需求编号格式，然后再submit
-    function Check() {
-        var reqNo = $("#FirstReqDetailNo").val();
-        if (reqNo.length > 0) {
-            // ajax 检查
-            $.ajax({
-                type: "GET",
-                url: "/ReqManage/CheckFirstReqDetailNo/" + reqNo,
-                success: function (msg) {
-                    if (msg != "S") {
-                        alert("首条维护需求编号格式不正确");
-                        return;
-                    }
-                },
-                error: function () {
-                    alert("检查初始需求编号格式失败，请联系管理员");
-                    return;
-                }
-            });
-        }
-
-        $("#MyForm").submit();
-    }
-</script>

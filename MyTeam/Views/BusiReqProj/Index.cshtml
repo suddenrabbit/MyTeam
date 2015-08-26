@@ -1,15 +1,15 @@
 ﻿@using PagedList
 @using PagedList.Mvc
-@model IEnumerable<MyTeam.Models.ProjSurv>
+@model IEnumerable<MyTeam.Models.BusiReqProj>
 
 @{
-    ViewBag.Title = "需求调研管理";
+    ViewBag.Title = "业务需求项目管理";
 
 }
 <h2>@ViewBag.Title。</h2>
 
 <p>
-    @Html.ActionLink("添加需求调研记录", "Create", null, new { @class= "btn btn-primary"})
+    @Html.ActionLink("添加业务需求项目", "Create", null, new { @class = "btn btn-primary" })
 </p>
 
 <!-- Ajax删除 -->
@@ -22,7 +22,7 @@
 
     function realDelete() {
         var id = $('#toDelId').val();
-        var url = "/ProjSurv/Delete/" + id;
+        var url = "/BusiReqProj/Delete/" + id;
         $.ajax({
             type: 'POST',
             url: url,
@@ -42,7 +42,7 @@
     // 在modal中编辑
     function doEdit(id, name) {
         $('#editName').html(name);
-        var url = "/ProjSurv/Edit/" + id;
+        var url = "/BusiReqProj/Edit/" + id;
         $.ajax({
             type: 'GET',
             url: url,
@@ -59,44 +59,14 @@
     }
 </script>
 
-<table class="table table-condensed table-bordered" style="font-size:12px;table-layout:fixed" width="100">
+<table class="table table-condensed table-bordered text-center" style="font-size:12px;table-layout:fixed" width="100">
     <tr>
-        <th width="6"></th>
-        <th width="11">
-            @Html.DisplayNameFor(model => model.ProjID)
+        <th width="20"></th>
+        <th width="60">
+            @Html.DisplayNameFor(model => model.BRProjName)
         </th>
-        <th width="7">
-            @Html.DisplayNameFor(model => model.SurveyWay)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.StartTime)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.EndTime)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.SurveyTime)
-        </th>
-        <th width="11">
-            @Html.DisplayNameFor(model => model.SurveyContent)
-        </th>
-        <th width="11">
-            @Html.DisplayNameFor(model => model.SurveyTarget)
-        </th>
-        <th width="11">
-            @Html.DisplayNameFor(model => model.WorkTarget)
-        </th>
-        <th width="7">
-            @Html.DisplayNameFor(model => model.HostPerson)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.JoinPerson)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.SatisfactionDegree)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.Remark)
+        <th width="20">
+            @Html.DisplayNameFor(model => model.ReqAnalysisID)
         </th>
     </tr>
 
@@ -104,56 +74,28 @@
     {
         <tr>
             <td>
-                <a href="#" onclick="doEdit('@item.SurvID','@item.ProjName')">编辑</a> |
-                <a href="#" onclick="doDelete('@item.SurvID','@item.ProjName 的项目调研记录')">删除</a>
+                <a href="#" onclick="doEdit('@item.BRProjID','@item.BRProjName')">编辑</a> |
+                @Html.ActionLink("查看明细", "Details", new { id = item.BRProjID }) |
+                <a href="#" onclick="doDelete('@item.BRProjID','@item.BRProjName')">删除</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProjName)
+                @Html.DisplayFor(modelItem => item.BRProjName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SurveyWay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyContent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyTarget)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkTarget)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HostPerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JoinPerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SatisfactionDegree)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Remark)
+                @Html.DisplayFor(modelItem => item.ReqAnalysisName)
             </td>
         </tr>
     }
 </table>
 
 <!--分页-->
-@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.ProjSurv>,
+@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.BusiReqProj>,
 generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -219,7 +161,7 @@ generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
                     &times;
                 </button>
                 <h4 class="modal-title" id="myModalLabel">
-                    【<span id="editName"></span>】需求调研编辑
+                    【<span id="editName"></span>】编辑
                 </h4>
             </div>
             <div class="modal-body">
@@ -228,6 +170,5 @@ generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
         </div>
     </div>
 </div>
-
 
 

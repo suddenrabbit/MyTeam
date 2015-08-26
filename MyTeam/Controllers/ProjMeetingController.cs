@@ -66,7 +66,6 @@ namespace MyTeam.Controllers
             ViewBag.MeetingTypeList = MyTools.GetSelectList(Constants.MeetingTypeList,true);
 
             return View(query);
-
         }
 
         //

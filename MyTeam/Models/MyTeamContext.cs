@@ -42,6 +42,8 @@
         public DbSet<ReqTrack> ReqTracks { get; set; }
 
         public DbSet<BusiReq> BusiReqs { get; set; }
+
+        public DbSet<BusiReqProj> BusiReqProjs { get; set; }
   
     }
 
