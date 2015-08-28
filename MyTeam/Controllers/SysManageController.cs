@@ -21,7 +21,7 @@ namespace MyTeam.Controllers
         //
         // GET: /SysManage/
 
-        public ActionResult Index(int pageNum=1)
+        public ActionResult Index(int pageNum = 1)
         {
             // 分页
             var ls = this.GetSysList().ToPagedList(pageNum, Constants.PAGE_SIZE);
@@ -55,15 +55,13 @@ namespace MyTeam.Controllers
 
             try
             {
-                if (ModelState.IsValid)
-                {
-                    dbContext.RetailSystems.Add(sys);
-                    dbContext.SaveChanges();
-                    // 更新内存
-                    this.Update(2);
-                }
+                dbContext.RetailSystems.Add(sys);
+                dbContext.SaveChanges();
+                // 更新内存
+                this.Update(2);
+
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
-                
+
             }
             catch (Exception e1)
             {
@@ -79,7 +77,7 @@ namespace MyTeam.Controllers
         {
             RetailSystem sys = this.GetSysList().Find(a => a.SysID == id);
 
-            if(sys==null)
+            if (sys == null)
             {
                 return View();
             }
@@ -101,7 +99,7 @@ namespace MyTeam.Controllers
         public string Edit(RetailSystem sys)
         {
 
-            if(sys.SysName != sys.OldSysName)
+            if (sys.SysName != sys.OldSysName)
             {
                 // 若系统名称改变，则判断新改的系统名称是否有重复，如有重复不允许新增
                 RetailSystem rs = this.GetSysList().Find(a => a.SysName == sys.SysName);
@@ -109,7 +107,7 @@ namespace MyTeam.Controllers
                 {
                     return "<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许更新！" + "</p>";
                 }
-            }            
+            }
 
             try
             {
@@ -130,10 +128,10 @@ namespace MyTeam.Controllers
         // POST: /SysManage/Delete/5
         [HttpPost]
         public string Delete(int id)
-        {           
+        {
             try
             {
-                RetailSystem sys = this.GetSysList().Find(a => a.SysID == id); 
+                RetailSystem sys = this.GetSysList().Find(a => a.SysID == id);
                 dbContext.Entry(sys).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
                 // 更新内存

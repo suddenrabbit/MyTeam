@@ -5,7 +5,7 @@
     ViewBag.Title = "业务需求管理";
 }
 <h2>@ViewBag.Title。</h2>
-
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script>
     function doDelete(id, name) {
         $('#toDelName').html(name);
@@ -49,6 +49,23 @@
             }
         });
     }
+    // 在modal中新增
+    function doCreate() {
+        var url = "/BusiReq/Create";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#Create').html(msg);
+            },
+            error: function () {
+                $('#Create').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
+            }
+        });
+    }
 </script>
 <div class="row">
     <div class="col-md-10">
@@ -67,7 +84,7 @@
                     </td>
                     <td>
                         <input type="submit" value="查询" class="btn btn-primary" />
-                        @Html.ActionLink("添加记录", "Create", null, new { @class = "btn btn-default" })
+                        <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
                         @Html.ActionLink("批量导入", "Import", null, new { @class = "btn btn-default" })
                         <a href="#" class="btn btn-default" onclick="doExport()">导出需求变更跟踪表</a>
                     </td>
@@ -147,14 +164,10 @@
     generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
             }
         }
-        
-        @section Scripts {
-            @Scripts.Render("~/bundles/jqueryval")
-        }
-
 
     </div>
 </div>
+
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
@@ -223,6 +236,27 @@
             </div>
             <div class="modal-body">
                 <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    业务需求项目新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="Create"></div>
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@
     ViewBag.Title = "项目状态跟踪管理";
 }
 <h2>@ViewBag.Title。</h2>
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     function doDelete(id, name) {
@@ -67,13 +68,31 @@
             type: 'GET',
             url: url,
             success: function (msg) {
-                $('#EditMain').html(msg);
+                $('#Edit').html(msg);
             },
             error: function () {
-                $('#EditMain').html("处理失败，请联系管理员");
+                $('#Edit').html("处理失败，请联系管理员");
             },
             complete: function () {
                 $('#myModal4').modal();
+            }
+        });
+    }
+
+    // 在modal中新增
+    function doCreate() {
+        var url = "/Proj/Create";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#Create').html(msg);
+            },
+            error: function () {
+                $('#Create').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal5').modal();
             }
         });
     }
@@ -105,7 +124,7 @@
                     <td colspan="4">
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
-                        <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/Proj/Create'" />
+                        <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
                     </td>
                 </tr>
             </table>
@@ -173,10 +192,6 @@
         }
     </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -272,7 +287,28 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <div id="EditMain"></div>
+                <div id="Edit"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框5：新增页面 -->
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    项目状态新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="Create"></div>
             </div>
         </div>
     </div>

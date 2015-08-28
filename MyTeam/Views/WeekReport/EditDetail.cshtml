@@ -1,21 +1,30 @@
-﻿@model MyTeam.Models.WeekReportDetail
-
-@{
-    ViewBag.Title = "编辑每周工作";
+﻿@{
+    Layout = null;
 }
+@model MyTeam.Models.WeekReportDetail
 
-<h2>@ViewBag.Title。</h2>
-
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        关闭
+    </button>
+    return;
+}
 <script>
-    function changeRptDate()
-    {
+    function changeRptDate() {
         $('#RptDate').val($('#chooseRptDate').val());
     }
+    // 隐藏表单
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
 </script>
-
 <div class="row">
     <div class="col-md-8">
-        @using (Html.BeginForm("EditDetail", "WeekReport", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        <div id="info"></div>
+        @using (Ajax.BeginForm("EditDetail", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -25,7 +34,6 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.RptDate, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-5">
                     @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
@@ -40,10 +48,9 @@
             {
                 <div class="form-group">
                     @Html.LabelFor(model => model.WorkMission, new { @class = "col-md-2 control-label" })
-
+                    <!--工作任务下拉列表-->
                     <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.WorkMission, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.WorkMission, "", new { @class = "text-danger" })
+                        @Html.DropDownListFor(model => model.WorkMission, ViewBag.WorkMissionList as SelectList, new { @class = "form-control" })
                     </div>
                 </div>
             }
@@ -53,7 +60,6 @@
             }
             <div class="form-group">
                 @Html.LabelFor(model => model.WorkDetail, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.WorkDetail, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.WorkDetail, "", new { @class = "text-danger" })
@@ -61,7 +67,6 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.WorkTarget, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.WorkTarget, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.WorkTarget, "", new { @class = "text-danger" })
@@ -69,7 +74,6 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.Person, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Person, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Person, "", new { @class = "text-danger" })
@@ -77,14 +81,12 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.WorkStat, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.DropDownListFor(model => model.WorkStat, ViewBag.WorkStatList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.WorkTime, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.WorkTime, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.WorkTime, "", new { @class = "text-danger" })
@@ -92,7 +94,6 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.Remark, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
@@ -105,14 +106,13 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="保存" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "DetailIndex", new { id = Model.WorkMission, forMain = Model.IsWithMain }, new { @class = "btn btn-default" })
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
                 </div>
             </div>
         }
-
     </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>

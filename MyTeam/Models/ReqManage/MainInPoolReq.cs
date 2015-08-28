@@ -54,7 +54,7 @@ namespace MyTeam.Models
         public DateTime? DevEvalDate { get; set; }
 
         [Required]
-        [Range(1,15, ErrorMessage="需求数量必须是1-15之间的数字")]
+        [Range(1,10, ErrorMessage="需求数量必须是1-10之间的数字")]
         [Display(Name = "需求数量")]
         public int ReqAmt { get; set; }
     }

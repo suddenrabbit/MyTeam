@@ -1,16 +1,13 @@
 ﻿@using PagedList
 @using PagedList.Mvc
-@model IEnumerable<MyTeam.Models.ProjSurv>
+@model MyTeam.Models.ProjSurvQuery
 
 @{
-    ViewBag.Title = "需求调研管理";
+    ViewBag.Title = "项目调研管理";
 
 }
 <h2>@ViewBag.Title。</h2>
-
-<p>
-    @Html.ActionLink("添加需求调研记录", "Create", null, new { @class= "btn btn-primary"})
-</p>
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 
 <!-- Ajax删除 -->
 <script>
@@ -57,103 +54,152 @@
             }
         });
     }
-</script>
 
-<table class="table table-condensed table-bordered" style="font-size:12px;table-layout:fixed" width="100">
-    <tr>
-        <th width="6"></th>
-        <th width="11">
-            @Html.DisplayNameFor(model => model.ProjID)
-        </th>
-        <th width="7">
-            @Html.DisplayNameFor(model => model.SurveyWay)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.StartTime)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.EndTime)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.SurveyTime)
-        </th>
-        <th width="11">
-            @Html.DisplayNameFor(model => model.SurveyContent)
-        </th>
-        <th width="11">
-            @Html.DisplayNameFor(model => model.SurveyTarget)
-        </th>
-        <th width="11">
-            @Html.DisplayNameFor(model => model.WorkTarget)
-        </th>
-        <th width="7">
-            @Html.DisplayNameFor(model => model.HostPerson)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.JoinPerson)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.SatisfactionDegree)
-        </th>
-        <th width="6">
-            @Html.DisplayNameFor(model => model.Remark)
-        </th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                <a href="#" onclick="doEdit('@item.SurvID','@item.ProjName')">编辑</a> |
-                <a href="#" onclick="doDelete('@item.SurvID','@item.ProjName 的项目调研记录')">删除</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyWay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyContent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SurveyTarget)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkTarget)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HostPerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JoinPerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SatisfactionDegree)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Remark)
-            </td>
-        </tr>
+    // 在modal中新增
+    function doCreate() {
+        var url = "/ProjSurv/Create";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#Create').html(msg);
+            },
+            error: function () {
+                $('#Create').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
+            }
+        });
     }
-</table>
+</script>
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "ProjSurv", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-<!--分页-->
-@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.ProjSurv>,
-generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+            <input type="hidden" name="isQuery" value="True" />
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+            <table class="table table-condensed query-table">
+                <tr>
+                    <td>@Html.LabelFor(model => model.ProjID, new { @class = "control-label" })</td>
+                    <td>
+                        <!--项目下拉选择-->
+                        @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
+                    </td>
+
+                    <td colspan="4">
+                        <input type="submit" value="查询" class="btn btn-primary" />
+                        <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
+                        <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+    <div class="col-md-12">
+        @if (Model.ResultList != null)
+        {
+            if (Model.ResultList.Count < 1)
+            {
+                <p class="alert alert-warning">没有符合条件的结果！</p>
+            }
+            else
+            {
+                <table class="table table-condensed table-bordered" style="font-size:12px;table-layout:fixed" width="100">
+                    <tr>
+                        <th width="6"></th>
+                        <th width="11">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
+                        </th>
+                        <th width="7">
+                            @Html.DisplayNameFor(model => model.ResultList[0].SurveyWay)
+                        </th>
+                        <th width="6">
+                            @Html.DisplayNameFor(model => model.ResultList[0].StartTime)
+                        </th>
+                        <th width="6">
+                            @Html.DisplayNameFor(model => model.ResultList[0].EndTime)
+                        </th>
+                        <th width="6">
+                            @Html.DisplayNameFor(model => model.ResultList[0].SurveyTime)
+                        </th>
+                        <th width="11">
+                            @Html.DisplayNameFor(model => model.ResultList[0].SurveyContent)
+                        </th>
+                        <th width="11">
+                            @Html.DisplayNameFor(model => model.ResultList[0].SurveyTarget)
+                        </th>
+                        <th width="11">
+                            @Html.DisplayNameFor(model => model.ResultList[0].WorkTarget)
+                        </th>
+                        <th width="7">
+                            @Html.DisplayNameFor(model => model.ResultList[0].HostPerson)
+                        </th>
+                        <th width="6">
+                            @Html.DisplayNameFor(model => model.ResultList[0].JoinPerson)
+                        </th>
+                        <th width="6">
+                            @Html.DisplayNameFor(model => model.ResultList[0].SatisfactionDegree)
+                        </th>
+                        <th width="6">
+                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model.ResultList)
+                    {
+                        <tr>
+                            <td>
+                                <a href="#" onclick="doEdit('@item.SurvID','@item.ProjName')">编辑</a> |
+                                <a href="#" onclick="doDelete('@item.SurvID','@item.ProjName 的项目调研记录')">删除</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SurveyWay)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EndTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SurveyTime)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SurveyContent)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SurveyTarget)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.WorkTarget)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.HostPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.JoinPerson)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SatisfactionDegree)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>
+                        </tr>
+                    }
+                </table>
+                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ProjSurv>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+            }
+        }
+    </div>
+</div>
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -229,5 +275,25 @@ generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
     </div>
 </div>
 
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    项目调研新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="Create"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 

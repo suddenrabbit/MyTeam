@@ -268,8 +268,7 @@ namespace MyTeam.Controllers
                     ProjCheckAcptDate = s.ProjCheckAcptDate,
                     ProjPublishDate = s.ProjPublishDate,
                     CheckResult = s.CheckResult,
-                    Remark = s.Remark,
-                    WorkTimeAtt = s.WorkTimeAtt
+                    Remark = s.Remark
                 };
                 rl.Add(ProjResult);
             }

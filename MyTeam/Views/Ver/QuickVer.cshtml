@@ -1,19 +1,22 @@
-﻿@model MyTeam.Models.Ver
-@{
-    ViewBag.Title = "批量制定年度版本计划";
-}
-<h2>@ViewBag.Title。</h2>
+﻿@{Layout = null;}
+@model MyTeam.Models.Ver
+
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     // 日期控件
     $(document).ready(function () {
         $("#VerYear").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M' })", placeholder: "点击选择日期" });
     });
+
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
 </script>
 <div class="row">
     <div class="col-md-8">
         <div id="info"></div>
-        @using (Ajax.BeginForm("QuickVer", "Ver", null, new AjaxOptions { UpdateTargetId = "info" },
+        @using (Ajax.BeginForm("QuickVer", "Ver", null, new AjaxOptions { UpdateTargetId = "info", OnComplete="hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -60,7 +63,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="新增" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 </div>
             </div>
 
@@ -68,6 +71,7 @@
     </div>
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+

@@ -324,17 +324,6 @@
                 </div>
             </fieldset>
 
-            <fieldset>
-                <legend>项目工时记录</legend>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.WorkTimeAtt, new { @class = "col-md-3 control-label" })
-
-                    <div class="col-md-9">
-                        @Html.TextBoxFor(model => model.WorkTimeAtt, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.WorkTimeAtt, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </fieldset>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="保存" class="btn btn-primary" />
@@ -348,6 +337,5 @@
     </div>
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>

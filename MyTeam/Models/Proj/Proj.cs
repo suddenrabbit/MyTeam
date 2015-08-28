@@ -145,10 +145,6 @@ namespace MyTeam.Models
         [Display(Name = "备注")]
         public String Remark { get; set; }
 
-
-        [Display(Name = "工时记录附件（文件链接）")]
-        public String WorkTimeAtt { get; set; }
-
         [NotMapped]
         public string ReqAnalysisName
         {

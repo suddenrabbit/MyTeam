@@ -5,7 +5,28 @@
 }
 
 <h2>用户管理</h2>
-
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        var url = "/User/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#Edit').html(msg);
+            },
+            error: function () {
+                $('#Edit').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal1').modal();
+            }
+        });
+    }
+</script>
 @Html.ValidationSummary()
 
 @if (Model != null)
@@ -47,10 +68,31 @@
                 </td>
 
                 <td>
-                    @Html.ActionLink("编辑", "Edit", new { id = item.UID })
+                    <a href="#" onclick="doEdit('@item.UID','@item.Realname 的用户信息')">编辑</a>
                 </td>
 
             </tr>
         }
     </table>
 }
+
+<!-- 对话框1：编辑页面 -->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="Edit"></div>
+            </div>
+        </div>
+    </div>
+</div>

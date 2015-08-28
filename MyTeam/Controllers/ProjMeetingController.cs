@@ -48,7 +48,7 @@ namespace MyTeam.Controllers
                 else
                 {
                     // 分页
-                    query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
+                    query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); 
                 }
             }
             else

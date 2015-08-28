@@ -164,6 +164,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BusiReq\BusiReqProj.cs" />
     <Compile Include="Models\Home\HomeResult.cs" />
+    <Compile Include="Models\Proj\ProjSurvQuery.cs" />
     <Compile Include="Models\Proj\ReqTrackQuery.cs" />
     <Compile Include="Models\Proj\ProjResult.cs" />
     <Compile Include="Models\Proj\ProjQuery.cs" />

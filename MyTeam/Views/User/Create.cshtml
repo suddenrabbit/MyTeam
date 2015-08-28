@@ -1,10 +1,7 @@
-﻿@model MyTeam.Models.User
-
-@{
-    ViewBag.Title = "新增用户";
+﻿@{
+    Layout = null;
 }
-
-<h2>@ViewBag.Title。</h2>
+@model MyTeam.Models.User
 
 <script>
     function hideForm() {
@@ -67,7 +64,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="新增" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "Index", "", new { @class = "btn btn-default" })
+                    @Html.ActionLink("关闭", "Index", "", new { @class = "btn btn-default" })
                 </div>
             </div>
         }
@@ -75,7 +72,5 @@
     </div>
 </div>
 
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>

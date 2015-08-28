@@ -110,12 +110,9 @@ namespace MyTeam.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    dbContext.Vers.Add(ver);
-                    dbContext.SaveChanges();
+                dbContext.Vers.Add(ver);
+                dbContext.SaveChanges();
 
-                }
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
@@ -192,7 +189,7 @@ namespace MyTeam.Controllers
 
                 dbContext.Entry(ver).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
-               
+
                 return "删除成功";
             }
             catch (Exception e1)
@@ -307,7 +304,7 @@ namespace MyTeam.Controllers
 
                 dbContext.SaveChanges();
 
-                return "<p class='alert alert-success'>版本计划制定成功</p>";
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
 
             catch (Exception e1)

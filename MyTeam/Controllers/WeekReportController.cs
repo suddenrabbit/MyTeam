@@ -48,6 +48,14 @@ namespace MyTeam.Controllers
             SelectList sl = MyTools.GetSelectList(Constants.WorkStageList);
             ViewBag.WorkStageList = sl;
 
+            // 进度
+            List<int> progressLs = new List<int>();
+            for (int i = 0; i <= 100; i += 10)
+            {
+                progressLs.Add(i);
+            }
+            ViewBag.ProgressList = new SelectList(progressLs);
+
             // 默认加上当前的用户UID和姓名
             User user = this.GetSessionCurrentUser();
             if (user == null)
@@ -60,25 +68,18 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddMain(WeekReportMain main)
+        public string AddMain(WeekReportMain main)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    dbContext.WeekReportMains.Add(main);
-                    dbContext.SaveChanges();
-                }
+                dbContext.WeekReportMains.Add(main);
+                dbContext.SaveChanges();
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
-                // 任务阶段下拉列表
-                SelectList sl = MyTools.GetSelectList(Constants.WorkStageList, false, true, main.WorkStage);
-                ViewBag.WorkStageList = sl;
-                ModelState.AddModelError("", "出错了：" + e1.Message);
-                return View(main);
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return RedirectToAction("MainIndex");
         }
 
         // 修改：每周重点工作
@@ -87,38 +88,34 @@ namespace MyTeam.Controllers
             WeekReportMain main = dbContext.WeekReportMains.ToList().Find(a => a.WRMainID == id);
             if (main == null)
             {
-                ModelState.AddModelError("", "无此记录");
-                main = new WeekReportMain();
+                return View();
             }
             // 任务阶段下拉列表
             SelectList sl = MyTools.GetSelectList(Constants.WorkStageList, false, true, main.WorkStage);
             ViewBag.WorkStageList = sl;
+            // 进度
+            List<int> progressLs = new List<int>();
+            for (int i = 0; i <= 100; i += 10)
+            {
+                progressLs.Add(i);
+            }
+            ViewBag.ProgressList = new SelectList(progressLs, main.Progress);
             return View(main);
         }
 
         [HttpPost]
-        public ActionResult EditMain(WeekReportMain main)
+        public string EditMain(WeekReportMain main)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    dbContext.Entry(main).State = System.Data.Entity.EntityState.Modified;
-                    dbContext.SaveChanges();
-
-                    return RedirectToAction("MainIndex");
-                }
+                dbContext.Entry(main).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                // 为了正常显示页面，重新生成select list
-                // 用户列表
-                SelectList sl = MyTools.GetSelectList(Constants.WorkStageList, false, true, main.WorkStage);
-                ViewBag.WorkStageList = sl;
-
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return View(main);
         }
 
         // AJAX调用
@@ -216,16 +213,17 @@ namespace MyTeam.Controllers
             }
 
             // RptDate备选（取最近的5个）
-            var r =  from a in dbContext.WeekReportDetails
-                     orderby a.RptDate descending
-                     select a.RptDate;
+            var r = from a in dbContext.WeekReportDetails
+                    orderby a.RptDate descending
+                    select a.RptDate;
             List<string> ls = r.Take(5).Distinct().ToList<string>();
             ls.Insert(0, DateTime.Now.Year + "年");
             SelectList sl = MyTools.GetSelectList(ls);
-            
+
             ViewBag.RptDateList = sl;
 
-            // 工作任务：默认为ID，不允许填写            
+            // 工作任务：默认为ID，不允许填写   
+            ViewBag.WorkMissionList = MyTools.GetSelectList(Constants.WorkMissionList);
 
             // 完成情况的下拉列表
             ViewBag.WorkStatList = MyTools.GetSelectList(Constants.WorkStatList);
@@ -247,33 +245,25 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddDetail(WeekReportDetail detail)
+        public string AddDetail(WeekReportDetail detail)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    dbContext.WeekReportDetails.Add(detail);
-                    dbContext.SaveChanges();
-                }
-            }
-            catch (Exception e1)
-            {
-                ModelState.AddModelError("", "出错了：" + e1.Message);
-                // 完成情况的下拉列表
-                ViewBag.WorkStatList = MyTools.GetSelectList(Constants.WorkStatList);
-                return View(detail);
-            }
-            if (detail.IsWithMain)
-            {
+                dbContext.WeekReportDetails.Add(detail);
+                dbContext.SaveChanges();
+
                 // 自动计算工时
                 if (detail.IsWithMain)
                 {
                     this.UpdateWorkTime(detail.WorkMission);
                 }
-                return RedirectToAction("DetailIndex", new { id = detail.WorkMission, forMain = detail.IsWithMain });
+
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
-            return RedirectToAction("DetailIndex");
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+            }
         }
 
         // 修改：每周重点工作
@@ -282,24 +272,26 @@ namespace MyTeam.Controllers
             WeekReportDetail detail = dbContext.WeekReportDetails.ToList().Find(a => a.WRDetailID == id);
             if (detail == null)
             {
-                ViewBag.ErrMsg = "无此记录！";
                 return View();
             }
             // 任务阶段下拉列表
             SelectList sl = MyTools.GetSelectList(Constants.WorkStatList, false, true, detail.WorkStat);
             ViewBag.WorkStatList = sl;
-            
+
+            // 工作任务：默认为ID，不允许填写   
+            ViewBag.WorkMissionList = MyTools.GetSelectList(Constants.WorkMissionList);
+
             // RptDate备选（取最近的5个）
             List<string> ls = this.GetRptDateList();
             ls.Insert(0, DateTime.Now.Year + "年");
-            SelectList sl2 = MyTools.GetSelectList(ls,false, true, detail.RptDate);
+            SelectList sl2 = MyTools.GetSelectList(ls, false, true, detail.RptDate);
             ViewBag.RptDateList = sl2;
 
             return View(detail);
         }
 
         [HttpPost]
-        public ActionResult EditDetail(WeekReportDetail detail)
+        public string EditDetail(WeekReportDetail detail)
         {
             try
             {
@@ -308,32 +300,19 @@ namespace MyTeam.Controllers
                     dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
 
+                    // 自动计算工时
                     if (detail.IsWithMain)
                     {
-                        // 自动计算工时
-                        if (detail.IsWithMain)
-                        {
-                            this.UpdateWorkTime(detail.WorkMission);
-                        }
-                        return RedirectToAction("DetailIndex", new { id = detail.WorkMission, forMain = detail.IsWithMain });
+                        this.UpdateWorkTime(detail.WorkMission);
                     }
-                    return RedirectToAction("DetailIndex");
+
                 }
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-                // 为了正常显示页面，重新生成select list
-                // 用户列表
-                SelectList sl = MyTools.GetSelectList(Constants.WorkStatList, false, true, detail.WorkStat);
-                ViewBag.WorkStatList = sl;
-                // RptDate备选（取最近的5个）
-                List<string> ls = this.GetRptDateList();
-                ls.Insert(0, DateTime.Now.Year + "年");
-                SelectList sl2 = MyTools.GetSelectList(ls, false, true, detail.RptDate);
-                ViewBag.RptDateList = sl2;
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return View(detail);
+            return Constants.AJAX_EDIT_SUCCESS_RETURN;
         }
 
         // AJAX调用
@@ -348,7 +327,7 @@ namespace MyTeam.Controllers
                 dbContext.SaveChanges();
 
                 // 自动计算工时
-                if(detail.IsWithMain)
+                if (detail.IsWithMain)
                 {
                     this.UpdateWorkTime(detail.WorkMission);
                 }
@@ -403,24 +382,18 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddRisk(WeekReportRisk risk)
+        public string AddRisk(WeekReportRisk risk)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    dbContext.WeekReportRisks.Add(risk);
-                    dbContext.SaveChanges();
-                    return RedirectToAction("RiskIndex");
-
-                }
+                dbContext.WeekReportRisks.Add(risk);
+                dbContext.SaveChanges();
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了：" + e1.Message);
-
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return View(risk);
         }
 
         // 修改：风险与待协调问题
@@ -429,8 +402,7 @@ namespace MyTeam.Controllers
             WeekReportRisk risk = dbContext.WeekReportRisks.ToList().Find(a => a.WRRiskID == id);
             if (risk == null)
             {
-                ModelState.AddModelError("", "未找到该记录");
-                risk = new WeekReportRisk();
+                return View();
             }
 
             // RptDate备选（取最近的5个）
@@ -443,24 +415,18 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditRisk(WeekReportRisk risk)
+        public string EditRisk(WeekReportRisk risk)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    dbContext.Entry(risk).State = System.Data.Entity.EntityState.Modified;
-                    dbContext.SaveChanges();
-
-                    return RedirectToAction("RiskIndex");
-                }
+                dbContext.Entry(risk).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
-                ModelState.AddModelError("", "出错了: " + e1.Message);
-
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return View(risk);
         }
 
         // AJAX调用
@@ -485,14 +451,14 @@ namespace MyTeam.Controllers
         // Main表的WorkTime根据Detail表计算，每次插入、编辑、删除Detail时均重新计算
         private void UpdateWorkTime(string mainId)
         {
-            List<WeekReportDetail> details = dbContext.WeekReportDetails.ToList();
-            WeekReportDetail temp = details.Find(a => a.WorkMission == mainId);
-            if(temp == null){
-                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = 0");
+            var details = dbContext.WeekReportDetails.Where(a=>a.WorkMission==mainId).ToList();
+            if (details.Count == 0)
+            {
+                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = 0 where WRMainID = @p0", mainId);
             }
             else
             {
-                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkMission = m.WRMainID) where WRMainID=" + mainId);
+                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkMission = m.WRMainID) where WRMainID = @p0", mainId);
             }
         }
 
@@ -538,12 +504,12 @@ namespace MyTeam.Controllers
             // 分别读取每周工作、重点工作、项目风险三部分内容
             var detailList = dbContext.WeekReportDetails.Where(a => a.RptDate == week);
             // 重点工作通过每周工作读取
-            string[] detailWithMainList = detailList.Where(a => a.IsWithMain == true).Select(a=>a.WorkMission).ToArray<string>();
+            string[] detailWithMainList = detailList.Where(a => a.IsWithMain == true).Select(a => a.WorkMission).ToArray<string>();
             var mainList = from a in dbContext.WeekReportMains
                            where detailWithMainList.Contains(a.WRMainID.ToString())
                            select a;
             var riskList = dbContext.WeekReportRisks.Where(a => a.RptDate == week);
-        
+
 
             // 根据sheetNum处理
             ExcelWorksheet sheet = wb.Worksheets[sheetNum];
@@ -642,6 +608,6 @@ namespace MyTeam.Controllers
         {
             return dbContext.Database.SqlQuery<string>("select distinct top 5 RptDate from WeekReportDetails order by RptDate desc").ToList<string>();
         }
-        
+
     }
 }

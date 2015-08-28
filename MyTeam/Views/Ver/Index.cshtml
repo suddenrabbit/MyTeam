@@ -5,6 +5,7 @@
     ViewBag.Title = "年度版本下发记录管理";
 }
 <h2>@ViewBag.Title。</h2>
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     function doDelete(id, name) {
@@ -38,7 +39,7 @@
         $('#myForm').submit();
         $('#isExcel').val(false);
     }
-    
+
     // 日期控件
     $(document).ready(function () {
         $("#VerYear").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy' })", placeholder: "点击选择日期" });
@@ -59,6 +60,24 @@
             },
             complete: function () {
                 $('#myModal3').modal();
+            }
+        });
+    }
+
+    // 在modal中新增
+    function doCreate(target) {
+        var url = "/Ver/" + target;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateMain').html(msg);
+            },
+            error: function () {
+                $('#CreateMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
             }
         });
     }
@@ -91,8 +110,8 @@
                     <td colspan="4">
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
-                        <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/Ver/Create'" />
-                        <input type="button" value="批量制定版本计划" class="btn btn-default" onclick="javascript:window.location.href='/Ver/QuickVer'" />
+                        <input type="button" onclick="doCreate('Create')" class="btn btn-default" value="添加一条" />
+                        <input type="button" onclick="doCreate('QuickVer')" class="btn btn-default" value="批量制定版本计划" />
                     </td>
                 </tr>
             </table>
@@ -182,10 +201,6 @@
     </div>
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
@@ -255,6 +270,27 @@
             </div>
             <div class="modal-body">
                 <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    年度版本下发计划新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="CreateMain"></div>
             </div>
         </div>
     </div>

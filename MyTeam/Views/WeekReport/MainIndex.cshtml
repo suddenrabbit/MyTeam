@@ -7,9 +7,9 @@
 }
 
 <h2>@ViewBag.Title。</h2>
-
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 <p>
-    @Html.ActionLink("添加重点项目与工作", "AddMain", null, new { @class = "btn btn-primary" })
+    <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加重点项目与工作" />
     @Html.ActionLink("每周工作", "DetailIndex", null, new { @class = "btn btn-default" })
     @Html.ActionLink("风险与待协调问题", "RiskIndex", null, new { @class = "btn btn-default" })
 </p>
@@ -56,6 +56,23 @@
             },
             complete: function () {
                 $('#myModal3').modal();
+            }
+        });
+    }
+    // 在modal中新增
+    function doCreate() {
+        var url = "/WeekReport/AddMain/";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateMain').html(msg);
+            },
+            error: function () {
+                $('#CreateMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
             }
         });
     }
@@ -203,6 +220,27 @@
             </div>
             <div class="modal-body">
                 <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    重点项目与工作新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="CreateMain"></div>
             </div>
         </div>
     </div>

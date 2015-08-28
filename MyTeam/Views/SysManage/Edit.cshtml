@@ -6,7 +6,9 @@
 @if (Model == null)
 {
     <div class="alert alert-warning">无此记录</div>
-    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        关闭
+    </button>
     return;
 }
 
@@ -20,7 +22,7 @@
 <div class="row">
     <div class="col-md-12">
         <div id="info"></div>
-        @using (Ajax.BeginForm("Edit", "SysManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete="hideForm" },
+        @using (Ajax.BeginForm("Edit", "SysManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -103,23 +105,18 @@
 
                 </div>
             </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="保存" class="btn btn-primary" />       
-            <button type="button" class="btn btn-default" data-dismiss="modal">
-                关闭
-            </button>
-        </div>
-    </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
+                </div>
+            </div>
         }
 
     </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>
 <script>
     // 选中 研发中心下拉列表
     $(function () {

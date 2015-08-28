@@ -103,11 +103,16 @@ namespace MyTeam.Utils
         /// <summary>
         /// AJAX新增成功后统一返回HTML值
         /// </summary>
-        public static string AJAX_CREATE_SUCCESS_RETURN = "<p class='alert alert-success'>添加成功！<a href='Create'>继续添加</a> <a href='Index'>返回</a></p>";
+        public static string AJAX_CREATE_SUCCESS_RETURN = "<p class='alert alert-success'>添加成功！<a href='#' data-dismiss='modal' onclick='javascript:window.location.reload()'>关闭</a></p>";
 
         /// <summary>
         /// AJAX编辑成功后统一返回HTML值
         /// </summary>
         public static string AJAX_EDIT_SUCCESS_RETURN = "<p class='alert alert-success'>修改成功！<a href='#' data-dismiss='modal' onclick='javascript:window.location.reload()'>关闭</a></p>";
+
+        /// <summary>
+        /// 每周工作工作任务下拉列表
+        /// </summary>
+        public static List<string> WorkMissionList = new List<string>() { "领导交办", "项目调研", "维护需求" };
     }
 }

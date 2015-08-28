@@ -1,10 +1,7 @@
-﻿@model MyTeam.Models.ProjSurv
-
-@{
-    ViewBag.Title = "添加需求调研记录";
+﻿@{
+    Layout = null;
 }
-
-<h2>@ViewBag.Title。</h2>
+@model MyTeam.Models.ProjSurv
 
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
@@ -23,7 +20,7 @@
 </script>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         @using (Ajax.BeginForm("Create", "ProjSurv", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
         {
@@ -31,95 +28,95 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <div class="form-group">
-                @Html.LabelFor(model => model.ProjID, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.ProjID, new { @class = "col-md-3 control-label" })
                 <!--项目名称列表-->
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.SurveyWay, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.SurveyWay, new { @class = "col-md-3 control-label" })
                 <!--调研方式列表-->
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.DropDownListFor(model => model.SurveyWay, ViewBag.SurveyWayList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.StartTime, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.StartTime, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.StartTime, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.EndTime, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.EndTime, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.SurveyTime, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.SurveyTime, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SurveyTime, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SurveyTime, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.SurveyContent, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.SurveyContent, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SurveyContent, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SurveyContent, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.SurveyTarget, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.SurveyTarget, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SurveyTarget, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SurveyTarget, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.WorkTarget, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.WorkTarget, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.WorkTarget, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.WorkTarget, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.HostPerson, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.HostPerson, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.HostPerson, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.HostPerson, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.JoinPerson, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.JoinPerson, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.JoinPerson, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.JoinPerson, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.SatisfactionDegree, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.SatisfactionDegree, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.SatisfactionDegree, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.SatisfactionDegree, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Remark, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                 </div>
@@ -127,7 +124,7 @@
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="新增" class="btn btn-primary" />
-                    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+                    @Html.ActionLink("关闭", "Index", null, new { @class = "btn btn-default" })
                 </div>
             </div>
         }
@@ -135,7 +132,5 @@
     </div>
 </div>
 
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>

@@ -59,9 +59,12 @@ namespace MyTeam.Controllers
             // 3、需求发起单位 
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
 
-            // 4、需求数量默认为1
-            mainInPoolReq.ReqAmt = 1;
-
+            // 4、需求数量
+            List<int> reqAmtLs = new List<int>();
+            for (int i = 1; i <= 10; i++)
+                reqAmtLs.Add(i);
+            ViewBag.ReqAmtList = new SelectList(reqAmtLs);
+                
             return View(mainInPoolReq);
         }
 

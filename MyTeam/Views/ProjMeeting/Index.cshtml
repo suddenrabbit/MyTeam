@@ -5,6 +5,7 @@
     ViewBag.Title = "项目会议管理";
 }
 <h2>@ViewBag.Title。</h2>
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     function check() {
@@ -88,6 +89,24 @@
             }
         });
     }
+
+    // 在modal中新增
+    function doCreate() {
+        var url = "/ProjMeeting/Create";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#Create').html(msg);
+            },
+            error: function () {
+                $('#Create').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal5').modal();
+            }
+        });
+    }
 </script>
 <div class="row">
     <div class="col-md-8">
@@ -125,7 +144,7 @@
                     <td colspan="4">
                         <input type="button" value="查询" class="btn btn-primary" onclick="check()"/>
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
-                        <input type="button" value="新增一条" class="btn btn-default" onclick="javascript:window.location.href='/ProjMeeting/Create'" />
+                        <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
                     </td>
                 </tr>
             </table>
@@ -143,10 +162,10 @@
                 <table class="table table-condensed table-bordered" style="table-layout:fixed;font-size:12px" width="100">
                     <tr>
                         <th width="11"></th>
-                        <th width="12" align="center">
+                        <th width="25" align="center">
                             @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
                         </th>
-                        <th width="28" align="center">
+                        <th width="15" align="center">
                             @Html.DisplayNameFor(model => model.ResultList[0].MeetingTopic)
                         </th>
                         <th width="11" align="center">
@@ -203,10 +222,6 @@
         }
     </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -303,6 +318,27 @@
             </div>
             <div class="modal-body">
                 <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框5：新增页面 -->
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    项目会议新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="Create"></div>
             </div>
         </div>
     </div>

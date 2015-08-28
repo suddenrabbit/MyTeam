@@ -42,7 +42,7 @@ namespace MyTeam.Models
         [Required]
         [Display(Name = "总体进度（%）")]
         [Range(0,100, ErrorMessage="只能填0-100之间的数字")]
-        public double Progress { get; set; }
+        public int Progress { get; set; }
 
         [Display(Name = "工时（人小时）")]
         public double WorkTime { get; set; }

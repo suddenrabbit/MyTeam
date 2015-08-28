@@ -14,20 +14,43 @@ namespace MyTeam.Controllers
     {
         //
         // GET: /ProjSurv/
-
-        public ActionResult Index(int pageNum = 1)
+        public ActionResult Index(ProjSurvQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            List<ProjSurv> ls = dbContext.ProjSurvs.ToList();
+
+            if (isQuery)
+            {
+                var ls = from a in dbContext.ProjSurvs select a;
+                if (query.ProjID != 0)
+                {
+                    ls = ls.Where(p => p.ProjID == query.ProjID);
+                }
+                var result = ls.ToList();
+                // 分页
+                query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); 
+            }
+            else
+            {
+                query = new ProjSurvQuery();
+            }
+
+            // 为了保证查询部分正常显示，对下拉列表处理           
+            // 获取项目下拉列表
             List<Proj> projLs = dbContext.Projs.ToList();
-            foreach(ProjSurv rs in ls)
+            // 加上“全部”
+            projLs.Insert(0, new Proj() { ProjID = 0, ProjName = "全部" });
+            ViewBag.ProjList = new SelectList(projLs, "ProjID", "ProjName", query.ProjID);
+
+            List<ProjSurv> list = dbContext.ProjSurvs.ToList();
+            foreach (ProjSurv rs in list)
             {
                 Proj p = projLs.Find(a => a.ProjID == rs.ProjID);
                 rs.ProjName = p == null ? "未知" : p.ProjName;
             }
+            
+            // 调研方式
+            ViewBag.SurveyWayList = MyTools.GetSelectList(Constants.SurveyWayList);
 
-            // 分页
-            var ls1 = ls.ToPagedList(pageNum, Constants.PAGE_SIZE);
-            return View(ls1);
+            return View(query);
         }
 
         //

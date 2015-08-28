@@ -209,7 +209,7 @@ namespace MyTeam.Controllers
             {
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return Constants.AJAX_EDIT_SUCCESS_RETURN; ;
+            return Constants.AJAX_EDIT_SUCCESS_RETURN;
         }
 
     }

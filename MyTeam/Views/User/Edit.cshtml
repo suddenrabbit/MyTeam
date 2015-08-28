@@ -1,14 +1,16 @@
-﻿@model MyTeam.Models.User
-@{
-    ViewBag.Title = "修改用户信息";
+﻿@{
+    Layout = null;
 }
-<h2>@ViewBag.Title。</h2>
-@if (!string.IsNullOrEmpty(ViewBag.ErrMsg))
+@model MyTeam.Models.User
+
+@if (Model == null)
 {
-    <div class="alert alert-danger" role="alert">@ViewBag.ErrMsg</div>
+    <div class="alert alert-warning">无此记录</div>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        关闭
+    </button>
     return;
 }
-
 <script>
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
@@ -17,69 +19,63 @@
 </script>
 
 <div class="row">
-    <div class="col-md-8">
-        @if (!string.IsNullOrEmpty(ViewBag.Message))
-        {
-            <div class="alert alert-success" role="alert">@ViewBag.Message</div>
-        }
+    <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("Edit", "User", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                 new { @class = "form-horizontal", role = "form" }))
+                new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            if (Model != null)
-            {
-                @Html.HiddenFor(model => model.UID)
+            @Html.HiddenFor(model => model.UID)
 
                 <!--用户名、密码不允许修改-->
-                @Html.HiddenFor(model => model.Username)
-                @Html.HiddenFor(model => model.Password)
+            @Html.HiddenFor(model => model.Username)
+            @Html.HiddenFor(model => model.Password)
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Realname, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.Realname, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.Realname, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Phone, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
-                    </div>
-                </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Realname, new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            @Html.TextBoxFor(model => model.Realname, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Realname, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Phone, new { @class = "col-md-3 control-label" })
+        <div class="col-md-9">
+            @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
                 <!--只有管理员可以控制用户是否为管理员-->
-                if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
-                {
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(model => model.IsAdmin)
-                                是否管理员
-                            </div>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    @Html.HiddenFor(model => model.IsAdmin)
-                }
-
+            if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+            {
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="保存" class="btn btn-primary" />
-                        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default", onclick = "javascript:history.back()" })
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(model => model.IsAdmin)
+                            是否管理员
+                        </div>
                     </div>
                 </div>
-
             }
+            else
+            {
+                @Html.HiddenFor(model => model.IsAdmin)
+            }
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                </div>
+            </div>
+
         }
     </div>
 </div>
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>

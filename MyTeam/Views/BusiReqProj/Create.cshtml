@@ -1,46 +1,49 @@
-﻿@model MyTeam.Models.BusiReqProj
-
-@{
-    ViewBag.Title = "添加业务需求项目";
+﻿@{
+    Layout = null;
 }
+@model MyTeam.Models.BusiReqProj
 
-<h2>@ViewBag.Title。</h2>
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
+</script>
 
 <div class="row">
-    <div class="col-md-8">
-        @using (Html.BeginForm("Create", "BusiReqProj", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-                new { @class = "form-horizontal", role = "form" }))
-		{
-		@Html.AntiForgeryToken()
-		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="col-md-12">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Create", "BusiReqProj", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+        new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-			<div class="form-group">
-				@Html.LabelFor(model => model.BRProjName, new { @class = "col-md-2 control-label" })
-					
-			<div class="col-md-10">
-					@Html.TextBoxFor(model => model.BRProjName, new { @class = "form-control" })
-					@Html.ValidationMessageFor(model => model.BRProjName, "", new { @class = "text-danger" })
-			</div>
-		</div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.BRProjName, new { @class = "col-md-3 control-label" })
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.ReqAnalysisID, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            <!--需求分析师下拉选择-->
-            @Html.DropDownListFor(model => model.ReqAnalysisID, ViewBag.UserList as SelectList, new { @class = "form-control" })
-        </div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.BRProjName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BRProjName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqAnalysisID, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <!--需求分析师下拉选择-->
+                    @Html.DropDownListFor(model => model.ReqAnalysisID, ViewBag.UserList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="新增" class="btn btn-primary" />
+                    @Html.ActionLink("关闭", "Index", null, new { @class = "btn btn-default" })
+                </div>
+            </div>
+        }
     </div>
-			<div class="form-group">
-			<div class="col-md-offset-2 col-md-10">
-				<input type="submit" value="新增" class="btn btn-primary" />
-				@Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
-			</div>
-		</div>
-	}
-		</div>
 </div>
 
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>

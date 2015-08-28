@@ -5,9 +5,9 @@
     ViewBag.Title = "零售条线系统管理";
 }
 <h2>@ViewBag.Title。</h2>
-
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 <p>
-    @Html.ActionLink("添加系统", "Create", null, new { @class = "btn btn-primary" })
+    <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加系统" />
 </p>
 
 <script>
@@ -51,6 +51,24 @@
             },
             complete: function () {
                 $('#myModal3').modal();
+            }
+        });
+    }
+
+    // 在modal中新增
+    function doCreate() {
+        var url = "/SysManage/Create/";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateMain').html(msg);
+            },
+            error: function () {
+                $('#CreateMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
             }
         });
     }
@@ -131,10 +149,6 @@
 @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.RetailSystem>,
     generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
@@ -208,3 +222,25 @@
         </div>
     </div>
 </div>
+
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    零售条线系统新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="CreateMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

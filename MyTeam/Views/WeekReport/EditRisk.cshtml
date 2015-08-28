@@ -3,14 +3,28 @@
 }
 @model MyTeam.Models.WeekReportRisk
 
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        关闭
+    </button>
+    return;
+}
 <script>
     function changeRptDate() {
         $('#RptDate').val($('#chooseRptDate').val());
     }
+    // 隐藏表单
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
 </script>
 <div class="row">
     <div class="col-md-8">
-        @using (Html.BeginForm("EditRisk", "WeekReport", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        <div id="info"></div>
+        @using (Ajax.BeginForm("EditRisk", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -58,6 +72,5 @@
         }
     </div>
 </div>
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>
