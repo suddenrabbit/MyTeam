@@ -68,12 +68,16 @@ namespace MyTeam.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                var ls = dbContext.BusiReqs.ToList();
+                // ProjID+BusiReqNo重复的不导入
+                if (ls.Find(a => a.BRProjID == br.BRProjID && a.BusiReqNo == br.BusiReqNo) != null)
                 {
-
-                    dbContext.BusiReqs.Add(br);
-                    dbContext.SaveChanges();
+                    return "<p class='alert alert-danger'>出错了: 记录已存在，不允许重复添加！" + "</p>";
                 }
+
+                dbContext.BusiReqs.Add(br);
+                dbContext.SaveChanges();
+                
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)

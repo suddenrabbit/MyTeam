@@ -52,14 +52,17 @@ namespace MyTeam.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    dbContext.BusiReqProjs.Add(brProj);
-                    dbContext.SaveChanges();
-
-                    // 更新内存
-                    this.Update(3);
+                var r = dbContext.BusiReqProjs.ToList().Find(a => a.BRProjName == brProj.BRProjName);
+                if(r != null){
+                    return "<p class='alert alert-danger'>出错了: " + brProj.BRProjName + "已存在，不允许重复添加！" + "</p>";
                 }
+
+                dbContext.BusiReqProjs.Add(brProj);
+                dbContext.SaveChanges();
+
+                // 更新内存
+                this.Update(3);
+                
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)

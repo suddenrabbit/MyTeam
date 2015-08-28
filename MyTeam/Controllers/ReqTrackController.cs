@@ -88,13 +88,19 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Create(ReqTrack reqTrack)
         {
+            List<ReqTrack> list = dbContext.ReqTracks.ToList();
+            ReqTrack track = list.Find(a => a.ReqNo == reqTrack.ReqNo && a.SoftReqNo == reqTrack.SoftReqNo);
+
+            if(track != null){
+                return "<p class='alert alert-danger'>出错了: 该记录已存在，不允许重复添加！" + "</p>";
+            }
+
             try
             {
-                if (ModelState.IsValid)
-                {
+                
                     dbContext.ReqTracks.Add(reqTrack);
                     dbContext.SaveChanges();
-                }
+                
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
@@ -211,15 +217,17 @@ namespace MyTeam.Controllers
 
                         int rowStart = worksheet.Dimension.Start.Row;       //工作区开始行号
                         int rowEnd = worksheet.Dimension.End.Row;       //工作区结束行号
-
                         var ls = dbContext.ReqTracks.ToList();
 
+                        var tmpLs = new List<ReqTrack>(ls.ToArray());
+                        
                         for (int row = rowStart + 1; row <= rowEnd; row++)
                         {
                             string ReqNo = worksheet.Cells[row, 1].GetValue<string>();
+                            string softReqNo = worksheet.Cells[row, 10].GetValue<string>();
 
                             // ProjID+BusiReqNo重复的不导入
-                            if (ls.Find(a => a.ProjID == ProjID && a.ReqNo == ReqNo) != null)
+                            if (tmpLs.Find(a => a.ProjID == ProjID && a.ReqNo == ReqNo && a.SoftReqNo == softReqNo) != null)
                             {
                                 continue;
                             }
@@ -247,6 +255,7 @@ namespace MyTeam.Controllers
                             br.ReqStat = worksheet.Cells[row, 12].GetValue<string>();
 
                             dbContext.ReqTracks.Add(br);
+                            tmpLs.Add(br);
                         }
                         // 保存
                         int realNum = dbContext.SaveChanges();

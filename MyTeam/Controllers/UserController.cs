@@ -114,7 +114,6 @@ namespace MyTeam.Controllers
         // 新增用户页面
         public ActionResult Create()
         {
-
             return View();
         }
 
@@ -124,8 +123,7 @@ namespace MyTeam.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+                
                     // Password要MD5加密
                     user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "MD5");
                     // 检验是否已经存在该客户
@@ -142,7 +140,7 @@ namespace MyTeam.Controllers
                         this.Update(1);
                     }
 
-                }
+                
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
@@ -196,14 +194,13 @@ namespace MyTeam.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+                
                     dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
                     
                     // 更新内存
                     this.Update(1);
-                }
+                
             }
             catch (Exception e1)
             {

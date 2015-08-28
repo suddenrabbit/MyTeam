@@ -79,11 +79,10 @@ namespace MyTeam.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+                
                     dbContext.ProjSurvs.Add(reqSurv);
                     dbContext.SaveChanges();
-                }
+                
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)

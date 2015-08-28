@@ -116,14 +116,13 @@ namespace MyTeam.Controllers
             
             try
             {
-                if (ModelState.IsValid)
-                {
+                
                     dbContext.Projs.Add(proj);
                     dbContext.SaveChanges();
 
                     // 更新内存
                     this.Update(3);
-                }
+                
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)

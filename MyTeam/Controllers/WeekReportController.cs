@@ -295,8 +295,7 @@ namespace MyTeam.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+                
                     dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
 
@@ -306,7 +305,6 @@ namespace MyTeam.Controllers
                         this.UpdateWorkTime(detail.WorkMission);
                     }
 
-                }
             }
             catch (Exception e1)
             {

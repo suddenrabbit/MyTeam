@@ -64,7 +64,7 @@ namespace MyTeam.Controllers
             for (int i = 1; i <= 10; i++)
                 reqAmtLs.Add(i);
             ViewBag.ReqAmtList = new SelectList(reqAmtLs);
-                
+
             return View(mainInPoolReq);
         }
 
@@ -117,8 +117,7 @@ namespace MyTeam.Controllers
 
             try
             {
-                if (ModelState.IsValid)
-                {
+                
                     // 入库
                     foreach (Req req in reqList)
                     {
@@ -140,7 +139,7 @@ namespace MyTeam.Controllers
                     {
                         r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
                     }
-                }
+                
 
             }
             catch (Exception e1)
@@ -325,15 +324,15 @@ namespace MyTeam.Controllers
             {
                 string sql = "";
                 // 若是需求编号不为空，则按需求编号更新
-                if(!string.IsNullOrEmpty(reqs))
+                if (!string.IsNullOrEmpty(reqs))
                 {
                     // 拼出sql中的in条件
                     string whereIn = this.GetWhereIn(reqs);
                     sql = string.Format("update Reqs set RlsDate='{0}' where ReqDetailNo in ({1})", rlsDate, whereIn);
                 }
-               
+
                 // 若是下发通知编号不为空，则按下发通知编号更新
-                if(!string.IsNullOrEmpty(rlsNoToBatRlsDate))
+                if (!string.IsNullOrEmpty(rlsNoToBatRlsDate))
                 {
                     sql = string.Format("update Reqs set RlsDate='{0}' where RlsNo = ('{1}')", rlsDate, rlsNoToBatRlsDate);
                 }
@@ -419,20 +418,20 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Create(Req req)
         {
-            // 判断是否有重复的维护需求编号，如有重复不允许新增
-            Req r = dbContext.Reqs.ToList().Find(a => a.ReqDetailNo == req.ReqDetailNo);
-            if (r != null)
-            {
-                return "<p class='alert alert-danger'>出错了: 维护需求编号" + req.ReqDetailNo + "已存在，不允许重复添加！" + "</p>";
-            }
-
             try
             {
-                if (ModelState.IsValid)
+                // 判断是否有重复的维护需求编号，如有重复不允许新增
+                if (!string.IsNullOrEmpty(req.ReqDetailNo))
                 {
-                    dbContext.Reqs.Add(req);
-                    dbContext.SaveChanges();
+                    Req r = dbContext.Reqs.ToList().Find(a => a.ReqDetailNo == req.ReqDetailNo);
+                    if (r != null)
+                    {
+                        return "<p class='alert alert-danger'>出错了: 维护需求编号" + req.ReqDetailNo + "已存在，不允许重复添加！" + "</p>";
+                    }
                 }
+
+                dbContext.Reqs.Add(req);
+                dbContext.SaveChanges();
 
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }

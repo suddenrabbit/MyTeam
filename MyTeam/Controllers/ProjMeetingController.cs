@@ -116,11 +116,10 @@ namespace MyTeam.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
+                
                     dbContext.ProjMeetings.Add(projMeeting);
                     dbContext.SaveChanges();
-                }
+                
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
