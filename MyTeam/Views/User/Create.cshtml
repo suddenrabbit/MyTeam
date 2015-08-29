@@ -11,7 +11,7 @@
 </script>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("Create", "User", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
                  new { @class = "form-horizontal", role = "form" }))
@@ -21,39 +21,39 @@
 
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Username, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
+                @Html.LabelFor(model => model.Username, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Password, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.Password, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Realname, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.Realname, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Realname, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Realname, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Phone, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.Phone, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-10">
+                <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="col-md-offset-3 col-md-9">
                     <div class="checkbox">
                         @Html.CheckBoxFor(model => model.IsAdmin)
                         是否管理员
@@ -62,9 +62,9 @@
             </div>
 
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="col-md-offset-3 col-md-9">
                     <input type="submit" value="新增" class="btn btn-primary" />
-                    @Html.ActionLink("关闭", "Index", "", new { @class = "btn btn-default" })
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
                 </div>
             </div>
         }

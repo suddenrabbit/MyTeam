@@ -222,9 +222,6 @@ namespace MyTeam.Controllers
 
             ViewBag.RptDateList = sl;
 
-            // 工作任务：默认为ID，不允许填写   
-            ViewBag.WorkMissionList = MyTools.GetSelectList(Constants.WorkMissionList);
-
             // 完成情况的下拉列表
             ViewBag.WorkStatList = MyTools.GetSelectList(Constants.WorkStatList);
 
@@ -278,9 +275,6 @@ namespace MyTeam.Controllers
             SelectList sl = MyTools.GetSelectList(Constants.WorkStatList, false, true, detail.WorkStat);
             ViewBag.WorkStatList = sl;
 
-            // 工作任务：默认为ID，不允许填写   
-            ViewBag.WorkMissionList = MyTools.GetSelectList(Constants.WorkMissionList);
-
             // RptDate备选（取最近的5个）
             List<string> ls = this.GetRptDateList();
             ls.Insert(0, DateTime.Now.Year + "年");
@@ -295,16 +289,14 @@ namespace MyTeam.Controllers
         {
             try
             {
-                
-                    dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
-                    dbContext.SaveChanges();
+                dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
 
-                    // 自动计算工时
-                    if (detail.IsWithMain)
-                    {
-                        this.UpdateWorkTime(detail.WorkMission);
-                    }
-
+                // 自动计算工时
+                if (detail.IsWithMain)
+                {
+                    this.UpdateWorkTime(detail.WorkMission);
+                }
             }
             catch (Exception e1)
             {
@@ -449,7 +441,7 @@ namespace MyTeam.Controllers
         // Main表的WorkTime根据Detail表计算，每次插入、编辑、删除Detail时均重新计算
         private void UpdateWorkTime(string mainId)
         {
-            var details = dbContext.WeekReportDetails.Where(a=>a.WorkMission==mainId).ToList();
+            var details = dbContext.WeekReportDetails.Where(a => a.WorkMission == mainId).ToList();
             if (details.Count == 0)
             {
                 dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = 0 where WRMainID = @p0", mainId);
