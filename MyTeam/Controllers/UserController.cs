@@ -78,7 +78,7 @@ namespace MyTeam.Controllers
         [HttpPost]
         public ContentResult ChangePsw(ChangePsw changePsw)
         {
-            User user = this.GetSessionCurrentUser();   
+            User user = this.GetSessionCurrentUser();
 
             user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(changePsw.NewPsw, "MD5");
             dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
@@ -123,29 +123,28 @@ namespace MyTeam.Controllers
         {
             try
             {
-                
-                    // Password要MD5加密
-                    user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "MD5");
-                    // 检验是否已经存在该客户
-                    var ls = this.GetUserList().Where(a => a.Username == user.Username);
-                    if (ls.Count() > 0)
-                    {
-                        return"<p class='alert alert-danger'>该用户名已存在，无法添加！</p>";
-                    }
-                    else
-                    {
-                        dbContext.Users.Add(user);
-                        dbContext.SaveChanges();
-                        // 更新内存
-                        this.Update(1);
-                    }
+                // Password要MD5加密
+                user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "MD5");
+                // 检验是否已经存在该客户
+                var ls = this.GetUserList().Where(a => a.Username == user.Username);
+                if (ls.Count() > 0)
+                {
+                    return "<p class='alert alert-danger'>该用户名已存在，无法添加！</p>";
+                }
+                else
+                {
+                    dbContext.Users.Add(user);
+                    dbContext.SaveChanges();
+                    // 更新内存
+                    this.Update(1);
+                }
 
-                
+
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
-                return"<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
 
         }
@@ -156,7 +155,7 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user == null)
             {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/User/Edit/"+id });
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/User/Edit/" + id });
             }
 
             // 为避免直接访问/Edit或传入的id不正确，默认id为当前登陆用户
@@ -180,7 +179,7 @@ namespace MyTeam.Controllers
                 user = this.GetUserList().Find(a => a.UID == uid);
             }
 
-            if(user == null)
+            if (user == null)
             {
                 ViewBag.ErrMsg = "无此用户！";
             }
@@ -194,19 +193,18 @@ namespace MyTeam.Controllers
         {
             try
             {
-                
-                    dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
-                    dbContext.SaveChanges();
-                    
-                    // 更新内存
-                    this.Update(1);
-                
+                dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+
+                // 更新内存
+                this.Update(1);
+
             }
             catch (Exception e1)
             {
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return Constants.AJAX_EDIT_SUCCESS_RETURN;
+            return "<p class='alert alert-success'>修改成功</p>";
         }
 
     }

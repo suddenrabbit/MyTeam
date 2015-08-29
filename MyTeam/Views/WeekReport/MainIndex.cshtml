@@ -149,7 +149,7 @@
 </table>
 <!--分页-->
 @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.WeekReportMain>,
-    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+    generatePageUrl: Page => Url.Action("MainIndex", new { pageNum = Page }))
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

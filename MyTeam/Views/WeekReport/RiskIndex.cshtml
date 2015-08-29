@@ -1,12 +1,10 @@
 ﻿@using PagedList
 @using PagedList.Mvc
 @model IEnumerable<MyTeam.Models.WeekReportRisk>
-
 @{
     ViewBag.Title = "风险与待协调问题";
 
 }
-
 <h2>@ViewBag.Title。</h2>
 <script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 <p>
@@ -14,7 +12,6 @@
     @Html.ActionLink("重点项目与工作", "MainIndex", null, new { @class = "btn btn-default" })
     @Html.ActionLink("每周工作", "DetailIndex", null, new { @class = "btn btn-default" })
 </p>
-
 <!-- Ajax删除 -->
 <script>
     function doDelete(id, name) {
@@ -79,7 +76,6 @@
         });
     }
 </script>
-
 <table class="table table-condensed table-bordered" style="font-size:12px">
     <tr>
         <th></th>
@@ -114,8 +110,7 @@
 </table>
 <!--分页-->
 @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.WeekReportRisk>,
-    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
-
+    generatePageUrl: Page => Url.Action("RiskIndex", new { pageNum = Page }))
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
@@ -146,7 +141,6 @@
         </div>
     </div>
 </div>
-
 <!-- 对话框2：删除完成 -->
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
      aria-labelledby="myModal2Label" aria-hidden="true">
@@ -168,7 +162,6 @@
         </div>
     </div>
 </div>
-
 <!-- 对话框3：编辑页面 -->
 <div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
@@ -189,7 +182,6 @@
         </div>
     </div>
 </div>
-
 <!-- 对话框4：新增页面 -->
 <div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
