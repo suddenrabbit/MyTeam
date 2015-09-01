@@ -23,9 +23,6 @@ namespace MyTeam.Controllers
      * 7、出池计划导出
      * 8、按照查询条件导出
      */
-#if Release
-    [Authorize]
-#endif
     public class ReqManageController : BaseController
     {
         /*
@@ -35,6 +32,10 @@ namespace MyTeam.Controllers
         // 入池：第一步，输入维护需求主信息
         public ActionResult MainInPool()
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/MainInPool" });
+            }
             MainInPoolReq mainInPoolReq = new MainInPoolReq();
             // 1、生成系统列表
             SelectList sl1 = new SelectList(this.GetSysList(), "SysID", "SysName");
@@ -42,8 +43,6 @@ namespace MyTeam.Controllers
             ViewBag.SysList = sl1;
 
             // 2、生成需求受理人列表，默认当前用户为需求受理人 
-            SelectList sl2 = null;
-
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
@@ -162,6 +161,10 @@ namespace MyTeam.Controllers
         // 按照查询条件查询结果：为使用分页功能，GET模式查询
         public ActionResult Index(ReqQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage" });
+            }
             if (isQuery)
             {
                 var ls = from a in dbContext.Reqs

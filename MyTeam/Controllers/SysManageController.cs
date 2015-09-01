@@ -13,9 +13,6 @@ namespace MyTeam.Controllers
     /// <summary>
     /// 系统管理Controller
     /// </summary>
-#if Release
-    [Authorize]
-#endif
     public class SysManageController : BaseController
     {
         //
@@ -23,6 +20,10 @@ namespace MyTeam.Controllers
 
         public ActionResult Index(int pageNum = 1)
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/SysManage" });
+            }
             // 分页
             var ls = this.GetSysList().ToPagedList(pageNum, Constants.PAGE_SIZE);
             return View(ls);

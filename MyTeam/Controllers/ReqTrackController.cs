@@ -18,6 +18,11 @@ namespace MyTeam.Controllers
         // GET: /ReqTrack/
         public ActionResult Index(ReqTrackQuery query, int pageNum = 1, bool isQuery = false)
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqTrack" });
+            }
+
             var ls = from a in dbContext.ReqTracks select a;
             if (isQuery)
             {
@@ -204,7 +209,13 @@ namespace MyTeam.Controllers
             }
             else
             {
-                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Upload/temp"), Path.GetFileName(file.FileName));
+                // 判断文件夹是否存在，不存在则创建文件夹
+                var dir = HttpContext.Server.MapPath("~/Upload/temp");
+                if (Directory.Exists(dir) == false)//如果不存在就创建file文件夹
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                string filePath = Path.Combine(dir, Path.GetFileName(file.FileName));
                 try
                 {
                     file.SaveAs(filePath);

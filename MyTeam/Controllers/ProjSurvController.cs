@@ -16,6 +16,10 @@ namespace MyTeam.Controllers
         // GET: /ProjSurv/
         public ActionResult Index(ProjSurvQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/ProjSurv" });
+            }
 
             if (isQuery)
             {

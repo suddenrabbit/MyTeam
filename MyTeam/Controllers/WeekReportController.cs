@@ -11,9 +11,6 @@ using PagedList;
 
 namespace MyTeam.Controllers
 {
-#if Release
-    [Authorize]
-#endif
     /// <summary>
     /// 周报管理
     /// </summary>
@@ -60,10 +57,10 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user == null)
             {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/WeekReport/AddMain" });
+                user = new User();
             }
 
-            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID = user.UID, PlanDeadLine = null, Person = user.Realname };
+            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID = user.UID, Person = user.Realname };
             return View(main);
         }
 
@@ -209,14 +206,11 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user == null)
             {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/WeekReport/AddDetail" });
+                user = new User();
             }
 
-            // RptDate备选（取最近的5个）
-            var r = from a in dbContext.WeekReportDetails
-                    orderby a.RptDate descending
-                    select a.RptDate;
-            List<string> ls = r.Take(5).Distinct().ToList<string>();
+            // RptDate备选（取最近的5个）            
+            List<string> ls = this.GetRptDateList();
             ls.Insert(0, DateTime.Now.Year + "年");
             SelectList sl = MyTools.GetSelectList(ls);
 
@@ -235,8 +229,6 @@ namespace MyTeam.Controllers
             };
 
             ViewBag.ForMain = forMain;
-
-            ViewBag.MainId = id;
 
             return View(detail);
         }
@@ -358,7 +350,7 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user == null)
             {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/WeekReport/AddRisk" });
+                user = new User();
             }
 
             // RptDate备选（取最近的5个）

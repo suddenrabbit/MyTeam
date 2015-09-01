@@ -66,6 +66,16 @@
             }
         });
     }
+    // 导出跟踪表
+    function doExport() {
+        var brProjId = $('#BRProjID').val();
+        if(brProjId.length == 0 || brProjId == 0)
+        {
+            alert("导出需求变更跟踪表时必须选择具体的某个项目！");
+            return;
+        }
+        $('#myForm').attr("action", "/BusiReq/Export").submit();
+    }
 </script>
 <div class="row">
     <div class="col-md-10">
@@ -83,10 +93,10 @@
                         @Html.DropDownListFor(model => model.BRProjID, ViewBag.BRProjLs as SelectList, new { @class = "form-control" })
                     </td>
                     <td>
-                        <input type="submit" value="查询" class="btn btn-primary" />
+                        <input type="submit" value="查询" class="btn btn-default" />
                         <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
                         @Html.ActionLink("批量导入", "Import", null, new { @class = "btn btn-default" })
-                        <a href="#" class="btn btn-default" onclick="doExport()">导出需求变更跟踪表</a>
+                        <a href="#" class="btn btn-primary" onclick="doExport()">导出需求变更跟踪表</a>
                     </td>
                 </tr>
             </table>
@@ -161,7 +171,7 @@
                 </table>
                 <!--分页-->
                 @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.BusiReq>,
-    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+         generatePageUrl: Page => Url.Action("Index", new { pageNum = Page, isQuery = true, BRProjID = Model.BRProjID}))
             }
         }
 

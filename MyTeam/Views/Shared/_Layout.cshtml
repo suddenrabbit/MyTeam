@@ -12,6 +12,15 @@
     <script src="/Scripts/jquery-1.10.2.js"></script>
     <script src="/Scripts/bootstrap.js"></script>
     <script src="/Scripts/respond.js"></script>
+    <script>
+        // xp指定显示宋体
+        $(document).ready(function () {
+            var ua = navigator.userAgent;
+            if (ua.indexOf("Windows NT 5") != -1) {
+                $("body").attr("style", "font-family:arial,simsun!important");
+            } 
+        });
+    </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">

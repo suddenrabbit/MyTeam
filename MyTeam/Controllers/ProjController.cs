@@ -10,15 +10,16 @@ using PagedList;
 
 namespace MyTeam.Controllers
 {
-#if RELEASE
-    [Authorize]
-#endif
     public class ProjController : BaseController
     {
         //
         // GET: /Proj/
         public ActionResult Index(ProjQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/Proj" });
+            }
             if (isQuery)
             {
                 var ls = from a in dbContext.Projs

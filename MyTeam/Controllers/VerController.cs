@@ -10,9 +10,6 @@ using PagedList;
 
 namespace MyTeam.Controllers
 {
-#if Release
-    [Authorize]
-#endif
     // 年度版本下发计划Controller
     public class VerController : BaseController
     {
@@ -20,6 +17,10 @@ namespace MyTeam.Controllers
         // GET: /Ver/     
         public ActionResult Index(VerQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
+            if(this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/Ver" });
+            }
             if (isQuery)
             {
                 var ls = from a in dbContext.Vers

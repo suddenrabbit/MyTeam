@@ -11,9 +11,6 @@ using OfficeOpenXml;
 
 namespace MyTeam.Controllers
 {
-#if Release
-    [Authorize]
-#endif
     /// <summary>
     /// 业需明细管理
     /// </summary>
@@ -23,6 +20,11 @@ namespace MyTeam.Controllers
         // GET: /BusiReq/
         public ActionResult Index(BusiReqQuery query, int pageNum = 1, bool isQuery = false)
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/BusiReq" });
+            }
+
             var ls = from a in dbContext.BusiReqs select a;
             if (isQuery)
             {
@@ -210,7 +212,13 @@ namespace MyTeam.Controllers
             }
             else
             {
-                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Upload/temp"), Path.GetFileName(file.FileName));
+                // 判断文件夹是否存在，不存在则创建文件夹
+                var dir = HttpContext.Server.MapPath("~/Upload/temp");
+                if (Directory.Exists(dir) == false)//如果不存在就创建file文件夹
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                string filePath = Path.Combine(dir, Path.GetFileName(file.FileName));
                 try
                 {
                     file.SaveAs(filePath);

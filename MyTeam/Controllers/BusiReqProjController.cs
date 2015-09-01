@@ -17,6 +17,10 @@ namespace MyTeam.Controllers
 
         public ActionResult Index(int pageNum = 1 )
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/BusiReqProj" });
+            }
             List<BusiReqProj> projLs = dbContext.BusiReqProjs.ToList();
            
             // 分页

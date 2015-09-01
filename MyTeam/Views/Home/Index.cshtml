@@ -1,11 +1,8 @@
 ﻿@using MyTeam.Models
-
 @model MyTeam.Models.HomeResult
-
 @{
     ViewBag.Title = "欢迎";
 }
-
 <script>
     // 在modal中显示详情
     function showDetail(id, name) {
@@ -26,7 +23,6 @@
         });
     }
 </script>
-
 <div class="jumbotron">
     <h1 style="font-weight:bold">零售团队管理系统<span style="font-size:12px">(Beta)</span></h1>
 </div>
@@ -43,20 +39,14 @@
                 </a>
             }
         </div>
-
     </fieldset>
-
     <fieldset class="col-md-6">
-        <legend>当前未完成的项目情况：</legend>
-           @foreach (HomeProj p in Model.ProjLs)
-           {
-               <span onclick="showDetail('@p.ProjID', '@p.ProjName')" style="cursor:pointer">@p.ProjName</span>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="@p.Progress" aria-valuemin="0" aria-valuemax="100" style="width: @p.Progress%; min-width:2em">
-                    @p.Progress%
-                </div>
-            </div>
-           }
+        <legend>常用功能：</legend>
+        <div class="list-group">
+            <a class="list-group-item" href="/ReqManage/MainInPool">批量入池</a>
+            <a class="list-group-item" href="/ReqManage">维护需求管理</a>
+            <a class="list-group-item" href="/WeekReport/Export">导出周报</a>
+        </div>
     </fieldset>
 </div>
 <!--用modal展示项目详情-->

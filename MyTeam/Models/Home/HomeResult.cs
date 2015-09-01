@@ -13,7 +13,7 @@ namespace MyTeam.Models
     {
         public List<HomeReq> ReqLs { get; set; }
 
-        public List<HomeProj> ProjLs { get; set; }
+        public List<WeekReportDetail> Works { get; set; }
     }
 
     public class HomeReq
@@ -34,14 +34,5 @@ namespace MyTeam.Models
             }
             set { this.SysName = value; }
         }
-    }
-
-    public class HomeProj
-    {
-        public int ProjID { get; set; }
-
-        public string ProjName { get; set; }
-
-        public string Progress { get; set; }        
-    }
+    }        
 }

@@ -9,9 +9,6 @@ using MyTeam.Utils;
 
 namespace MyTeam.Controllers
 {
-#if Release
-    [Authorize]
-#endif
     public class UserController : BaseController
     {
 
@@ -41,7 +38,7 @@ namespace MyTeam.Controllers
                 this.SetSessionCurrentUser(user.UID);
                 // 控制部分菜单显示，session记录是否为管理员
                 Session["IsAdmin"] = user.IsAdmin;
-                FormsAuthentication.RedirectFromLoginPage(username, false);
+                FormsAuthentication.RedirectFromLoginPage(user.Realname, false);
                 // return RedirectToAction("Index", "Home");
             }
 
