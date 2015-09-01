@@ -47,14 +47,16 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                //sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                mainInPoolReq.ReqAcptPerson = user.UID;
             }
             else
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                //sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                mainInPoolReq.ReqAcptPerson = 1;
             }
 
-            ViewBag.UserList = sl2;
+            ViewBag.UserList = new SelectList(this.GetUserList(), "UID", "NamePhone");
 
             // 3、需求发起单位 
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
@@ -117,29 +119,28 @@ namespace MyTeam.Controllers
 
             try
             {
-                
-                    // 入库
-                    foreach (Req req in reqList)
+                // 入库
+                foreach (Req req in reqList)
+                {
+                    if (!string.IsNullOrEmpty(req.ReqDetailNo) && ls.Find(a => a.ReqDetailNo == req.ReqDetailNo) != null)
                     {
-                        if (!string.IsNullOrEmpty(req.ReqDetailNo) && ls.Find(a => a.ReqDetailNo == req.ReqDetailNo) != null)
-                        {
-                            skipNum++;
-                            repeatReqDetailNo = repeatReqDetailNo + req.ReqDetailNo + " ";
-                            continue;
-                        }
-                        dbContext.Reqs.Add(req);
+                        skipNum++;
+                        repeatReqDetailNo = repeatReqDetailNo + req.ReqDetailNo + " ";
+                        continue;
                     }
-                    dbContext.SaveChanges();
+                    dbContext.Reqs.Add(req);
+                }
+                dbContext.SaveChanges();
 
-                    if (skipNum > 0)
-                    {
-                        r = string.Format("<p class='alert alert-warning'>有{0}条因维护需求编号重复未能入池：{1}</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>", skipNum, repeatReqDetailNo);
-                    }
-                    else
-                    {
-                        r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
-                    }
-                
+                if (skipNum > 0)
+                {
+                    r = string.Format("<p class='alert alert-warning'>有{0}条因维护需求编号重复未能入池：{1}</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>", skipNum, repeatReqDetailNo);
+                }
+                else
+                {
+                    r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
+                }
+
 
             }
             catch (Exception e1)
@@ -485,7 +486,6 @@ namespace MyTeam.Controllers
         {
             if (req.ReqDetailNo != req.OldReqDetailNo)
             {
-                // 若项目名称改变，则判断新改的系统名称是否有重复，如有重复不允许新增
                 Req r = dbContext.Reqs.Where(a => a.ReqDetailNo == req.ReqDetailNo).FirstOrDefault();
                 if (r != null)
                 {

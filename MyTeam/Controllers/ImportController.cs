@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity.Migrations;
+
 
 namespace MyTeam.Controllers
 {
@@ -104,16 +106,11 @@ namespace MyTeam.Controllers
 
                 // 第11列，需求受理人，转成UID
                 string reqPerson = worksheet.Cells[row, 11].GetValue<string>();
-                var u = this.GetUserList().Find(a => reqPerson.Contains(reqPerson));
+                var u = this.GetUserList().Find(a => reqPerson.Contains(a.Realname));
                 int uid = u == null ? 0 : u.UID;
 
                 // 第4列，维护需求编号
-                string reqDetailNo = worksheet.Cells[row, 4].GetValue<string>();
-                // ReqDetailNo 重复的不导入
-                if (ls.Find(a => a.ReqDetailNo == reqDetailNo) != null)
-                {
-                    continue;
-                }
+                string reqDetailNo = worksheet.Cells[row, 4].GetValue<string>();               
 
                 Req r = new Req();
                 // 按列赋值
@@ -132,7 +129,8 @@ namespace MyTeam.Controllers
                 r.ReqBusiTestPerson = worksheet.Cells[row, 13].GetValue<string>();
                 r.ReqType = worksheet.Cells[row, 14].GetValue<string>();
 
-                r.DevWorkload = worksheet.Cells[row, 17].GetValue<int>();
+                var workload = worksheet.Cells[row, 17].GetValue<string>();
+                r.DevWorkload = string.IsNullOrEmpty(workload) ? 0 : int.Parse(workload);
                 r.ReqStat = worksheet.Cells[row, 18].GetValue<string>();
 
                 r.RlsNo = worksheet.Cells[row, 22].GetValue<string>();
@@ -155,7 +153,16 @@ namespace MyTeam.Controllers
                 if (!string.IsNullOrEmpty(planRlsDate)) r.PlanRlsDate = DateTime.Parse(planRlsDate);
                 if (!string.IsNullOrEmpty(rlsDate)) r.RlsDate = DateTime.Parse(rlsDate);
 
-                dbContext.Reqs.Add(r);
+                // ReqDetailNo 重复的跳过
+                if(reqDetailNo.Length > 10 && ls.Find(a => a.ReqDetailNo == reqDetailNo) !=null)
+                {  
+                    continue;                    
+                }
+               
+                else
+                {
+                   dbContext.Reqs.Add(r);
+                }
             }
 
             // 保存

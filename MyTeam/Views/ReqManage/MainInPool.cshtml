@@ -10,7 +10,6 @@
         $("#AcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
         $("#DevAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
         $("#DevEvalDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-
     });
 </script>
 <div class="row">
@@ -114,6 +113,12 @@
         }
     </div>
 </div>
-
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script src="/Scripts/jquery.validate.js"></script>
 <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+<script>
+    // 选中 受理人
+    $(function () {
+        $("#ReqAcptPerson").val('@Model.ReqAcptPerson');
+    });
+</script>
