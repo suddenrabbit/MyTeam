@@ -1082,8 +1082,8 @@ html {
 }
 body {
   font-family: Arial, "Microsoft YaHei", sans-serif;
-  font-size: 14px;
-  line-height: 1.42857143;
+  font-size: 1.4em;
+  line-height: 1.5;
   color: #333;
   background-color: #fff;
 }
@@ -2509,7 +2509,7 @@ label {
   display: inline-block;
   max-width: 100%;
   margin-bottom: 5px;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 input[type="search"] {
   -webkit-box-sizing: border-box;

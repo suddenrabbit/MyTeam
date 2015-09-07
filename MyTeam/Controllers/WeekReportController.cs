@@ -440,7 +440,7 @@ namespace MyTeam.Controllers
             }
             else
             {
-                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkMission = m.WRMainID) where WRMainID = @p0", mainId);
+                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkMission = m.WRMainID where d.WorkMission = @p0) where WRMainID = @p1", mainId.ToString(), mainId);
             }
         }
 
@@ -487,9 +487,9 @@ namespace MyTeam.Controllers
             var detailList = dbContext.WeekReportDetails.Where(a => a.RptDate == week);
             // 重点工作通过每周工作读取
             string[] detailWithMainList = detailList.Where(a => a.IsWithMain == true).Select(a => a.WorkMission).ToArray<string>();
-            var mainList = from a in dbContext.WeekReportMains
+            var mainList = (from a in dbContext.WeekReportMains
                            where detailWithMainList.Contains(a.WRMainID.ToString())
-                           select a;
+                           select a).ToList();
             var riskList = dbContext.WeekReportRisks.Where(a => a.RptDate == week);
 
 
@@ -514,7 +514,7 @@ namespace MyTeam.Controllers
                 sheet.Cells[cursor, 9, cursor, 10].Merge = true;
                 // 第一列是序号
                 sheet.Cells[cursor, 1].Value = cursor - 2;
-                sheet.Cells[cursor, 2].Value = s.IsWithMain ? mainList.Where(a => a.WRMainID.ToString() == s.WorkMission).FirstOrDefault().WorkName : s.WorkMission;
+                sheet.Cells[cursor, 2].Value = s.IsWithMain ? mainList.Find(a => a.WRMainID.ToString() == s.WorkMission).WorkName : s.WorkMission;
                 sheet.Cells[cursor, 3].Value = s.WorkDetail;
                 sheet.Cells[cursor, 5].Value = s.Person;
                 sheet.Cells[cursor, 6].Value = s.WorkTarget;

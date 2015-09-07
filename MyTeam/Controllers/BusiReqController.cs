@@ -150,9 +150,9 @@ namespace MyTeam.Controllers
         /// <summary>
         /// 导出跟踪表
         /// </summary>
-        /// <param name="ProjID"></param>
+        /// <param name="BRProjID"></param>
         /// <returns></returns>
-        public ActionResult Export(string ProjID)
+        public ActionResult Export(string BRProjID)
         {
             //List<Proj> projLs = this.GetProjList().Where(a => a.IsReqTrack == true).ToList();
             //string pName = " ";
@@ -166,7 +166,7 @@ namespace MyTeam.Controllers
             var ls = from br in dbContext.BusiReqs
                      join req in dbContext.Reqs
                      on br.BusiReqNo equals req.BusiReqNo
-                     where br.BRProjID.ToString() == ProjID
+                     where br.BRProjID.ToString() == BRProjID
 
                      select new BusiReqExcel
                      {

@@ -333,6 +333,7 @@
     <Content Include="Views\BusiReqProj\Create.cshtml" />
     <Content Include="Views\BusiReqProj\Edit.cshtml" />
     <Content Include="Views\BusiReqProj\Details.cshtml" />
+    <Content Include="Views\WeekReport\Export.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

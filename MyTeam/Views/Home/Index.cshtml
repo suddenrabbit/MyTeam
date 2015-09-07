@@ -3,26 +3,7 @@
 @{
     ViewBag.Title = "欢迎";
 }
-<script>
-    // 在modal中显示详情
-    function showDetail(id, name) {
-        $('#detailName').html(name);
-        var url = "/Proj/Details/" + id;
-        $.ajax({
-            type: 'GET',
-            url: url,
-            success: function (msg) {
-                $('#detailMain').html(msg);
-            },
-            error: function () {
-                $('#detailMain').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal3').modal();
-            }
-        });
-    }
-</script>
+
 <div class="jumbotron">
     <h1 style="font-weight:bold">零售团队管理系统<span style="font-size:12px">(Beta)</span></h1>
 </div>
@@ -45,6 +26,7 @@
         <div class="list-group">
             <a class="list-group-item" href="/ReqManage/MainInPool">批量入池</a>
             <a class="list-group-item" href="/ReqManage">维护需求管理</a>
+            <a class="list-group-item" href="/WeekReport/MainIndex">填写周报</a>
             <a class="list-group-item" href="/WeekReport/Export">导出周报</a>
         </div>
     </fieldset>
