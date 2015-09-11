@@ -10,6 +10,9 @@ namespace MyTeam.Models
 {
     public class ProjQuery
     {
+        [Display(Name = "项目名称")]
+        public int ProjID { get; set; }
+
         [Display(Name = "项目调研受理日期")]
         public string ProAcptDate { get; set; }
 
@@ -20,7 +23,8 @@ namespace MyTeam.Models
 
         public string ToQueryString()
         {
-            return new StringBuilder("&ProAcptDate=").Append(this.ProAcptDate)
+            return new StringBuilder("&ProjID=").Append(this.ProjID)
+                .Append("&ProAcptDate=").Append(this.ProAcptDate)
                 .Append("&RulesPublishDate=").Append(this.RulesPublishDate)
                 .Append("&isQuery=True").ToString();
         }

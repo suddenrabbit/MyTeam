@@ -40,6 +40,128 @@ namespace MyTeam.Controllers
                 //hr.Works = dbContext.WeekReportDetails.Where(a => a.WorkStat != "完成" && a.Person.Contains(user.Realname)).ToList();
             }           
 
+            // 判断入池已超过三个月，但是没有出池的需求记录
+            if (user.IsAdmin)
+            {
+                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) group by t.SysId").ToList();
+            }
+            else
+            {
+                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
+            }   
+            foreach(HomeReqDelay d in hr.ReqDelayLS){
+                int a = d.SysId;
+                int b = d.ReqDelayNum;
+            }
+
+
+            // 筛选出各个阶段延期的项目
+            // 首先获得所有有时间计划的项目列表，对没有时间计划的项目将不统计其延期的情况
+            List<ProjPlan> plans = dbContext.ProjPlans.ToList();
+            List<Proj> projs = dbContext.Projs.ToList();
+            List<HomeProjDelay> delays = new List<HomeProjDelay>();
+
+            foreach(ProjPlan plan in plans){
+                Proj p = new Proj();
+                if (user.IsAdmin)
+                {
+                    p = projs.Find(a => a.ProjID == plan.ProjID);
+                }
+                // 如果是非管理员登陆，显示自己的延期项目
+                else
+                {
+                    p = projs.Find(a => a.ProjID == plan.ProjID && a.ReqAnalysisID == user.UID);
+                }
+                
+                // 如果筛选出项目在项目计划列表中，那么判断时间是否延期
+                if(p != null){
+                    // 判断各个阶段的时间是否延期
+                    if (p.ProAcptDate == null && plan.SurveyStartDate <= DateTime.Now)
+                    {
+                        // 调研受理开始延期
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "项目调研开始已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if(p.SurveyFinishDate == null && plan.SurveyFinishDate <= DateTime.Now)
+                    {
+                        // 调研结束延期
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "项目调研结束已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.OutlineStartDate == null && plan.OutlineStartDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "需求大纲开始编写已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.OutlineEndDate == null && plan.OutlineFinishDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "需求大纲结束编写已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.ReqStartDate == null && plan.ReqStartDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "业需开始开发已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.ReqPublishDate == null && plan.ReqFinishDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "业需结束开发已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.ReviewAcptDate == null && plan.ReviewStartDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "业需开始评审已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.ReviewMeetingDate == null && plan.ReviewFinishDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "业需结束评审已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesStartDate == null && plan.RulesStartDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "章程开始已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesPublishDate == null && plan.RulesFinishDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "章程结束已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                }
+            }
+            hr.ProjDetails = delays;
+            
             return View(hr);
         }
 

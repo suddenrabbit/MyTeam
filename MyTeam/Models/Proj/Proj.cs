@@ -19,12 +19,10 @@ namespace MyTeam.Models
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string ProjName { get; set; }
 
-        
         [Display(Name = "项目编号")]
         [StringLength(16, ErrorMessage = "不能超过16位")]
         public String ProjNo { get; set; }
 
-        
         [Display(Name = "主办部门")]
         [StringLength(8, ErrorMessage = "不能超过8位")]
         public String HostDept { get; set; }
@@ -36,7 +34,6 @@ namespace MyTeam.Models
         [Display(Name = "需求分析师")]
         public int? ReqAnalysisID { get; set; }
 
-        
         [Display(Name = "业务人员")]
         public String BusiPerson { get; set; }
 
@@ -54,11 +51,11 @@ namespace MyTeam.Models
         [DataType(DataType.Date)]
         public DateTime? SurveyGroupFoundDate { get; set; }
 
-        [Display(Name = "需求调研完成日期")]
+        [Display(Name = "项目调研完成日期")]
         [DataType(DataType.Date)]
         public DateTime? SurveyFinishDate { get; set; }
 
-        [Display(Name = "需求调研备注")]
+        [Display(Name = "项目调研备注")]
         public String SurveyRemark { get; set; }
 
         [Display(Name = "需求大纲编写人员")]
@@ -72,19 +69,15 @@ namespace MyTeam.Models
         [DataType(DataType.Date)]
         public DateTime? OutlineEndDate { get; set; }
 
-
         [Display(Name = "需求大纲审核人员")]
         public String OutlineAuditPerson { get; set; }
-
 
         [Display(Name = "需求大纲发布日期")]
         [DataType(DataType.Date)]
         public DateTime? OutlinePublishDate { get; set; }
 
-
         [Display(Name = "需求大纲备注")]
         public String OutlineRemark { get; set; }
-
 
         [Display(Name = "业需编写人员")]
         public String ReqWriter { get; set; }

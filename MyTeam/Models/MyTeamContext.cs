@@ -44,6 +44,8 @@
         public DbSet<BusiReq> BusiReqs { get; set; }
 
         public DbSet<BusiReqProj> BusiReqProjs { get; set; }
+
+        public DbSet<ProjPlan> ProjPlans { get; set; }
   
     }
 

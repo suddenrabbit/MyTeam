@@ -112,28 +112,28 @@
             }
             else
             {
-                <table class="table table-condensed table-bordered" style="font-size:0.8em">
+                <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
                     <tr>
-                        <th></th>
-                        <th>
+                        <th width="6"></th>
+                        <th width="15">
                             @Html.DisplayNameFor(model => model.ResultList[0].BRProjID)
                         </th>
-                        <th>
+                        <th width="10">
                             @Html.DisplayNameFor(model => model.ResultList[0].BusiReqNo)
                         </th>
-                        <th>
+                        <th width="15">
                             @Html.DisplayNameFor(model => model.ResultList[0].BusiReqName)
                         </th>
-                        <th>
+                        <th width="24">
                             @Html.DisplayNameFor(model => model.ResultList[0].Desc)
                         </th>
-                        <th>
+                        <th width="10">
                             @Html.DisplayNameFor(model => model.ResultList[0].CreateDate)
                         </th>
-                        <th>
+                        <th width="10">
                             @Html.DisplayNameFor(model => model.ResultList[0].Stat)
                         </th>
-                        <th>
+                        <th width="10">
                             @Html.DisplayNameFor(model => model.ResultList[0].Remark)
                         </th>
                     </tr>
@@ -165,7 +165,6 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Remark)
                             </td>
-
                         </tr>
                     }
                 </table>

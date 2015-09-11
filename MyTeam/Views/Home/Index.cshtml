@@ -4,34 +4,82 @@
     ViewBag.Title = "欢迎";
 }
 
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#myTab a:first").tab('show')
+    });
+</script>
 <div class="jumbotron">
     <h1 style="font-weight:bold">零售团队管理系统<span style="font-size:12px">(Beta)</span></h1>
 </div>
 <div class="row">
     <fieldset class="col-md-6">
-        <legend>当前尚未出池的需求情况：</legend>
+        <div class="row">
+            <div class="col-md-10">
+                <form class="form-horizontal" role="form">
+                    <div id="info"></div>
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li><a href="#tabs1" data-toggle="tab">当前尚未出池的需求情况：</a></li>
+                        <li><a href="#tabs2" data-toggle="tab">超过三个月未出池的需求情况：</a></li>
+                    </ul>
+                    <div class="tab-content" style="margin-top:20px">
+                        <div id="tabs1" class="tab-pane fade in active">
+                            <div class="list-group">
+                                @foreach (HomeReq r in Model.ReqLs)
+                                {
+                                    string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SysId=" + r.SysId;
+                                    <a class="list-group-item" href=@s>
+                                        <span class="badge">@r.ReqNum</span>
+                                        @r.SysName
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <div id="tabs2" class="tab-pane fade in active">
+                            <div class="list-group">
+                                @foreach (HomeReqDelay r in Model.ReqDelayLS)
+                                {
+                                    string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&IsMoreThan3Month=true&SysId=" + r.SysId;
+                                    <a class="list-group-item" href=@s>
+                                        <span class="badge">@r.ReqDelayNum</span>
+                                        @r.SysName
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="col-md-6">
+        <legend>延期项目：</legend>
         <div class="list-group">
-            @foreach (HomeReq r in Model.ReqLs)
+            @foreach (HomeProjDelay r in Model.ProjDetails)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SysId=" + r.SysId;
+                string s = "/Proj/index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
                 <a class="list-group-item" href=@s>
-                    <span class="badge">@r.ReqNum</span>
-                    @r.SysName
+                    <span class="badge">@r.DelayDetail</span>
+                    @r.ProjName
                 </a>
             }
         </div>
     </fieldset>
-    <fieldset class="col-md-6">
-        <legend>常用功能：</legend>
-        <div class="list-group">
-            <a class="list-group-item" href="/ReqManage/MainInPool">批量入池</a>
-            <a class="list-group-item" href="/ReqManage">维护需求管理</a>
-            <a class="list-group-item" href="/WeekReport/MainIndex">填写周报</a>
-            <a class="list-group-item" href="/WeekReport/Export">导出周报</a>
-        </div>
-    </fieldset>
+    <!--
+            <fieldset class="col-md-6">
+            <legend>常用功能：</legend>
+            <div class="list-group">
+                <a class="list-group-item" href="/ReqManage/MainInPool">批量入池</a>
+                <a class="list-group-item" href="/ReqManage">维护需求管理</a>
+                <a class="list-group-item" href="/WeekReport/MainIndex">填写周报</a>
+                <a class="list-group-item" href="/WeekReport/Export">导出周报</a>
+            </div>
+        </fieldset>
+    -->
 </div>
-<!--用modal展示项目详情-->
+<!--用modal展示项目详情
 <div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -56,3 +104,4 @@
         </div>
     </div>
 </div>
+    -->

@@ -1,21 +1,19 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
-using PagedList;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace MyTeam.Models
 {
-    public class ReqTrackQuery
+    public class ProjPlanQuery
     {
         [Display(Name = "项目名称")]
         public int ProjID { get; set; }
 
-        public IPagedList<ReqTrack> ResultList { get; set; }
-
+        public IPagedList<ProjPlan> ResultList { get; set; }
 
         public string ToQueryString()
         {

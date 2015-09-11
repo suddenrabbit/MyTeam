@@ -153,7 +153,6 @@
                         <!--需求受理人下拉选择-->
                         @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.ReqAcptPersonList as SelectList, new { @class = "form-control" })
                     </td>
-
                     <td></td>
                     <td>
                         <input type="submit" value="查询" class="btn btn-primary" />
@@ -176,32 +175,35 @@
                 <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
                     <tr>
                         <th width="7"></th>
-                        <th width="10">
+                        <th width="13">
                             @Html.DisplayNameFor(model => model.ResultList[0].SysId)
                         </th>
-                        <th width="6">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
                         </th>
-                        <th width="8">
+                        <th width="7">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
                         </th>
-                        <th width="8">
+                        <th width="7">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
                         </th>
-                        <th width="7">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].Version)
                         </th>
-                        <th width="10">
+                        <th width="15">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
                         </th>
-                        <th width="20">
+                        <th width="23">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
                         </th>
-                        <th width="8">
+                        <th width="4">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
                         </th>
-                        <th width="10">
+                        <th width="7">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqAcptPerson)
+                        </th>
+                        <th width="7">
+                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
                         </th>
                     </tr>
                     @foreach (var item in Model.ResultList)
@@ -239,6 +241,9 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReqAcptPersonNamePhone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
                             </td>
                         </tr>
                     }

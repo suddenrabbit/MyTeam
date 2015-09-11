@@ -40,7 +40,8 @@ namespace MyTeam.Controllers
                     DateTime endDate = DateTime.Parse(query.MeetingDateEnd);
                     ls = ls.Where(p => p.MeetingDate.CompareTo(startDate) >= 0 && p.MeetingDate.CompareTo(endDate) <= 0);
                 }
-                var result = ls.ToList();
+                var result = ls.OrderByDescending(a=>a.MeetingDate).ToList();
+                
                 // 若isExcel为true，导出Excel
                 if (isExcel)
                 {
@@ -121,9 +122,8 @@ namespace MyTeam.Controllers
         {
             try
             {
-                
-                    dbContext.ProjMeetings.Add(projMeeting);
-                    dbContext.SaveChanges();
+                dbContext.ProjMeetings.Add(projMeeting);
+                dbContext.SaveChanges();
                 
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }

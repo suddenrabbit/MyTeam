@@ -12,7 +12,7 @@ namespace MyTeam.Models
     /// </summary>
     public class ReqQuery
     {
-        
+
         [Display(Name = "系统名称")]
         public int SysId { get; set; }
 
@@ -40,6 +40,9 @@ namespace MyTeam.Models
         [Display(Name = "不等于")]
         public bool NotEqual { get; set; }
 
+        // 为了显示超过三个月未出池的需求情况，所以添加一个参数，如果为true过滤出超过三个月的
+        public bool IsMoreThan3Month { get; set; }
+
         public IPagedList<Req> ResultList { get; set; }
 
         public string ToQueryString()
@@ -52,8 +55,8 @@ namespace MyTeam.Models
                 .Append("&ReqStat=").Append(this.ReqStat)
                 .Append("&ReqAcptPerson=").Append(this.ReqAcptPerson)
                 .Append("&NotEqual=").Append(this.NotEqual)
-                .Append("&isQuery=True").ToString();
+                .Append("&isQuery=True").Append("&IsMoreThan3Month")
+                .Append(this.IsMoreThan3Month).ToString();
         }
-
     }
 }

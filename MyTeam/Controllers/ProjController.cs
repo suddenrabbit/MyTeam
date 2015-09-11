@@ -25,6 +25,10 @@ namespace MyTeam.Controllers
                 var ls = from a in dbContext.Projs
                          select a;
 
+                if (query.ProjID != 0)
+                {
+                    ls = ls.Where(p => p.ProjID == query.ProjID);
+                }
                 if (!string.IsNullOrEmpty(query.ProAcptDate))
                 {
                     DateTime ProAcptDate = DateTime.Parse(query.ProAcptDate);
@@ -58,11 +62,13 @@ namespace MyTeam.Controllers
 
             // 需求分析师显示用户名不是显示ID
             List<User> userLs = this.GetUserList();
-
-            // 是否跟踪需求变更的正常显示
+            // 项目名称下拉列表
+            List<Proj> projList = this.GetProjList();
+            // 加上“全部”
+            projList.Insert(0, new Proj() { ProjID = 0, ProjName = "全部" });
+            ViewBag.ProjList = new SelectList(projList, "ProjID", "ProjName", query.ProjID); 
 
             return View(query);
-
         }
         
         // GET: /Proj/Details/5

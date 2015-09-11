@@ -175,11 +175,11 @@ namespace MyTeam.Controllers
                 }
                 if (!string.IsNullOrEmpty(query.AcptYear))
                 {
-                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.AcptYear);
+                    ls = ls.Where(p => p.AcptDate.Year.ToString() == query.AcptYear);
                 }
                 if (!string.IsNullOrEmpty(query.AcptMonth))
                 {
-                    ls = ls.Where(p => p.AcptDate.Value.Month.ToString() == query.AcptMonth);
+                    ls = ls.Where(p => p.AcptDate.Month.ToString() == query.AcptMonth);
                 }
                 if (!string.IsNullOrEmpty(query.ReqNo))
                 {
@@ -214,14 +214,31 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
                 }
 
+                // 如果MoreThan3Mouth为true，筛选出超过三个月未出池的需求情况
+                if (query.IsMoreThan3Month)
+                {
+                    DateTime time = DateTime.Now.AddMonths(-3);
+                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0);
+                }
+
                 // 统一按照受理日期倒序
                 ls = ls.OrderByDescending(p => p.AcptDate);
 
                 // 若isExcel为true，导出Excel
                 if (isExcel)
                 {
-                    string targetFileName = "维护需求查询_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                    RetailSystem s = new RetailSystem();
+                    string targetFileName = "";
 
+                    if (query.SysId != 0)
+                    {
+                        s = dbContext.RetailSystems.ToList().Find(a => a.SysID == query.SysId);
+                        targetFileName = "维护需求查询_" + s.SysName + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                    }
+                    else
+                    {
+                        targetFileName = "维护需求查询_所有系统_" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                    }
                     // 需要对list修改以适应Excel模板
                     List<ReqExcel> excelList = this.GetExcelList(ls);
                     return this.MakeExcel<ReqExcel>("ReqReportT", targetFileName, excelList);
@@ -244,7 +261,7 @@ namespace MyTeam.Controllers
             List<RetailSystem> sysList = this.GetSysList();
             // 加上“全部”
             sysList.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            ViewBag.SysList = new SelectList(sysList, "SysID", "SysName", query.SysId); ;
+            ViewBag.SysList = new SelectList(sysList, "SysID", "SysName", query.SysId);
 
             // 需求受理人下拉
             List<User> userList = this.GetUserList();
@@ -286,7 +303,7 @@ namespace MyTeam.Controllers
                 // 批量更新，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
-                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
+                return "<p class='alert alert-success'>已更新" + r + "条记录！现在可以去<a href='/ReqManage/OutPool'>导出出池计划文档</a>了<p>";
             }
             catch (Exception e1)
             {
@@ -345,6 +362,28 @@ namespace MyTeam.Controllers
                 {
                     sql += " and ReqStat = N'出池'";
                 }
+
+                // 批量更新，直接执行SQL
+                int r = dbContext.Database.ExecuteSqlCommand(sql);
+
+                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
+            }
+        }
+
+        // Ajax调用，批量更新备注      
+        [HttpPost]
+        public string BatRemark(string reqs, string remark)
+        {
+            try
+            {
+                // 拼出sql中的in条件
+                string whereIn = this.GetWhereIn(reqs);
+
+                string sql = string.Format("update Reqs set Remark=N'{0}' where ReqDetailNo in ({1})", remark, whereIn);
 
                 // 批量更新，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
@@ -554,7 +593,7 @@ namespace MyTeam.Controllers
                 }
                 if (!string.IsNullOrEmpty(query.MaintainYear))
                 {
-                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.MaintainYear);
+                    ls = ls.Where(p => p.AcptDate.Year.ToString() == query.MaintainYear);
                 }
 
                 // 将查询结果转换为OutPoolResult
@@ -563,7 +602,7 @@ namespace MyTeam.Controllers
                 {
                     OutPoolResult res = new OutPoolResult()
                     {
-                        AcptMonth = req.AcptDate.Value.ToString("yyyy/M"),
+                        AcptMonth = req.AcptDate.ToString("yyyy/M"),
                         SysName = req.SysName,
                         Version = req.Version,
                         ReqNo = req.ReqNo,

@@ -151,6 +151,7 @@
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\ProjController.cs" />
     <Compile Include="Controllers\ProjMeetingController.cs" />
+    <Compile Include="Controllers\ProjPlanController.cs" />
     <Compile Include="Controllers\ProjSurvController.cs" />
     <Compile Include="Controllers\ReqManageController.cs" />
     <Compile Include="Controllers\ReqTrackController.cs" />
@@ -164,6 +165,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BusiReq\BusiReqProj.cs" />
     <Compile Include="Models\Home\HomeResult.cs" />
+    <Compile Include="Models\Proj\ProjPlanQuery.cs" />
+    <Compile Include="Models\Proj\ProjPlan.cs" />
     <Compile Include="Models\Proj\ProjSurvQuery.cs" />
     <Compile Include="Models\Proj\ReqTrackQuery.cs" />
     <Compile Include="Models\Proj\ProjResult.cs" />
@@ -271,6 +274,7 @@
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -334,6 +338,9 @@
     <Content Include="Views\BusiReqProj\Edit.cshtml" />
     <Content Include="Views\BusiReqProj\Details.cshtml" />
     <Content Include="Views\WeekReport\Export.cshtml" />
+    <Content Include="Views\ProjPlan\Index.cshtml" />
+    <Content Include="Views\ProjPlan\Create.cshtml" />
+    <Content Include="Views\ProjPlan\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

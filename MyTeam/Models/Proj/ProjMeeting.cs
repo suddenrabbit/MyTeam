@@ -80,7 +80,7 @@ namespace MyTeam.Models
                 using (MyTeamContext dbContext = new MyTeamContext())
                 {
                     var p = dbContext.Projs.ToList().Find(a => a.ProjID == this.ProjID);
-                    return p == null ? "未知" : p.ProjName;
+                    return p == null ? "其他" : p.ProjName;
                 }
             }
 

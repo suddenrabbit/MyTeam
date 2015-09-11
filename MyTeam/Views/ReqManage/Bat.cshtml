@@ -105,6 +105,28 @@
 
         }
     }
+    // 批量更新备注
+    function BatRemark() {
+        var reqs = $("#Reqs").val();
+        var remark = $("#remark").val();
+
+        if (check() && confirm("确定要批量更新备注吗？")) {
+            var url = "/ReqManage/BatRemark";
+            var data = "reqs=" + reqs + "&remark=" + remark;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (msg) {
+                    $("#info").html(msg);
+                },
+                error: function () {
+                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
+                }
+            });
+
+        }
+    }
     // 批量删除
     function BatDel() {
         var reqs = $("#Reqs").val();
@@ -133,7 +155,7 @@
             <div class="form-group">
                 <label for="Reqs" class="control-label col-md-2">待处理的需求编号</label>
                 <div class="col-md-10">
-                    <textarea id="Reqs" name="Reqs" style="width:380px" class="form-control" rows="5"></textarea>
+                    <textarea id="Reqs" name="Reqs" class="form-control" rows="5"></textarea>
                 </div>
             </div>
             <div id="info"></div>
@@ -141,7 +163,8 @@
                 <li><a href="#tabs1" data-toggle="tab">批量出池</a></li>
                 <li><a href="#tabs2" data-toggle="tab">下发通知编号</a></li>
                 <li><a href="#tabs3" data-toggle="tab">实际下发日期</a></li>
-                <li><a href="#tabs4" data-toggle="tab">批量删除</a></li>
+                <li><a href="#tabs4" data-toggle="tab">批量更新备注</a></li>
+                <li><a href="#tabs5" data-toggle="tab">批量删除</a></li>
             </ul>
             <div class="tab-content" style="margin-top:20px">
                 <div id="tabs1" class="tab-pane fade in active">
@@ -209,6 +232,19 @@
                     </div>
                 </div>
                 <div id="tabs4" class="tab-pane fade in active">
+                    <div class="form-group">
+                        <label for="remark" class="col-md-2 control-label">备注</label>
+                        <div class="col-md-10">
+                            <textarea id="remark" name="remark" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="button" value="更新" onclick="BatRemark()" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+                <div id="tabs5" class="tab-pane fade in active">
                     <div style="margin-bottom:15px">                        
                          <input type="button" value="删除" onclick="BatDel()" class="btn btn-primary" />
                     </div>

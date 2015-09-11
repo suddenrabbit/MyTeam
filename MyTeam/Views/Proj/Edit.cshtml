@@ -30,6 +30,7 @@
         $("#RulesPublishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
         $("#ProjCheckAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
         $("#ProjPublishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
+        
     });
 </script>
 <script>
@@ -124,7 +125,6 @@
                 <legend>项目调研</legend>
                 <div class="form-group">
                     @Html.LabelFor(model => model.ProAcptDate, new { @class = "col-md-3 control-label" })
-
                     <div class="col-md-9">
                         @Html.TextBoxFor(model => model.ProAcptDate, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.ProAcptDate, "", new { @class = "text-danger" })
@@ -132,7 +132,6 @@
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.SurveyGroupFoundDate, new { @class = "col-md-3 control-label" })
-
                     <div class="col-md-9">
                         @Html.TextBoxFor(model => model.SurveyGroupFoundDate, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.SurveyGroupFoundDate, "", new { @class = "text-danger" })
@@ -160,7 +159,6 @@
                 <legend>需求大纲</legend>
                 <div class="form-group">
                     @Html.LabelFor(model => model.OutlineWriter, new { @class = "col-md-3 control-label" })
-
                     <div class="col-md-9">
                         @Html.TextBoxFor(model => model.OutlineWriter, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.OutlineWriter, "", new { @class = "text-danger" })
@@ -168,7 +166,6 @@
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.OutlineStartDate, new { @class = "col-md-3 control-label" })
-
                     <div class="col-md-9">
                         @Html.TextBoxFor(model => model.OutlineStartDate, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.OutlineStartDate, "", new { @class = "text-danger" })
