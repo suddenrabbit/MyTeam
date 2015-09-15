@@ -105,6 +105,9 @@ namespace MyTeam.Controllers
 
             for (int row = rowStart + 1; row <= rowEnd; row++)
             {
+                // 第一列为空则结束
+                if (worksheet.Cells[row, 1] == null) break;
+
                 // 第一列，系统名称，转成SysId
                 string sysName = worksheet.Cells[row, 1].GetValue<string>();
                 var sys = this.GetSysList().Find(a => a.SysName == sysName);
@@ -193,6 +196,9 @@ namespace MyTeam.Controllers
 
             for (int row = rowStart + 1; row <= rowEnd; row++)
             {
+                // 第一列为空则结束
+                if (worksheet.Cells[row, 1] == null) break;
+
                 // 第1列，项目名称
                 string projName = worksheet.Cells[row, 1].GetValue<string>();
                 // 项目名称 重复的不导入
@@ -302,6 +308,9 @@ namespace MyTeam.Controllers
 
             for (int row = rowStart + 1; row <= rowEnd; row++)
             {
+                // 第一列为空则结束
+                if (worksheet.Cells[row, 1] == null) break;
+
                 // 第1列，项目名称
                 string projName = worksheet.Cells[row, 1].GetValue<string>();
                 // 项目名称转ProjID

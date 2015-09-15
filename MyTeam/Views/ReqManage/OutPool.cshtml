@@ -67,7 +67,7 @@
     }
     else
     {
-        <table class="table table-condensed" style="font-size:0.8em">
+        <table class="table table-condensed table-bordered" style="font-size:0.8em">
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.ResultList[0].AcptMonth)
@@ -131,10 +131,10 @@
                         @Html.DisplayFor(modelItem => item.ReqDetailNo)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ReqReason)
+                        @Html.DisplayFor(modelItem => item.ShortReqReason)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ReqDesc)
+                        @Html.DisplayFor(modelItem => item.ShortReqDesc)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.DevWorkload)
@@ -161,7 +161,7 @@
             }
         </table>
         var data = Model.ResultList as PagedList.IPagedList<MyTeam.Models.OutPoolResult>;
-        @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+        @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("OutPool", new { pageNum = Page }) + Model.ToQueryString())
     }
 }
 

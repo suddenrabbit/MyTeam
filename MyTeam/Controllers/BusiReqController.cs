@@ -79,7 +79,7 @@ namespace MyTeam.Controllers
 
                 dbContext.BusiReqs.Add(br);
                 dbContext.SaveChanges();
-                
+
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
@@ -238,6 +238,9 @@ namespace MyTeam.Controllers
 
                         for (int row = rowStart + 1; row <= rowEnd; row++)
                         {
+                            // 第一列为空则结束
+                            if (worksheet.Cells[row, 1] == null) break;
+
                             string busiReqNo = worksheet.Cells[row, 1].GetValue<string>();
 
                             // ProjID+BusiReqNo重复的不导入

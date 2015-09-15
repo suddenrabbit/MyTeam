@@ -234,6 +234,9 @@ namespace MyTeam.Controllers
                         
                         for (int row = rowStart + 1; row <= rowEnd; row++)
                         {
+                            // 第一列为空则结束
+                            if (worksheet.Cells[row, 1] == null) break;
+
                             string ReqNo = worksheet.Cells[row, 1].GetValue<string>();
                             string softReqNo = worksheet.Cells[row, 10].GetValue<string>();
 
