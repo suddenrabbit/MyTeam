@@ -34,7 +34,7 @@ namespace MyTeam.Controllers
         {
             if (this.GetSessionCurrentUser() == null)
             {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/MainInPool" });
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage/MainInPool" });
             }
             MainInPoolReq mainInPoolReq = new MainInPoolReq();
             // 1、生成系统列表
@@ -65,6 +65,9 @@ namespace MyTeam.Controllers
             for (int i = 1; i <= 10; i++)
                 reqAmtLs.Add(i);
             ViewBag.ReqAmtList = new SelectList(reqAmtLs);
+
+            // 5、需求受理日期自动置为今天
+            mainInPoolReq.AcptDate = DateTime.Now;
 
             return View(mainInPoolReq);
         }

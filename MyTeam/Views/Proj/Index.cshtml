@@ -111,18 +111,18 @@
                 
                 <tr>
                     <td><label class="control-label">项目调研受理日期</label></td>
-                    <td colspan="3" class="form-inline">
+                    <td>
                         <input id="ProAcptDate" name="ProAcptDate" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.ProAcptDate" placeholder="点击选择日期" />
                     </td>
                 </tr>
                 <tr>
                     <td><label class="control-label">项目章程发布日期</label></td>
-                    <td colspan="3" class="form-inline">
+                    <td>
                         <input id="RulesPublishDate" name="RulesPublishDate" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.RulesPublishDate" placeholder="点击选择日期" />
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="4">
+                    <td colspan="2">
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
                         <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
