@@ -76,25 +76,16 @@ namespace MyTeam.Controllers
                 // 如果筛选出项目在项目计划列表中，那么判断时间是否延期
                 if(p != null){
                     // 判断各个阶段的时间是否延期
-                    if (p.ProAcptDate == null && plan.SurveyStartDate <= DateTime.Now)
+                    if (p.SurveyGroupFoundDate == null && plan.FoundGroupDate <= DateTime.Now)
                     {
-                        // 调研受理开始延期
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "项目调研开始已延期";
+                        projDelay.DelayDetail = "业务需求联合开发小组成立已延期";
                         delays.Add(projDelay);
                         continue;
                     }
-                    else if(p.SurveyFinishDate == null && plan.SurveyFinishDate <= DateTime.Now)
-                    {
-                        // 调研结束延期
-                        HomeProjDelay projDelay = new HomeProjDelay();
-                        projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "项目调研结束已延期";
-                        delays.Add(projDelay);
-                        continue;
-                    }
-                    else if (p.OutlineStartDate == null && plan.OutlineStartDate <= DateTime.Now)
+                    else 
+                    if (p.OutlineStartDate == null && plan.OutlineStartDate <= DateTime.Now)
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
@@ -142,19 +133,83 @@ namespace MyTeam.Controllers
                         delays.Add(projDelay);
                         continue;
                     }
-                    else if (p.RulesStartDate == null && plan.RulesStartDate <= DateTime.Now)
+                    else if (p.RulesStartDate == null && plan.BusiFeasiStartDate <= DateTime.Now)
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "章程开始已延期";
+                        projDelay.DelayDetail = "业务可行性论证开始已延期";
                         delays.Add(projDelay);
                         continue;
                     }
-                    else if (p.RulesPublishDate == null && plan.RulesFinishDate <= DateTime.Now)
+                    else if (p.RulesPublishDate == null && plan.BusiFeasiFinishDate <= DateTime.Now)
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "章程结束已延期";
+                        projDelay.DelayDetail = "业务可行性论证结束结束已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesStartDate == null && plan.TechFeasiStartDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "技术可行性论证开始已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesPublishDate == null && plan.TechFeasiFinishDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "技术可行性论证结束已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesStartDate == null && plan.TechFeasiReviewStartDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "技术可行性分析报告评审开始已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesPublishDate == null && plan.TechFeasiReviewFinishDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "技术可行性分析报告评审结束已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesStartDate == null && plan.SoftBudgetStartDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "软件实施投入预算开始已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesPublishDate == null && plan.SoftBudgetFinishDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "软件实施投入预算结束已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesStartDate == null && plan.ImplementPlansStartDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "实施方案开始已延期";
+                        delays.Add(projDelay);
+                        continue;
+                    }
+                    else if (p.RulesPublishDate == null && plan.ImplementPlansFinishDate <= DateTime.Now)
+                    {
+                        HomeProjDelay projDelay = new HomeProjDelay();
+                        projDelay.ProjId = p.ProjID;
+                        projDelay.DelayDetail = "实施方案结束已延期";
                         delays.Add(projDelay);
                         continue;
                     }

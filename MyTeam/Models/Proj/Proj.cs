@@ -106,34 +106,67 @@ namespace MyTeam.Models
         [Display(Name = "业需备注")]
         public String ReqRemark { get; set; }
 
+        [Display(Name = "业务可行性论证开始日期")]
+        [DataType(DataType.Date)]
+        public DateTime? BusiFeasiStartDate { get; set; }
+
+        [Display(Name = "业务可行性论证结束日期")]
+        [DataType(DataType.Date)]
+        public DateTime? BusiFeasiFinishDate { get; set; }
+
+        [Display(Name = "技术可行性论证开始日期")]
+        [DataType(DataType.Date)]
+        public DateTime? TechFeasiStartDate { get; set; }
+
+        [Display(Name = "技术可行性论证结束日期")]
+        [DataType(DataType.Date)]
+        public DateTime? TechFeasiFinishDate { get; set; }
+
+        [Display(Name = "技术可行性分析报告评审开始日期")]
+        [DataType(DataType.Date)]
+        public DateTime? TechFeasiReviewStartDate { get; set; }
+
+        [Display(Name = "技术可行性分析报告评审结束日期")]
+        [DataType(DataType.Date)]
+        public DateTime? TechFeasiReviewFinishDate { get; set; }
+
+        [Display(Name = "软件实施投入预算开始时间")]
+        [DataType(DataType.Date)]
+        public DateTime? SoftBudgetStartDate { get; set; }
+
+        [Display(Name = "软件实施投入预算结束时间")]
+        [DataType(DataType.Date)]
+        public DateTime? SoftBudgetFinishDate { get; set; }
+
+        [Display(Name = "实施方案开始时间")]
+        [DataType(DataType.Date)]
+        public DateTime? ImplementPlansStartDate { get; set; }
+
+        [Display(Name = "实施方案结束时间")]
+        [DataType(DataType.Date)]
+        public DateTime? ImplementPlansFinishDate { get; set; }
 
         [Display(Name = "章程发起日期")]
         [DataType(DataType.Date)]
         public DateTime? RulesStartDate { get; set; }
 
-
         [Display(Name = "章程发布日期")]
         [DataType(DataType.Date)]
         public DateTime? RulesPublishDate { get; set; }
 
-
         [Display(Name = "章程备注")]
         public String RulesRemark { get; set; }
-
 
         [Display(Name = "项目验收受理日期")]
         [DataType(DataType.Date)]
         public DateTime? ProjCheckAcptDate { get; set; }
 
-
         [Display(Name = "项目发布日期")]
         [DataType(DataType.Date)]
         public DateTime? ProjPublishDate { get; set; }
 
-
         [Display(Name = "验收结果")]
         public String CheckResult { get; set; }
-
 
         [Display(Name = "备注")]
         public String Remark { get; set; }

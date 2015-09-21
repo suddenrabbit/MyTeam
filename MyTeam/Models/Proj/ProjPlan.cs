@@ -18,22 +18,17 @@ namespace MyTeam.Models
         public int ProjID { get; set; }
 
         [Required]
-        [Display(Name = "项目调研开始日期")]
+        [Display(Name = "业需联合开发小组成立时间")]
         [DataType(DataType.Date)]
-        public DateTime? SurveyStartDate { get; set; }
+        public DateTime? FoundGroupDate { get; set; }
 
         [Required]
-        [Display(Name = "项目调研完成日期")]
-        [DataType(DataType.Date)]
-        public DateTime? SurveyFinishDate { get; set; }
-
-        [Required]
-        [Display(Name = "需求大纲编写开始日期")]
+        [Display(Name = "业务需求大纲编写开始日期")]
         [DataType(DataType.Date)]
         public DateTime? OutlineStartDate { get; set; }
 
         [Required]
-        [Display(Name = "需求大纲编写完成日期")]
+        [Display(Name = "业务需求大纲编写完成日期")]
         [DataType(DataType.Date)]
         public DateTime? OutlineFinishDate { get; set; }
 
@@ -43,7 +38,7 @@ namespace MyTeam.Models
         public DateTime? ReqStartDate { get; set; }
 
         [Required]
-        [Display(Name = "业需完成日期")]
+        [Display(Name = "业需开发完成日期")]
         [DataType(DataType.Date)]
         public DateTime? ReqFinishDate { get; set; }
 
@@ -58,14 +53,54 @@ namespace MyTeam.Models
         public DateTime? ReviewFinishDate { get; set; }
 
         [Required]
-        [Display(Name = "章程开始日期")]
+        [Display(Name = "业务可行性论证开始日期")]
         [DataType(DataType.Date)]
-        public DateTime? RulesStartDate { get; set; }
+        public DateTime? BusiFeasiStartDate { get; set; }
 
         [Required]
-        [Display(Name = "章程结束日期")]
+        [Display(Name = "业务可行性论证结束日期")]
         [DataType(DataType.Date)]
-        public DateTime? RulesFinishDate { get; set; }
+        public DateTime? BusiFeasiFinishDate { get; set; }
+
+        [Required]
+        [Display(Name = "技术可行性论证开始日期")]
+        [DataType(DataType.Date)]
+        public DateTime? TechFeasiStartDate { get; set; }
+
+        [Required]
+        [Display(Name = "技术可行性论证结束日期")]
+        [DataType(DataType.Date)]
+        public DateTime? TechFeasiFinishDate { get; set; }
+
+        [Required]
+        [Display(Name = "技术可行性分析报告评审开始日期")]
+        [DataType(DataType.Date)]
+        public DateTime? TechFeasiReviewStartDate { get; set; }
+
+        [Required]
+        [Display(Name = "技术可行性分析报告评审结束日期")]
+        [DataType(DataType.Date)]
+        public DateTime? TechFeasiReviewFinishDate { get; set; }
+
+        [Required]
+        [Display(Name = "软件实施投入预算开始时间")]
+        [DataType(DataType.Date)]
+        public DateTime? SoftBudgetStartDate { get; set; }
+
+        [Required]
+        [Display(Name = "软件实施投入预算结束时间")]
+        [DataType(DataType.Date)]
+        public DateTime? SoftBudgetFinishDate { get; set; }
+
+        [Required]
+        [Display(Name = "实施方案开始时间")]
+        [DataType(DataType.Date)]
+        public DateTime? ImplementPlansStartDate { get; set; }
+
+        [Required]
+        [Display(Name = "实施方案结束时间")]
+        [DataType(DataType.Date)]
+        public DateTime? ImplementPlansFinishDate { get; set; }
 
         [NotMapped]
         public string ProjName { get; set; }

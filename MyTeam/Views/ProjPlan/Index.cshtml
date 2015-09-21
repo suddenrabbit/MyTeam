@@ -93,6 +93,7 @@
                     <td colspan="4">
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
+                        @Html.ActionLink("批量导入", "Import", null, new { @class = "btn btn-default" })
                     </td>
                 </tr>
             </table>
@@ -114,10 +115,7 @@
                             @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
                         </th>
                         <th width="8">
-                            @Html.DisplayNameFor(model => model.ResultList[0].SurveyStartDate)
-                        </th>
-                        <th width="8">
-                            @Html.DisplayNameFor(model => model.ResultList[0].SurveyFinishDate)
+                            @Html.DisplayNameFor(model => model.ResultList[0].FoundGroupDate)
                         </th>
                         <th width="8">
                             @Html.DisplayNameFor(model => model.ResultList[0].OutlineStartDate)
@@ -138,10 +136,34 @@
                             @Html.DisplayNameFor(model => model.ResultList[0].ReviewFinishDate)
                         </th>
                         <th width="8">
-                            @Html.DisplayNameFor(model => model.ResultList[0].RulesStartDate)
+                            @Html.DisplayNameFor(model => model.ResultList[0].BusiFeasiStartDate)
                         </th>
                         <th width="8">
-                            @Html.DisplayNameFor(model => model.ResultList[0].RulesFinishDate)
+                            @Html.DisplayNameFor(model => model.ResultList[0].BusiFeasiFinishDate)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiStartDate)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiFinishDate)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiReviewStartDate)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiReviewFinishDate)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].SoftBudgetStartDate)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].SoftBudgetFinishDate)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ImplementPlansStartDate)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ImplementPlansFinishDate)
                         </th>
                     </tr>
 
@@ -156,10 +178,7 @@
                                 @Html.DisplayFor(modelItem => item.ProjName)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.SurveyStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SurveyFinishDate)
+                                @Html.DisplayFor(modelItem => item.FoundGroupDate)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.OutlineStartDate)
@@ -180,10 +199,34 @@
                                 @Html.DisplayFor(modelItem => item.ReviewFinishDate)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.RulesStartDate)
+                                @Html.DisplayFor(modelItem => item.BusiFeasiStartDate)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.RulesFinishDate)
+                                @Html.DisplayFor(modelItem => item.BusiFeasiFinishDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TechFeasiStartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TechFeasiFinishDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TechFeasiReviewStartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TechFeasiReviewFinishDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SoftBudgetStartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SoftBudgetFinishDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ImplementPlansStartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ImplementPlansFinishDate)
                             </td>
                         </tr>
                     }

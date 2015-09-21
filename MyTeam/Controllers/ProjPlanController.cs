@@ -7,6 +7,8 @@ using MyTeam.Utils;
 using MyTeam.Models;
 using System.Text;
 using PagedList;
+using System.IO;
+using OfficeOpenXml;
 
 namespace MyTeam.Controllers
 {
@@ -133,7 +135,7 @@ namespace MyTeam.Controllers
                 {
                     return "<p class='alert alert-danger'>出错了: " + projPlan.ProjName + "的项目计划表已存在，不允许更新！" + "</p>";
                 }
-            } 
+            }
 
             try
             {
@@ -168,5 +170,142 @@ namespace MyTeam.Controllers
                 return "出错了: " + e1.Message;
             }
         }
+
+        /// <summary>
+        /// 导入Excel
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Import()
+        {
+            // 项目列表
+            var r = dbContext.Projs.ToList();
+            ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName");
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Import(HttpPostedFileBase file, int ProjID)
+        {
+            if (file == null)
+            {
+                ViewBag.Msg = "<p class='alert alert-danger'>未获取到文件</p>";
+            }
+            else
+            {
+                // 判断文件夹是否存在，不存在则创建文件夹
+                var dir = HttpContext.Server.MapPath("~/Upload/temp");
+                if (Directory.Exists(dir) == false)//如果不存在就创建file文件夹
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                string filePath = Path.Combine(dir, Path.GetFileName(file.FileName));
+                try
+                {
+                    file.SaveAs(filePath);
+                    // 读取Excel文件
+                    FileInfo excelFile = new FileInfo(filePath);
+
+                    using (ExcelPackage ep = new ExcelPackage(excelFile))
+                    {
+                        ExcelWorksheet worksheet = ep.Workbook.Worksheets[1];
+
+                        int rowStart = worksheet.Dimension.Start.Row;       //工作区开始行号
+                        int rowEnd = worksheet.Dimension.End.Row;       //工作区结束行号
+                        var ls = dbContext.ProjPlans.ToList();
+
+                        var tmpLs = new List<ProjPlan>(ls.ToArray());
+
+                        for (int row = rowStart + 1; row <= rowEnd; row++)
+                        {
+                            // 第一列为空则结束
+                            if (worksheet.Cells[row, 1] == null) break;
+
+                            // ProjID重复的不导入
+                            if (tmpLs.Find(a => a.ProjID == ProjID) != null)
+                            {
+                                continue;
+                            }
+
+                            ProjPlan p = new ProjPlan();
+                            // 按列赋值
+                            p.ProjID = ProjID;
+                            string FoundGroupDate = worksheet.Cells[row, 1].GetValue<string>();
+                            string OutlineStartDate = worksheet.Cells[row, 2].GetValue<string>();
+                            string OutlineFinishDate = worksheet.Cells[row, 3].GetValue<string>();
+                            string ReqStartDate = worksheet.Cells[row, 4].GetValue<string>();
+                            string ReqFinishDate = worksheet.Cells[row, 5].GetValue<string>();
+                            string ReviewStartDate = worksheet.Cells[row, 6].GetValue<string>();
+                            string ReviewFinishDate = worksheet.Cells[row, 7].GetValue<string>();
+                            string BusiFeasiStartDate = worksheet.Cells[row, 8].GetValue<string>();
+                            string BusiFeasiFinishDate = worksheet.Cells[row, 9].GetValue<string>();
+                            string TechFeasiStartDate = worksheet.Cells[row, 10].GetValue<string>();
+                            string TechFeasiFinishDate = worksheet.Cells[row, 11].GetValue<string>();
+                            string TechFeasiReviewStartDate = worksheet.Cells[row, 12].GetValue<string>();
+                            string TechFeasiReviewFinishDate = worksheet.Cells[row, 13].GetValue<string>();
+                            string SoftBudgetStartDate = worksheet.Cells[row, 14].GetValue<string>();
+                            string SoftBudgetFinishDate = worksheet.Cells[row, 15].GetValue<string>();
+                            string ImplementPlansStartDate = worksheet.Cells[row, 16].GetValue<string>();
+                            string ImplementPlansFinishDate = worksheet.Cells[row, 17].GetValue<string>();
+
+                            if (!string.IsNullOrEmpty(FoundGroupDate)) p.FoundGroupDate = DateTime.Parse(worksheet.Cells[row, 1].GetValue<string>());
+                            if (!string.IsNullOrEmpty(OutlineStartDate)) p.OutlineStartDate = DateTime.Parse(worksheet.Cells[row, 2].GetValue<string>());
+                            if (!string.IsNullOrEmpty(OutlineFinishDate)) p.OutlineFinishDate = DateTime.Parse(worksheet.Cells[row, 3].GetValue<string>());
+                            if (!string.IsNullOrEmpty(ReqStartDate)) p.ReqStartDate = DateTime.Parse(worksheet.Cells[row, 4].GetValue<string>());
+                            if (!string.IsNullOrEmpty(ReqFinishDate)) p.ReqFinishDate = DateTime.Parse(worksheet.Cells[row, 5].GetValue<string>());
+                            if (!string.IsNullOrEmpty(ReviewStartDate)) p.ReviewStartDate = DateTime.Parse(worksheet.Cells[row, 6].GetValue<string>());
+                            if (!string.IsNullOrEmpty(ReviewFinishDate)) p.ReviewFinishDate = DateTime.Parse(worksheet.Cells[row, 7].GetValue<string>());
+                            if (!string.IsNullOrEmpty(BusiFeasiStartDate)) p.BusiFeasiStartDate = DateTime.Parse(worksheet.Cells[row, 8].GetValue<string>());
+                            if (!string.IsNullOrEmpty(BusiFeasiFinishDate)) p.BusiFeasiFinishDate = DateTime.Parse(worksheet.Cells[row, 9].GetValue<string>());
+                            if (!string.IsNullOrEmpty(TechFeasiStartDate)) p.TechFeasiStartDate = DateTime.Parse(worksheet.Cells[row, 10].GetValue<string>());
+                            if (!string.IsNullOrEmpty(TechFeasiFinishDate)) p.TechFeasiFinishDate = DateTime.Parse(worksheet.Cells[row, 11].GetValue<string>());
+                            if (!string.IsNullOrEmpty(TechFeasiReviewStartDate)) p.TechFeasiReviewStartDate = DateTime.Parse(worksheet.Cells[row, 12].GetValue<string>());
+                            if (!string.IsNullOrEmpty(TechFeasiReviewFinishDate)) p.TechFeasiReviewFinishDate = DateTime.Parse(worksheet.Cells[row, 13].GetValue<string>());
+                            if (!string.IsNullOrEmpty(SoftBudgetStartDate)) p.SoftBudgetStartDate = DateTime.Parse(worksheet.Cells[row, 14].GetValue<string>());
+                            if (!string.IsNullOrEmpty(SoftBudgetFinishDate)) p.SoftBudgetFinishDate = DateTime.Parse(worksheet.Cells[row, 15].GetValue<string>());
+                            if (!string.IsNullOrEmpty(ImplementPlansStartDate)) p.ImplementPlansStartDate = DateTime.Parse(worksheet.Cells[row, 16].GetValue<string>());
+                            if (!string.IsNullOrEmpty(ImplementPlansFinishDate)) p.ImplementPlansFinishDate = DateTime.Parse(worksheet.Cells[row, 17].GetValue<string>());
+                            
+                            dbContext.ProjPlans.Add(p);
+                            tmpLs.Add(p);
+                        }
+                        // 保存
+                        int realNum = dbContext.SaveChanges();
+
+                        string s = string.Format("<p class='alert alert-success'>《{0}》处理成功！共{1}条数据，实际导入{2}条数据</p>", file.FileName, rowEnd - rowStart, realNum);
+
+                        ViewBag.Msg = s;
+                    }
+                }
+                catch (Exception e1)
+                {
+                    ViewBag.Msg = "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+                }
+                finally
+                {
+                    // 完成后删除文件
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+            }
+
+            // 项目列表
+            var r = dbContext.Projs.ToList();
+            ViewBag.ProjList = new SelectList(r, "ProjID", "ProjName", ProjID);
+            return View();
+        }
+
+        /// <summary>
+        /// 下载模板
+        /// </summary>
+        /// <returns></returns>
+        public FileResult DownTemplate()
+        {
+            string fileName = "ProjPlanImportT.xlsx";
+            string tmpFilePath = System.Web.HttpContext.Current.Server.MapPath("~/Content/templates/" + fileName);
+            return File(tmpFilePath, "application/excel", fileName);
+        }
+
     }
 }
