@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "欢迎";
 }
-
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     $(document).ready(function () {
@@ -20,8 +19,8 @@
                 <form class="form-horizontal" role="form">
                     <div id="info"></div>
                     <ul class="nav nav-tabs" id="myTab">
-                        <li><a href="#tabs1" data-toggle="tab">当前尚未出池的需求情况：</a></li>
-                        <li><a href="#tabs2" data-toggle="tab">超过三个月未出池的需求情况：</a></li>
+                        <li><a href="#tabs1" data-toggle="tab">目前尚未出池的需求</a></li>
+                        <li><a href="#tabs2" data-toggle="tab">超过三个月未出池的需求</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top:20px">
                         <div id="tabs1" class="tab-pane fade in active">
@@ -53,19 +52,21 @@
             </div>
         </div>
     </fieldset>
-
     <fieldset class="col-md-6">
-        <legend>延期项目：</legend>
-        <div class="list-group">
+        <legend>延期项目</legend>
+        <table class="table">
+            <tr><th>项目名称</th><th>延期阶段</th></tr>
             @foreach (HomeProjDelay r in Model.ProjDetails)
             {
                 string s = "/Proj/index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
-                <a class="list-group-item" href=@s>
-                    <span class="badge">@r.DelayDetail</span>
-                    @r.ProjName
-                </a>
+
+                <tr>
+                    <td class="text-center"><a href=@s>@r.ProjName</a></td>
+                    <td class="text-center">@r.DelayDetail</td>
+                </tr>
             }
-        </div>
+        </table>
+
     </fieldset>
     <!--
             <fieldset class="col-md-6">
