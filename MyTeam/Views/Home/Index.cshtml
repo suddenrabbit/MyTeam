@@ -54,18 +54,26 @@
     </fieldset>
     <fieldset class="col-md-6">
         <legend>延期项目</legend>
-        <table class="table">
-            <tr><th>项目名称</th><th>延期阶段</th></tr>
-            @foreach (HomeProjDelay r in Model.ProjDetails)
-            {
-                string s = "/Proj/index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
+        @if(Model.ProjDetails.Count < 1)
+        {
+            <p>暂无</p>
+        }
+        else
+        {
+            <table class="table">
+                <tr><th>项目名称</th><th>延期阶段</th></tr>
+                @foreach (HomeProjDelay r in Model.ProjDetails)
+                {
+                    string s = "/Proj/index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
 
-                <tr>
-                    <td class="text-center"><a href=@s>@r.ProjName</a></td>
-                    <td class="text-center">@r.DelayDetail</td>
-                </tr>
-            }
-        </table>
+                    <tr>
+                        <td class="text-center"><a href=@s>@r.ProjName</a></td>
+                        <td class="text-center">@r.DelayDetail</td>
+                    </tr>
+                }
+            </table>
+        }
+        
 
     </fieldset>
     <!--

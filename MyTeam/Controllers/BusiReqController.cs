@@ -166,11 +166,13 @@ namespace MyTeam.Controllers
             var ls = from br in dbContext.BusiReqs
                      join req in dbContext.Reqs
                      on br.BusiReqNo equals req.BusiReqNo
+                     join proj in dbContext.BusiReqProjs
+                     on br.BRProjID equals proj.BRProjID
                      where br.BRProjID.ToString() == BRProjID
 
                      select new BusiReqExcel
                      {
-                         ProjName = "".ToString(),
+                         ProjName = proj.BRProjName,
                          BusiReqNo = br.BusiReqNo,
                          BusiReqName = br.BusiReqName,
                          Desc = br.Desc,

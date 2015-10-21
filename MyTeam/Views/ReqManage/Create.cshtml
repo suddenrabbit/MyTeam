@@ -98,7 +98,7 @@
 			<div class="form-group">
                 @Html.LabelFor(model => model.ReqBusiTestPerson, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.ReqBusiTestPerson, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.ReqBusiTestPerson, new { @class = "form-control", @placeholder = "点击自动填写需求发起人", @onclick = "$('#ReqBusiTestPerson').val($('#ReqFromPerson').val())" })
                     @Html.ValidationMessageFor(model => model.ReqBusiTestPerson, "", new { @class = "text-danger" })
                 </div>
             </div>

@@ -79,7 +79,7 @@ namespace MyTeam.Models
                 // ProjID转name
                 using (MyTeamContext dbContext = new MyTeamContext())
                 {
-                    var p = dbContext.Projs.ToList().Find(a => a.ProjID == this.ProjID);
+                    var p = Constants.ProjList.Find(a => a.ProjID == this.ProjID);
                     return p == null ? "其他" : p.ProjName;
                 }
             }

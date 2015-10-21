@@ -34,6 +34,7 @@
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.VerYear, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.VerYear, "", new { @class = "text-danger" })
+                    <span class="text-info">（格式必须形如：2015/1）</span>
                 </div>
             </div>
             <div class="form-group">
