@@ -153,8 +153,17 @@
                         <!--需求受理人下拉选择-->
                         @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.ReqAcptPersonList as SelectList, new { @class = "form-control" })
                     </td>
-                    <td></td>
+                    <td>@Html.LabelFor(model => model.SpecialQuery, new { @class = "control-label" })</td>
                     <td>
+                        <select id="SpecialQuery" name="SpecialQuery" class="form-control">
+                            <option value="0">无</option>
+                            <option value="1">超过3个月未出池</option>
+                            <option value="2">超过2周未入池</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
                         <input type="button" value="新增一条" class="btn btn-default" onclick="doCreate()" />
@@ -375,3 +384,10 @@
         </div>
     </div>
 </div>
+
+<!-- 选中特殊查询 -->
+<script>
+    $(function () {
+        $("#SpecialQuery").val('@Model.SpecialQuery');
+    });
+</script>

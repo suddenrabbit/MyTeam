@@ -14,29 +14,30 @@ namespace MyTeam.Controllers
     /// 维护需求管理Controller
     /// </summary>
     /* 包括如下功能：
-     * 1、批量入池
-     * 2、查询
-     * 3、批处理：批量出池、更新下发通知编号、下发日期、批量删除
-     * 4、单笔新增
-     * 5、单笔修改
-     * 6、单笔删除
-     * 7、出池计划导出
-     * 8、按照查询条件导出
+     * 1、批量登记
+     * 2、需求入池
+     * 3、查询
+     * 4、批处理：批量出池、更新下发通知编号、下发日期、批量删除
+     * 5、单笔新增
+     * 6、单笔修改
+     * 7、单笔删除
+     * 8、出池计划导出
+     * 9、按照查询条件导出
      */
     public class ReqManageController : BaseController
     {
         /*
-         * 【1】批量入池
+         * 【1】批量登记
          */
 
-        // 入池：第一步，输入维护需求主信息
-        public ActionResult MainInPool()
+        // 登记受理：第一步，输入维护需求主信息
+        public ActionResult MainReg()
         {
             if (this.GetSessionCurrentUser() == null)
             {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage/MainInPool" });
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage/MainReg" });
             }
-            MainInPoolReq mainInPoolReq = new MainInPoolReq();
+            MainRegReq mainRegReq = new MainRegReq();
             // 1、生成系统列表
             SelectList sl1 = new SelectList(this.GetSysList(), "SysID", "SysName");
 
@@ -47,12 +48,12 @@ namespace MyTeam.Controllers
             if (user != null)
             {
                 //sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
-                mainInPoolReq.ReqAcptPerson = user.UID;
+                mainRegReq.ReqAcptPerson = user.UID;
             }
             else
             {
                 //sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
-                mainInPoolReq.ReqAcptPerson = 1;
+                mainRegReq.ReqAcptPerson = 1;
             }
 
             ViewBag.UserList = new SelectList(this.GetUserList(), "UID", "NamePhone");
@@ -67,52 +68,50 @@ namespace MyTeam.Controllers
             ViewBag.ReqAmtList = new SelectList(reqAmtLs);
 
             // 5、需求受理日期自动置为今天
-            mainInPoolReq.AcptDate = DateTime.Now;
+            mainRegReq.AcptDate = DateTime.Now;
 
-            return View(mainInPoolReq);
+            return View(mainRegReq);
         }
 
         [HttpPost]
-        public ActionResult MainInPool(MainInPoolReq mainInPoolReq)
+        public ActionResult MainReg(MainRegReq mainRegReq)
         {
-            return RedirectToAction("DetailInPool", mainInPoolReq);
+            return RedirectToAction("DetailReg", mainRegReq);
         }
 
         // 入池：第二步，输入明细信息
 
         [HttpPost]
-        public ActionResult DetailInPool(MainInPoolReq mainInPoolReq)
+        public ActionResult DetailReg(MainRegReq mainRegReq)
         {
             // 生成List，添加维护需求编号
             List<Req> reqList = new List<Req>();
-            for (int i = 0; i < mainInPoolReq.ReqAmt; i++)
+            for (int i = 0; i < mainRegReq.ReqAmt; i++)
             {
                 Req newReq = new Req()
                 {
-                    SysId = mainInPoolReq.SysId,
-                    AcptDate = mainInPoolReq.AcptDate,
-                    ReqNo = mainInPoolReq.ReqNo,
-                    ReqReason = mainInPoolReq.ReqReason,
-                    ReqFromDept = mainInPoolReq.ReqFromDept,
-                    ReqFromPerson = mainInPoolReq.ReqFromPerson,
-                    ReqAcptPerson = mainInPoolReq.ReqAcptPerson,
-                    ReqDevPerson = mainInPoolReq.ReqDevPerson,
-                    ReqBusiTestPerson = mainInPoolReq.ReqBusiTestPerson,
-                    DevAcptDate = mainInPoolReq.DevAcptDate,
-                    DevEvalDate = mainInPoolReq.DevEvalDate
+                    SysId = mainRegReq.SysId,
+                    AcptDate = mainRegReq.AcptDate,
+                    ReqNo = mainRegReq.ReqNo,
+                    ReqReason = mainRegReq.ReqReason,
+                    ReqFromDept = mainRegReq.ReqFromDept,
+                    ReqFromPerson = mainRegReq.ReqFromPerson,
+                    ReqAcptPerson = mainRegReq.ReqAcptPerson,
+                    ReqBusiTestPerson = mainRegReq.ReqBusiTestPerson,
+                    DevWorkload = 0
                 };
                 reqList.Add(newReq);
             }
             // 需求类型下拉列表
             ViewBag.ReqTypeList = MyTools.GetSelectList(Constants.ReqTypeList);
             // 需求状态下拉列表
-            ViewBag.ReqStatList = MyTools.GetSelectList(Constants.ReqStatList, false, true, "入池");
+            ViewBag.ReqStatList = MyTools.GetSelectList(Constants.ReqStatList, false, true, "待评估");
             return View(reqList);
         }
 
-        // 正式入池
+        // 受理登记完成
         [HttpPost]
-        public ActionResult InPoolResult(List<Req> reqList)
+        public ActionResult RegResult(List<Req> reqList)
         {
             List<Req> ls = dbContext.Reqs.ToList();
             string r = "";
@@ -136,23 +135,76 @@ namespace MyTeam.Controllers
 
                 if (skipNum > 0)
                 {
-                    r = string.Format("<p class='alert alert-warning'>有{0}条因维护需求编号重复未能入池：{1}</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>", skipNum, repeatReqDetailNo);
+                    r = string.Format("<p class='alert alert-warning'>有{0}条因维护需求编号重复未能登记入库：{1}</p>", skipNum, repeatReqDetailNo);
                 }
                 else
                 {
-                    r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainInPool'>继续入池</a></li></ul></p>";
+                    r = "<p class='alert alert-success'>登记入库成功！</p>";
                 }
 
-
+                r += "<p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainReg'>继续登记</a></li></ul></p>";
             }
             catch (Exception e1)
             {
-                r = "<p class='alert alert-danger'>入池失败！" + e1.Message + "</p>";
+                r = "<p class='alert alert-danger'>登记入库失败！" + e1.Message + "</p>";
             }
 
             ViewBag.Msg = r;
             return View();
 
+        }
+
+        /*
+         * 入池：申请编号，研发联系人，研发受理日期，完成评估日期，研发评估工作量（多行）
+         * 
+         * */
+
+        public ActionResult InPool()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public string InPool(InPoolReq inPoolReq)
+        {
+            // 研发评估工作量拆分
+            string[] workload = inPoolReq.DevWorkload.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+            // 根据申请编号，找到所有的需求编号，按顺序填入研发评估的相关信息
+            string reqNo = inPoolReq.ReqNo;
+            var ls = dbContext.Reqs.Where(a => a.ReqNo == reqNo).OrderBy(a => a.ReqDetailNo).ToList();
+            int k = 0;
+            string err = "";
+            foreach (Req req in ls)
+            {
+                try
+                {
+                    req.ReqDevPerson = inPoolReq.ReqDevPerson;
+                    req.DevAcptDate = inPoolReq.DevAcptDate;
+                    req.DevEvalDate = inPoolReq.DevEvalDate;
+                    req.DevWorkload = int.Parse(workload[k]);
+                    req.ReqStat = "入池";
+                    dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;
+                    dbContext.SaveChanges();
+                    //string sql = string.Format("update Reqs set ReqDevPerson={0}, DevAcptDate={1}, DevEvalDate={2}, DevWorkload={3}, ReqStat=N'入池' where ReqDetailNo={4}",
+                         //inPoolReq.ReqDevPerson, inPoolReq.DevAcptDate, inPoolReq.DevEvalDate, workload[k], req.ReqDetailNo);
+                    // 批量更新，直接执行SQL
+                    //int r = dbContext.Database.ExecuteSqlCommand(sql);
+                    k++;
+                }
+                catch
+                {
+                    err += req.ReqDetailNo + " ";
+                    continue;
+                }
+
+            }
+
+            if (!string.IsNullOrEmpty(err))
+            {
+                return "<p class='alert alert-danger'>" + err + "更新失败!<p>";
+            }
+            return "<p class='alert alert-success'>已更新" + k + "条记录!<p>";
         }
 
 
@@ -200,7 +252,7 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.Version == query.Version);
                 }
-                if (query.ReqStat != "全部")
+                if (query.ReqStat != "全部") 
                 {
                     // 分『等于』和『不等于』2种情况
                     if (query.NotEqual)
@@ -217,12 +269,18 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
                 }
 
-                // 如果MoreThan3Mouth为true，筛选出超过三个月未出池的需求情况
-                if (query.IsMoreThan3Month)
+                // 特殊查询：0-无 1-超过3个月未出池 2-超过2周未入池
+                if (query.SpecialQuery == 1)
                 {
                     DateTime time = DateTime.Now.AddMonths(-3);
-                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0);
+                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0 );
                 }
+
+                else if (query.SpecialQuery == 2)
+                {
+                    DateTime time = DateTime.Now.AddDays(-14);
+                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0 );
+                }              
 
                 // 统一按照受理日期倒序
                 ls = ls.OrderByDescending(p => p.AcptDate);
@@ -678,7 +736,7 @@ namespace MyTeam.Controllers
         private string GetWhereIn(string reqs)
         {
             // 拆分reqs
-            string[] reqArr = reqs.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] reqArr = reqs.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             StringBuilder sb = new StringBuilder();
             foreach (string s in reqArr)

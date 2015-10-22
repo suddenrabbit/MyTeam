@@ -1,12 +1,12 @@
 ﻿@model List<MyTeam.Models.Req>
 @{
-    ViewBag.Title = "批量入池-第二步";
+    ViewBag.Title = "批量登记-第二步";
 }
 
 <h2>@ViewBag.Title。</h2>
 <div class="row">
     <div class="col-md-12">
-        @using (Html.BeginForm("InPoolResult", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        @using (Html.BeginForm("RegResult", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
@@ -26,9 +26,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model[0].ReqType)
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model[0].DevWorkload)
-                    </th>
+                   
                     <th>
                         @Html.DisplayNameFor(model => model[0].ReqStat)
                     </th>
@@ -50,8 +48,7 @@
                         @Html.HiddenFor(model => model[i].ReqAcptPerson)
                         @Html.HiddenFor(model => model[i].ReqDevPerson)
                         @Html.HiddenFor(model => model[i].ReqBusiTestPerson)
-                        @Html.HiddenFor(model => model[i].DevAcptDate)
-                        @Html.HiddenFor(model => model[i].DevEvalDate)
+                       
                         <td>
                             @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control" })
                         </td>
@@ -65,9 +62,7 @@
                             <!--需求类型下拉选择-->
                             @Html.DropDownListFor(model => model[i].ReqType, ViewBag.ReqTypeList as SelectList, new { @class = "form-control" })
                         </td>
-                        <td>
-                            @Html.TextBoxFor(model => model[i].DevWorkload, new { @class = "form-control" })
-                        </td>
+                        
                         <td>
                             <!--需求状态下拉选择-->
                             @Html.DropDownListFor(model => model[i].ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
@@ -81,7 +76,7 @@
 
             <div>
                 <input type="button" value="上一步" class="btn btn-default" onclick="javascript:window.history.back()"/>
-                <input type="submit" value="入池！" class="btn btn-primary" />
+                <input type="submit" value="登记入库！" class="btn btn-primary" />
             </div>
         }
     </div>

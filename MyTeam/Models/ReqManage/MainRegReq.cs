@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyTeam.Models
 {
-    public class MainInPoolReq
+    public class MainRegReq
     {
         [Required]
         [Display(Name = "系统名称")]
@@ -38,13 +38,15 @@ namespace MyTeam.Models
         public int ReqAcptPerson { get; set; }
 
         [Required]
-        [Display(Name = "研发联系人/联系电话")]
-        public string ReqDevPerson { get; set; }
-
-        [Required]
         [Display(Name = "业务测试人/联系电话")]
         public string ReqBusiTestPerson { get; set; }
 
+        /*
+         * 
+        [Required]
+        [Display(Name = "研发联系人/联系电话")]
+        public string ReqDevPerson { get; set; }
+         
         [Display(Name = "研发受理日期")]
         [DataType(DataType.Date)]
         public DateTime? DevAcptDate { get; set; }
@@ -52,6 +54,7 @@ namespace MyTeam.Models
         [Display(Name = "研发完成评估日期")]
         [DataType(DataType.Date)]
         public DateTime? DevEvalDate { get; set; }
+         * */
 
         [Required]
         [Range(1,10, ErrorMessage="需求数量必须是1-10之间的数字")]

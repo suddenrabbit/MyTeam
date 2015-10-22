@@ -19,8 +19,17 @@
                 <form class="form-horizontal" role="form">
                     <div id="info"></div>
                     <ul class="nav nav-tabs" id="myTab">
-                        <li><a href="#tabs1" data-toggle="tab">目前尚未出池的需求</a></li>
-                        <li><a href="#tabs2" data-toggle="tab">超过三个月未出池的需求</a></li>
+                        <li><a href="#tabs1" data-toggle="tab">全部未出池的需求</a></li>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                超过时限的需求 <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#tabs2" data-toggle="tab">超三个月未出池的需求</a></li>
+                                <li><a href="#tabs3" data-toggle="tab">超两周未入池的需求</a></li>
+                            </ul>
+                        </li>
+                        
                     </ul>
                     <div class="tab-content" style="margin-top:20px">
                         <div id="tabs1" class="tab-pane fade in active">
@@ -36,10 +45,24 @@
                             </div>
                         </div>
                         <div id="tabs2" class="tab-pane fade in active">
+                            <p class="alert alert-info">超三个月未出池的需求</p>
                             <div class="list-group">
                                 @foreach (HomeReqDelay r in Model.ReqDelayLS)
                                 {
-                                    string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&IsMoreThan3Month=true&SysId=" + r.SysId;
+                                    string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SpecialQuery=1&SysId=" + r.SysId;
+                                    <a class="list-group-item" href=@s>
+                                        <span class="badge">@r.ReqDelayNum</span>
+                                        @r.SysName
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <div id="tabs3" class="tab-pane fade in active">
+                            <p class="alert alert-info">超两周未入池的需求</p>
+                            <div class="list-group">
+                                @foreach (HomeInpoolReqDelay r in Model.ReqInpoolDelayLS)
+                                {
+                                    string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SpecialQuery=2&SysId=" + r.SysId;
                                     <a class="list-group-item" href=@s>
                                         <span class="badge">@r.ReqDelayNum</span>
                                         @r.SysName
@@ -56,7 +79,7 @@
         <legend>延期项目</legend>
         @if(Model.ProjDetails.Count < 1)
         {
-            <p>暂无</p>
+            <p class="alert alert-success">暂无</p>
         }
         else
         {

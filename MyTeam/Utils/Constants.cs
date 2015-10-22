@@ -16,7 +16,7 @@ namespace MyTeam.Utils
         /// <summary>
         /// 获取内存中的用户列表
         /// </summary>
-        public static List<User> UserList;        
+        public static List<User> UserList;
 
         /// <summary>
         /// 获取内存中的系统列表
@@ -41,13 +41,13 @@ namespace MyTeam.Utils
         /// <summary>
         /// 需求状态列表
         /// </summary>
-        public static List<string> ReqStatList = new List<string>() { "未办结", "入池", "出池", "办结", "作废", "拒绝", "整合", "纳入升级" };
+        public static List<string> ReqStatList = new List<string>() { "未办结", "待评估", "入池", "出池", "办结", "作废", "拒绝", "整合", "纳入升级" };
 
         /// <summary>
         /// 任务阶段列表
         /// </summary>
         public static List<string> WorkStageList = new List<string>() { "/", "调研小组成立", "需求调研", "需求大纲开发", "需求大纲审核", "业务可行性分析", "技术可行性分析", "技术方案编写", "技术方案审核", "实施方案汇报", "已立项", "业务需求开发", "业务需求评审", "招标准备", "软件需求开发", "系统设计", "系统编码", "系统测试", "上线配合", "暂缓", "完成" };
- 
+
         /// <summary>
         /// 工作完成情况列表
         /// </summary>
@@ -66,7 +66,7 @@ namespace MyTeam.Utils
         /// <summary>
         /// 需求会议评审结果列表
         /// </summary>
-        public static List<string> ReviewConclusionList = new List<string>() { "通过", "有条件通过", "不通过", "不适用"};
+        public static List<string> ReviewConclusionList = new List<string>() { "通过", "有条件通过", "不通过", "不适用" };
 
         /// <summary>
         /// 需求会议当前状态列表

@@ -23,8 +23,8 @@ namespace MyTeam.Controllers
             }
 
             // 根据用户UID，
-            // （1）找到负责的系统，统计未出池的需求
-            // （2）TODO：根据项目计划判断有无超期
+            // （1）找到负责的系统，统计未出池的需求（未出池需求，超过三个月未出池需求，超过两个星期未入池需求）
+            // （2）根据项目计划判断有无超期
             // 若为管理员，则显示全部
 
             HomeResult hr = new HomeResult();
@@ -49,10 +49,16 @@ namespace MyTeam.Controllers
             {
                 hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
             }   
-            foreach(HomeReqDelay d in hr.ReqDelayLS){
-                int a = d.SysId;
-                int b = d.ReqDelayNum;
+            
+            // 判断超过两周还没入池的记录（状态为「待评估」）
+            if (user.IsAdmin)
+            {
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeInpoolReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) group by t.SysId").ToList();
             }
+            else
+            {
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeInpoolReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
+            } 
 
 
             // 筛选出各个阶段延期的项目
@@ -99,15 +105,7 @@ namespace MyTeam.Controllers
                         projDelay.DelayDetail = "业需结束评审";
                         delays.Add(projDelay);
                         continue;
-                    }
-                    else if (p.TechFeasiReviewStartDate == null && plan.TechFeasiReviewStartDate <= DateTime.Now)
-                    {
-                        HomeProjDelay projDelay = new HomeProjDelay();
-                        projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "技术可行性分析报告评审开始";
-                        delays.Add(projDelay);
-                        continue;
-                    }
+                    }                   
                     else if (p.TechFeasiReviewFinishDate == null && plan.TechFeasiReviewFinishDate <= DateTime.Now)
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();

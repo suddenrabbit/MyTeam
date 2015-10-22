@@ -17,7 +17,9 @@ namespace MyTeam.Models
 
         public List<WeekReportDetail> Works { get; set; }
 
-        public List<HomeProjDelay> ProjDetails { get; set; } 
+        public List<HomeProjDelay> ProjDetails { get; set; }
+
+        public List<HomeInpoolReqDelay> ReqInpoolDelayLS { get; set; }
     }
 
     public class HomeReqDelay
@@ -78,5 +80,25 @@ namespace MyTeam.Models
             }
             set { this.ProjName = value; }
         }
-    }       
+    }
+
+    public class HomeInpoolReqDelay
+    {
+        public int SysId { get; set; }
+
+        public int ReqDelayNum { get; set; }
+
+        public string SysName
+        {
+            get
+            {
+                var r = (from a in Constants.SysList
+                         where a.SysID == this.SysId
+                         select a.SysName).FirstOrDefault();
+
+                return r == null ? "未知" : r.ToString();
+            }
+            set { this.SysName = value; }
+        }
+    }
 }

@@ -1,6 +1,6 @@
-﻿@model MyTeam.Models.MainInPoolReq
+﻿@model MyTeam.Models.MainRegReq
 @{
-    ViewBag.Title = "批量入池-第一步";
+    ViewBag.Title = "批量登记-第一步";
 }
 <h2>@ViewBag.Title。</h2>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-md-10">
 
-        @using (Html.BeginForm("DetailInPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+        @using (Html.BeginForm("DetailReg", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
                 new { @class = "form-horizontal", role = "form", id = "MyForm" }))
         {
 
@@ -67,16 +67,7 @@
                     <td>
                         @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.UserList as SelectList, new { @class = "form-control" })
                     </td>
-                    <td>
-                        @Html.LabelFor(model => model.ReqDevPerson, new { @class = "control-label" })
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(model => model.ReqDevPerson, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.ReqDevPerson, "", new { @class = "text-danger" })
-                    </td>
-                </tr>
 
-                <tr>
                     <td>
                         @Html.LabelFor(model => model.ReqBusiTestPerson, new { @class = "control-label" })
                     </td>
@@ -84,31 +75,16 @@
                         @Html.TextBoxFor(model => model.ReqBusiTestPerson, new { @class = "form-control", @placeholder = "点击自动填写需求发起人", @onclick = "$('#ReqBusiTestPerson').val($('#ReqFromPerson').val())" })
                         @Html.ValidationMessageFor(model => model.ReqBusiTestPerson, "", new { @class = "text-danger" })
                     </td>
-                    <td>
-                        @Html.LabelFor(model => model.DevAcptDate, new { @class = "control-label" })
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(model => model.DevAcptDate, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.DevAcptDate, "", new { @class = "text-danger" })
-                    </td>
                 </tr>
 
                 <tr>
-                    <td>
-                        @Html.LabelFor(model => model.DevEvalDate, new { @class = "control-label" })
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(model => model.DevEvalDate, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.DevEvalDate, "", new { @class = "text-danger" })
-                    </td>
                     <td>
                         @Html.LabelFor(model => model.ReqAmt, new { @class = "control-label" })
                     </td>
                     <td>
                         @Html.DropDownListFor(model => model.ReqAmt, ViewBag.ReqAmtList as SelectList, new { @class = "form-control" })
                     </td>
-                </tr>
-               <tr><td><input type="submit" class="btn btn-primary"  value="下一步"/> </td></tr>
+                <td><input type="submit" class="btn btn-primary"  value="下一步"/> </td></tr>
             </table>
         }
     </div>

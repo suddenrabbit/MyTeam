@@ -180,9 +180,10 @@
     <Compile Include="Models\Proj\ProjSurv.cs" />
     <Compile Include="Models\Proj\Proj.cs" />
     <Compile Include="Models\Proj\ReqTrack.cs" />
+    <Compile Include="Models\ReqManage\InPoolReq.cs" />
     <Compile Include="Models\ReqManage\OutPoolQuery.cs" />
     <Compile Include="Models\ReqManage\OutPoolResult.cs" />
-    <Compile Include="Models\ReqManage\MainInPoolReq.cs" />
+    <Compile Include="Models\ReqManage\MainRegReq.cs" />
     <Compile Include="Models\ReqManage\ReqExcel.cs" />
     <Compile Include="Models\ReqManage\ReqQuery.cs" />
     <Compile Include="Models\System\RetailSystem.cs" />
@@ -286,8 +287,6 @@
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\ChangePsw.cshtml" />
-    <Content Include="Views\ReqManage\MainInPool.cshtml" />
-    <Content Include="Views\ReqManage\DetailInPool.cshtml" />
     <Content Include="Views\ReqManage\Index.cshtml" />
     <Content Include="Views\SysManage\Index.cshtml" />
     <Content Include="Views\SysManage\Create.cshtml" />
@@ -297,7 +296,7 @@
     <Content Include="Views\ReqManage\Edit.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\WeekReport\AddMain.cshtml" />
-    <Content Include="Views\ReqManage\InPoolResult.cshtml" />
+    <Content Include="Views\ReqManage\RegResult.cshtml" />
     <Content Include="Views\WeekReport\MainIndex.cshtml" />
     <Content Include="Views\WeekReport\EditMain.cshtml" />
     <Content Include="Views\WeekReport\DetailIndex.cshtml" />
@@ -343,6 +342,9 @@
     <Content Include="Views\ProjPlan\Create.cshtml" />
     <Content Include="Views\ProjPlan\Edit.cshtml" />
     <Content Include="Views\ProjPlan\Import.cshtml" />
+    <Content Include="Views\ReqManage\InPool.cshtml" />
+    <Content Include="Views\ReqManage\DetailReg.cshtml" />
+    <Content Include="Views\ReqManage\MainReg.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
