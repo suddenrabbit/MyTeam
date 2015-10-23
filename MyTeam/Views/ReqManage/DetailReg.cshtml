@@ -13,23 +13,13 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <table class="table table-condensed table-bordered">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model[0].ReqDetailNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model[0].BusiReqNo)
-                    </th>
+                <tr>                    
                     <th>
                         @Html.DisplayNameFor(model => model[0].ReqDesc)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model[0].ReqType)
-                    </th>
-                   
-                    <th>
-                        @Html.DisplayNameFor(model => model[0].ReqStat)
-                    </th>
+                    </th>                   
                     <th>
                         @Html.DisplayNameFor(model => model[0].Remark)
                     </th>
@@ -46,29 +36,18 @@
                         @Html.HiddenFor(model => model[i].ReqFromDept)
                         @Html.HiddenFor(model => model[i].ReqFromPerson)
                         @Html.HiddenFor(model => model[i].ReqAcptPerson)
-                        @Html.HiddenFor(model => model[i].ReqDevPerson)
                         @Html.HiddenFor(model => model[i].ReqBusiTestPerson)
-                       
+                                               
                         <td>
-                            @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control" })
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => model[i].BusiReqNo, new { @class = "form-control" })
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => model[i].ReqDesc, new { @class = "form-control" })
+                            @Html.TextBoxFor(model => model[i].ReqDesc, new { @class = "form-control text-center", @style = "margin:0 auto" })
                         </td>
                         <td>
                             <!--需求类型下拉选择-->
-                            @Html.DropDownListFor(model => model[i].ReqType, ViewBag.ReqTypeList as SelectList, new { @class = "form-control" })
+                            @Html.DropDownListFor(model => model[i].ReqType, ViewBag.ReqTypeList as SelectList, new { @class = "form-control text-center", @style = "margin:0 auto" })
                         </td>
-                        
+                                               
                         <td>
-                            <!--需求状态下拉选择-->
-                            @Html.DropDownListFor(model => model[i].ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => model[i].Remark, new { @class = "form-control" })
+                            @Html.TextBoxFor(model => model[i].Remark, new { @class = "form-control text-center", @style = "margin:0 auto" })
                         </td>
                     </tr>
                 }

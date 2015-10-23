@@ -1,7 +1,7 @@
 ﻿@model MyTeam.Models.InPoolReq
 
 @{
-    ViewBag.Title = "需求入池";
+    ViewBag.Title = "需求入池-第一步";
 }
 
 <h2>@ViewBag.Title。</h2>
@@ -16,11 +16,10 @@
 </script>
 <div class="row">
     <div class="col-md-10">
-        @using (Ajax.BeginForm("InPool", "ReqManage", null, new AjaxOptions { UpdateTargetId = "info" },
-                new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("InPoolStep2", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                new { @class = "form-horizontal", role = "form", id = "MyForm" }))
         {
-            <div id="info"></div>
-            
+
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -57,16 +56,8 @@
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.DevWorkload, new { @class = "col-md-2 control-label" })
-
-                <div class="col-md-10">
-                    <textarea id="DevWorkload" name="DevWorkload" class="form-control" rows="5"></textarea>
-                    <span class="text-info">请将每条需求的研发评估工作量分行填写，系统自动按照顺序更新</span>
-                </div>
-            </div>
-            <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="入池！" class="btn btn-primary" />
+                    <input type="submit" value="下一步" class="btn btn-primary" />
                 </div>
             </div>
 

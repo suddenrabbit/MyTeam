@@ -182,6 +182,7 @@
     <Compile Include="Models\Proj\ReqTrack.cs" />
     <Compile Include="Models\ReqManage\InPoolReq.cs" />
     <Compile Include="Models\ReqManage\OutPoolQuery.cs" />
+    <Compile Include="Models\ReqManage\OutPoolResultExcel.cs" />
     <Compile Include="Models\ReqManage\OutPoolResult.cs" />
     <Compile Include="Models\ReqManage\MainRegReq.cs" />
     <Compile Include="Models\ReqManage\ReqExcel.cs" />
@@ -345,6 +346,8 @@
     <Content Include="Views\ReqManage\InPool.cshtml" />
     <Content Include="Views\ReqManage\DetailReg.cshtml" />
     <Content Include="Views\ReqManage\MainReg.cshtml" />
+    <Content Include="Views\ReqManage\InPoolStep2.cshtml" />
+    <Content Include="Views\ReqManage\InPoolResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -26,8 +26,6 @@ namespace MyTeam.Models
         [Display(Name = "研发完成评估日期")]
         [DataType(DataType.Date)]
         public DateTime? DevEvalDate { get; set; }
-
-        [Display(Name = "研发评估工作量")]
-        public string DevWorkload { get; set; }
+       
     }
 }
