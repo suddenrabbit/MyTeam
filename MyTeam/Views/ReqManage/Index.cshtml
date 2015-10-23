@@ -143,7 +143,7 @@
                         <!--需求状态下拉选择-->
                         @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
                         <!-- 勾选不等于 -->
-                        @Html.CheckBoxFor(model => model.NotEqual, new { @class="checkbox" })
+                        @Html.CheckBoxFor(model => model.NotEqual, new { @class = "checkbox" })
                         @Html.LabelFor(model => model.NotEqual)
                     </td>
                 </tr>
@@ -155,7 +155,7 @@
                     </td>
                     <td>@Html.LabelFor(model => model.SpecialQuery, new { @class = "control-label" })</td>
                     <td>
-                        <select id="SpecialQuery" name="SpecialQuery" class="form-control">
+                        <select id="SpecialQuery" name="SpecialQuery" class="form-control" onchange="changeReqStat()">
                             <option value="0">无</option>
                             <option value="1">超过3个月未出池</option>
                             <option value="2">超过2周未入池</option>
@@ -390,4 +390,14 @@
     $(function () {
         $("#SpecialQuery").val('@Model.SpecialQuery');
     });
+
+    function changeReqStat() {
+        var s = $("#SpecialQuery").val();
+        if (s == 1) {
+            $("#ReqStat").val("入池");
+        }
+        else if (s == 2) {
+            $("#ReqStat").val("待评估");
+        }
+    }
 </script>
