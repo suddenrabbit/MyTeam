@@ -11,17 +11,7 @@
     return;
 }
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
-<script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#AcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#DevAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#DevEvalDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#OutDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#PlanRlsDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#RlsDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-    });
-</script>
+
 <script>
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
@@ -52,7 +42,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.AcptDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.AcptDate)
+                    @Html.EditorFor(model => model.AcptDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.AcptDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -116,7 +106,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.DevAcptDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.DevAcptDate)
+                    @Html.EditorFor(model => model.DevAcptDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.DevAcptDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -124,7 +114,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.DevEvalDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.DevEvalDate)
+                    @Html.EditorFor(model => model.DevEvalDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.DevEvalDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -188,7 +178,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.OutDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.OutDate)
+                    @Html.EditorFor(model => model.OutDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.OutDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -196,7 +186,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.PlanRlsDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.PlanRlsDate)
+                    @Html.EditorFor(model => model.PlanRlsDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.PlanRlsDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -204,7 +194,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.RlsDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.RlsDate)
+                    @Html.EditorFor(model => model.RlsDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.RlsDate, "", new { @class = "text-danger" })
                 </div>
             </div>

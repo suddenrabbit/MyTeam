@@ -2,7 +2,6 @@
     Layout = null;
 }
 @model MyTeam.Models.RetailSystem
-
 @if (Model == null)
 {
     <div class="alert alert-warning">无此记录</div>
@@ -11,14 +10,12 @@
     </button>
     return;
 }
-
 <script>
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
             $('form').hide()
     }
 </script>
-
 <div class="row">
     <div class="col-md-12">
         <div id="info"></div>
@@ -102,9 +99,16 @@
                 @Html.LabelFor(model => model.ReqPersonID, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.DropDownListFor(model => model.ReqPersonID, ViewBag.ReqPersonList as SelectList, new { @class = "form-control" })
-
                 </div>
             </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqEditPersonID, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.ReqEditPersonID, ViewBag.ReqEditPersonList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                     <input type="submit" value="保存" class="btn btn-primary" />
@@ -112,7 +116,6 @@
                 </div>
             </div>
         }
-
     </div>
 </div>
 <script src="/Scripts/jquery.validate.js"></script>

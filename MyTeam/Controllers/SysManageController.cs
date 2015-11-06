@@ -90,6 +90,11 @@ namespace MyTeam.Controllers
 
             ViewBag.ReqPersonList = sl;
 
+            // 用户列表
+            SelectList s2 = new SelectList(this.GetUserList(), "UID", "Realname", sys.ReqEditPersonID); // 选中当前值
+
+            ViewBag.ReqEditPersonList = s2;
+
             return View(sys);
         }
 

@@ -53,8 +53,11 @@ namespace MyTeam.Models
         public string DevPerson { get; set; }
 
         [Required]
-        [Display(Name = "维护需求受理人")]
+        [Display(Name = "需求受理人")]
         public int ReqPersonID { get; set; }
+
+        [Display(Name = "需求登记人")]
+        public int ReqEditPersonID { get; set; }
 
         [NotMapped]
         public string ReqPersonName
@@ -74,5 +77,21 @@ namespace MyTeam.Models
 
         [NotMapped]
         public string OldSysName { get; set; }
+
+        [NotMapped]
+        public string ReqEditPersonName
+        {
+            get
+            {
+                var s = (from a in Constants.UserList
+                         where a.UID == this.ReqEditPersonID
+                         select a.Realname).FirstOrDefault();
+                return s == null ? "未知" : s.ToString();
+            }
+            set
+            {
+                this.ReqEditPersonName = value;
+            }
+        } //用于显示UID对应的名字
     }
 }

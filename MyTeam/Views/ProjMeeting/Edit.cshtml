@@ -12,12 +12,6 @@
 
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#MeetingDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-    });
-</script>
-<script>
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
             $('form').hide()
@@ -94,7 +88,7 @@
                 @Html.LabelFor(model => model.MeetingDate, new { @class = "col-md-3 control-label" })
 
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.MeetingDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.MeetingDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.MeetingDate, "", new { @class = "text-danger" })
                 </div>
             </div>

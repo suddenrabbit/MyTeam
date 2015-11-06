@@ -36,7 +36,7 @@ namespace MyTeam.Utils
         /// <summary>
         /// 需求类型列表
         /// </summary>
-        public static List<string> ReqTypeList = new List<string>() { "功能改进", "新增功能", "性能优化", "适应性需求", "软件缺陷", "项目配套", "监管要求" };
+        public static List<string> ReqTypeList = new List<string>() { "功能改进", "新增功能", "性能优化", "适应性需求", "软件缺陷", "项目配套", "监管要求", "专项工作" };
 
         /// <summary>
         /// 需求状态列表
