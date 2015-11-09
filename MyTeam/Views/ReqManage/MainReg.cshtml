@@ -4,14 +4,7 @@
 }
 <h2>@ViewBag.Title。</h2>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
-<script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#AcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#DevAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#DevEvalDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-    });
-</script>
+
 <div class="row">
     <div class="col-md-10">
 
@@ -27,7 +20,7 @@
                     <td>@Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })</td>
                     <td>@Html.LabelFor(model => model.AcptDate, new { @class = "control-label" })</td>
                     <td>
-                        @Html.TextBoxFor(model => model.AcptDate, new { @class = "form-control" })
+                        @Html.EditorFor(model => model.AcptDate, "DateTime")
                         @Html.ValidationMessageFor(model => model.AcptDate, "", new { @class = "text-danger" })
                     </td>
                 </tr>

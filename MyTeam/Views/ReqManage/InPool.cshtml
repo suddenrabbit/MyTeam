@@ -6,14 +6,7 @@
 
 <h2>@ViewBag.Title。</h2>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
-<script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#AcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#DevAcptDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#DevEvalDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-    });
-</script>
+
 <div class="row">
     <div class="col-md-10">
         @using (Html.BeginForm("InPoolStep2", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
@@ -43,7 +36,7 @@
                 @Html.LabelFor(model => model.DevAcptDate, new { @class = "col-md-2 control-label" })
 
                 <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.DevAcptDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.DevAcptDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.DevAcptDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -51,7 +44,7 @@
                 @Html.LabelFor(model => model.DevEvalDate, new { @class = "col-md-2 control-label" })
 
                 <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.DevEvalDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.DevEvalDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.DevEvalDate, "", new { @class = "text-danger" })
                 </div>
             </div>

@@ -196,7 +196,7 @@ namespace MyTeam.Controllers
                     r = "<p class='alert alert-success'>入池成功！</p>";
                 }
 
-                r = "<p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
+                r += "<p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
             }
             catch (Exception e1)
             {

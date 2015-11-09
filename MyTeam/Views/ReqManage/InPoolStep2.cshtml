@@ -41,7 +41,7 @@
                             @Html.TextBoxFor(model => model[i].BusiReqNo, new { @class = "form-control text-center" , @style="margin:0 auto" })
                         </td>
                         <td>
-                            @Html.TextBoxFor(model => model[i].DevWorkload, new { @class = "form-control text-center", @style = "margin:0 auto" })
+                            @Html.TextBoxFor(model => model[i].DevWorkload, new { @class = "form-control text-center", @style = "margin:0 auto", @type="number" })
                         </td>
                     </tr>
                 }
