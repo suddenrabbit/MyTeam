@@ -89,7 +89,12 @@
                         <!--项目下拉选择-->
                         @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
                     </td>
-
+                    <td>@Html.LabelFor(model => model.PlanYear, new { @class = "control-label" })</td>
+                    <td>
+                        <input id="PlanYear" name="PlanYear"  type="number" min="2010" max="2100" class="form-control" />
+                    </td>
+                    </tr>
+                <tr>
                     <td colspan="4">
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />

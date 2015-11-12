@@ -34,6 +34,14 @@
             </div>
 
             <div class="form-group">
+                @Html.LabelFor(model => model.PlanYear, new { @class = "col-md-4 control-label" })
+                <div class="col-md-8">
+                    <input id="PlanYear" name="PlanYear" value="@Model.PlanYear" type="number" min="2010" max="2100" class="form-control" />
+
+                </div>
+            </div>
+
+            <div class="form-group">
                 @Html.LabelFor(model => model.FoundGroupDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.FoundGroupDate, "DateTime")

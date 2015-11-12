@@ -30,6 +30,10 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ProjID == query.ProjID);
                 }
+                if(!string.IsNullOrEmpty(query.PlanYear))
+                {
+                    ls = ls.Where(p => p.PlanYear == query.PlanYear);
+                }
                 var result = ls.ToList();
                 // 分页
                 query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);

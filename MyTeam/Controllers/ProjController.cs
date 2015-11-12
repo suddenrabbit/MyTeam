@@ -29,16 +29,27 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ProjID == query.ProjID);
                 }
-                if (!string.IsNullOrEmpty(query.ProAcptDate))
+                if (!string.IsNullOrEmpty(query.ProAcptDateStart))
                 {
-                    DateTime ProAcptDate = DateTime.Parse(query.ProAcptDate);
-                    ls = ls.Where(p => p.ProAcptDate == ProAcptDate);
+                    DateTime startDate = DateTime.Parse(query.ProAcptDateStart);
+                    ls = ls.Where(p => p.ProAcptDate >= startDate);
                 }
-                if (!string.IsNullOrEmpty(query.RulesPublishDate))
+                if (!string.IsNullOrEmpty(query.ProAcptDateEnd))
                 {
-                    DateTime RulesPublishDate = DateTime.Parse(query.RulesPublishDate);
-                    ls = ls.Where(p => p.RulesPublishDate == RulesPublishDate);
+                    DateTime endDate = DateTime.Parse(query.ProAcptDateEnd);
+                    ls = ls.Where(p => p.ProAcptDate <= endDate);
                 }
+                if (!string.IsNullOrEmpty(query.RulesPublishDateStart))
+                {
+                    DateTime startDate = DateTime.Parse(query.RulesPublishDateStart);
+                    ls = ls.Where(p => p.RulesPublishDate >= startDate);
+                }
+                if (!string.IsNullOrEmpty(query.RulesPublishDateEnd))
+                {
+                    DateTime endDate = DateTime.Parse(query.RulesPublishDateEnd);
+                    ls = ls.Where(p => p.RulesPublishDate <= endDate);
+                }                
+                
                 var result = ls.ToList();
                 // 若isExcel为true，导出Excel
                 if (isExcel)

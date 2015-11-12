@@ -481,12 +481,12 @@ namespace MyTeam.Controllers
         /*
          * 【4】单笔新增
          */
-        public ActionResult Create()
+        public ActionResult Create(int id = 0)
         {
             // 1、生成系统列表
             List<RetailSystem> ls1 = this.GetSysList();
 
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", id); // 选中传进来的值
 
             ViewBag.SysList = sl1;
 

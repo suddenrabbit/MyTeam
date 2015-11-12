@@ -102,6 +102,11 @@ namespace MyTeam.Models
         [DataType(DataType.Date)]
         public DateTime? ImplementPlansFinishDate { get; set; }
 
+        
+        [Display(Name = "创新计划年度")]
+        [MaxLength(4, ErrorMessage="请输入正确的年份信息（必须为4位数字）")]
+        public string PlanYear { get; set; }
+
         [NotMapped]
         public string ProjName { get; set; }
 

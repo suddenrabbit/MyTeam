@@ -110,14 +110,16 @@
                 
                 <tr>
                     <td><label class="control-label">项目调研受理日期</label></td>
-                    <td>
-                        <input id="ProAcptDate" name="ProAcptDate" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy-M-d' })" value="@Model.ProAcptDate" placeholder="点击选择日期" />
+                    <td class="form-inline">
+                        <input id="ProAcptDateStart" name="ProAcptDateStart" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy-M-d' })" value="@Model.ProAcptDateStart" placeholder="点击选择日期" />-
+                        <input id="ProAcptDateEnd" name="ProAcptDateEnd" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy-M-d' })" value="@Model.ProAcptDateEnd" placeholder="点击选择日期" />
                     </td>
                 </tr>
                 <tr>
                     <td><label class="control-label">项目章程发布日期</label></td>
-                    <td>
-                        <input id="RulesPublishDate" name="RulesPublishDate" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy-M-d' })" value="@Model.RulesPublishDate" placeholder="点击选择日期" />
+                    <td class="form-inline">
+                        <input id="RulesPublishDateStart" name="RulesPublishDateStart" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy-M-d' })" value="@Model.RulesPublishDateStart" placeholder="点击选择日期" />-
+                        <input id="RulesPublishDateEnd" name="RulesPublishDateEnd" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy-M-d' })" value="@Model.RulesPublishDateEnd" placeholder="点击选择日期" />
                     </td>
                 </tr>
                 <tr>

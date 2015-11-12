@@ -80,8 +80,10 @@
     }
 
     // 在modal中新增
-    function doCreate() {
-        var url = "/ReqManage/Create/";
+    function doCreate() {        
+        // 记录下当前页面中选中的系统
+        var sysId = $("#SysId").val();
+        var url = "/ReqManage/Create/" + sysId;
         $.ajax({
             type: 'GET',
             url: url,
