@@ -7,6 +7,7 @@
 <script>
     $(document).ready(function () {
         $("#myTab a:first").tab('show')
+        $("#myTab1 a:first").tab('show')
     });
 </script>
 <div class="jumbotron">
@@ -29,7 +30,6 @@
                                 <li><a href="#tabs3" data-toggle="tab">超两周未入池的需求</a></li>
                             </ul>
                         </li>
-                        
                     </ul>
                     <div class="tab-content" style="margin-top:20px">
                         <div id="tabs1" class="tab-pane fade in active">
@@ -76,28 +76,56 @@
         </div>
     </fieldset>
     <fieldset class="col-md-6">
-        <legend>延期项目</legend>
-        @if(Model.ProjDetails.Count < 1)
-        {
-            <p class="alert alert-success">暂无</p>
-        }
-        else
-        {
-            <table class="table table-condensed table-striped">
-                <tr><th>项目名称</th><th>延期阶段</th></tr>
-                @foreach (HomeProjDelay r in Model.ProjDetails)
-                {
-                    string s = "/Proj/index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
+        <div class="row">
+            <div class="col-md-10">
+                <form class="form-horizontal" role="form">
+                    <div id="info"></div>
+                    <ul class="nav nav-tabs" id="myTab1">
+                        <li><a href="#tabs4" data-toggle="tab">延期项目</a></li>
+                        <li><a href="#tabs5" data-toggle="tab">未完成的副下发</a></li>
+                    </ul>
+                    <div class="tab-content" style="margin-top:20px">
+                        <div id="tabs4" class="tab-pane fade in active">
+                            <div class="list-group">
+                                @if (Model.ProjDetails.Count < 1)
+                                {
+                                    <p class="alert alert-success">暂无</p>
+                                }
+                                else
+                                {
+                                    <table class="table table-condensed table-striped">
+                                        <tr><th>项目名称</th><th>延期阶段</th></tr>
+                                        @foreach (HomeProjDelay r in Model.ProjDetails)
+                                        {
+                                            string s = "/Proj/index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
 
-                    <tr>
-                        <td class="text-center"><a href=@s>@r.ProjName</a></td>
-                        <td class="text-center">@r.DelayDetail</td>
-                    </tr>
-                }
-            </table>
-        }
-        
-
+                                            <tr>
+                                                <td class="text-center"><a href=@s>@r.ProjName</a></td>
+                                                <td class="text-center">@r.DelayDetail</td>
+                                            </tr>
+                                        }
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                        <div id="tabs5" class="tab-pane fade in active">
+                            <div class="list-group">
+                                <table class="table table-condensed table-striped">
+                                    <tr><th>副下发通知编号</th></tr>
+                                    @foreach (HomeRlsDelay r in Model.RlsDelayLS)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@r.SecondRlsNo</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
     </fieldset>
     <!--
             <fieldset class="col-md-6">

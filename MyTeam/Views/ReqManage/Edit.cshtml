@@ -192,6 +192,14 @@
             </div>
 
             <div class="form-group">
+                @Html.LabelFor(model => model.RlsNo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.RlsNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.RlsNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            <div class="form-group">
                 @Html.LabelFor(model => model.RlsDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.EditorFor(model => model.RlsDate, "DateTime")
@@ -200,10 +208,18 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.RlsNo, new { @class = "col-md-3 control-label" })
+                @Html.LabelFor(model => model.SecondRlsNo, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.RlsNo, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.RlsNo, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(model => model.SecondRlsNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SecondRlsNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecondRlsDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.SecondRlsDate, "DateTime")
+                    @Html.ValidationMessageFor(model => model.SecondRlsDate, "", new { @class = "text-danger" })
                 </div>
             </div>
 

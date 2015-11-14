@@ -348,6 +348,8 @@
     <Content Include="Views\ReqManage\MainReg.cshtml" />
     <Content Include="Views\ReqManage\InPoolStep2.cshtml" />
     <Content Include="Views\ReqManage\InPoolResult.cshtml" />
+    <Content Include="Views\ProjPlan\Details.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

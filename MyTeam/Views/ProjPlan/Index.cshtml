@@ -72,6 +72,25 @@
             }
         });
     }
+
+    // 在modal中显示详情
+    function showDetail(id, name) {
+        $('#detailName').html(name);
+        var url = "/ProjPlan/Details/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#detailMain').html(msg);
+            },
+            error: function () {
+                $('#detailMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal5').modal();
+            }
+        });
+    }
 </script>
 <div class="row">
     <div class="col-md-8">
@@ -113,75 +132,81 @@
             }
             else
             {
-                <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+                <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed">
                     <tr>
-                        <th width="4"></th>
-                        <th width="16">
+                        <th width="20"></th>
+                        <th width="40">
                             @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
                         </th>
-                        <th width="8">
+                        <!--<th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].FoundGroupDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].OutlineStartDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].OutlineFinishDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqStartDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqFinishDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReviewStartDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReviewFinishDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].BusiFeasiStartDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].BusiFeasiFinishDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiStartDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiFinishDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiReviewStartDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiReviewFinishDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].SoftBudgetStartDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].SoftBudgetFinishDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ImplementPlansStartDate)
                         </th>
-                        <th width="8">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ImplementPlansFinishDate)
+                        </th>
+                            -->
+                        <th width="40">
+                            @Html.DisplayNameFor(model => model.ResultList[0].PlanYear)
                         </th>
                     </tr>
 
                     @foreach (var item in Model.ResultList)
                     {
                         <tr>
-                            <td>
+                            <td align="center">
                                 <a href="#" onclick="doEdit('@item.PlanID','@item.ProjName')">编辑</a> |
+                                <a href="#" onclick="showDetail('@item.ProjID','@item.ProjName')">详情</a> |
                                 <a href="#" onclick="doDelete('@item.PlanID','@item.ProjName 的项目计划记录')">删除</a>
                             </td>
-                            <td>
+                            <td align="center">
                                 @Html.DisplayFor(modelItem => item.ProjName)
                             </td>
+                            <!--
                             <td>
                                 @Html.DisplayFor(modelItem => item.FoundGroupDate)
                             </td>
@@ -232,6 +257,10 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ImplementPlansFinishDate)
+                            </td>
+                                -->
+                            <td align="center">
+                                @Html.DisplayFor(modelItem => item.PlanYear)
                             </td>
                         </tr>
                     }
@@ -337,4 +366,29 @@
     </div>
 </div>
 
+<!-- 对话框5：展示详情 -->
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="detailName"></span>】的项目计划表
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="detailMain"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 

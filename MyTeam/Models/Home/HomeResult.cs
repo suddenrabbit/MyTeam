@@ -20,6 +20,8 @@ namespace MyTeam.Models
         public List<HomeProjDelay> ProjDetails { get; set; }
 
         public List<HomeInpoolReqDelay> ReqInpoolDelayLS { get; set; }
+
+        public List<HomeRlsDelay> RlsDelayLS { get; set; }
     }
 
     public class HomeReqDelay
@@ -100,5 +102,11 @@ namespace MyTeam.Models
             }
             set { this.SysName = value; }
         }
+    }
+
+    public class HomeRlsDelay
+    {
+        public string SecondRlsNo { get; set; }
+
     }
 }

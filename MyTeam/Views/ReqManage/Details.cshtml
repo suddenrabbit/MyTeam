@@ -154,6 +154,13 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.RlsNo, new { @class = "col-md-3 control-label" })
+            <div class="col-md-9 form-control-static">
+                @Html.DisplayFor(model => model.RlsNo)
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.RlsDate, new { @class = "col-md-3 control-label" })
             <div class="col-md-9 form-control-static">
                 @Html.DisplayFor(model => model.RlsDate)
@@ -161,9 +168,16 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.RlsNo, new { @class = "col-md-3 control-label" })
+            @Html.LabelFor(model => model.SecondRlsNo, new { @class = "col-md-3 control-label" })
             <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.RlsNo)
+                @Html.DisplayFor(model => model.SecondRlsNo)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SecondRlsDate, new { @class = "col-md-3 control-label" })
+            <div class="col-md-9 form-control-static">
+                @Html.DisplayFor(model => model.SecondRlsDate)
             </div>
         </div>
 

@@ -52,11 +52,12 @@
     function BatRlsNo() {
         var reqs = $("#Reqs").val();
         var rlsNo = $("#RlsNo").val();
+        var secondRlsNo = $("#SecondRlsNo").val();
 
         if (check() && confirm("确定要批量更新下发通知编号吗？")) {
             var rlsNoProtect = $("#RlsNoProtect").is(":checked");
             var url = "/ReqManage/BatRlsNo";
-            var data = "reqs=" + reqs + "&rlsNo=" + rlsNo + "&rlsNoProtect=" + rlsNoProtect;
+            var data = "reqs=" + reqs + "&rlsNo=" + rlsNo + "&secondRlsNo=" + secondRlsNo + "&rlsNoProtect=" + rlsNoProtect;
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -76,12 +77,14 @@
         var reqs = $("#Reqs").val();
         var rlsNoToBatRlsDate = $("#RlsNoToBatRlsDate").val();
         var rlsDate = $("#RlsDate").val();
+        var secondRlsNoToBatRlsDate = $("#SecondRlsNoToBatRlsDate").val();
+        var secondRlsDate = $("#SecondRlsDate").val();
 
-        if (reqs.length > 0 && rlsNoToBatRlsDate.length > 0) {
+        if (reqs.length > 0 && rlsNoToBatRlsDate.length > 0 || reqs.length > 0 && secondRlsNoToBatRlsDate.length > 0) {
             $("#info").html("<p class='alert alert-danger'>维护需求编号和下发通知编号不可同时填写</p>");
             return;
         }
-        if(bothFalse = reqs.length == 0 && rlsNoToBatRlsDate.length == 0)
+        if (reqs.length == 0 && rlsNoToBatRlsDate.length == 0 && secondRlsNoToBatRlsDate.length == 0)
         {
             $("#info").html("<p class='alert alert-danger'>维护需求编号和下发通知编号不可同时为空</p>");
             return;
@@ -90,7 +93,7 @@
         if (confirm("确定要批量更新实际下发日期吗？")) {
             var rlsDateProtect = $("#RlsDateProtect").is(":checked");
             var url = "/ReqManage/BatRlsDate";
-            var data = "reqs=" + reqs + "&rlsDate=" + rlsDate + "&rlsDateProtect=" + rlsDateProtect + "&rlsNoToBatRlsDate=" + rlsNoToBatRlsDate;
+            var data = "reqs=" + reqs + "&rlsDate=" + rlsDate + "&rlsDateProtect=" + rlsDateProtect + "&rlsNoToBatRlsDate=" + rlsNoToBatRlsDate + "&secondRlsNoToBatRlsDate=" + secondRlsNoToBatRlsDate + "&secondRlsDate=" + secondRlsDate;
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -197,9 +200,15 @@
 
                 <div id="tabs2" class="tab-pane fade in active">
                     <div class="form-group">
-                        <label for="RlsNo" class="col-md-2 control-label">下发通知编号</label>
+                        <label for="RlsNo" class="col-md-2 control-label">主下发通知编号</label>
                         <div class="col-md-10">
                             <input id="RlsNo" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="SecondRlsNo" class="col-md-2 control-label">副下发通知编号</label>
+                        <div class="col-md-10">
+                            <input id="SecondRlsNo" type="text" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -212,16 +221,29 @@
 
                 <div id="tabs3" class="tab-pane fade in active">
                     <div class="form-group">
-                        <label for="RlsNoToBatRlsDate" class="col-md-2 control-label">下发通知编号</label>
+                        <label for="RlsNoToBatRlsDate" class="col-md-2 control-label">主下发通知编号</label>
                         <div class="col-md-10">
                             <input id="RlsNoToBatRlsDate" type="text" class="form-control" />
                             <div class="text-info">(可以按照下发通知编号更新，维护需求编号请留空)</div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="RlsDate" class="col-md-2 control-label">实际下发日期</label>
+                        <label for="RlsDate" class="col-md-2 control-label">主实际下发日期</label>
                         <div class="col-md-10">
                             <input id="RlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy-M-d' })" placeholder="点击选择日期" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="SecondRlsNoToBatRlsDate" class="col-md-2 control-label">副下发通知编号</label>
+                        <div class="col-md-10">
+                            <input id="SecondRlsNoToBatRlsDate" type="text" class="form-control" />
+                            <div class="text-info">(可以按照下发通知编号更新，维护需求编号请留空)</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="SecondRlsDate" class="col-md-2 control-label">副实际下发日期</label>
+                        <div class="col-md-10">
+                            <input id="SecondRlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy-M-d' })" placeholder="点击选择日期" />
                         </div>
                     </div>
                     <div class="form-group">

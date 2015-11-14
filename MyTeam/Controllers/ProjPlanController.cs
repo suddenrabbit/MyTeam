@@ -60,6 +60,20 @@ namespace MyTeam.Controllers
             return View(query);
         }
 
+
+        // GET: /Proj/Details/5
+
+        public ActionResult Details(int id)
+        {
+            ProjPlan projPlan = dbContext.ProjPlans.ToList().Find(a => a.ProjID == id);
+         
+            if (projPlan == null)
+            {
+                return View();
+            }
+            return View(projPlan);
+        }
+
         //
         // GET: /ProjPlan/Create
 

@@ -101,13 +101,20 @@ namespace MyTeam.Models
         [DataType(DataType.Date)]
         public DateTime? PlanRlsDate { get; set; }
 
-        [Display(Name = "实际下发日期")]
+        [Display(Name = "主实际下发日期")]
         [DataType(DataType.Date)]
         public DateTime? RlsDate { get; set; }
 
-        [Display(Name = "下发通知编号")]
+        [Display(Name = "主下发通知编号")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string RlsNo { get; set; }
+
+        [Display(Name = "副下发通知编号")]
+        public string SecondRlsNo { get; set; }
+
+        [Display(Name = "副实际下发日期")]
+        [DataType(DataType.Date)]
+        public DateTime? SecondRlsDate { get; set; }
 
         [Display(Name = "是否有关联系统")]
         public bool IsSysAsso { get; set; }

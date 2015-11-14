@@ -150,6 +150,10 @@ namespace MyTeam.Controllers
             }
             hr.ProjDetails = delays;
             
+            // 罗列维护需求下发时，主下发已更新实际下发时间，副下发没有更新的记录
+            hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeRlsDelay>("select distinct t.SecondRlsNo from Reqs t where t.SecondRlsNo is not null and t.RlsDate is not null and t.SecondRlsDate  is null").ToList();
+
+
             return View(hr);
         }
 

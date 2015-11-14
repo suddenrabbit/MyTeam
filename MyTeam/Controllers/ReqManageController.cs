@@ -373,14 +373,14 @@ namespace MyTeam.Controllers
 
         // Ajax调用，批量更新下发编号       
         [HttpPost]
-        public string BatRlsNo(string reqs, string rlsNo, string rlsNoProtect)
+        public string BatRlsNo(string reqs, string rlsNo, string secondRlsNo, string rlsNoProtect)
         {
             try
             {
                 // 拼出sql中的in条件
                 string whereIn = this.GetWhereIn(reqs);
 
-                string sql = string.Format("update Reqs set RlsNo='{0}' where ReqDetailNo in ({1})", rlsNo, whereIn);
+                string sql = string.Format("update Reqs set RlsNo='{0}',SecondRlsNo='{1}' where ReqDetailNo in ({2})", rlsNo, secondRlsNo, whereIn);
                 if (rlsNoProtect == "true")
                 {
                     sql += " and ReqStat = N'出池'";
@@ -399,7 +399,7 @@ namespace MyTeam.Controllers
 
         // Ajax调用，批量更新实际下发日期       
         [HttpPost]
-        public string BatRlsDate(string reqs, string rlsDate, string rlsDateProtect, string rlsNoToBatRlsDate)
+        public string BatRlsDate(string reqs, string rlsDate, string rlsDateProtect, string rlsNoToBatRlsDate, string secondRlsNoToBatRlsDate, string secondRlsDate)
         {
             try
             {
@@ -409,13 +409,36 @@ namespace MyTeam.Controllers
                 {
                     // 拼出sql中的in条件
                     string whereIn = this.GetWhereIn(reqs);
-                    sql = string.Format("update Reqs set RlsDate='{0}' where ReqDetailNo in ({1})", rlsDate, whereIn);
+                    if (!string.IsNullOrEmpty(rlsDate) && string.IsNullOrEmpty(secondRlsDate))
+                    {
+                        sql = string.Format("update Reqs set RlsDate='{0}' where ReqDetailNo in ({1})", rlsDate, whereIn);
+                    }
+                    if (!string.IsNullOrEmpty(secondRlsDate) && string.IsNullOrEmpty(rlsDate))
+                    {
+                        sql = string.Format("update Reqs set SecondRlsDate='{0}' where ReqDetailNo in ({1})", secondRlsDate, whereIn);
+                    }
+                    if (!string.IsNullOrEmpty(rlsDate) && !string.IsNullOrEmpty(secondRlsDate))
+                    {
+                        sql = string.Format("update Reqs set RlsDate='{0}',SecondRlsDate='{1}' where ReqDetailNo in ({2})", rlsDate, secondRlsDate, whereIn);
+                    }
                 }
-
-                // 若是下发通知编号不为空，则按下发通知编号更新
-                if (!string.IsNullOrEmpty(rlsNoToBatRlsDate))
+                else
                 {
-                    sql = string.Format("update Reqs set RlsDate='{0}' where RlsNo = ('{1}')", rlsDate, rlsNoToBatRlsDate);
+                    // 主下发编号不为空、副下发为空
+                    if (!string.IsNullOrEmpty(rlsNoToBatRlsDate) && string.IsNullOrEmpty(secondRlsNoToBatRlsDate))
+                    {
+                        sql = string.Format("update Reqs set RlsDate='{0}' where RlsNo = ('{1}')", rlsDate, rlsNoToBatRlsDate);
+                    }
+                    // 副下发编号不为空、主下发为空
+                    if (string.IsNullOrEmpty(rlsNoToBatRlsDate) && !string.IsNullOrEmpty(secondRlsNoToBatRlsDate))
+                    {
+                        sql = string.Format("update Reqs set SecondRlsDate='{0}' where SecondRlsNo = ('{1}')", secondRlsDate, secondRlsNoToBatRlsDate);
+                    }
+                    // 主下发和副下发编号都不为空
+                    if (!string.IsNullOrEmpty(rlsNoToBatRlsDate))
+                    {
+                        sql = string.Format("update Reqs set RlsDate='{0}',secondRlsDate='{1}' where RlsNo = ('{2}')", rlsDate, secondRlsDate, rlsNoToBatRlsDate);
+                    }
                 }
 
                 if (rlsDateProtect == "true")
