@@ -86,7 +86,7 @@ namespace MyTeam.Controllers
                 {
                     SysId = mainRegReq.SysId,
                     AcptDate = mainRegReq.AcptDate,
-                    ReqNo = mainRegReq.ReqNo,
+                    ReqNo = mainRegReq.ReqNo.Trim(), // 去空格
                     ReqReason = mainRegReq.ReqReason,
                     ReqFromDept = mainRegReq.ReqFromDept,
                     ReqFromPerson = mainRegReq.ReqFromPerson,
@@ -116,7 +116,7 @@ namespace MyTeam.Controllers
                 {   
                     // 状态默认「待评估」
                     req.ReqStat = "待评估";
-                    dbContext.Reqs.Add(req);
+                    dbContext.Reqs.Add(req); 
                 }
                 dbContext.SaveChanges();              
 
@@ -166,37 +166,21 @@ namespace MyTeam.Controllers
         {
             List<Req> ls = dbContext.Reqs.ToList();
             string r = "";
-            int skipNum = 0;
-            string repeatReqDetailNo = "";
-
+          
             try
             {
                 // 入库
                 foreach (Req req in reqList)
                 {
-                    if (!string.IsNullOrEmpty(req.ReqDetailNo) && ls.Find(a => a.ReqDetailNo == req.ReqDetailNo) != null)
-                    {
-                        skipNum++;
-                        repeatReqDetailNo = repeatReqDetailNo + req.ReqDetailNo + " ";
-                        continue;
-                    }
+                    
                     // 状态默认为「入池」
                     req.ReqStat = "入池";
                     // 直接执行sql更新
                     string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6 where RID=@p7";
-                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo, req.BusiReqNo, req.DevWorkload, "入池", req.RID);
+                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo.Trim(), req.BusiReqNo, req.DevWorkload, "入池", req.RID);
                 }
-
-                if (skipNum > 0)
-                {
-                    r = string.Format("<p class='alert alert-warning'>有{0}条因维护需求编号重复未能入池：{1}</p>", skipNum, repeatReqDetailNo);
-                }
-                else
-                {
-                    r = "<p class='alert alert-success'>入池成功！</p>";
-                }
-
-                r += "<p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
+                               
+               r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
             }
             catch (Exception e1)
             {
@@ -237,20 +221,17 @@ namespace MyTeam.Controllers
                 }
                 if (!string.IsNullOrEmpty(query.ReqNo))
                 {
-                    ls = ls.Where(p => p.ReqNo == query.ReqNo);
+                    ls = ls.Where(p => p.ReqNo == query.ReqNo.Trim());
                 }
                 if (!string.IsNullOrEmpty(query.ReqDetailNo))
                 {
-                    ls = ls.Where(p => p.ReqDetailNo == query.ReqDetailNo);
+                    ls = ls.Where(p => p.ReqDetailNo == query.ReqDetailNo.Trim());
                 }
                 if (!string.IsNullOrEmpty(query.Version))
                 {
                     ls = ls.Where(p => p.Version == query.Version);
                 }
-                if (!string.IsNullOrEmpty(query.Version))
-                {
-                    ls = ls.Where(p => p.Version == query.Version);
-                }
+               
                 if (query.ReqStat != "全部") 
                 {
                     // 分『等于』和『不等于』2种情况
@@ -380,7 +361,7 @@ namespace MyTeam.Controllers
                 // 拼出sql中的in条件
                 string whereIn = this.GetWhereIn(reqs);
 
-                string sql = string.Format("update Reqs set RlsNo='{0}',SecondRlsNo='{1}' where ReqDetailNo in ({2})", rlsNo, secondRlsNo, whereIn);
+                string sql = string.Format("update Reqs set RlsNo='{0}',SecondRlsNo='{1}' where ReqDetailNo in ({2})", rlsNo.Trim(), secondRlsNo.Trim(), whereIn);
                 if (rlsNoProtect == "true")
                 {
                     sql += " and ReqStat = N'出池'";
@@ -409,6 +390,7 @@ namespace MyTeam.Controllers
                 {
                     // 拼出sql中的in条件
                     string whereIn = this.GetWhereIn(reqs);
+                    // 为空的不更新
                     if (!string.IsNullOrEmpty(rlsDate) && string.IsNullOrEmpty(secondRlsDate))
                     {
                         sql = string.Format("update Reqs set RlsDate='{0}' where ReqDetailNo in ({1})", rlsDate, whereIn);
@@ -555,6 +537,10 @@ namespace MyTeam.Controllers
                         return "<p class='alert alert-danger'>出错了: 维护需求编号" + req.ReqDetailNo + "已存在，不允许重复添加！" + "</p>";
                     }
                 }
+
+                // 去除空格：
+                req.ReqNo = req.ReqNo.Trim();
+                req.ReqDetailNo = req.ReqDetailNo.Trim();
 
                 dbContext.Reqs.Add(req);
                 dbContext.SaveChanges();

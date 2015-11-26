@@ -17,7 +17,7 @@ namespace MyTeam.Controllers
         {
             // 首页显示 未出池的需求，未完成的项目
             User user = this.GetSessionCurrentUser();
-            if(user == null)
+            if (user == null)
             {
                 return RedirectToAction("Login", "User", new { ReturnUrl = "/Home/Index" });
             }
@@ -29,7 +29,7 @@ namespace MyTeam.Controllers
 
             HomeResult hr = new HomeResult();
 
-            if(user.IsAdmin)
+            if (user.IsAdmin)
             {
                 hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum from Reqs t where t.ReqStat = N'入池' group by t.SysId").ToList();
                 //hr.Works = dbContext.WeekReportDetails.Where(a => a.WorkStat != "完成").ToList();
@@ -38,7 +38,7 @@ namespace MyTeam.Controllers
             {
                 hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum from Reqs t where t.ReqStat = N'入池' and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
                 //hr.Works = dbContext.WeekReportDetails.Where(a => a.WorkStat != "完成" && a.Person.Contains(user.Realname)).ToList();
-            }           
+            }
 
             // 判断入池已超过三个月，但是没有出池的需求记录
             if (user.IsAdmin)
@@ -48,8 +48,8 @@ namespace MyTeam.Controllers
             else
             {
                 hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
-            }   
-            
+            }
+
             // 判断超过两周还没入池的记录（状态为「待评估」）
             if (user.IsAdmin)
             {
@@ -58,7 +58,7 @@ namespace MyTeam.Controllers
             else
             {
                 hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeInpoolReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
-            } 
+            }
 
 
             // 筛选出各个阶段延期的项目
@@ -67,7 +67,8 @@ namespace MyTeam.Controllers
             List<Proj> projs = dbContext.Projs.ToList();
             List<HomeProjDelay> delays = new List<HomeProjDelay>();
 
-            foreach(ProjPlan plan in plans){
+            foreach (ProjPlan plan in plans)
+            {
                 Proj p = new Proj();
                 if (user.IsAdmin)
                 {
@@ -78,11 +79,12 @@ namespace MyTeam.Controllers
                 {
                     p = projs.Find(a => a.ProjID == plan.ProjID && a.ReqAnalysisID == user.UID);
                 }
-                
+
                 // 如果筛选出项目在项目计划列表中，那么判断时间是否延期
-                if(p != null){
+                if (p != null)
+                {
                     // 判断各个阶段的时间是否延期
-                   if (p.OutlineEndDate == null && plan.OutlineFinishDate <= DateTime.Now)
+                    if (p.OutlineEndDate == null && plan.OutlineFinishDate <= DateTime.Now)
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
@@ -90,7 +92,7 @@ namespace MyTeam.Controllers
                         delays.Add(projDelay);
                         continue;
                     }
-                   else if (p.ReviewAcptDate == null && plan.ReviewStartDate <= DateTime.Now)
+                    else if (p.ReviewAcptDate == null && plan.ReviewStartDate <= DateTime.Now)
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
@@ -105,7 +107,7 @@ namespace MyTeam.Controllers
                         projDelay.DelayDetail = "业需结束评审";
                         delays.Add(projDelay);
                         continue;
-                    }                   
+                    }
                     else if (p.TechFeasiReviewFinishDate == null && plan.TechFeasiReviewFinishDate <= DateTime.Now)
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
@@ -149,10 +151,14 @@ namespace MyTeam.Controllers
                 }
             }
             hr.ProjDetails = delays;
-            
-            // 罗列维护需求下发时，主下发已更新实际下发时间，副下发没有更新的记录
-            hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeRlsDelay>("select distinct t.SecondRlsNo from Reqs t where t.SecondRlsNo is not null and t.RlsDate is not null and t.SecondRlsDate  is null").ToList();
 
+            // 列出超过一个月以上未填入下发日期
+            string sql = "select distinct t.RlsNo, t.SecondRlsNo, t.OutDate from Reqs t where ((t.RlsNo is not null and t.RlsDate is null ) or (t.SecondRlsNo is not null and t.SecondRlsDate is null)) and t.OutDate < (select dateadd(d,-day(getdate())+1,getdate())) and t.ReqStat=N'出池'";
+            if (!IsAdminNow())
+            {
+                sql += " and t.ReqAcptPerson = " + user.UID;
+            }
+            hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeRlsDelay>(sql).ToList();
 
             return View(hr);
         }

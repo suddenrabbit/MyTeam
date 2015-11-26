@@ -14,14 +14,16 @@
 
             <table class="table table-condensed table-bordered">
                 <tr>
-                    <th>
+                    <th width="40%">
                         @Html.DisplayNameFor(model => model[0].ReqDetailNo)
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model[0].BusiReqNo)
-                    </th>
-                    <th>
+                   
+                    <th width="20%">
                         @Html.DisplayNameFor(model => model[0].DevWorkload)
+                    </th>
+
+                    <th width="40%">
+                        @Html.DisplayNameFor(model => model[0].BusiReqNo)
                     </th>
                 </tr>
 
@@ -37,11 +39,13 @@
                         <td>
                             @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control text-center" , @style="margin:0 auto"})
                         </td>
-                        <td>
-                            @Html.TextBoxFor(model => model[i].BusiReqNo, new { @class = "form-control text-center" , @style="margin:0 auto" })
-                        </td>
+                       
                         <td>
                             @Html.TextBoxFor(model => model[i].DevWorkload, new { @class = "form-control text-center", @style = "margin:0 auto", @type="number" })
+                        </td>
+
+                        <td>
+                            @Html.TextBoxFor(model => model[i].BusiReqNo, new { @class = "form-control text-center", @style = "margin:0 auto" })
                         </td>
                     </tr>
                 }

@@ -47,7 +47,7 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="EPPlus">
-      <HintPath>..\packages\EPPlus\EPPlus.dll</HintPath>
+      <HintPath>D:\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PagedList">
@@ -240,6 +240,7 @@
     <Content Include="Content\templates\VerReportT.xlsx" />
     <Content Include="Content\templates\ReqTrackImportT.xlsx" />
     <Content Include="Content\templates\ProjPlanImportT.xlsx" />
+    <None Include="Properties\PublishProfiles\MZ.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

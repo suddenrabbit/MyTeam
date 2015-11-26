@@ -80,7 +80,7 @@
         var secondRlsNoToBatRlsDate = $("#SecondRlsNoToBatRlsDate").val();
         var secondRlsDate = $("#SecondRlsDate").val();
 
-        if (reqs.length > 0 && rlsNoToBatRlsDate.length > 0 || reqs.length > 0 && secondRlsNoToBatRlsDate.length > 0) {
+        if ((reqs.length > 0 && rlsNoToBatRlsDate.length > 0) || (reqs.length > 0 && secondRlsNoToBatRlsDate.length > 0)) {
             $("#info").html("<p class='alert alert-danger'>维护需求编号和下发通知编号不可同时填写</p>");
             return;
         }

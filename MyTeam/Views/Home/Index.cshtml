@@ -82,7 +82,7 @@
                     <div id="info"></div>
                     <ul class="nav nav-tabs" id="myTab1">
                         <li><a href="#tabs4" data-toggle="tab">延期项目</a></li>
-                        <li><a href="#tabs5" data-toggle="tab">未完成的副下发</a></li>
+                        <li><a href="#tabs5" data-toggle="tab">超时未完成的下发</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top:20px">
                         <div id="tabs4" class="tab-pane fade in active">
@@ -110,58 +110,34 @@
                         </div>
                         <div id="tabs5" class="tab-pane fade in active">
                             <div class="list-group">
-                                <table class="table table-condensed table-striped">
-                                    <tr><th>副下发通知编号</th></tr>
-                                    @foreach (HomeRlsDelay r in Model.RlsDelayLS)
-                                    {
+                                @if (Model.RlsDelayLS.Count < 1)
+                                {
+                                    <p class="alert alert-success">暂无</p>
+                                }
+                                else
+                                {
+                                    <table class="table table-condensed table-striped">
                                         <tr>
-                                            <td class="text-center">@r.SecondRlsNo</td>
+                                            <th>主下发通知编号</th>
+                                            <th>副下发通知编号</th>
+                                            <th>出池日期</th>
                                         </tr>
-                                    }
-                                </table>
+                                        @foreach (HomeRlsDelay r in Model.RlsDelayLS)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@r.RlsNo</td>
+                                                <td class="text-center">@r.SecondRlsNo</td>
+                                                <td class="text-center">@r.OutDate.Value.ToString("yyyy-M-d")  </td>
+                                            </tr>
+                                        }
+                                    </table>
+                                }
                             </div>
                         </div>
-                        
+
                     </div>
                 </form>
             </div>
         </div>
-    </fieldset>
-    <!--
-            <fieldset class="col-md-6">
-            <legend>常用功能：</legend>
-            <div class="list-group">
-                <a class="list-group-item" href="/ReqManage/MainInPool">批量入池</a>
-                <a class="list-group-item" href="/ReqManage">维护需求管理</a>
-                <a class="list-group-item" href="/WeekReport/MainIndex">填写周报</a>
-                <a class="list-group-item" href="/WeekReport/Export">导出周报</a>
-            </div>
-        </fieldset>
-    -->
+    </fieldset>   
 </div>
-<!--用modal展示项目详情
-<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close"
-                        data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title" id="myModalLabel">
-                    【<span id="detailName"></span>】的详情
-                </h4>
-            </div>
-            <div class="modal-body">
-                <div id="detailMain"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">
-                    确定
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-    -->

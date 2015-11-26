@@ -106,7 +106,8 @@ namespace MyTeam.Models
 
     public class HomeRlsDelay
     {
+        public string RlsNo { get; set; }
         public string SecondRlsNo { get; set; }
-
+        public DateTime? OutDate { get; set; }
     }
 }
