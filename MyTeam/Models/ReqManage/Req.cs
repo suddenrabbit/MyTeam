@@ -194,5 +194,22 @@ namespace MyTeam.Models
             }
         }
 
+        [NotMapped]
+        [Display(Name = "下发通知编号")]
+        public string AnyRlsNo //下发通知编号，若存在副下发，两个都输出
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(this.SecondRlsNo))
+                    return this.RlsNo + "（主）、" + this.SecondRlsNo + "（副）";
+                else
+                    return this.RlsNo;
+            }
+            set
+            {
+                this.AnyRlsNo = value;
+            }
+        }
+
     }
 }

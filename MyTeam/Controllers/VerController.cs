@@ -34,6 +34,10 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.VerYear == query.VerYear);
                 }
+
+                // 按照发布时间排序
+                ls = ls.OrderBy(p => p.PublishTime);
+
                 var result = ls.ToList();
                 // 若isExcel为true，导出Excel
                 if (isExcel)
@@ -58,14 +62,7 @@ namespace MyTeam.Controllers
             // 项目列表
             List<RetailSystem> sysLs = dbContext.RetailSystems.ToList();
             sysLs.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            ViewBag.sysList = new SelectList(sysLs, "SysID", "SysName");
-
-            List<Ver> vLs = dbContext.Vers.ToList();
-            foreach (Ver v in vLs)
-            {
-                RetailSystem r = sysLs.Find(a => a.SysID == v.SysId);
-                v.SysName = r == null ? "未知" : r.SysName;
-            }
+            ViewBag.sysList = new SelectList(sysLs, "SysID", "SysName");           
 
             return View(query);
         }

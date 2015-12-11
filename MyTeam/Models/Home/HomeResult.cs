@@ -108,6 +108,6 @@ namespace MyTeam.Models
     {
         public string RlsNo { get; set; }
         public string SecondRlsNo { get; set; }
-        public DateTime? OutDate { get; set; }
+        public DateTime? PlanRlsDate { get; set; }
     }
 }

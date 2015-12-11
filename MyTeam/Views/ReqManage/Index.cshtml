@@ -135,10 +135,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>@Html.LabelFor(model => model.Version, new { @class = "control-label" })</td>
+                    <td>@Html.LabelFor(model => model.AnyRlsNo, new { @class = "control-label" })</td>
                     <td>
-                        @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.Version, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(model => model.AnyRlsNo, new { @class = "form-control" , @placeholder="主副下发编号均可，只能填一个"})
+                        @Html.ValidationMessageFor(model => model.AnyRlsNo, "", new { @class = "text-danger" })
                     </td>
                     <td>@Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })</td>
                     <td class="form-inline">
@@ -185,21 +185,21 @@
             {
                 <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
                     <tr>
-                        <th width="7"></th>
+                        <th width="2"></th>
                         <th width="13">
                             @Html.DisplayNameFor(model => model.ResultList[0].SysId)
                         </th>
-                        <th width="5">
+                        <th width="3">
                             @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
                         </th>
-                        <th width="7">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
                         </th>
-                        <th width="7">
+                        <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
                         </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].Version)
+                        <th width="18">
+                            @Html.DisplayNameFor(model => model.ResultList[0].AnyRlsNo)
                         </th>
                         <th width="15">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
@@ -207,7 +207,7 @@
                         <th width="23">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
                         </th>
-                        <th width="4">
+                        <th width="2">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
                         </th>
                         <th width="7">
@@ -221,10 +221,10 @@
                     {
                         var trid = "resultTR" + item.RID;
                         <tr id="@trid">
-                            <td>
-                                <a href="#" onclick="doEdit('@item.RID','@item.SysName')">编辑</a> |
-                                <a href="#" onclick="showDetail('@item.RID','@item.SysName 的维护需求')">详情</a> |
-                                <a href="#" onclick="doDelete('@item.RID','@item.SysName 的维护需求')">删除</a>
+                            <td style="font-size:1.5em; text-align:center">
+                                <span class="glyphicon glyphicon-edit text-warning" style="cursor:pointer" aria-hidden="true" onclick="doEdit('@item.RID','@item.SysName')" title="编辑"></span>&nbsp;
+                                <span class="glyphicon glyphicon-info-sign text-info" style="cursor:pointer" aria-hidden="true" onclick="showDetail('@item.RID','@item.SysName 的维护需求')" title="详情"></span>&nbsp;
+                                <span class="glyphicon glyphicon-remove text-danger" style="cursor:pointer" aria-hidden="true" onclick="doDelete('@item.RID','@item.SysName 的维护需求')" title="删除"></span>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.SysName)
@@ -239,7 +239,7 @@
                                 @Html.DisplayFor(modelItem => item.ReqDetailNo)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Version)
+                                @Html.DisplayFor(modelItem => item.AnyRlsNo)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ShortReqReason)

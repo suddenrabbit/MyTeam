@@ -91,7 +91,7 @@ namespace MyTeam.Utils
         /// <summary>
         /// 分页的每页记录数
         /// </summary>
-        public const int PAGE_SIZE = 10;
+        public const int PAGE_SIZE = 20;
 
         public static List<string> BusiReqStat = new List<string>() { "一期原始需求", "二期原始需求", "三期原始需求", "新增维护需求", "需求已作废", "文档更新增补" };
 

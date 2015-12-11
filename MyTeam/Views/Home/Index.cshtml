@@ -20,14 +20,14 @@
                 <form class="form-horizontal" role="form">
                     <div id="info"></div>
                     <ul class="nav nav-tabs" id="myTab">
-                        <li><a href="#tabs1" data-toggle="tab">全部未出池的需求</a></li>
+                        <li><a href="#tabs1" data-toggle="tab">全部未出池的需求(@ViewBag.ReqLsSum)</a></li>
                         <li role="presentation" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                超过时限的需求 <span class="caret"></span>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >
+                                <span id="mytitle">超过时限的需求</span> <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#tabs2" data-toggle="tab">超三个月未出池的需求</a></li>
-                                <li><a href="#tabs3" data-toggle="tab">超两周未入池的需求</a></li>
+                                <li><a href="#tabs2" data-toggle="tab" onclick="$('#mytitle').text('超三个月未出池的需求(@ViewBag.ReqDelayLsSum)')">超三个月未出池的需求(@ViewBag.ReqDelayLsSum)</a></li>
+                                <li><a href="#tabs3" data-toggle="tab" onclick="$('#mytitle').text('超两周未入池的需求(@ViewBag.ReqInpoolDelayLsSum)')">超两周未入池的需求(@ViewBag.ReqInpoolDelayLsSum)</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -45,7 +45,6 @@
                             </div>
                         </div>
                         <div id="tabs2" class="tab-pane fade in active">
-                            <p class="alert alert-info">超三个月未出池的需求</p>
                             <div class="list-group">
                                 @foreach (HomeReqDelay r in Model.ReqDelayLS)
                                 {
@@ -58,7 +57,6 @@
                             </div>
                         </div>
                         <div id="tabs3" class="tab-pane fade in active">
-                            <p class="alert alert-info">超两周未入池的需求</p>
                             <div class="list-group">
                                 @foreach (HomeInpoolReqDelay r in Model.ReqInpoolDelayLS)
                                 {
@@ -81,8 +79,8 @@
                 <form class="form-horizontal" role="form">
                     <div id="info"></div>
                     <ul class="nav nav-tabs" id="myTab1">
-                        <li><a href="#tabs4" data-toggle="tab">延期项目</a></li>
-                        <li><a href="#tabs5" data-toggle="tab">超时未完成的下发</a></li>
+                        <li><a href="#tabs4" data-toggle="tab">延期项目(@Model.ProjDetails.Count)</a></li>
+                        <li><a href="#tabs5" data-toggle="tab">超时未完成的下发(@Model.RlsDelayLS.Count)</a></li>
                     </ul>
                     <div class="tab-content" style="margin-top:20px">
                         <div id="tabs4" class="tab-pane fade in active">
@@ -120,14 +118,16 @@
                                         <tr>
                                             <th>主下发通知编号</th>
                                             <th>副下发通知编号</th>
-                                            <th>出池日期</th>
+                                            <th>计划下发日期</th>
                                         </tr>
                                         @foreach (HomeRlsDelay r in Model.RlsDelayLS)
                                         {
+                                            string s = "/ReqManage/Index?IsQuery=True&SysId=0&ReqStat=出池&AnyRlsNo=" + r.RlsNo;
+
                                             <tr>
-                                                <td class="text-center">@r.RlsNo</td>
+                                                <td class="text-center"><a href=@s>@r.RlsNo</a></td>
                                                 <td class="text-center">@r.SecondRlsNo</td>
-                                                <td class="text-center">@r.OutDate.Value.ToString("yyyy-M-d")  </td>
+                                                <td class="text-center">@r.PlanRlsDate.Value.ToString("yyyy-M-d")  </td>
                                             </tr>
                                         }
                                     </table>

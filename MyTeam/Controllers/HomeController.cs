@@ -32,13 +32,22 @@ namespace MyTeam.Controllers
             if (user.IsAdmin)
             {
                 hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum from Reqs t where t.ReqStat = N'入池' group by t.SysId").ToList();
-                //hr.Works = dbContext.WeekReportDetails.Where(a => a.WorkStat != "完成").ToList();
             }
             else
             {
                 hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum from Reqs t where t.ReqStat = N'入池' and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
-                //hr.Works = dbContext.WeekReportDetails.Where(a => a.WorkStat != "完成" && a.Person.Contains(user.Realname)).ToList();
             }
+
+            // 统计计算未出池的需求总数
+            int reqLsSum = 0;
+            foreach(HomeReq q in hr.ReqLs)
+            {
+                reqLsSum += q.ReqNum;
+            }
+
+            ViewBag.ReqLsSum = reqLsSum;
+
+            //////////////////////////////////////////////////////////////////////
 
             // 判断入池已超过三个月，但是没有出池的需求记录
             if (user.IsAdmin)
@@ -50,6 +59,17 @@ namespace MyTeam.Controllers
                 hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
             }
 
+            // 统计计算三个月未出池的需求总数
+            int reqDelayLsSum = 0;
+            foreach (HomeReqDelay q in hr.ReqDelayLS)
+            {
+                reqDelayLsSum += q.ReqDelayNum;
+            }
+
+            ViewBag.ReqDelayLsSum = reqDelayLsSum;
+
+            //////////////////////////////////////////////////////////////////////
+
             // 判断超过两周还没入池的记录（状态为「待评估」）
             if (user.IsAdmin)
             {
@@ -60,6 +80,16 @@ namespace MyTeam.Controllers
                 hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeInpoolReqDelay>("select t.SysId, count(1) as ReqDelayNum from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) and t.SysId in (select ss.SysId from RetailSystems ss where ss.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
             }
 
+            // 统计计算超过凉州未入池的需求总数
+            int reqInpoolDelayLsSum = 0;
+            foreach (HomeInpoolReqDelay q in hr.ReqInpoolDelayLS)
+            {
+                reqInpoolDelayLsSum += q.ReqDelayNum;
+            }
+
+            ViewBag.ReqInpoolDelayLsSum = reqInpoolDelayLsSum;
+
+            //////////////////////////////////////////////////////////////////////
 
             // 筛选出各个阶段延期的项目
             // 首先获得所有有时间计划的项目列表，对没有时间计划的项目将不统计其延期的情况
@@ -152,8 +182,10 @@ namespace MyTeam.Controllers
             }
             hr.ProjDetails = delays;
 
-            // 列出超过一个月以上未填入下发日期
-            string sql = "select distinct t.RlsNo, t.SecondRlsNo, t.OutDate from Reqs t where ((t.RlsNo is not null and t.RlsDate is null ) or (t.SecondRlsNo is not null and t.SecondRlsDate is null)) and t.OutDate < (select dateadd(d,-day(getdate())+1,getdate())) and t.ReqStat=N'出池'";
+            //////////////////////////////////////////////////////////////////////
+
+            // 列出超过计划下发日期仍未下发的
+            string sql = "select distinct t.RlsNo, t.SecondRlsNo, t.PlanRlsDate from Reqs t where ((t.RlsNo is not null and t.RlsDate is null ) or (t.SecondRlsNo is not null and t.SecondRlsDate is null)) and t.PlanRlsDate < getdate() and t.ReqStat=N'出池'";
             if (!IsAdminNow())
             {
                 sql += " and t.ReqAcptPerson = " + user.UID;

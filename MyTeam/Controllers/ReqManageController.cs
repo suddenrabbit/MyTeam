@@ -176,8 +176,8 @@ namespace MyTeam.Controllers
                     // 状态默认为「入池」
                     req.ReqStat = "入池";
                     // 直接执行sql更新
-                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6 where RID=@p7";
-                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo.Trim(), req.BusiReqNo, req.DevWorkload, "入池", req.RID);
+                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7 where RID=@p8";
+                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo.Trim(), req.BusiReqNo, req.DevWorkload, "入池", req.ReqDesc, req.RID);
                 }
                                
                r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
@@ -227,9 +227,9 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ReqDetailNo == query.ReqDetailNo.Trim());
                 }
-                if (!string.IsNullOrEmpty(query.Version))
+                if (!string.IsNullOrEmpty(query.AnyRlsNo))
                 {
-                    ls = ls.Where(p => p.Version == query.Version);
+                    ls = ls.Where(p => p.RlsNo == query.AnyRlsNo || p.SecondRlsNo == query.AnyRlsNo);
                 }
                
                 if (query.ReqStat != "全部") 

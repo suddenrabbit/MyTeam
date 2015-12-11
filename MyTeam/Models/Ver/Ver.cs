@@ -57,7 +57,18 @@ namespace MyTeam.Models
         public string Remark { get; set; }
 
         [NotMapped]
-        public string SysName { get; set; }
+        public string SysName
+        {
+            get
+            {
+                var r = (from a in Constants.SysList
+                         where a.SysID == this.SysId
+                         select a.SysName).FirstOrDefault();
+
+                return r == null ? "未知" : r.ToString();
+            }
+            set { this.SysName = value; }
+        }
  
         [NotMapped]
         public string DraftPersonName
