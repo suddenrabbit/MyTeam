@@ -30,6 +30,8 @@ namespace MyTeam.Models
 
         public int ReqDelayNum { get; set; }
 
+        public int ReqAcptPerson { get; set; }
+
         public string SysName
         {
             get
@@ -49,6 +51,8 @@ namespace MyTeam.Models
         public int SysId { get; set; }
 
         public int ReqNum { get; set; }
+
+        public int ReqAcptPerson { get; set; }
 
         public string SysName
         {
@@ -89,6 +93,8 @@ namespace MyTeam.Models
         public int SysId { get; set; }
 
         public int ReqDelayNum { get; set; }
+
+        public int ReqAcptPerson { get; set; }
 
         public string SysName
         {

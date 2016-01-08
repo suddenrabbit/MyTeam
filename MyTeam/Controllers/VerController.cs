@@ -35,8 +35,8 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.VerYear == query.VerYear);
                 }
 
-                // 按照发布时间排序
-                ls = ls.OrderBy(p => p.PublishTime);
+                // 按照系统、发布时间排序
+                ls = ls.OrderByDescending(p => p.VerYear);
 
                 var result = ls.ToList();
                 // 若isExcel为true，导出Excel

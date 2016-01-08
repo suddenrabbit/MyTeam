@@ -98,7 +98,7 @@ namespace MyTeam.Utils
         /// <summary>
         /// 年度版本下发计划发布频率列表
         /// </summary>
-        public static List<string> ReleaseFreqList = new List<string>() { "1", "2", "3", "6", "12" };
+        public static List<string> ReleaseFreqList = new List<string>() { "1", "2", "3", "4", "6", "12" };
 
         /// <summary>
         /// AJAX新增成功后统一返回HTML值

@@ -33,8 +33,8 @@ namespace MyTeam.Controllers
                 }
                 ls = ls.Where(a => a.Person.Contains(user.Realname));
             }
-            // 按照『进度』升序
-            ls = ls.OrderBy(a => a.Progress);
+            // 按照『进度』升序、『计划完成日期』降序
+            ls = ls.OrderBy(a => a.Progress).OrderByDescending(a=>a.PlanDeadLine);
             return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }
 
@@ -171,9 +171,7 @@ namespace MyTeam.Controllers
                 }
                 string workName = main.WorkName;
                 // 此处只显示与“重点任务”有关的
-                ls = ls.Where(a => a.IsWithMain == true && a.WorkMission == id.ToString());
-                // 按照RptDate倒序显示
-                ls = ls.OrderByDescending(a => a.RptDate);
+                ls = ls.Where(a => a.IsWithMain == true && a.WorkMission == id.ToString());                
 
                 // workMission中的ID转为中文
                 foreach (var r in ls)
