@@ -1,0 +1,94 @@
+﻿@{Layout = null;}
+@model MyTeam.Models.TargetMission
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>
+    @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
+    return;
+}
+
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Edit", "TargetMission", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <!-- 年度和指标在此不可修改 -->
+            <div class="form-group">
+                <label for="TargetYear" class="col-md-3 control-label">指标年度</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" disabled="disabled" value="@ViewBag.TargetYear" />
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.TMID)
+            <div class="form-group">
+                <label for="TID" class="col-md-3 control-label">指标名称</label>
+                <div class="col-md-9 control-label" style="text-align:left!important">
+                    <input type="text" class="form-control" disabled="disabled" value="@Model.TargetName" />
+                    @Html.HiddenFor(model => model.TID)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PersonID, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <!--需求分析师下拉选择-->
+                    @Html.DropDownListFor(model => model.PersonID, ViewBag.PersonList as SelectList, new { @class = "form-control" })
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SidePerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.SidePerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SidePerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Mission, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.Mission, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Mission, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Stat, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <select name="Stat" id="Stat" class="form-control">
+                        <option value="未完成">未完成</option>
+                        <option value="已完成">已完成</option>
+                        <option value="已中止">已中止</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+
+        }
+
+    </div>
+</div>
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+<script>
+    $("#PersonID").val('@Model.PersonID');//选中成员
+    $("#Stat").val('@Model.Stat');
+</script>

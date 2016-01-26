@@ -47,12 +47,12 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                //sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                //sl = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
                 mainRegReq.ReqAcptPerson = user.UID;
             }
             else
             {
-                //sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                //sl = new SelectList(this.GetUserList(), "UID", "NamePhone");
                 mainRegReq.ReqAcptPerson = 1;
             }
 

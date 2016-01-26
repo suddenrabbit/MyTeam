@@ -46,7 +46,10 @@
         public DbSet<BusiReqProj> BusiReqProjs { get; set; }
 
         public DbSet<ProjPlan> ProjPlans { get; set; }
-  
+
+        public DbSet<Target> Targets { get; set; }
+
+        public DbSet<TargetMission> TargetMissions { get; set; }
     }
 
     //public class MyEntity

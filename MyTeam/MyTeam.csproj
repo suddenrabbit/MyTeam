@@ -155,6 +155,8 @@
     <Compile Include="Controllers\ProjSurvController.cs" />
     <Compile Include="Controllers\ReqManageController.cs" />
     <Compile Include="Controllers\ReqTrackController.cs" />
+    <Compile Include="Controllers\TargetMissionController.cs" />
+    <Compile Include="Controllers\TargetManageController.cs" />
     <Compile Include="Controllers\SysManageController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VerController.cs" />
@@ -188,6 +190,9 @@
     <Compile Include="Models\ReqManage\ReqExcel.cs" />
     <Compile Include="Models\ReqManage\ReqQuery.cs" />
     <Compile Include="Models\System\RetailSystem.cs" />
+    <Compile Include="Models\Target\TargetMission.cs" />
+    <Compile Include="Models\Target\Target.cs" />
+    <Compile Include="Models\Target\TargetMissionResult.cs" />
     <Compile Include="Models\User\ChangePsw.cs" />
     <Compile Include="Models\MyTeamContext.cs" />
     <Compile Include="Models\ReqManage\Req.cs" />
@@ -351,6 +356,12 @@
     <Content Include="Views\ReqManage\InPoolResult.cshtml" />
     <Content Include="Views\ProjPlan\Details.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml" />
+    <Content Include="Views\TargetManage\Create.cshtml" />
+    <Content Include="Views\TargetManage\Edit.cshtml" />
+    <Content Include="Views\TargetManage\Index.cshtml" />
+    <Content Include="Views\TargetMission\Create.cshtml" />
+    <Content Include="Views\TargetMission\Index.cshtml" />
+    <Content Include="Views\TargetMission\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

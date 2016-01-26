@@ -1,0 +1,304 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model MyTeam.Models.TargetMissionResult
+@{
+    ViewBag.Title = "量化指标对应工作任务管理";
+    bool isAdmin = ViewBag.IsAdmin;
+}
+<h2>@ViewBag.Title。</h2>
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal();
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/TargetMission/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal();
+            }
+        });
+    }
+
+
+    // 日期控件
+    $(document).ready(function () {
+        $("#year").val('@ViewBag.year');
+    });
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        var url = "/TargetMission/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal();
+            }
+        });
+    }
+
+    // 在modal中新增
+    function doCreate(TargetMission) {
+        var url = "/TargetMission/" + TargetMission;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateMain').html(msg);
+            },
+            error: function () {
+                $('#CreateMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
+            }
+        });
+    }
+</script>
+<div class="row">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "TargetMission", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <table class="table table-condensed query-table">
+                <tr>
+                    <td><label for="year" class="control-label">指标年度</label></td>
+                    <!--年度-->
+                    <td>
+                        <input type="text" id="year" name="year" class="form-control Wdate datepicker" required="required" onclick="WdatePicker({ dateFmt: 'yyyy' })" placeholder="请选择年份" />
+                    </td>
+                    <td>
+                        <input type="submit" value="查询" class="btn btn-primary" />
+                        <input type="button" onclick="doCreate('Create')" class="btn btn-default" value="添加一条" />
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+
+</div>
+@if (!isAdmin)
+{<blockquote>
+        <p>我主办的项目</p>
+    </blockquote>
+}
+
+<table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+    <tr>
+        <th width="10"></th>
+        <th width="20">
+            @Html.DisplayNameFor(model => model.HostLs[0].TID)
+        </th>
+        <th width="30">
+            @Html.DisplayNameFor(model => model.HostLs[0].Mission)
+        </th>
+        <th width="10">
+            @Html.DisplayNameFor(model => model.HostLs[0].PersonID)
+        </th>
+        <th width="20">
+            @Html.DisplayNameFor(model => model.HostLs[0].SidePerson)
+        </th>
+        <th width="10">
+            @Html.DisplayNameFor(model => model.HostLs[0].Stat)
+        </th>
+
+    </tr>
+    @foreach (var item in Model.HostLs)
+    {
+        <tr>
+            <td>
+                <a href="#" onclick="doEdit('@item.TMID','@item.PersonName - @item.TargetName')">编辑</a>
+                | <a href="#" onclick="doDelete('@item.TMID','@item.PersonName - @item.TargetName')">删除</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TargetName)
+            </td>
+            <td>
+                @Html.Raw(item.Mission)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SidePerson)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stat)
+            </td>
+
+        </tr>
+    }
+</table>
+
+@if (!isAdmin)
+{
+    <blockquote>
+        <p>我协办的项目</p>
+    </blockquote>
+    <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+        <tr>
+            <th width="10"></th>
+            <th width="20">
+                @Html.DisplayNameFor(model => model.SideLs[0].TID)
+            </th>
+            <th width="30">
+                @Html.DisplayNameFor(model => model.SideLs[0].Mission)
+            </th>
+            <th width="10">
+                @Html.DisplayNameFor(model => model.SideLs[0].PersonID)
+            </th>
+            <th width="20">
+                @Html.DisplayNameFor(model => model.SideLs[0].SidePerson)
+            </th>
+            <th width="10">
+                @Html.DisplayNameFor(model => model.SideLs[0].Stat)
+            </th>
+
+        </tr>
+        @foreach (var item in Model.SideLs)
+        {
+            <tr>
+                <td>
+                    <a href="#" onclick="doEdit('@item.TMID','@item.PersonName - @item.TargetName')">编辑</a>
+                    | <a href="#" onclick="doDelete('@item.TMID','@item.PersonName - @item.TargetName')">删除</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TargetName)
+                </td>
+                <td>
+                    @Html.Raw(item.Mission)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PersonName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SidePerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stat)
+                </td>
+
+            </tr>
+        }
+    </table>
+}
+
+<!--因为分段显示，所以不分页了-->
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框3：编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="CreateMain"></div>
+            </div>
+        </div>
+    </div>
+</div>

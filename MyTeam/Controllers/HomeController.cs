@@ -169,7 +169,7 @@ namespace MyTeam.Controllers
             //////////////////////////////////////////////////////////////////////
 
             // 列出超过计划下发日期仍未下发的
-            string sql = "select distinct t.RlsNo, t.SecondRlsNo, t.PlanRlsDate from Reqs t where ((t.RlsNo is not null and t.RlsDate is null ) or (t.SecondRlsNo is not null and t.SecondRlsDate is null)) and t.PlanRlsDate < getdate()+1 and t.ReqStat=N'出池'";
+            string sql = "select distinct t.RlsNo, t.SecondRlsNo, t.PlanRlsDate from Reqs t where ((t.RlsNo is not null and t.RlsDate is null ) or (t.SecondRlsNo is not null and t.SecondRlsDate is null)) and t.PlanRlsDate < getdate()-1 and t.ReqStat=N'出池'";
             if (!IsAdminNow())
             {
                 sql += " and t.ReqAcptPerson = " + user.UID;
