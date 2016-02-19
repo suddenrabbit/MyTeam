@@ -54,6 +54,37 @@
         var rlsNo = $("#RlsNo").val();
         var secondRlsNo = $("#SecondRlsNo").val();
 
+        // 下发通知编号格式控制
+        var rname = /[\u4E00-\u9FA5]/;
+        if (rlsNo.length > 0) {
+            if (rname.test(rlsNo)) {
+                alert("下发通知编号不能含有汉字");
+                $("#RlsNo").focus();
+                return;
+            }
+          
+            if (rlsNo.length != 12) {
+                alert("下发通知编号必须是形如YFZX20160101");
+                $("#RlsNo").focus();
+                return;
+            }
+        }
+
+        // 副下发通知编号格式控制
+        if (secondRlsNo.length > 0) {
+            if (rname.test(secondRlsNo)) {
+                alert("副下发通知编号不能含有汉字");
+                $("#SecondRlsNo").focus();
+                return;
+            }
+            if (secondRlsNo.length != 12) {
+                alert("下发通知编号必须是形如YFZX20160101");
+                $("#SecondRlsNo").focus();
+                return;
+            }
+        }
+
+
         if (check() && confirm("确定要批量更新下发通知编号吗？")) {
             var rlsNoProtect = $("#RlsNoProtect").is(":checked");
             var url = "/ReqManage/BatRlsNo";
@@ -84,8 +115,7 @@
             $("#info").html("<p class='alert alert-danger'>维护需求编号和下发通知编号不可同时填写</p>");
             return;
         }
-        if (reqs.length == 0 && rlsNoToBatRlsDate.length == 0 && secondRlsNoToBatRlsDate.length == 0)
-        {
+        if (reqs.length == 0 && rlsNoToBatRlsDate.length == 0 && secondRlsNoToBatRlsDate.length == 0) {
             $("#info").html("<p class='alert alert-danger'>维护需求编号和下发通知编号不可同时为空</p>");
             return;
         }
@@ -267,8 +297,8 @@
                     </div>
                 </div>
                 <div id="tabs5" class="tab-pane fade in active">
-                    <div style="margin-bottom:15px">                        
-                         <input type="button" value="删除" onclick="BatDel()" class="btn btn-primary" />
+                    <div style="margin-bottom:15px">
+                        <input type="button" value="删除" onclick="BatDel()" class="btn btn-primary" />
                     </div>
                 </div>
             </div>

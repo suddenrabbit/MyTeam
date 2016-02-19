@@ -1081,7 +1081,7 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-family: Arial, "Microsoft YaHei", sans-serif;
+  font-family: Arial, SimSun, sans-serif;
   font-size: 1.4em;
   line-height: 1.5;
   color: #333;
@@ -1183,7 +1183,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: inherit;
+  font-family: "Microsoft YaHei";
   font-weight: 500;
   line-height: 1.1;
   color: inherit;
@@ -2258,7 +2258,7 @@ caption {
   text-align: left;
 }
 th {
-  text-align: left;
+  text-align: center;
 }
 .table {
   width: 100%;
@@ -4215,6 +4215,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   min-height: 50px;
   margin-bottom: 20px;
   border: 1px solid transparent;
+  font-family:"Microsoft YaHei";
 }
 @media (min-width: 768px) {
   .navbar {
