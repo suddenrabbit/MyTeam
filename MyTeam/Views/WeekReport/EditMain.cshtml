@@ -2,7 +2,6 @@
     Layout = null;
 }
 @model MyTeam.Models.WeekReportMain
-
 @if (Model == null)
 {
     <div class="alert alert-warning">无此记录</div>
@@ -13,7 +12,6 @@
 }
 <script src="/Scripts/jquery.validate.js"></script>
 <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
-
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     // 日期控件
@@ -28,7 +26,6 @@
     }
 
 </script>
-
 <div class="row">
     <div class="col-md-12">
         <div id="info"></div>
@@ -41,77 +38,85 @@
             @Html.HiddenFor(model => model.WRMainID)
 
             <div class="form-group">
-                @Html.LabelFor(model => model.WorkName, new { @class = "col-md-3 control-label" })
+                @Html.LabelFor(model => model.WorkType, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.WorkType, ViewBag.WorkTypeList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
 
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkName, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.WorkName, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.WorkName, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.WorkStage, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.WorkStage, ViewBag.WorkStageList as SelectList, new { @class = "form-control" })
-                </div>
-            </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.WorkMission, new { @class = "col-md-3 control-label" })
-
                 <div class="col-md-9">
                     @Html.TextAreaFor(model => model.WorkMission, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.WorkMission, "", new { @class = "text-danger" })
                 </div>
             </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkStage, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.WorkStage, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.WorkStage, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
             <div class="form-group">
                 @Html.LabelFor(model => model.Person, new { @class = "col-md-3 control-label" })
-
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Person, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Person, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.WorkTarget, new { @class = "col-md-3 control-label" })
 
+            <div class="form-group">
+                @Html.LabelFor(model => model.OutSource, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextAreaFor(model => model.WorkTarget, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.WorkTarget, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(model => model.OutSource, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.OutSource, "", new { @class = "text-danger" })
                 </div>
             </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Progress, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Progress, new { @class = "form-control", @type = "number" })
+                    <div class="text-info">（只需要填写0-100的数字，不需要百分号）</div>
+                    @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })                </div>
+            </div>
+
             <div class="form-group">
                 @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-3 control-label" })
-
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.PlanDeadLine, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.PlanDeadLine)
                     @Html.ValidationMessageFor(model => model.PlanDeadLine, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Progress, new { @class = "col-md-3 control-label" })
 
-                <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.Progress, ViewBag.ProgressList as SelectList, new { @class = "form-control" })
-                </div>
-            </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.WorkTime, new { @class = "col-md-3 control-label" })
-
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.WorkTime, new { @class = "form-control", @readonly = "readonly" })
-                    <div class="text-info">（工时会自动按照每周工作计算，不可修改）</div>
+                    <div class="text-info">（工时会自动按照每周工作计算，不可填写）</div>
                     @Html.ValidationMessageFor(model => model.WorkTime, "", new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
-
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                 </div>
             </div>
+
             @Html.HiddenFor(model => model.RptPersonID);
 
             <div class="form-group">
@@ -123,6 +128,5 @@
                 </div>
             </div>
         }
-
     </div>
 </div>

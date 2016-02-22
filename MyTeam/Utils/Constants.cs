@@ -109,5 +109,11 @@ namespace MyTeam.Utils
         /// AJAX编辑成功后统一返回HTML值
         /// </summary>
         public static string AJAX_EDIT_SUCCESS_RETURN = "<p class='alert alert-success'>修改成功！<a href='#' data-dismiss='modal' onclick='javascript:window.location.reload()'>关闭</a></p>";
+
+        /// <summary>
+        /// 工作类型下拉列表
+        /// </summary>
+        public static List<string> WorkTypeList = new List<string>() { "创新项目", "科技引领", "专项工作", "解决方案", "维护需求", "创新研究", "培训学习", "规模度量", "制度建设", "原型工具应用", "人力资源管理", "物料资源管理", "信息资源管理", "单位内务", "其他" };
+
     }
 }

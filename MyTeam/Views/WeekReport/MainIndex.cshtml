@@ -82,26 +82,29 @@
     <tr>
         <th></th>
         <th>
+            @Html.DisplayNameFor(model => model.WorkType)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.WorkName)
+        </th>        
+        <th>
+            @Html.DisplayNameFor(model => model.WorkMission)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.WorkStage)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.WorkMission)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Person)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.WorkTarget)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PlanDeadLine)
+            @Html.DisplayNameFor(model => model.OutSource)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Progress)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlanDeadLine)
+        </th>        
         <th>
             @Html.DisplayNameFor(model => model.WorkTime)
         </th>
@@ -118,25 +121,28 @@
                 <a href="#" onclick="doDelete('@item.WRMainID','@item.WorkName')">删除</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.WorkName)
+                @Html.DisplayFor(modelItem => item.WorkType)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.WorkStage)
+                @Html.DisplayFor(modelItem => item.WorkName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.WorkMission)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.WorkStage)
+            </td>            
+            <td>
                 @Html.DisplayFor(modelItem => item.Person)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.WorkTarget)
+                @Html.DisplayFor(modelItem => item.OutSource)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Progress)%
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PlanDeadLine)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Progress)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.WorkTime)

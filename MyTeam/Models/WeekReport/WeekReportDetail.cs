@@ -15,26 +15,23 @@ namespace MyTeam.Models
         [Display(Name = "周报日期")]
         [StringLength(16, ErrorMessage = "不能超过16位")]
         public string RptDate { get; set; }
-        
-        [Required]
-        [Display(Name = "工作任务")]
+
+        [Display(Name = "工作内容")]
         public string WorkMission { get; set; }          
        
-        [Required]
-        [Display(Name = "工作内容")]
+        [Display(Name = "工作内容")] // 作废
         public string WorkDetail { get; set; }
 
-        [Required]
-        [Display(Name = "目标或交付物")]
+        [Display(Name = "交付物")]
         public string WorkTarget { get; set; }
 
         [Required]
         [Display(Name = "负责人")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
-        public string Person { get; set; }       
+        public string Person { get; set; }      
        
-        [Required]
-        [Display(Name = "完成情况")]
+        
+        [Display(Name = "完成情况")]// 作废
         [StringLength(8, ErrorMessage = "不能超过8位")]
         public string WorkStat { get; set; }
 
@@ -51,5 +48,29 @@ namespace MyTeam.Models
 
         // 后台字段，表示该任务是否附属于“重点任务”
         public bool IsWithMain { get; set; }
+
+        [Display(Name = "工作类型")]
+        [StringLength(16, ErrorMessage = "不能超过16位")]
+        public string WorkType { get; set; }
+
+        [Display(Name = "现场技术服务人员")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
+        public string OutSource { get; set; }
+
+        [Display(Name = "优先级")]
+        [StringLength(2, ErrorMessage = "不能超过2位")]
+        public string Priority { get; set; }
+
+        [Display(Name = "完成率")]
+        [Range(0, 100, ErrorMessage = "只能填0-100之间的数字")]
+        public int Progress { get; set; }
+
+        [Display(Name = "计划完成时间")]
+        [DataType(DataType.Date)]
+        public DateTime? PlanDeadLine { get; set; }
+
+        [Display(Name = "任务名称")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
+        public string WorkName { get; set; }
     }
 }

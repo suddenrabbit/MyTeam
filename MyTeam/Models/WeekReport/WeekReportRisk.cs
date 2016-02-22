@@ -20,7 +20,7 @@ namespace MyTeam.Models
         [Display(Name = "风险或待协调问题")]
         public string RiskDetail { get; set; }
 
-        [Display(Name = "解决情况")]
+        [Display(Name = "解决建议")]
         public string Solution { get; set; }
 
         [Required]
