@@ -25,9 +25,14 @@ namespace MyTeam.Controllers
                 var ls = from a in dbContext.Projs
                          select a;
 
-                if (query.ProjID != 0)
+                if(query.ProjID != 0)
                 {
                     ls = ls.Where(p => p.ProjID == query.ProjID);
+                }
+
+                if (!string.IsNullOrEmpty(query.ProjName))
+                {
+                    ls = ls.Where(p => p.ProjName.Contains(query.ProjName));
                 }
                 if (!string.IsNullOrEmpty(query.ProAcptDateStart))
                 {
@@ -48,8 +53,8 @@ namespace MyTeam.Controllers
                 {
                     DateTime endDate = DateTime.Parse(query.RulesPublishDateEnd);
                     ls = ls.Where(p => p.RulesPublishDate <= endDate);
-                }                
-                
+                }
+
                 var result = ls.ToList();
                 // 若isExcel为true，导出Excel
                 if (isExcel)
@@ -58,7 +63,7 @@ namespace MyTeam.Controllers
 
                     // 需要对list修改以适应Excel模板
                     List<ProjResult> excelList = this.GetExcelList(ls);
-                    return this.MakeExcel<ProjResult>("ProjReportT", targetFileName, excelList , 2);
+                    return this.MakeExcel<ProjResult>("ProjReportT", targetFileName, excelList, 2);
                 }
                 else
                 {
@@ -71,17 +76,9 @@ namespace MyTeam.Controllers
                 query = new ProjQuery();
             }
 
-            // 需求分析师显示用户名不是显示ID
-            List<User> userLs = this.GetUserList();
-            // 项目名称下拉列表
-            List<Proj> projList = this.GetProjList();
-            // 加上“全部”
-            projList.Insert(0, new Proj() { ProjID = 0, ProjName = "全部" });
-            ViewBag.ProjList = new SelectList(projList, "ProjID", "ProjName", query.ProjID); 
-
             return View(query);
         }
-        
+
         // GET: /Proj/Details/5
 
         public ActionResult Details(int id)
@@ -128,26 +125,27 @@ namespace MyTeam.Controllers
         {
             // 判断是否有重复的项目名称，如有重复不允许新增
             Proj p = this.GetProjList().Find(a => a.ProjName == proj.ProjName);
-            if(p != null){
+            if (p != null)
+            {
                 return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目跟踪状态已存在，不允许重复添加！" + "</p>";
             }
-            
+
             try
             {
-                
-                    dbContext.Projs.Add(proj);
-                    dbContext.SaveChanges();
 
-                    // 更新内存
-                    this.Update(3);
-                
+                dbContext.Projs.Add(proj);
+                dbContext.SaveChanges();
+
+                // 更新内存
+                this.Update(3);
+
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
             {
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-           
+
         }
 
         //
@@ -197,7 +195,7 @@ namespace MyTeam.Controllers
                 {
                     return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目跟踪状态已存在，不允许更新！" + "</p>";
                 }
-            }       
+            }
 
             try
             {
@@ -248,7 +246,7 @@ namespace MyTeam.Controllers
 
             List<User> userLs = this.GetUserList();
             User user = new User();
-            
+
             foreach (Proj s in list)
             {
                 user = userLs.Find(a => a.UID == s.ReqAnalysisID);

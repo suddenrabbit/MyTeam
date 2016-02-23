@@ -1,0 +1,103 @@
+﻿@{
+    Layout = null;
+}
+@model MyTeam.Models.YearMission
+
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("AddYearMission", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.MissionDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.MissionDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.MissionDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MissionSource, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.MissionSource, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.MissionSource, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkMission, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.WorkMission, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.WorkMission, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkStage, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.WorkStage, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.WorkStage, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Person, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Person, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Person, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.OutSource, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.OutSource, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.OutSource, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Progress, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Progress, new { @class = "form-control", @type = "number" })
+                    <div class="text-info">（只需要填写0-100的数字，不需要百分号）</div>
+                    @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.PlanDeadLine, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PlanDeadLine, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="新增" class="btn btn-primary" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="/Scripts/jquery.validate.js"></script>
+<script src="/Scripts/jquery.validate.unobtrusive.js"></script>

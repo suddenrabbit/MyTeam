@@ -39,49 +39,56 @@
 
             @Html.HiddenFor(model => model.WRDetailID)
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.RptDate, new { @class = "col-md-3 control-label" })
-        <div class="col-md-5">
-            @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
-        </div>
-        <div class="col-md-3">
-            @Html.DropDownList("chooseRptDate", ViewBag.RptDateList as SelectList, new { @class = "form-control", id = "chooseRptDate", onchange = "changeRptDate()" })
-            <span class="text-info">（选择已经存在的周报日期）</span>
-        </div>
-        <div class="col-md-1"></div>
-    </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.RptDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    @Html.DropDownList("chooseRptDate", ViewBag.RptDateList as SelectList, new { @class = "form-control", id = "chooseRptDate", onchange = "changeRptDate()" })
+                    <span class="text-info">（选择已经存在的周报日期）</span>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Priority, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            <select class="form-control" name="Priority" id="Priority">
-                <option value=""></option>
-                <option value="高">高</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.WorkType, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.DropDownListFor(model => model.WorkType, ViewBag.WorkTypeList as SelectList, new { @class = "form-control" })
-        </div>
-    </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Priority, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <select class="form-control" name="Priority" id="Priority">
+                        <option value=""></option>
+                        <option value="高">高</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkType, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.WorkType, ViewBag.WorkTypeList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
 
-            if (!Model.IsWithMain)
-            {
-                <div class="form-group">
-                    @Html.LabelFor(model => model.WorkName, new { @class = "col-md-3 control-label" })
-                    <div class="col-md-9">
-                        @Html.TextBoxFor(model => model.WorkName, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.WorkName, "", new { @class = "text-danger" })
+            <!-- WorkName 若勾选「重点项目工作」则下拉选择重点项目，不勾选则为文本框输入-->
+            <div class="form-group">
+                <div class="col-md-3 "></div>
+                <div class="col-md-9">
+                    @Html.CheckBoxFor(model => model.IsWithMain, new { @onclick = "ChangeWorkName()" })
+                    &nbsp;重点项目工作
+                    <div class="text-info">（勾选后，「任务名称」可下拉选择未完成的重点项目）</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WorkName, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <div id="WorkNameDiv1">
+                        <input type="text" id="WorkName1" name="WorkName" class="form-control" maxlength="32" />
+                    </div>
+                    <div id="WorkNameDiv2">
+                        @Html.DropDownList("WorkName2", ViewBag.WorkNameList as SelectList, new { @class = "form-control" })
                     </div>
                 </div>
-            }
-            else
-            {
-                @Html.HiddenFor(model => model.WorkName)
-            }
+            </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.WorkMission, new { @class = "col-md-3 control-label" })
@@ -116,7 +123,8 @@
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Progress, new { @class = "form-control", @type = "number" })
                     <div class="text-info">（只需要填写0-100的数字，不需要百分号）</div>
-                    @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })                </div>
+                    @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })
+                </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-3 control-label" })
@@ -139,10 +147,8 @@
                     @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                 </div>
             </div>
-            
-            @Html.HiddenFor(model => model.RptPersonID, new { @class = "form-control" })
 
-            @Html.HiddenFor(model => model.IsWithMain, new { @class = "form-control" })
+            @Html.HiddenFor(model => model.RptPersonID, new { @class = "form-control" })
 
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
@@ -156,5 +162,32 @@
 <script src="/Scripts/jquery.validate.js"></script>
 <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
 <script>
-    $('#Priority').val('@Model.Priority');
+    function ChangeWorkName() {
+        var d1 = $('#WorkNameDiv1');
+        var d2 = $('#WorkNameDiv2');
+
+        var n1 = $('#WorkName1');
+        var n2 = $('#WorkName2');
+
+        if ($('#IsWithMain').prop('checked')) {
+            d1.hide();
+            d2.show();
+            n1.attr("name", "WorkNameFalse");
+            n2.attr("name", "WorkName");
+        } else {
+            d1.show();
+            d2.hide();
+            n1.attr("name", "WorkName");
+            n2.attr("name", "WorkNameFalse");
+        }
+    }
+
+    $(function () {
+        $('#Priority').val('@Model.Priority');
+
+        ChangeWorkName(); // 先根据IsWithMain处理好页面的WorkName
+
+        $('#WorkName1').val('@Model.WorkName');
+        $('#WorkName2').val('@Model.WorkName');
+    })
 </script>

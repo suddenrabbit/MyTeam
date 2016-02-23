@@ -36,7 +36,7 @@ namespace MyTeam.Models
         public string WorkStat { get; set; }
 
         [Required]
-        [Display(Name = "占用工时（人小时）")]
+        [Display(Name = "工时（人小时）")]
         public double WorkTime { get; set; }
 
         [Display(Name = "备注")]

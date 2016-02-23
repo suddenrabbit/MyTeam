@@ -50,6 +50,8 @@
         public DbSet<Target> Targets { get; set; }
 
         public DbSet<TargetMission> TargetMissions { get; set; }
+
+        public DbSet<YearMission> YearMissions { get; set; }
     }
 
     //public class MyEntity

@@ -8,6 +8,7 @@ using MyTeam.Utils;
 using OfficeOpenXml;
 using System.IO;
 using PagedList;
+using System.Text;
 
 namespace MyTeam.Controllers
 {
@@ -128,7 +129,7 @@ namespace MyTeam.Controllers
         /* 每周工作 */
 
         // 每周工作页面
-        public ActionResult DetailIndex(string id, bool forMain = false, int pageNum = 1)
+        public ActionResult DetailIndex(string id, int pageNum = 1)
         {
             var ls = from a in dbContext.WeekReportDetails select a;
             // 若非管理员只显示负责人中含有自己姓名的记录
@@ -141,45 +142,20 @@ namespace MyTeam.Controllers
                 }
                 ls = ls.Where(a => a.Person.Contains(user.Realname) || a.OutSource.Contains(user.Realname));
             }
-            // 根据forMain判断是否与重点任务有关
-            if (forMain)
+            // 对于IsWithMain的任务，WorkName转换成对应的重点任务名称
+            var mainLs = dbContext.WeekReportMains.ToList();
+            WeekReportMain main = null;
+            foreach (var detail in ls)
             {
-                int mainId = 0;
-                if (!int.TryParse(id, out mainId))
+                if (detail.IsWithMain)
                 {
-                    ViewBag.ErrMsg = "参数不正确！";
-                    return View();
+                    main = mainLs.Find(a => a.WRMainID.ToString() == detail.WorkName);
+                    detail.WorkName = main == null ? "未知" : main.WorkName;
                 }
-                WeekReportMain main = dbContext.WeekReportMains.ToList().Find(a => a.WRMainID == mainId);
-                if (main == null)
-                {
-                    ViewBag.ErrMsg = "参数不正确！";
-                    return View();
-                }
-                string workName = main.WorkName;
-                // 此处只显示与“重点任务”有关的
-                ls = ls.Where(a => a.IsWithMain == true && a.WorkName == id.ToString());
-
-                // workMission中的ID转为中文
-                foreach (var r in ls)
-                {
-                    r.WorkName = workName;
-                }
-
-                ViewBag.Title = workName + "-每周工作";
-            }
-            else
-            {
-                // 此处只显示与“重点任务”无关的
-                ls = ls.Where(a => a.IsWithMain != true);
             }
 
             // 按照RptDate倒序显示
             ls = ls.OrderByDescending(a => a.RptDate);
-
-            ViewBag.ForMain = forMain;
-
-            ViewBag.MainId = id;
 
             return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }
@@ -217,6 +193,11 @@ namespace MyTeam.Controllers
             };
 
             ViewBag.ForMain = forMain;
+
+            // 重点项目下拉
+            var mainList = dbContext.WeekReportMains.Where(a => a.Progress < 100);
+            SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
+            ViewBag.WorkNameList = sl3;
 
             return View(detail);
         }
@@ -261,6 +242,11 @@ namespace MyTeam.Controllers
             ls.Insert(0, DateTime.Now.Year + "年");
             SelectList sl2 = MyTools.GetSelectList(ls, false, true, detail.RptDate);
             ViewBag.RptDateList = sl2;
+
+            // 重点项目下拉
+            var mainList = dbContext.WeekReportMains.Where(a => a.Progress < 100);
+            SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
+            ViewBag.WorkNameList = sl3;
 
             return View(detail);
         }
@@ -474,33 +460,51 @@ namespace MyTeam.Controllers
             // 填报周期
             sheet.Cells[1, 4].Value = "填报周期：" + thisWeek + " - " + nextWeek;
 
-            // 分别读取每周工作、重点工作、项目风险三部分内容
+            // 分别读取年度重点任务、每周工作、重点工作、项目风险
 
-            // 只有每周工作分本周与下周
-            var thisWeekDetailList = (from  a in dbContext.WeekReportDetails where a.RptDate == thisWeek
-                                          orderby a.Person, a.OutSource
-                                          select a).ToList();
+            // 游标：标记目前需要操作的行号
+            int cursor = 4; //从第4行开始操作
 
-            var nextWeekDetailList = (from a in dbContext.WeekReportDetails
-                                      where a.RptDate == nextWeek
-                                      orderby a.Person, a.OutSource
-                                      select a).ToList();
+            // 【1】重点任务 （进度没到100的）
+            var yearMissionList = dbContext.YearMissions.Where(p => p.Progress < 100).ToList();
 
-            // 重点工作取所有不为100%的
+            int size = yearMissionList.Count();
+            int num = 1;
+            // 在cursor+1位置插入size-1行
+            sheet.InsertRow(cursor + 1, size - 1, cursor);
+
+            // 插入数据
+            foreach (var s in yearMissionList)
+            {
+                // 第一列是序号
+                sheet.Cells[cursor, 1].Value = num;
+                sheet.Cells[cursor, 2].Value = s.MissionDate;
+                sheet.Cells[cursor, 3].Value = s.MissionSource;
+                sheet.Cells[cursor, 4].Value = s.WorkMission;
+                sheet.Cells[cursor, 5].Value = s.WorkStage;
+                sheet.Cells[cursor, 6].Value = s.Person;
+                sheet.Cells[cursor, 7].Value = s.OutSource;
+                sheet.Cells[cursor, 8].Value = s.Progress + "%";
+                sheet.Cells[cursor, 9].Value = s.PlanDeadLine;
+                sheet.Cells[cursor, 10].Value = s.Remark;
+
+                // 下移一行
+                cursor++;
+
+                num++;
+            }
+
+            // 游标下移3行，因为有1个空行2个标题行
+            cursor += 3;
+
+            // 【2】重点工作（取所有不为100%的）
             var mainList = (from a in dbContext.WeekReportMains
                             where a.Progress < 100
                             orderby a.Person, a.OutSource
                             select a).ToList();
 
-            // 风险提示只取本周的
-            var riskList = dbContext.WeekReportRisks.Where(a => a.RptDate == thisWeek);
-
-            // 游标：标记目前需要操作的行号
-            int cursor = 8; //先从第8行开始操作
-
-            // 1、重点工作进展
-            int size = mainList.Count();
-            int num = 1;
+            size = mainList.Count();
+            num = 1;
             // 在cursor+1位置插入size-1行
             sheet.InsertRow(cursor + 1, size - 1, cursor);
 
@@ -525,10 +529,12 @@ namespace MyTeam.Controllers
                 num++;
             }
 
-            // 游标下移3行，因为有3个标题行
+            // 游标下移3行
             cursor += 3;
 
-            // 2、风险
+            // 【3】风险
+            // 风险提示取本周和下周的
+            var riskList = dbContext.WeekReportRisks.Where(a => a.RptDate == thisWeek || a.RptDate == nextWeek);
             size = riskList.Count();
             if (size > 0)
             {
@@ -540,9 +546,10 @@ namespace MyTeam.Controllers
                 foreach (var s in riskList)
                 {
                     // 需要对第2-4单元格进行合并
-                    sheet.Cells[cursor, 2, cursor, 4].Merge = true;
+                    //sheet.Cells[cursor, 2, cursor, 4].Merge = true;
                     // 5-10单元格合并
-                    sheet.Cells[cursor, 5, cursor, 10].Merge = true;
+                    //sheet.Cells[cursor, 5, cursor, 10].Merge = true;   //似乎有问题，以后处理
+
                     // 第一列是序号
                     sheet.Cells[cursor, 1].Value = num;
                     sheet.Cells[cursor, 2].Value = s.RiskDetail;
@@ -563,7 +570,12 @@ namespace MyTeam.Controllers
                 cursor += 4;
             }
 
-            // 3、本周工作
+            // 【4】本周工作
+            var thisWeekDetailList = (from a in dbContext.WeekReportDetails
+                                      where a.RptDate == thisWeek
+                                      orderby a.Person, a.OutSource
+                                      select a).ToList();
+
             size = thisWeekDetailList.Count();
             // 在cursor+1位置插入size-1行
             sheet.InsertRow(cursor + 1, size - 1, cursor);
@@ -603,7 +615,12 @@ namespace MyTeam.Controllers
             // 游标下移3行，因为有3个标题行
             cursor += 3;
 
-            // 4、下周工作
+            // 【4】下周计划
+            var nextWeekDetailList = (from a in dbContext.WeekReportDetails
+                                      where a.RptDate == nextWeek
+                                      orderby a.Person, a.OutSource
+                                      select a).ToList();
+
             size = nextWeekDetailList.Count();
             // 在cursor+1位置插入size-1行
             sheet.InsertRow(cursor + 1, size - 1, cursor);
@@ -646,6 +663,86 @@ namespace MyTeam.Controllers
         private List<string> GetRptDateList()
         {
             return dbContext.Database.SqlQuery<string>("select distinct top 5 RptDate from WeekReportDetails order by RptDate desc").ToList<string>();
+        }
+
+
+        /* 年度重点任务 */
+
+        // 年度重点任务页面
+        public ActionResult YearMissionIndex(int pageNum = 1)
+        {
+            var ls = from a in dbContext.YearMissions select a;
+
+            // 按照『进度』升序、『计划完成日期』降序
+            ls = ls.OrderBy(a => a.Progress).OrderByDescending(a => a.PlanDeadLine);
+            return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
+        }
+
+        // 填报:年度重点任务
+        public ActionResult AddYearMission()
+        {
+            return View(new YearMission());
+        }
+
+        [HttpPost]
+        public string AddYearMission(YearMission yearMission)
+        {
+            try
+            {
+                dbContext.YearMissions.Add(yearMission);
+                dbContext.SaveChanges();
+                return Constants.AJAX_CREATE_SUCCESS_RETURN;
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+            }
+        }
+
+        // 修改：年度重点任务
+        public ActionResult EditYearMission(int id)
+        {
+            YearMission yearMission = dbContext.YearMissions.ToList().Find(a => a.YMID == id);
+            if (yearMission == null)
+            {
+                return View();
+            }
+
+            return View(yearMission);
+        }
+
+        [HttpPost]
+        public string EditYearMission(YearMission yearMission)
+        {
+            try
+            {
+                dbContext.Entry(yearMission).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+            }
+        }
+
+        // AJAX调用
+        // POST: /WeekReport/DeleteYearMission/5
+        [HttpPost]
+        public string DeleteYearMission(int id)
+        {
+            try
+            {
+                YearMission yearMission = dbContext.YearMissions.ToList().Find(a => a.YMID == id);
+                dbContext.Entry(yearMission).State = System.Data.Entity.EntityState.Deleted;
+                dbContext.SaveChanges();
+
+                return "删除成功";
+            }
+            catch (Exception e1)
+            {
+                return "出错了: " + e1.Message;
+            }
         }
 
     }

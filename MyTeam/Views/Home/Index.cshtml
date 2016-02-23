@@ -95,7 +95,7 @@
                                         <tr><th>项目名称</th><th>延期阶段</th></tr>
                                         @foreach (HomeProjDelay r in Model.ProjDetails)
                                         {
-                                            string s = "/Proj/index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
+                                            string s = "/Proj/Index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
 
                                             <tr>
                                                 <td class="text-center"><a href=@s>@r.ProjName</a></td>
