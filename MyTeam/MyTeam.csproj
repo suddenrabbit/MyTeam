@@ -155,6 +155,7 @@
     <Compile Include="Controllers\ProjSurvController.cs" />
     <Compile Include="Controllers\ReqManageController.cs" />
     <Compile Include="Controllers\ReqTrackController.cs" />
+    <Compile Include="Controllers\AttendanceManageController.cs" />
     <Compile Include="Controllers\TargetMissionController.cs" />
     <Compile Include="Controllers\TargetManageController.cs" />
     <Compile Include="Controllers\SysManageController.cs" />
@@ -165,6 +166,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Attendance\AttendaceResult.cs" />
+    <Compile Include="Models\Attendance\Attendace.cs" />
     <Compile Include="Models\BusiReq\BusiReqProj.cs" />
     <Compile Include="Models\Home\HomeResult.cs" />
     <Compile Include="Models\Proj\ProjPlanQuery.cs" />
@@ -246,6 +249,7 @@
     <Content Include="Content\templates\VerReportT.xlsx" />
     <Content Include="Content\templates\ReqTrackImportT.xlsx" />
     <Content Include="Content\templates\ProjPlanImportT.xlsx" />
+    <Content Include="Content\templates\AttendanceReportT.xlsx" />
     <None Include="Properties\PublishProfiles\MZ.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -366,6 +370,9 @@
     <Content Include="Views\WeekReport\YearMissionIndex.cshtml" />
     <Content Include="Views\WeekReport\EditYearMission.cshtml" />
     <Content Include="Views\WeekReport\AddYearMission.cshtml" />
+    <Content Include="Views\AttendanceManage\Create.cshtml" />
+    <Content Include="Views\AttendanceManage\Edit.cshtml" />
+    <Content Include="Views\AttendanceManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

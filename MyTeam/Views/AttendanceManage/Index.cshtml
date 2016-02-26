@@ -1,0 +1,217 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IEnumerable<MyTeam.Models.Attendance>
+@{
+    ViewBag.Title = "外协人员考勤管理";
+}
+<h2>@ViewBag.Title。</h2>
+<script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+<p>
+    @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+    {
+     <!--只有管理员可以添加-->
+
+        <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加记录" />
+    }
+    <a href="/AttendanceManage/Export" class="btn btn-default">导出Excel</a>
+</p>
+<script>
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal();
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/AttendanceManage/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal();
+            }
+        });
+    }
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        var url = "/AttendanceManage/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal();
+            }
+        });
+    }
+
+    // 在modal中新增
+    function doCreate() {
+        var url = "/AttendanceManage/Create/";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateMain').html(msg);
+            },
+            error: function () {
+                $('#CreateMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
+            }
+        });
+    }
+</script>
+<table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed">
+    <tr>
+        @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+        {
+            <th></th>
+        }
+        <th>
+            @Html.DisplayNameFor(model => model.LeaveDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PersonID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LeaveDays)
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            
+                @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+                {
+                    <td>
+                        <!--只有管理员可以编辑删除-->
+                        <span>
+                            <a href="#" onclick="doEdit('@item.AID','@item.PersonName')">编辑</a>
+                            | <a href="#" onclick="doDelete('@item.AID','@item.PersonName 在 @item.LeaveDate.ToShortDateString() 的请假记录')">删除</a>
+                        </span>
+                    </td>
+                }
+                
+            <td>
+                @Html.DisplayFor(modelItem => item.LeaveDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LeaveDays)
+            </td>
+        </tr>
+    }
+</table>
+<!--分页-->
+@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.Attendance>,
+    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 对话框3：编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="CreateMain"></div>
+            </div>
+        </div>
+    </div>
+</div>

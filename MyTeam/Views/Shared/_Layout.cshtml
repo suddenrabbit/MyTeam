@@ -37,7 +37,7 @@
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                            系统维护管理
+                            维护需求管理
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
@@ -88,12 +88,13 @@
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                            量化考核指标管理
+                            考核与考勤
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="/TargetManage">指标管理</a></li>
                             <li><a href="/TargetMission">指标对应任务管理</a></li>
+                            <li><a href="/AttendanceManage">外协人员考勤管理</a></li>
                         </ul>
                     </li>
                     @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])

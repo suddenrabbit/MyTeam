@@ -31,7 +31,7 @@ namespace MyTeam.Controllers
                 year = DateTime.Now.Year;
             }
 
-            //var ls = dbContext.Database.SqlQuery<TargetMissionQuery>("select tm.TMID, tm.TID, tm.PersonID, tm.Mission, tm.TargetPoint, t.TargetName from TargetMissions tm left join Targets t on tm.TID = t.TID where t.TargetYear = @p0", year);
+            //var ls = dbContext.Database.SqlQuery<TargetMissionQuery>("select tm.TMID, tm.TID, tm.PersonName, tm.Mission, tm.TargetPoint, t.TargetName from TargetMissions tm left join Targets t on tm.TID = t.TID where t.TargetYear = @p0", year);
             var ls = from tm in dbContext.TargetMissions
                      join t in dbContext.Targets
                      on tm.TID equals t.TID

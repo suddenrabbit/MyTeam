@@ -14,11 +14,6 @@
 <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#PlanDeadLine").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy-M-d' })", placeholder: "点击选择日期" });
-
-    });
     // 隐藏表单
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
@@ -95,7 +90,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.PlanDeadLine)
+                    @Html.EditorFor(model => model.PlanDeadLine, "DateTime")
                     @Html.ValidationMessageFor(model => model.PlanDeadLine, "", new { @class = "text-danger" })
                 </div>
             </div>

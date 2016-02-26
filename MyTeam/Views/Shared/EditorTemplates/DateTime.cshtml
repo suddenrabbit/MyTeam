@@ -1,2 +1,2 @@
 ﻿@model System.DateTime? 
-           @Html.TextBox("", Model.HasValue ? Model.Value.ToString("yyyy-M-d") : "", new { @class = "form-control  Wdate datepicker", @onclick = "WdatePicker({ dateFmt: 'yyyy-M-d' })", @placeholder = "点击选择日期" })
+           @Html.TextBox("", Model.HasValue ? Model.Value.ToString("yyyy/M/d") : "", new { @class = "form-control  Wdate datepicker", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })", @placeholder = "点击选择日期" })

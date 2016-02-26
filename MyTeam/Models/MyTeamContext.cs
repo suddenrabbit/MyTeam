@@ -52,6 +52,8 @@
         public DbSet<TargetMission> TargetMissions { get; set; }
 
         public DbSet<YearMission> YearMissions { get; set; }
+
+        public DbSet<Attendance> Attendances { get; set; }
     }
 
     //public class MyEntity

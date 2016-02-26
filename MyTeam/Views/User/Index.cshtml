@@ -34,6 +34,7 @@
 
     <table class="table table-bordered">
         <tr>
+            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.Username)
             </th>
@@ -46,11 +47,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.IsAdmin)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserType)
+            </th>
         </tr>
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    @Html.ActionLink("编辑", "Edit")
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Username)
                 </td>
@@ -64,7 +70,7 @@
                     @Html.DisplayFor(modelItem => item.IsAdmin)
                 </td>
                 <td>
-                    @Html.ActionLink("编辑", "Edit")
+                    @Html.DisplayFor(modelItem => item.UserTypeName)
                 </td>
             </tr>
         }

@@ -37,7 +37,10 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "管理员", Description = "管理员可以修改系统参数和管理用户")]
-        public bool IsAdmin { get; set; } 
+        public bool IsAdmin { get; set; }
+
+        [Display(Name = "用户类别")]
+        public int UserType { get; set; } //0-系统用户 1-行员 2-外协
 
         [NotMapped]
         public string NamePhone { 
@@ -52,6 +55,26 @@ namespace MyTeam.Models
                 this.Phone = s[1];
             }
         }
+
+        [NotMapped]
+        public string UserTypeName { 
+            get 
+            {
+                if (this.UserType == 0)
+                    return "系统用户";
+                else if (this.UserType == 1)
+                    return "行员";
+                else if (this.UserType == 2)
+                    return "外协";
+                else
+                    return "未知";
+            } 
+            set 
+            { 
+                this.UserTypeName = value;
+            } 
+        }
+        //0-系统用户 1-行员 2-外协
     }
 
     
