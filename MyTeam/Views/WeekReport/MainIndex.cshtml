@@ -82,6 +82,9 @@
     <tr>
         <th></th>
         <th>
+            @Html.DisplayNameFor(model => model.WorkYear)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.WorkType)
         </th>
         <th>
@@ -105,9 +108,7 @@
         <th>
             @Html.DisplayNameFor(model => model.PlanDeadLine)
         </th>        
-        <th>
-            @Html.DisplayNameFor(model => model.WorkTime)
-        </th>
+
         <th>
             @Html.DisplayNameFor(model => model.Remark)
         </th>
@@ -118,6 +119,9 @@
             <td>
                 <a href="#" onclick="doEdit('@item.WRMainID','@item.WorkName')">编辑</a> |
                 <a href="#" onclick="doDelete('@item.WRMainID','@item.WorkName')">删除</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkYear)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.WorkType)
@@ -143,9 +147,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.PlanDeadLine)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkTime)
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.Remark)
             </td>

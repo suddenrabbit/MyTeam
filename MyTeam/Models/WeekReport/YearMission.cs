@@ -44,6 +44,7 @@ namespace MyTeam.Models
 
         [Display(Name = "计划完成时间")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
+        [MinLength(4, ErrorMessage="至少要填4位")]
         public string PlanDeadLine { get; set; }
 
         [Display(Name = "备注")]

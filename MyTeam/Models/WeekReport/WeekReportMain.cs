@@ -11,6 +11,10 @@ namespace MyTeam.Models
         [Key]
         public int WRMainID { get; set; }
 
+        [Display(Name = "任务年度")]
+        [StringLength(4, ErrorMessage = "不能超过4位")]
+        public string WorkYear { get; set; }
+
         [Required]
         [Display(Name = "任务名称")]
         [StringLength(32, ErrorMessage = "不能超过32位")]

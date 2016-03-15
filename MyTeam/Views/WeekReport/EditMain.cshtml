@@ -33,6 +33,14 @@
             @Html.HiddenFor(model => model.WRMainID)
 
             <div class="form-group">
+                @Html.LabelFor(model => model.WorkYear, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.WorkYear, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.WorkYear, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
                 @Html.LabelFor(model => model.WorkType, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.DropDownListFor(model => model.WorkType, ViewBag.WorkTypeList as SelectList, new { @class = "form-control" })
@@ -84,7 +92,8 @@
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Progress, new { @class = "form-control", @type = "number" })
                     <div class="text-info">（只需要填写0-100的数字，不需要百分号）</div>
-                    @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })                </div>
+                    @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })
+                </div>
             </div>
 
             <div class="form-group">

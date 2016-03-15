@@ -51,10 +51,10 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user == null)
             {
-                user = new User();
+                user = Constants.UserList.FirstOrDefault<User>(); // 若获取不到则去第一个
             }
 
-            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID = user.UID, Person = user.Realname };
+            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID = user.UID, Person = user.Realname , WorkYear = DateTime.Now.Year.ToString()};
             return View(main);
         }
 
@@ -81,6 +81,13 @@ namespace MyTeam.Controllers
             {
                 return View();
             }
+
+            // 若workYear为空，自动填上今年的日期
+            if(string.IsNullOrEmpty(main.WorkYear))
+            {
+                main.WorkYear = DateTime.Now.Year.ToString();
+            }
+
             // 工作类型下拉列表
             SelectList sl = MyTools.GetSelectList(Constants.WorkTypeList, false, true, main.WorkType);
             ViewBag.WorkTypeList = sl;
@@ -465,8 +472,8 @@ namespace MyTeam.Controllers
             // 游标：标记目前需要操作的行号
             int cursor = 4; //从第4行开始操作
 
-            // 【1】重点任务 （进度没到100的）
-            var yearMissionList = dbContext.YearMissions.Where(p => p.Progress < 100).ToList();
+            // 【1】重点任务 （进度没到100的、计划完成时间是今年的）
+            var yearMissionList = dbContext.YearMissions.Where(p => p.Progress < 100 || p.PlanDeadLine.Substring(0,4) == DateTime.Now.Year.ToString()).ToList();
 
             int size = yearMissionList.Count();
             int num = 1;
@@ -497,9 +504,9 @@ namespace MyTeam.Controllers
             // 游标下移3行，因为有1个空行2个标题行
             cursor += 3;
 
-            // 【2】重点工作（取所有不为100%的）
+            // 【2】重点工作（取所有不为100%的、以及WorkYear是本年的）
             var mainList = (from a in dbContext.WeekReportMains
-                            where a.Progress < 100
+                            where a.Progress < 100 || a.WorkYear == DateTime.Now.Year.ToString()
                             orderby a.Person, a.OutSource
                             select a).ToList();
 
