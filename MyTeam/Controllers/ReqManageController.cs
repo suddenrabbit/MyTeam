@@ -71,7 +71,7 @@ namespace MyTeam.Controllers
             mainRegReq.AcptDate = DateTime.Now;
 
             return View(mainRegReq);
-        }        
+        }
 
         // 入池：第二步，输入明细信息
 
@@ -98,7 +98,7 @@ namespace MyTeam.Controllers
             }
             // 需求类型下拉列表
             ViewBag.ReqTypeList = MyTools.GetSelectList(Constants.ReqTypeList);
-          
+
             return View(reqList);
         }
 
@@ -107,18 +107,22 @@ namespace MyTeam.Controllers
         public ActionResult RegResult(List<Req> reqList)
         {
             List<Req> ls = dbContext.Reqs.ToList();
-            string r = "";            
+            string r = "";
 
             try
             {
                 // 登记
                 foreach (Req req in reqList)
-                {   
+                {
                     // 状态默认「待评估」
                     req.ReqStat = "待评估";
-                    dbContext.Reqs.Add(req); 
+                    dbContext.Reqs.Add(req);
+
+                    // 加入创建时间和更新时间
+                    req.CreateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
                 }
-                dbContext.SaveChanges();              
+                dbContext.SaveChanges();
 
                 r = "<p class='alert alert-success'>登记入库成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainReg'>继续登记</a></li></ul></p>";
             }
@@ -147,10 +151,10 @@ namespace MyTeam.Controllers
         {
             // 根据申请编号，找到相应的记录
             var rs = dbContext.Reqs.Where(a => a.ReqNo == inPoolReq.ReqNo);
-            
+
             // 通用字段赋值，生成list
             List<Req> reqList = new List<Req>();
-            foreach(Req req in rs)
+            foreach (Req req in rs)
             {
                 req.DevAcptDate = inPoolReq.DevAcptDate;
                 req.DevEvalDate = inPoolReq.DevEvalDate;
@@ -166,21 +170,24 @@ namespace MyTeam.Controllers
         {
             List<Req> ls = dbContext.Reqs.ToList();
             string r = "";
-          
+
             try
             {
                 // 入库
                 foreach (Req req in reqList)
                 {
-                    
+
                     // 状态默认为「入池」
                     req.ReqStat = "入池";
+                    // 更新时间
+                    req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+
                     // 直接执行sql更新
-                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7 where RID=@p8";
-                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo.Trim(), req.BusiReqNo, req.DevWorkload, "入池", req.ReqDesc, req.RID);
+                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7, UpdateTime=@p8 where RID=@p9";
+                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo.Trim(), req.BusiReqNo, req.DevWorkload, "入池", req.ReqDesc, req.UpdateTime, req.RID);
                 }
-                               
-               r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
+
+                r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
             }
             catch (Exception e1)
             {
@@ -231,8 +238,8 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.RlsNo == query.AnyRlsNo || p.SecondRlsNo == query.AnyRlsNo);
                 }
-               
-                if (query.ReqStat != "全部") 
+
+                if (query.ReqStat != "全部")
                 {
                     // 分『等于』和『不等于』2种情况
                     if (query.NotEqual)
@@ -253,14 +260,14 @@ namespace MyTeam.Controllers
                 if (query.SpecialQuery == 1)
                 {
                     DateTime time = DateTime.Now.AddMonths(-3);
-                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0 );
+                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0);
                 }
 
                 else if (query.SpecialQuery == 2)
                 {
                     DateTime time = DateTime.Now.AddDays(-14);
-                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0 );
-                }              
+                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0);
+                }
 
                 // 统一按照受理日期倒序
                 ls = ls.OrderByDescending(p => p.AcptDate);
@@ -335,7 +342,7 @@ namespace MyTeam.Controllers
                 // 拼出sql中的in条件
                 string whereIn = this.GetWhereIn(reqs);
 
-                string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat=N'出池' where ReqDetailNo in ({3})", version, outDate, planRlsDate, whereIn);
+                string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat=N'出池', UpdateTime='{3}' where ReqDetailNo in ({4})", version, outDate, planRlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn);
                 if (outPoolProtect == "true")
                 {
                     sql += " and ReqStat <> N'出池'";
@@ -361,7 +368,7 @@ namespace MyTeam.Controllers
                 // 拼出sql中的in条件
                 string whereIn = this.GetWhereIn(reqs);
 
-                string sql = string.Format("update Reqs set RlsNo='{0}',SecondRlsNo='{1}' where ReqDetailNo in ({2})", rlsNo.Trim(), secondRlsNo.Trim(), whereIn);
+                string sql = string.Format("update Reqs set RlsNo='{0}',SecondRlsNo='{1}', UpdateTime='{2}' where ReqDetailNo in ({3})", rlsNo.Trim(), secondRlsNo.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn);
                 if (rlsNoProtect == "true")
                 {
                     sql += " and ReqStat = N'出池'";
@@ -385,53 +392,44 @@ namespace MyTeam.Controllers
             try
             {
                 string sql = "";
-                // 若是需求编号不为空，则按需求编号更新
+
+                // 更新的条件：1、需求编号不为空，则按需求编号更新；2、否则按照下发通知编号更新
+                string condition = "";
                 if (!string.IsNullOrEmpty(reqs))
                 {
-                    // 拼出sql中的in条件
-                    string whereIn = this.GetWhereIn(reqs);
-                    // 为空的不更新
-                    if (!string.IsNullOrEmpty(rlsDate) && string.IsNullOrEmpty(secondRlsDate))
-                    {
-                        sql = string.Format("update Reqs set RlsDate='{0}' where ReqDetailNo in ({1})", rlsDate, whereIn);
-                    }
-                    if (!string.IsNullOrEmpty(secondRlsDate) && string.IsNullOrEmpty(rlsDate))
-                    {
-                        sql = string.Format("update Reqs set SecondRlsDate='{0}' where ReqDetailNo in ({1})", secondRlsDate, whereIn);
-                    }
-                    if (!string.IsNullOrEmpty(rlsDate) && !string.IsNullOrEmpty(secondRlsDate))
-                    {
-                        sql = string.Format("update Reqs set RlsDate='{0}',SecondRlsDate='{1}' where ReqDetailNo in ({2})", rlsDate, secondRlsDate, whereIn);
-                    }
+                    condition = string.Format("ReqDetailNo in ({0})", this.GetWhereIn(reqs));
+                }
+                else if(!string.IsNullOrEmpty(rlsNoToBatRlsDate))
+                {
+                    condition = string.Format("RlsNo = '{0}'", rlsNoToBatRlsDate);
                 }
                 else
                 {
-                    // 主下发编号不为空、副下发为空
-                    if (!string.IsNullOrEmpty(rlsNoToBatRlsDate) && string.IsNullOrEmpty(secondRlsNoToBatRlsDate))
-                    {
-                        sql = string.Format("update Reqs set RlsDate='{0}' where RlsNo = ('{1}')", rlsDate, rlsNoToBatRlsDate);
-                    }
-                    // 副下发编号不为空、主下发为空
-                    if (string.IsNullOrEmpty(rlsNoToBatRlsDate) && !string.IsNullOrEmpty(secondRlsNoToBatRlsDate))
-                    {
-                        sql = string.Format("update Reqs set SecondRlsDate='{0}' where SecondRlsNo = ('{1}')", secondRlsDate, secondRlsNoToBatRlsDate);
-                    }
-                    // 主下发和副下发编号都不为空
-                    if (!string.IsNullOrEmpty(rlsNoToBatRlsDate))
-                    {
-                        sql = string.Format("update Reqs set RlsDate='{0}',secondRlsDate='{1}' where RlsNo = ('{2}')", rlsDate, secondRlsDate, rlsNoToBatRlsDate);
-                    }
+                    condition = string.Format("SecondRlsNo = '{0}'", secondRlsNoToBatRlsDate);
                 }
 
                 if (rlsDateProtect == "true")
                 {
-                    sql += " and ReqStat = N'出池'";
+                    condition += " and ReqStat = N'出池'";
                 }
 
-                // 批量更新，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sql);
+                int r = 0;
 
-                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
+                // 下发日期的更新原则：为空的不更新
+                if(!string.IsNullOrEmpty(rlsDate))
+                {
+                    sql = string.Format("update Reqs set RlsDate='{0}', UpdateTime='{1}' where {2}", rlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), condition);
+                    // 批量更新，直接执行SQL
+                    r = dbContext.Database.ExecuteSqlCommand(sql);
+                }
+                if (!string.IsNullOrEmpty(secondRlsDate))
+                {
+                    sql = string.Format("update Reqs set SecondRlsDate='{0}', UpdateTime='{1}' where {2}", secondRlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), condition);
+                    // 批量更新，直接执行SQL
+                    r = dbContext.Database.ExecuteSqlCommand(sql);
+                }
+
+                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";                
             }
             catch (Exception e1)
             {
@@ -448,7 +446,7 @@ namespace MyTeam.Controllers
                 // 拼出sql中的in条件
                 string whereIn = this.GetWhereIn(reqs);
 
-                string sql = string.Format("update Reqs set Remark=N'{0}' where ReqDetailNo in ({1})", remark, whereIn);
+                string sql = string.Format("update Reqs set Remark=N'{0}', UpdateTime='{1}' where ReqDetailNo in ({2})", remark, DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn);
 
                 // 批量更新，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
@@ -542,6 +540,10 @@ namespace MyTeam.Controllers
                 req.ReqNo = req.ReqNo.Trim();
                 req.ReqDetailNo = req.ReqDetailNo.Trim();
 
+                // 加入创建时间和更新时间
+                req.CreateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+                req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+
                 dbContext.Reqs.Add(req);
                 dbContext.SaveChanges();
 
@@ -606,6 +608,9 @@ namespace MyTeam.Controllers
 
             try
             {
+                // 更新时间
+                req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+
                 dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
@@ -834,6 +839,94 @@ namespace MyTeam.Controllers
             }
 
             return View(req);
+        }
+
+        /*
+         * 出池与下发功能改进
+         * */
+
+        public ActionResult QuickOutPool()
+        {
+            // 提供系统列表
+            List<RetailSystem> ls1 = this.GetSysList();
+            // 加上“请选择系统”
+            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "请选择系统" });
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
+            ViewBag.SysList = sl1;
+
+            return View();
+        }
+
+        [HttpPost]
+        public string QuickOutPool(string Reqs, string Version, string OutDate, string PlanRlsDate, string SysId)
+        {
+            string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat=N'出池', UpdateTime='{3}' where RID in ({4})", Version, OutDate, PlanRlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
+            try
+            {
+                // 批量更新，直接执行SQL
+                int r = dbContext.Database.ExecuteSqlCommand(sql);
+
+                // 下载出池计划文档接口
+                string downfile = string.Format("/ReqManage/OutPool?isQuery=True&isExcel=True&SysId={0}&Version={1}", SysId, Version);
+
+                return string.Format("<p class='alert alert-success'>" + r + "条需求成功出池！<a href='{0}'>点击</a>导出出池计划文档<p>", downfile);
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
+            }
+        }
+
+        [HttpPost]
+        public string QuickUpdateRlsNo(string Reqs, string RlsNo, string SecondRlsNo)
+        {
+            string sql = string.Format("update Reqs set RlsNo='{0}', SecondRlsNo='{1}', UpdateTime='{2}' where RID in ({3})", RlsNo, SecondRlsNo, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
+            try
+            {
+                // 批量更新，直接执行SQL
+                int r = dbContext.Database.ExecuteSqlCommand(sql);
+                               
+                return "<p class='alert alert-success'>" + r + "条记录更新成功！";
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
+            }
+        }
+
+        /// <summary>
+        /// Ajax接口，根据SysId获取可以出池的需求列表
+        /// </summary>
+        /// <param name="sysId"></param>
+        /// <returns></returns>
+        public string GetReqsToOutPool(int sysId)
+        {
+            if (sysId == 0)
+            {
+                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>请选择系统</option></select>";
+            }
+
+            List<Req> list = dbContext.Reqs.Where(p => p.SysId == sysId && p.ReqStat == "入池").ToList();
+
+
+            int size = list.Count;
+
+            if (size == 0)
+            {
+                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>无可出池需求</option></select>";
+            }
+
+            StringBuilder sb = new StringBuilder("<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"5\">");
+
+            foreach (Req r in list)
+            {
+                sb.Append(string.Format("<option value='{0}'>{1}</option>", r.RID, r.ReqDetailNo));
+            }
+
+            sb.Append("</select>");
+
+            return sb.ToString();
+
         }
 
     }

@@ -251,7 +251,7 @@ namespace MyTeam.Controllers
             ViewBag.RptDateList = sl2;
 
             // 重点项目下拉
-            var mainList = dbContext.WeekReportMains.Where(a => a.Progress < 100);
+            var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack != true);
             SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
             ViewBag.WorkNameList = sl3;
 
@@ -293,7 +293,7 @@ namespace MyTeam.Controllers
                 // 自动计算工时
                 if (detail.IsWithMain)
                 {
-                    this.UpdateWorkTime(detail.WorkMission);
+                    this.UpdateWorkTime(detail.WorkName);
                 }
 
                 return "删除成功";
@@ -422,7 +422,7 @@ namespace MyTeam.Controllers
             }
             else
             {
-                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkMission = m.WRMainID where d.WorkMission = @p0) where WRMainID = @p1", mainId.ToString(), mainId);
+                dbContext.Database.ExecuteSqlCommand("update WeekReportMains set WorkTime = (select sum(d.WorkTime) from WeekReportDetails d left join WeekReportMains m on d.WorkName = m.WRMainID where d.WorkName = @p0) where WRMainID = @p1", mainId.ToString(), mainId);
             }
         }
 
@@ -472,8 +472,8 @@ namespace MyTeam.Controllers
             // 游标：标记目前需要操作的行号
             int cursor = 4; //从第4行开始操作
 
-            // 【1】重点任务 （进度没到100的、计划完成时间是今年的）
-            var yearMissionList = dbContext.YearMissions.Where(p => p.Progress < 100 || p.PlanDeadLine.Substring(0,4) == DateTime.Now.Year.ToString()).ToList();
+            // 【1】重点任务 
+            var yearMissionList = dbContext.YearMissions.Where(p => p.DoNotTrack != true).ToList();
 
             int size = yearMissionList.Count();
             int num = 1;
@@ -491,7 +491,7 @@ namespace MyTeam.Controllers
                 sheet.Cells[cursor, 5].Value = s.WorkStage;
                 sheet.Cells[cursor, 6].Value = s.Person;
                 sheet.Cells[cursor, 7].Value = s.OutSource;
-                sheet.Cells[cursor, 8].Value = s.Progress + "%";
+                sheet.Cells[cursor, 8].Value = s.Progress;
                 sheet.Cells[cursor, 9].Value = s.PlanDeadLine;
                 sheet.Cells[cursor, 10].Value = s.Remark;
 
@@ -506,7 +506,7 @@ namespace MyTeam.Controllers
 
             // 【2】重点工作（取所有不为100%的、以及WorkYear是本年的）
             var mainList = (from a in dbContext.WeekReportMains
-                            where a.Progress < 100 || a.WorkYear == DateTime.Now.Year.ToString()
+                            where a.DoNotTrack != true
                             orderby a.Person, a.OutSource
                             select a).ToList();
 

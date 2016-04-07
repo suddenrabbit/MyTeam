@@ -211,5 +211,12 @@ namespace MyTeam.Models
             }
         }
 
+
+        // 增加创建日期和最近一次更新日期，便于跟踪
+        [StringLength(16)]
+        public string CreateTime { get; set; }
+
+        [StringLength(16)]
+        public string UpdateTime { get; set; }
     }
 }

@@ -114,6 +114,15 @@
             </div>
 
             <div class="form-group">
+                @Html.LabelFor(model => model.DoNotTrack, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.DoNotTrack, new { @class = "form-control" })
+                    <div class="text-info">（勾选后不再导出到周报excel中）</div>
+                    @Html.ValidationMessageFor(model => model.DoNotTrack, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
                 @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
