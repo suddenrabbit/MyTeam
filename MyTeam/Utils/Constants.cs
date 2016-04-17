@@ -115,5 +115,10 @@ namespace MyTeam.Utils
         /// </summary>
         public static List<string> WorkTypeList = new List<string>() { "创新项目", "科技引领", "专项工作", "解决方案", "维护需求", "创新研究", "培训学习", "规模度量", "制度建设", "原型工具应用", "人力资源管理", "物料资源管理", "信息资源管理", "单位内务", "其他" };
 
+        /// <summary>
+        /// 项目状态下拉列表
+        /// </summary>
+        public static List<string> ProjStatList = new List<string>() { "进行中", "完成", "暂停", "取消" };
+
     }
 }

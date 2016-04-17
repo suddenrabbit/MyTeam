@@ -149,7 +149,7 @@
                 <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
                     <tr>
                         <th width="12"></th>
-                        <th width="28">
+                        <th width="24">
                             @Html.DisplayNameFor(model => model.ResultList[0].ProjName)
                         </th>
                         <th width="12">
@@ -158,11 +158,14 @@
                         <th width="12">
                             @Html.DisplayNameFor(model => model.ResultList[0].HostDept)
                         </th>
-                        <th width="12">
+                        <th width="8">
                             @Html.DisplayNameFor(model => model.ResultList[0].ProjLevel)
                         </th>
                         <th width="12">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqAnalysisID)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ProjStat)
                         </th>
                     </tr>
 
@@ -189,6 +192,9 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReqAnalysisName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjStat)
                             </td>
                         </tr>
                     }

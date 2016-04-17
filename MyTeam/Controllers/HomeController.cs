@@ -91,10 +91,10 @@ namespace MyTeam.Controllers
 
             //////////////////////////////////////////////////////////////////////
 
-            // 筛选出各个阶段延期的项目
+            // 筛选出各个阶段延期的项目（只统计项目状态为：进行中）
             // 首先获得所有有时间计划的项目列表，对没有时间计划的项目将不统计其延期的情况
             List<ProjPlan> plans = dbContext.ProjPlans.ToList();
-            List<Proj> projs = dbContext.Projs.ToList();
+            List<Proj> projs = dbContext.Projs.Where(p=>p.ProjStat=="进行中").ToList();
             List<HomeProjDelay> delays = new List<HomeProjDelay>();
 
             foreach (ProjPlan plan in plans)

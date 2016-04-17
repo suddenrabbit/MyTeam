@@ -136,7 +136,7 @@ namespace MyTeam.Controllers
         /* 每周工作 */
 
         // 每周工作页面
-        public ActionResult DetailIndex(string id, int pageNum = 1)
+        public ActionResult DetailIndex(int pageNum = 1, int orderByType =  1)
         {
             var ls = from a in dbContext.WeekReportDetails select a;
             // 若非管理员只显示负责人中含有自己姓名的记录
@@ -161,14 +161,23 @@ namespace MyTeam.Controllers
                 }
             }
 
-            // 按照RptDate倒序显示
-            ls = ls.OrderByDescending(a => a.RptDate);
+            // 按照 orderByType 排序 (1-按照周报倒序；2-按照项目名称）
+            if(orderByType == 2)
+            {
+                ls = ls.OrderBy(a => a.WorkName);
+            }
+            else
+            {
+                ls = ls.OrderByDescending(a => a.RptDate);
+            }
+
+            ViewBag.OrdeyByTypeParam = "&orderByType=" + orderByType;
 
             return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }
 
         // 添加每周工作
-        public ActionResult AddDetail(string id, bool forMain = false)
+        public ActionResult AddDetail(bool forMain = false)
         {
             // 当前用户
             User user = this.GetSessionCurrentUser();
@@ -194,15 +203,12 @@ namespace MyTeam.Controllers
                 RptDate = DateTime.Now.Year + "年",
                 Person = user.Realname,
                 RptPersonID = user.UID,
-                WorkName = forMain ? id : "",
                 Progress = 100,
                 IsWithMain = forMain
             };
 
-            ViewBag.ForMain = forMain;
-
             // 重点项目下拉
-            var mainList = dbContext.WeekReportMains.Where(a => a.Progress < 100);
+            var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack != true);
             SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
             ViewBag.WorkNameList = sl3;
 

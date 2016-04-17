@@ -31,6 +31,8 @@
 
             @Html.HiddenFor(model => model.RID);
             @Html.HiddenFor(model => model.OldReqDetailNo);
+            @Html.HiddenFor(model => model.CreateTime);
+            
                 <!--系统下拉选择-->
             <div class="form-group">
                 @Html.LabelFor(model => model.SysId, new { @class = "col-md-3 control-label" })

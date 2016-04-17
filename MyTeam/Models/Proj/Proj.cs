@@ -187,5 +187,9 @@ namespace MyTeam.Models
 
         [NotMapped]
         public string OldProjName { get; set; }
+
+        [Display(Name = "项目状态")]
+        [StringLength(10)]
+        public string ProjStat { get; set; }
     }
 }

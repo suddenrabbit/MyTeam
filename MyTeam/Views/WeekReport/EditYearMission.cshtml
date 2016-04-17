@@ -84,7 +84,7 @@
                 @Html.LabelFor(model => model.Progress, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Progress, new { @class = "form-control" })
-                    <div class="text-info">（允许填任意内容，若填百分比请自行添加%符号）</div>
+                    <span class="text-info">（允许填任意内容，若填百分比请自行添加%符号）</span>
                     @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })
                 </div>
             </div>

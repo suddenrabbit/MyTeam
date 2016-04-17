@@ -86,8 +86,8 @@
     <tr>
         <th></th>
         <th>
-            @Html.DisplayNameFor(model => model.RptDate)
-        </th>
+            <a href="/WeekReport/DetailIndex?orderByType=1">@Html.DisplayNameFor(model => model.RptDate)</a>
+</th>
         <th>
             @Html.DisplayNameFor(model => model.Priority)
         </th>
@@ -95,7 +95,7 @@
             @Html.DisplayNameFor(model => model.WorkType)
         </th>       
         <th>
-            @Html.DisplayNameFor(model => model.WorkName)
+            <a href="/WeekReport/DetailIndex?orderByType=2">@Html.DisplayNameFor(model => model.WorkName)</a>
         </th>
         <th>
             @Html.DisplayNameFor(model => model.WorkMission)
@@ -168,7 +168,7 @@
 </table>
 <!--分页-->
 @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.WeekReportDetail>,
-    generatePageUrl: Page => Url.Action("DetailIndex", new { pageNum = Page }))
+        generatePageUrl: Page => Url.Action("DetailIndex", new { pageNum = Page }) + ViewBag.OrdeyByTypeParam)
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -264,3 +264,4 @@
         </div>
     </div>
 </div>
+
