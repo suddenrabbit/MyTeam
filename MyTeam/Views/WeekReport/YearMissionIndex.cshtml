@@ -106,6 +106,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Remark)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DoNotTrack)
+        </th>
     </tr>
     @foreach (var item in Model)
     {
@@ -133,13 +136,16 @@
                 @Html.DisplayFor(modelItem => item.OutSource)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Progress)%
+                @Html.DisplayFor(modelItem => item.Progress)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PlanDeadLine)
             </td>           
             <td>
                 @Html.DisplayFor(modelItem => item.Remark)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoNotTrack)
             </td>
         </tr>
     }

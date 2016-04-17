@@ -215,6 +215,20 @@
                 @Html.DisplayFor(model => model.Remark)
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreateTime, new { @class = "col-md-3 control-label" })
+            <div class="col-md-9 form-control-static">
+                @Html.DisplayFor(model => model.CreateTime)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UpdateTime, new { @class = "col-md-3 control-label" })
+            <div class="col-md-9 form-control-static">
+                @Html.DisplayFor(model => model.UpdateTime)
+            </div>
+        </div>
     </div>
 </div>
 

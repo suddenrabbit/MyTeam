@@ -114,6 +114,9 @@ namespace MyTeam.Controllers
             // 主办部门
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
 
+            // 项目状态
+            ViewBag.ProjStatList = MyTools.GetSelectList(Constants.ProjStatList);
+
             return View();
         }
 
@@ -176,6 +179,9 @@ namespace MyTeam.Controllers
 
             // 主办部门
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
+
+            // 项目状态
+            ViewBag.ProjStatList = MyTools.GetSelectList(Constants.ProjStatList);
 
             proj.OldProjName = proj.ProjName;
             return View(proj);

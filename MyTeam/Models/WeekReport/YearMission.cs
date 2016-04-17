@@ -39,8 +39,8 @@ namespace MyTeam.Models
         public string OutSource { get; set; }
 
         [Display(Name = "整体完成率")]
-        [Range(0, 100, ErrorMessage = "只能填0-100之间的数字")]
-        public int Progress { get; set; }
+        [StringLength(32, ErrorMessage = "不能超过32位")]
+        public string Progress { get; set; }
 
         [Display(Name = "计划完成时间")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
@@ -49,5 +49,8 @@ namespace MyTeam.Models
 
         [Display(Name = "备注")]
         public string Remark { get; set; }
+
+        [Display(Name = "不再跟踪")]
+        public bool DoNotTrack { get; set; }
     }
 }

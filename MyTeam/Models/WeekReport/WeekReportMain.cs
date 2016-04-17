@@ -60,6 +60,8 @@ namespace MyTeam.Models
         [Display(Name = "现场技术服务人员")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string OutSource { get; set; }
-       
+
+        [Display(Name = "不再跟踪")]
+        public bool DoNotTrack { get; set; }
     }
 }

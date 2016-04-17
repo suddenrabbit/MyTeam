@@ -120,6 +120,14 @@
                         @Html.ValidationMessageFor(model => model.Architect, "", new { @class = "text-danger" })
                     </div>
                 </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProjStat, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        <!--项目状态下拉选择-->
+                        @Html.DropDownListFor(model => model.ProjStat, ViewBag.ProjStatList as SelectList, new { @class = "form-control" })
+                    </div>
+
+                </div>
             </fieldset>
 
             <fieldset>
