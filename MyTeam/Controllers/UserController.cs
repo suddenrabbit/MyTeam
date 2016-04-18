@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using MyTeam.Models;
@@ -73,7 +71,7 @@ namespace MyTeam.Controllers
 
         // 修改密码:ajax调用
         [HttpPost]
-        public ContentResult ChangePsw(ChangePsw changePsw)
+        public string ChangePsw(ChangePsw changePsw)
         {
             User user = this.GetSessionCurrentUser();
 
@@ -84,7 +82,7 @@ namespace MyTeam.Controllers
             // 更新内存
             this.Update(1);
 
-            return Content("<p class='alert alert-success'>您已成功修改密码</p>", "text/html");
+            return "<p class='alert alert-success'>您已成功修改密码</p>";
         }
 
         // 管理页面

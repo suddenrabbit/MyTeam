@@ -3,141 +3,103 @@
 @{
     ViewBag.Title = "欢迎";
 }
-<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#myTab a:first").tab('show')
-        $("#myTab1 a:first").tab('show')
-    });
-</script>
+
+<!--
+
 <div class="jumbotron">
-    <h1 style="font-weight:bold">零售团队管理系统<span style="font-size:12px">(Beta)</span></h1>
+    <h1 style="font-weight:bold">零售团队管理系统</h1>
 </div>
-<div class="row">
-    <fieldset class="col-md-6">
-        <div class="row">
-            <div class="col-md-10">
-                <form class="form-horizontal" role="form">
-                    <div id="info"></div>
-                    <ul class="nav nav-tabs" id="myTab">
-                        <li><a href="#tabs1" data-toggle="tab">全部未出池的需求(@ViewBag.ReqLsSum)</a></li>
-                        <li role="presentation" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >
-                                <span id="mytitle">超过时限的需求</span> <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#tabs2" data-toggle="tab" onclick="$('#mytitle').text('超三个月未出池的需求(@ViewBag.ReqDelayLsSum)')">超三个月未出池的需求(@ViewBag.ReqDelayLsSum)</a></li>
-                                <li><a href="#tabs3" data-toggle="tab" onclick="$('#mytitle').text('超两周未入池的需求(@ViewBag.ReqInpoolDelayLsSum)')">超两周未入池的需求(@ViewBag.ReqInpoolDelayLsSum)</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <div class="tab-content" style="margin-top:20px">
-                        <div id="tabs1" class="tab-pane fade in active">
-                            <div class="list-group">
-                                @foreach (HomeReq r in Model.ReqLs)
-                                {
-                                    string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SysId=" + r.SysId + "&ReqAcptPerson=" + r.ReqAcptPerson;
-                                    <a class="list-group-item" href=@s>
-                                        <span class="badge">@r.ReqNum</span>
-                                        @r.SysName
-                                    </a>
-                                }
-                            </div>
-                        </div>
-                        <div id="tabs2" class="tab-pane fade in active">
-                            <div class="list-group">
-                                @foreach (HomeReqDelay r in Model.ReqDelayLS)
-                                {
-                                    string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SpecialQuery=1&SysId=" + r.SysId + "&ReqAcptPerson=" + r.ReqAcptPerson;
-                                    <a class="list-group-item" href=@s>
-                                        <span class="badge">@r.ReqDelayNum</span>
-                                        @r.SysName
-                                    </a>
-                                }
-                            </div>
-                        </div>
-                        <div id="tabs3" class="tab-pane fade in active">
-                            <div class="list-group">
-                                @foreach (HomeInpoolReqDelay r in Model.ReqInpoolDelayLS)
-                                {
-                                    string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SpecialQuery=2&SysId=" + r.SysId + "&ReqAcptPerson=" + r.ReqAcptPerson;
-                                    <a class="list-group-item" href=@s>
-                                        <span class="badge">@r.ReqDelayNum</span>
-                                        @r.SysName
-                                    </a>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+
+-->
+
+<div class="row" style="padding-top:50px">
+    <div class="col-lg-2" style="border-right:1px dashed #808080">
+        <p>全部未出池的需求</p>
+        <p style="font-weight:bold; font-size:8em">@ViewBag.ReqLsSum</p>
+        <div class="list-group">
+            @foreach (HomeReq r in Model.ReqLs)
+            {
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SysId=" + r.SysId + "&ReqAcptPerson=" + r.ReqAcptPerson;
+                <a class="list-group-item" href=@s>
+                    <span class="badge">@r.ReqNum</span>
+                    @r.SysName
+                </a>
+            }
         </div>
-    </fieldset>
-    <fieldset class="col-md-6">
-        <div class="row">
-            <div class="col-md-10">
-                <form class="form-horizontal" role="form">
-                    <div id="info"></div>
-                    <ul class="nav nav-tabs" id="myTab1">
-                        <li><a href="#tabs4" data-toggle="tab">延期项目(@Model.ProjDetails.Count)</a></li>
-                        <li><a href="#tabs5" data-toggle="tab">超时未完成的下发(@Model.RlsDelayLS.Count)</a></li>
-                    </ul>
-                    <div class="tab-content" style="margin-top:20px">
-                        <div id="tabs4" class="tab-pane fade in active">
-                            <div class="list-group">
-                                @if (Model.ProjDetails.Count < 1)
-                                {
-                                    <p class="alert alert-success">暂无</p>
-                                }
-                                else
-                                {
-                                    <table class="table table-condensed table-striped">
-                                        <tr><th>项目名称</th><th>延期阶段</th></tr>
-                                        @foreach (HomeProjDelay r in Model.ProjDetails)
-                                        {
-                                            string s = "/Proj/Index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
 
-                                            <tr>
-                                                <td class="text-center"><a href=@s>@r.ProjName</a></td>
-                                                <td class="text-center">@r.DelayDetail</td>
-                                            </tr>
-                                        }
-                                    </table>
-                                }
-                            </div>
-                        </div>
-                        <div id="tabs5" class="tab-pane fade in active">
-                            <div class="list-group">
-                                @if (Model.RlsDelayLS.Count < 1)
-                                {
-                                    <p class="alert alert-success">暂无</p>
-                                }
-                                else
-                                {
-                                    <table class="table table-condensed table-striped">
-                                        <tr>
-                                            <th>主下发通知编号</th>
-                                            <th>副下发通知编号</th>
-                                            <th>计划下发日期</th>
-                                        </tr>
-                                        @foreach (HomeRlsDelay r in Model.RlsDelayLS)
-                                        {
-                                            string s = "/ReqManage/Index?IsQuery=True&SysId=0&ReqStat=出池&AnyRlsNo=" + r.RlsNo;
-
-                                            <tr>
-                                                <td class="text-center"><a href=@s>@r.RlsNo</a></td>
-                                                <td class="text-center">@r.SecondRlsNo</td>
-                                                <td class="text-center">@r.PlanRlsDate.Value.ToString("yyyy/M/d")  </td>
-                                            </tr>
-                                        }
-                                    </table>
-                                }
-                            </div>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
+    </div>
+    <div class="col-lg-2" style="border-right:1px dashed #808080">
+        <p>超三个月未出池的需求</p>
+        <p style="font-weight:bold; font-size:8em">@ViewBag.ReqDelayLsSum</p>
+        <div class="list-group">
+            @foreach (HomeReqDelay r in Model.ReqDelayLS)
+            {
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SpecialQuery=1&SysId=" + r.SysId + "&ReqAcptPerson=" + r.ReqAcptPerson;
+                <a class="list-group-item" href=@s>
+                    <span class="badge">@r.ReqDelayNum</span>
+                    @r.SysName
+                </a>
+            }
         </div>
-    </fieldset>   
+
+    </div>
+    <div class="col-lg-2" style="border-right:1px dashed #808080">
+        <p>超两周未入池的需求</p>
+        <p style="font-weight:bold; font-size:8em">@ViewBag.ReqInpoolDelayLsSum</p>
+        <div class="list-group">
+            @foreach (HomeInpoolReqDelay r in Model.ReqInpoolDelayLS)
+            {
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SpecialQuery=2&SysId=" + r.SysId + "&ReqAcptPerson=" + r.ReqAcptPerson;
+                <a class="list-group-item" href=@s>
+                    <span class="badge">@r.ReqDelayNum</span>
+                    @r.SysName
+                </a>
+            }
+        </div>
+
+    </div>
+    <div class="col-lg-3" style="border-right:1px dashed #808080">
+        <p>延期项目</p>
+        <p style="font-weight:bold; font-size:8em">@Model.ProjDetails.Count</p>
+        @if (Model.ProjDetails.Count > 0)
+        {
+            <table class="table table-condensed table-striped">
+                <tr><th>项目名称</th><th>延期阶段</th></tr>
+                @foreach (HomeProjDelay r in Model.ProjDetails)
+                {
+                    string s = "/Proj/Index?isQuery=True&isExcel=False&ProAcptDate=&RulesPublishDate=&ProjID=" + r.ProjId;
+
+                    <tr>
+                        <td class="text-center"><a href=@s>@r.ProjName</a></td>
+                        <td class="text-center">@r.DelayDetail</td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+    <div class="col-lg-3">
+        <p>超时未完成的下发</p>
+        <p style="font-weight:bold; font-size:8em">@Model.RlsDelayLS.Count</p>
+        @if (Model.RlsDelayLS.Count > 0)
+        {
+            <table class="table table-condensed table-striped">
+                <tr>
+                    <th>主下发通知编号</th>
+                    <th>副下发通知编号</th>
+                    <th>计划下发日期</th>
+                </tr>
+                @foreach (HomeRlsDelay r in Model.RlsDelayLS)
+                {
+                    string s = "/ReqManage/Index?IsQuery=True&SysId=0&ReqStat=出池&AnyRlsNo=" + r.RlsNo;
+
+                    <tr>
+                        <td class="text-center"><a href=@s>@r.RlsNo</a></td>
+                        <td class="text-center">@r.SecondRlsNo</td>
+                        <td class="text-center">@r.PlanRlsDate.Value.ToString("yyyy/M/d")  </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
 </div>
+
