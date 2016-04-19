@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using MyTeam.Models;
 
 namespace MyTeam.Controllers
@@ -12,7 +10,6 @@ namespace MyTeam.Controllers
     {
         //
         // GET: /Home/
-
         public ActionResult Index()
         {
             // 首页显示 未出池的需求，未完成的项目

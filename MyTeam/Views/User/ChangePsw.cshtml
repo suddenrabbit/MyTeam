@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-md-8">
 <div id="info"></div>
-        @using (Ajax.BeginForm("ChangePsw", "User", null,new AjaxOptions { UpdateTargetId = "info", HttpMethod = "POST" },
+        @using (Ajax.BeginForm("ChangePsw", "User", null,new AjaxOptions { UpdateTargetId = "info" },
                 new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
