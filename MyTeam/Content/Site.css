@@ -41,3 +41,15 @@ textarea {
     border-color:none!important;
 }
 
+.infobox {
+    border:solid 1px #ddd;
+    padding-left: 10px;
+    padding-top:10px;
+    margin-bottom:15px;
+    box-shadow:2px 2px 5px #ddd;
+    border-radius:4px;
+}
+
+.infolist {
+    font-size:0.8em;
+}
