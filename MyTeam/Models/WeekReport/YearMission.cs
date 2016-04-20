@@ -22,7 +22,7 @@ namespace MyTeam.Models
         public string WorkMission { get; set; }
 
         [Display(Name = "工作进展")]
-        [StringLength(128, ErrorMessage = "不能超过128位")]
+        [StringLength(1024, ErrorMessage = "不能超过1024位")]
         public string WorkStage { get; set; }
 
         [Required]

@@ -14,7 +14,7 @@
     <div class="col-md-2">
         <div class="infobox">
             <p>全部未出池的需求</p>
-            <p style="font-weight:bold; font-size:6em">@ViewBag.ReqLsSum</p>
+            <p style="font-weight:bold; font-size:5em">@ViewBag.ReqLsSum</p>
         </div>
 
         <div class="list-group infolist">
@@ -31,7 +31,7 @@
     <div class="col-md-2">
         <div class="infobox">
             <p>超三个月未出池的需求</p>
-            <p style="font-weight:bold; font-size:6em">@ViewBag.ReqDelayLsSum</p>
+            <p style="font-weight:bold; font-size:5em">@ViewBag.ReqDelayLsSum</p>
         </div>
 
         <div class="list-group infolist">
@@ -48,7 +48,7 @@
     <div class="col-md-2">
         <div class="infobox">
             <p>超两周未入池的需求</p>
-            <p style="font-weight:bold; font-size:6em">@ViewBag.ReqInpoolDelayLsSum</p>
+            <p style="font-weight:bold; font-size:5em">@ViewBag.ReqInpoolDelayLsSum</p>
         </div>
         
         <div class="list-group infolist">
@@ -65,7 +65,7 @@
     <div class="col-md-3">
         <div class="infobox">
             <p>延期项目</p>
-            <p style="font-weight:bold; font-size:6em">@Model.ProjDetails.Count</p>
+            <p style="font-weight:bold; font-size:5em">@Model.ProjDetails.Count</p>
         </div>
         
         @if (Model.ProjDetails.Count > 0)
@@ -87,7 +87,7 @@
     <div class="col-md-3">
         <div class="infobox">
             <p>超时未完成的下发</p>
-            <p style="font-weight:bold; font-size:6em">@Model.RlsDelayLS.Count</p>
+            <p style="font-weight:bold; font-size:5em">@Model.RlsDelayLS.Count</p>
         </div>
        
         @if (Model.RlsDelayLS.Count > 0)
