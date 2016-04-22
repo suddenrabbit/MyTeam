@@ -25,24 +25,33 @@ namespace MyTeam.Controllers
         {
             string username = userLogin.Username;
             string password = userLogin.Password;
-            // Password要MD5加密
-            password = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "MD5");
-            // 检测登陆信息
-            // 根据用户名、密码获取User信息
-            User user = this.GetUserList().Find(a => a.Username == username && a.Password == password);
-            if (user != null)
+            try
             {
-                // 先用Session记录UID
-                this.SetSessionCurrentUser(user.UID);
-                // 控制部分菜单显示，session记录是否为管理员
-                Session["IsAdmin"] = user.IsAdmin;
-                FormsAuthentication.RedirectFromLoginPage(user.Realname, false);
-                // return RedirectToAction("Index", "Home");
+                // Password要MD5加密
+                password = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "MD5");
+                // 检测登陆信息
+                // 根据用户名、密码获取User信息
+                User user = this.GetUserList().Find(a => a.Username == username && a.Password == password);
+                if (user != null)
+                {
+                    // 先用Session记录UID
+                    this.SetSessionCurrentUser(user.UID);
+                    // 控制部分菜单显示，session记录是否为管理员
+                    Session["IsAdmin"] = user.IsAdmin;
+                    FormsAuthentication.RedirectFromLoginPage(user.Realname, false);
+                    // return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    throw new Exception("用户名或密码错误");
+                }
             }
+            catch (Exception e1)
+            {
+                ViewBag.ErrMsg = "登陆失败：" + e1.Message;
+            }            
 
-            ModelState.AddModelError("", "您输入的用户名或密码错误");
             return View();
-
 
         }
 

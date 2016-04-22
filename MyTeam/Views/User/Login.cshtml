@@ -5,8 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - MyTeam</title>
@@ -31,7 +30,7 @@
 </head>
 <body style="background-color:#f1f1f1;">
     <div class="container body-content">
-        <!--[if lt IE 9]> <p class='alert alert-danger text-center'>本系统在旧版IE中可能会出现各种显示问题，建议使用Chrome或其他webkit内核浏览器！</p> <![endif]-->
+        <!--[if lt IE 10]> <p class='alert alert-danger text-center'>本系统在旧版IE中可能会出现各种显示问题，建议使用Chrome或其他webkit内核浏览器！</p> <![endif]-->
         @model MyTeam.Models.UserLogin
         <div class="row text-center">
             <div style="height:30px"></div>
@@ -39,13 +38,22 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4" style="background-color:#ffffff; padding-left:0px; padding-right:0px; box-shadow:0 0 2px #ddd; border-radius:4px">
                     <div style="background-color:#333;color:#ffffff; padding:10px; margin-bottom:40px; font-size:1.8em">零售团队管理系统</div>
-                    <div style="margin-bottom:40px">WELCOME. SIGN IN TO CONTINUE.</div>
+                    @if (!string.IsNullOrEmpty(ViewBag.ErrMsg))
+                    {
+                        <div style="margin-bottom:40px; color:#ff0000">@ViewBag.ErrMsg</div>
+                    }
+                    else
+                    {
+                        <div style="margin-bottom:40px">WELCOME. SIGN IN TO CONTINUE.</div>
+                    }
+
                     @using (Html.BeginForm("Login", "User", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
                 new { @class = "form-horizontal", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+                        
+                        
                         <div class="form-group">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
