@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color:#f1f1f1;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -52,4 +53,15 @@ textarea {
 
 .infolist {
     font-size:0.8em;
+}
+
+.card{
+    background-color:#FFF;
+    margin-bottom:20px;
+    padding:20px;
+    box-shadow:2px 2px 5px #ddd;
+}
+
+footer{
+    margin-top:30px;
 }

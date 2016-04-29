@@ -123,12 +123,11 @@
     </div>
     <div class="container body-content">
         <!--[if lt IE 10]> <p class='alert alert-danger text-center' style="margin:30px">本系统在旧版IE中可能会出现各种显示问题，建议使用Chrome或其他webkit内核浏览器！</p> <![endif]-->
-        @RenderBody()
-        <hr />
-        <footer>
-            <p class="text-left">&copy; @DateTime.Now.Year - 兴业银行信息科技部需求中心零售团队</p>
-            <p class="text-right" style="font-size:0.8em; font-style:italic">Made by ZhouMeng & ZhangJuan</p>
-        </footer>
+        @RenderBody()        
     </div>
+    <footer>
+        <p class="text-center">&copy; @DateTime.Now.Year - 兴业银行信息科技部需求中心零售团队</p>
+        <p class="text-center" style="font-size:0.8em;">Made by ZhouMeng & ZhangJuan</p>
+    </footer>
 </body>
 </html>

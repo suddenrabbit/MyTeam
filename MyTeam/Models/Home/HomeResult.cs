@@ -34,7 +34,7 @@ namespace MyTeam.Models
             {
                 var r = (from a in Constants.SysList
                          where a.SysID == this.SysId
-                         select a.SysName).FirstOrDefault();
+                         select a.SysShortName).FirstOrDefault();
 
                 return r == null ? "未知" : r.ToString();
             }
@@ -56,7 +56,7 @@ namespace MyTeam.Models
             {
                 var r = (from a in Constants.SysList
                          where a.SysID == this.SysId
-                         select a.SysName).FirstOrDefault();
+                         select a.SysShortName).FirstOrDefault();
 
                 return r == null ? "未知" : r.ToString();
             }
@@ -98,7 +98,7 @@ namespace MyTeam.Models
             {
                 var r = (from a in Constants.SysList
                          where a.SysID == this.SysId
-                         select a.SysName).FirstOrDefault();
+                         select a.SysShortName).FirstOrDefault();
 
                 return r == null ? "未知" : r.ToString();
             }
