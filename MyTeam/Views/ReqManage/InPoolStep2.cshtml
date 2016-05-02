@@ -3,69 +3,68 @@
     ViewBag.Title = "需求入池-第二步";
 }
 
-<h2>@ViewBag.Title。</h2>
-<div class="row">
-    <div class="col-md-12">
-        @using (Html.BeginForm("InPoolResult", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-                new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<h2>@ViewBag.Title</h2>
+<div class="row card">
+    @using (Html.BeginForm("InPoolResult", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                        new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <table class="table table-condensed table-bordered">
-                <tr>
-                    <th width="30%">
-                        @Html.DisplayNameFor(model => model[0].ReqDetailNo)
-                    </th>
+        <table class="table table-condensed table-bordered">
+            <tr>
+                <th width="30%">
+                    @Html.DisplayNameFor(model => model[0].ReqDetailNo)
+                </th>
 
-                    <th width="40%">
-                        @Html.DisplayNameFor(model => model[0].ReqDesc)
-                    </th>
-                   
-                    <th width="10%">
-                        @Html.DisplayNameFor(model => model[0].DevWorkload)
-                    </th>
+                <th width="40%">
+                    @Html.DisplayNameFor(model => model[0].ReqDesc)
+                </th>
 
-                    <th width="20%">
-                        @Html.DisplayNameFor(model => model[0].BusiReqNo)
-                    </th>
-                </tr>
+                <th width="10%">
+                    @Html.DisplayNameFor(model => model[0].DevWorkload)
+                </th>
 
-                @for (int i = 0; i < Model.Count(); i++)
+                <th width="20%">
+                    @Html.DisplayNameFor(model => model[0].BusiReqNo)
+                </th>
+            </tr>
+
+            @for (int i = 0; i < Model.Count(); i++)
                 {
-                    <tr>
-                        <!--上一页填的内容不再显示-->
-                        @Html.HiddenFor(model => model[i].ReqDevPerson)
-                        @Html.HiddenFor(model => model[i].DevAcptDate)
-                        @Html.HiddenFor(model => model[i].DevEvalDate)
-                        <!-- 主键，用以更新-->
-                        @Html.HiddenFor(model => model[i].RID)
-                        <td>
-                            @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control text-center" , @style="margin:0 auto"})
-                        </td>
+                <tr>
+                    <!--上一页填的内容不再显示-->
+                    @Html.HiddenFor(model => model[i].ReqDevPerson)
+                    @Html.HiddenFor(model => model[i].DevAcptDate)
+                    @Html.HiddenFor(model => model[i].DevEvalDate)
+                    <!-- 主键，用以更新-->
+                    @Html.HiddenFor(model => model[i].RID)
+                    <td>
+                        @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control text-center", @style = "margin:0 auto" })
+                    </td>
 
-                        <td>
-                            @Html.TextBoxFor(model => model[i].ReqDesc, new { @class = "form-control text-center", @style = "margin:0 auto" })
-                        </td>
-                       
-                        <td>
-                            @Html.TextBoxFor(model => model[i].DevWorkload, new { @class = "form-control text-center", @style = "margin:0 auto", @type="number" })
-                        </td>
+                    <td>
+                        @Html.TextBoxFor(model => model[i].ReqDesc, new { @class = "form-control text-center", @style = "margin:0 auto" })
+                    </td>
 
-                        <td>
-                            @Html.TextBoxFor(model => model[i].BusiReqNo, new { @class = "form-control text-center", @style = "margin:0 auto" })
-                        </td>
-                    </tr>
-                }
-            </table>
+                    <td>
+                        @Html.TextBoxFor(model => model[i].DevWorkload, new { @class = "form-control text-center", @style = "margin:0 auto", @type = "number" })
+                    </td>
+
+                    <td>
+                        @Html.TextBoxFor(model => model[i].BusiReqNo, new { @class = "form-control text-center", @style = "margin:0 auto" })
+                    </td>
+                </tr>
+            }
+        </table>
 
             <div>
                 <input type="button" value="上一步" class="btn btn-default" onclick="javascript:window.history.back()" />
                 <input type="submit" value="入池！" class="btn btn-primary" />
             </div>
-        }
-    </div>
+    }
 </div>
+
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

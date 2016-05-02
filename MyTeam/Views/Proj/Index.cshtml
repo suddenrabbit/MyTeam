@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "项目信息与状态跟踪管理";
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
@@ -32,7 +32,7 @@
             }
         });
     }
-    
+
     // 导出excel
     function doExport() {
         $('#isExcel').val(true);
@@ -96,10 +96,10 @@
         });
     }
 </script>
-<div class="row">
+<div class="row card">
     <div class="col-md-8">
         @using (Html.BeginForm("Index", "Proj", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                    new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -109,10 +109,12 @@
             <table class="table table-condensed query-table">
                 <tr>
                     <td><label class="control-label">项目名称</label></td>
-                    <td class="form-inline"><input id="ProjName" name="ProjName" class="form-control" />
-                    <span class="text-info">（支持模糊查询）</span></td>
+                    <td class="form-inline">
+                        <input id="ProjName" name="ProjName" class="form-control" />
+                        <span class="text-info">（支持模糊查询）</span>
+                    </td>
                 </tr>
-                
+
                 <tr>
                     <td><label class="control-label">项目调研受理日期</label></td>
                     <td class="form-inline">
@@ -137,74 +139,75 @@
             </table>
         }
     </div>
-    <div class="col-md-12">
-        @if (Model.ResultList != null)
-        {
-            if (Model.ResultList.Count < 1)
-            {
-                <p class="alert alert-warning">没有符合条件的结果！</p>
-            }
-            else
-            {
-                <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
-                    <tr>
-                        <th width="12"></th>
-                        <th width="24">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ProjName)
-                        </th>
-                        <th width="12">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ProjNo)
-                        </th>
-                        <th width="12">
-                            @Html.DisplayNameFor(model => model.ResultList[0].HostDept)
-                        </th>
-                        <th width="8">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ProjLevel)
-                        </th>
-                        <th width="12">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqAnalysisID)
-                        </th>
-                        <th width="8">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ProjStat)
-                        </th>
-                    </tr>
+</div>
+@if (Model.ResultList != null)
+{
+    <div class="row card">
 
-                    @foreach (var item in Model.ResultList)
+        @if (Model.ResultList.Count < 1)
+                {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+                <tr>
+                    <th width="12"></th>
+                    <th width="24">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ProjName)
+                    </th>
+                    <th width="12">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ProjNo)
+                    </th>
+                    <th width="12">
+                        @Html.DisplayNameFor(model => model.ResultList[0].HostDept)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ProjLevel)
+                    </th>
+                    <th width="12">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqAnalysisID)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ProjStat)
+                    </th>
+                </tr>
+
+                @foreach (var item in Model.ResultList)
                     {
                         var trid = "resultTR" + item.ProjID;
-                        <tr id="@trid">
-                            <td>
-                                <a href="#" onclick="doEdit('@item.ProjID','@item.ProjName')">编辑</a> |
-                                <a href="#" onclick="showDetail('@item.ProjID','@item.ProjName')">详情</a> |
-                                <a href="#" onclick="doDelete('@item.ProjID','@item.ProjName')">删除</a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ProjName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ProjNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.HostDept)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ProjLevel)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqAnalysisName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ProjStat)
-                            </td>
-                        </tr>
-                    }
+                    <tr id="@trid">
+                        <td>
+                            <a href="#" onclick="doEdit('@item.ProjID','@item.ProjName')">编辑</a> |
+                            <a href="#" onclick="showDetail('@item.ProjID','@item.ProjName')">详情</a> |
+                            <a href="#" onclick="doDelete('@item.ProjID','@item.ProjName')">删除</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HostDept)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjLevel)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqAnalysisName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjStat)
+                        </td>
+                    </tr>
+                }
 
-                </table>
-                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Proj>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
-            }
+            </table>
+                    @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Proj>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
         }
     </div>
-</div>
+}
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -276,7 +279,7 @@
             <div class="modal-body">
                 <div id="detailMain"></div>
             </div>
-            <div class="modal-footer">              
+            <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">
                     确定
                 </button>

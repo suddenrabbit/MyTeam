@@ -6,11 +6,8 @@
     ViewBag.Title = "业务需求项目管理";
 
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<p>
-    <input type="button" onclick="doCreate()" class="btn btn-primary" value="新增一条" />
-</p>
 
 <!-- Ajax删除 -->
 <script>
@@ -77,38 +74,45 @@
     }
 </script>
 
-<table class="table table-condensed table-bordered text-center" style="font-size:0.8em;table-layout:fixed" width="100">
-    <tr>
-        <th width="20"></th>
-        <th width="60">
-            @Html.DisplayNameFor(model => model.BRProjName)
-        </th>
-        <th width="20">
-            @Html.DisplayNameFor(model => model.ReqAnalysisID)
-        </th>
-    </tr>
+<div class="row card">
+    <p>
+        <input type="button" onclick="doCreate()" class="btn btn-primary" value="新增一条" />
+    </p>
 
-    @foreach (var item in Model)
-    {
+    <table class="table table-condensed table-bordered text-center" style="font-size:0.8em;table-layout:fixed" width="100">
         <tr>
-            <td>
-                <a href="#" onclick="doEdit('@item.BRProjID','@item.BRProjName')">编辑</a> |
-                @Html.ActionLink("查看明细", "Details", new { id = item.BRProjID }) |
-                <a href="#" onclick="doDelete('@item.BRProjID','@item.BRProjName')">删除</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BRProjName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReqAnalysisName)
-            </td>
+            <th width="20"></th>
+            <th width="60">
+                @Html.DisplayNameFor(model => model.BRProjName)
+            </th>
+            <th width="20">
+                @Html.DisplayNameFor(model => model.ReqAnalysisID)
+            </th>
         </tr>
-    }
-</table>
 
-<!--分页-->
-@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.BusiReqProj>,
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="#" onclick="doEdit('@item.BRProjID','@item.BRProjName')">编辑</a> |
+                    @Html.ActionLink("查看明细", "Details", new { id = item.BRProjID }) |
+                    <a href="#" onclick="doDelete('@item.BRProjID','@item.BRProjName')">删除</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BRProjName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReqAnalysisName)
+                </td>
+            </tr>
+        }
+    </table>
+
+    <!--分页-->
+    @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.BusiReqProj>,
 generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+</div>
+
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

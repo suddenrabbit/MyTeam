@@ -4,11 +4,8 @@
 @{
     ViewBag.Title = "零售条线系统管理";
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<p>
-    <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加系统" />
-</p>
 
 <script>
     function doDelete(id, name) {
@@ -73,87 +70,94 @@
         });
     }
 </script>
-<table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
-    <tr>
-        <th width="10"></th>
-        <th width="10">
-            @Html.DisplayNameFor(model => model.SysNO)
-        </th>
-        <th width="10">
-            @Html.DisplayNameFor(model => model.SysName)
-        </th>
-        <th width="10">
-            @Html.DisplayNameFor(model => model.SysShortName)
-        </th>
-        <th width="10">
-            @Html.DisplayNameFor(model => model.HostDept)
-        </th>
-        <th width="10">
-            @Html.DisplayNameFor(model => model.SecondDept)
-        </th>
-        <th width="8">
-            @Html.DisplayNameFor(model => model.BusiPerson)
-        </th>
-        <th width="8">
-            @Html.DisplayNameFor(model => model.DevCenter)
-        </th>
-        <th width="8">
-            @Html.DisplayNameFor(model => model.DevPerson)
-        </th>
-        <th width="8">
-            @Html.DisplayNameFor(model => model.ReqPersonID)
-        </th>
-        <th width="8">
-            @Html.DisplayNameFor(model => model.ReqEditPersonID)
-        </th>
-    </tr>
-    @foreach (var item in Model)
-    {
+
+<div class="row card">
+    <p>
+        <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加系统" />
+    </p>
+    <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
         <tr>
-            <td>
-                <a href="#" onclick="doEdit('@item.SysID','@item.SysName')">编辑</a> 
-                @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+            <th width="10"></th>
+            <th width="10">
+                @Html.DisplayNameFor(model => model.SysNO)
+            </th>
+            <th width="10">
+                @Html.DisplayNameFor(model => model.SysName)
+            </th>
+            <th width="10">
+                @Html.DisplayNameFor(model => model.SysShortName)
+            </th>
+            <th width="10">
+                @Html.DisplayNameFor(model => model.HostDept)
+            </th>
+            <th width="10">
+                @Html.DisplayNameFor(model => model.SecondDept)
+            </th>
+            <th width="8">
+                @Html.DisplayNameFor(model => model.BusiPerson)
+            </th>
+            <th width="8">
+                @Html.DisplayNameFor(model => model.DevCenter)
+            </th>
+            <th width="8">
+                @Html.DisplayNameFor(model => model.DevPerson)
+            </th>
+            <th width="8">
+                @Html.DisplayNameFor(model => model.ReqPersonID)
+            </th>
+            <th width="8">
+                @Html.DisplayNameFor(model => model.ReqEditPersonID)
+            </th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="#" onclick="doEdit('@item.SysID','@item.SysName')">编辑</a>
+                    @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
                 {
                     <!--只有管理员可以删除-->
-                    <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysName')">删除</a></span>
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SysNO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SysName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SysShortName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HostDept)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SecondDept)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BusiPerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DevCenter)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DevPerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReqPersonName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReqEditPersonName)
-            </td>
-        </tr>
-    }
-</table>
-<!--分页-->
-@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.RetailSystem>,
+                        <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysName')">删除</a></span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SysNO)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SysName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SysShortName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HostDept)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SecondDept)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BusiPerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DevCenter)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DevPerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReqPersonName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReqEditPersonName)
+                </td>
+            </tr>
+        }
+    </table>
+    <!--分页-->
+    @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.RetailSystem>,
     generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+
+</div>
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

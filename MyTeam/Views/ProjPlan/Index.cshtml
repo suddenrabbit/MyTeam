@@ -6,7 +6,7 @@
     ViewBag.Title = "项目计划管理";
 
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 
 <!-- Ajax删除 -->
@@ -92,10 +92,10 @@
         });
     }
 </script>
-<div class="row">
+<div class="row card">
     <div class="col-md-8">
         @using (Html.BeginForm("Index", "ProjPlan", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -110,9 +110,9 @@
                     </td>
                     <td>@Html.LabelFor(model => model.PlanYear, new { @class = "control-label" })</td>
                     <td>
-                        <input id="PlanYear" name="PlanYear"  type="number" min="2010" max="2100" class="form-control" />
+                        <input id="PlanYear" name="PlanYear" type="number" min="2010" max="2100" class="form-control" />
                     </td>
-                    </tr>
+                </tr>
                 <tr>
                     <td colspan="4">
                         <input type="submit" value="查询" class="btn btn-primary" />
@@ -123,153 +123,154 @@
             </table>
         }
     </div>
-    <div class="col-md-12">
-        @if (Model.ResultList != null)
-        {
-            if (Model.ResultList.Count < 1)
-            {
-                <p class="alert alert-warning">没有符合条件的结果！</p>
-            }
-            else
-            {
-                <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed">
-                    <tr>
-                        <th width="20"></th>
-                        <th width="40">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
-                        </th>
-                        <!--<th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].FoundGroupDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].OutlineStartDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].OutlineFinishDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqStartDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqFinishDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReviewStartDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReviewFinishDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].BusiFeasiStartDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].BusiFeasiFinishDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiStartDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiFinishDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiReviewStartDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiReviewFinishDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].SoftBudgetStartDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].SoftBudgetFinishDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ImplementPlansStartDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ImplementPlansFinishDate)
-                        </th>
-                            -->
-                        <th width="40">
-                            @Html.DisplayNameFor(model => model.ResultList[0].PlanYear)
-                        </th>
-                    </tr>
+</div>
 
-                    @foreach (var item in Model.ResultList)
-                    {
-                        <tr>
-                            <td align="center">
-                                <a href="#" onclick="doEdit('@item.PlanID','@item.ProjName')">编辑</a> |
-                                <a href="#" onclick="showDetail('@item.ProjID','@item.ProjName')">详情</a> |
-                                <a href="#" onclick="doDelete('@item.PlanID','@item.ProjName 的项目计划记录')">删除</a>
-                            </td>
-                            <td align="center">
-                                @Html.DisplayFor(modelItem => item.ProjName)
-                            </td>
-                            <!--
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FoundGroupDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.OutlineStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.OutlineFinishDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqFinishDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReviewStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReviewFinishDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.BusiFeasiStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.BusiFeasiFinishDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TechFeasiStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TechFeasiFinishDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TechFeasiReviewStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TechFeasiReviewFinishDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SoftBudgetStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SoftBudgetFinishDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ImplementPlansStartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ImplementPlansFinishDate)
-                            </td>
-                                -->
-                            <td align="center">
-                                @Html.DisplayFor(modelItem => item.PlanYear)
-                            </td>
-                        </tr>
-                    }
-                </table>
-                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ProjPlan>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
-            }
+@if (Model.ResultList != null)
+{
+    <div class="row card">
+        @if (Model.ResultList.Count < 1)
+        {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed">
+                <tr>
+                    <th width="20"></th>
+                    <th width="40">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
+                    </th>
+                    <!--<th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].FoundGroupDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].OutlineStartDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].OutlineFinishDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqStartDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqFinishDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReviewStartDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReviewFinishDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].BusiFeasiStartDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].BusiFeasiFinishDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiStartDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiFinishDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiReviewStartDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].TechFeasiReviewFinishDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].SoftBudgetStartDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].SoftBudgetFinishDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ImplementPlansStartDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ImplementPlansFinishDate)
+                    </th>
+                        -->
+                    <th width="40">
+                        @Html.DisplayNameFor(model => model.ResultList[0].PlanYear)
+                    </th>
+                </tr>
+
+                @foreach (var item in Model.ResultList)
+                {
+                    <tr>
+                        <td align="center">
+                            <a href="#" onclick="doEdit('@item.PlanID','@item.ProjName')">编辑</a> |
+                            <a href="#" onclick="showDetail('@item.ProjID','@item.ProjName')">详情</a> |
+                            <a href="#" onclick="doDelete('@item.PlanID','@item.ProjName 的项目计划记录')">删除</a>
+                        </td>
+                        <td align="center">
+                            @Html.DisplayFor(modelItem => item.ProjName)
+                        </td>
+                        <!--
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FoundGroupDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OutlineStartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OutlineFinishDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqStartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqFinishDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReviewStartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReviewFinishDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BusiFeasiStartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BusiFeasiFinishDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TechFeasiStartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TechFeasiFinishDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TechFeasiReviewStartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TechFeasiReviewFinishDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SoftBudgetStartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SoftBudgetFinishDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ImplementPlansStartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ImplementPlansFinishDate)
+                        </td>
+                            -->
+                        <td align="center">
+                            @Html.DisplayFor(modelItem => item.PlanYear)
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ProjPlan>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
         }
     </div>
-</div>
+}
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

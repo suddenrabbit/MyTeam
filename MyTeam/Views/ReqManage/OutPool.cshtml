@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "出池计划报表";
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     // 日期控件
@@ -19,14 +19,13 @@
         $('#isExcel').val(false);
     }
 </script>
-<div class="row">
-    <div class="col-md-8">
-        @using (Html.BeginForm("OutPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
-        {
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="row card">
+    @using (Html.BeginForm("OutPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <input type="hidden" name="isQuery" value="True" />
+        <input type="hidden" name="isQuery" value="True" />
             <input type="hidden" id="isExcel" name="isExcel" value="False" />
             <div class="form-group">
                 @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
@@ -56,115 +55,117 @@
                 </div>
             </div>
 
-        }
-    </div>
+    }
 </div>
 @if (Model.ResultList != null)
 {
-    if (Model.ResultList.Count < 1)
-    {
-        <p class="alert alert-warning">没有符合条件的结果！</p>
-    }
-    else
-    {
-        <table class="table table-condensed table-bordered" style="font-size:0.8em">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].AcptMonth)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].SysName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].Version)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                </th>
-            </tr>
-            @foreach (var item in Model.ResultList)
-            {
+    <h2>查询结果</h2>
+    <div class="row card">
+        @if (Model.ResultList.Count < 1)
+        {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em">
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AcptMonth)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SysName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Version)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ReqNo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ReqDetailNo)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShortReqReason)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShortReqDesc)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DevWorkload)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ReqDevPerson)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ReqType)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PlanRlsDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RlsDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Remark)
-                    </td>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].AcptMonth)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].SysName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].Version)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                    </th>
                 </tr>
-            }
-        </table>
-        var data = Model.ResultList as PagedList.IPagedList<MyTeam.Models.OutPoolResult>;
-        @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("OutPool", new { pageNum = Page }) + Model.ToQueryString())
-    }
+                @foreach (var item in Model.ResultList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AcptMonth)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SysName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Version)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqDetailNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShortReqReason)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShortReqDesc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DevWorkload)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqDevPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PlanRlsDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RlsDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remark)
+                        </td>
+                    </tr>
+                }
+            </table>
+            var data = Model.ResultList as PagedList.IPagedList<MyTeam.Models.OutPoolResult>;
+            @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("OutPool", new { pageNum = Page }) + Model.ToQueryString())
+        }
+    </div>
 }
 
-
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

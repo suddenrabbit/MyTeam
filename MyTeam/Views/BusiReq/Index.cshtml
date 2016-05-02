@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "业务需求管理";
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script>
     function doDelete(id, name) {
@@ -69,18 +69,17 @@
     // 导出跟踪表
     function doExport() {
         var brProjId = $('#BRProjID').val();
-        if(brProjId.length == 0 || brProjId == 0)
-        {
+        if (brProjId.length == 0 || brProjId == 0) {
             alert("导出需求变更跟踪表时必须选择具体的某个项目！");
             return;
         }
         $('#myForm').attr("action", "/BusiReq/Export").submit();
     }
 </script>
-<div class="row">
+<div class="row card">
     <div class="col-md-10">
         @using (Html.BeginForm("Index", "BusiReq", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -103,79 +102,79 @@
 
         }
     </div>
-    <div class="col-md-12">
-        @if (Model.ResultList != null)
-        {
-            if (Model.ResultList.Count < 1)
-            {
-                <p class="alert alert-warning">没有符合条件的结果！</p>
-            }
-            else
-            {
-                <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
-                    <tr>
-                        <th width="6"></th>
-                        <th width="15">
-                            @Html.DisplayNameFor(model => model.ResultList[0].BRProjID)
-                        </th>
-                        <th width="10">
-                            @Html.DisplayNameFor(model => model.ResultList[0].BusiReqNo)
-                        </th>
-                        <th width="15">
-                            @Html.DisplayNameFor(model => model.ResultList[0].BusiReqName)
-                        </th>
-                        <th width="24">
-                            @Html.DisplayNameFor(model => model.ResultList[0].Desc)
-                        </th>
-                        <th width="10">
-                            @Html.DisplayNameFor(model => model.ResultList[0].CreateDate)
-                        </th>
-                        <th width="10">
-                            @Html.DisplayNameFor(model => model.ResultList[0].Stat)
-                        </th>
-                        <th width="10">
-                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                        </th>
-                    </tr>
-                    @foreach (var item in Model.ResultList)
-                    {
-                        <tr>
-                            <td>
-                                <a href="#" onclick="doEdit('@item.BRID','@item.ProjName')">编辑</a>
-                                | <a href="#" onclick="doDelete('@item.BRID','@item.ProjName @item.BusiReqName')">删除</a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ProjName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.BusiReqNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.BusiReqName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Desc)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CreateDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Stat)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Remark)
-                            </td>
-                        </tr>
-                    }
-                </table>
-                <!--分页-->
-                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.BusiReq>,
-         generatePageUrl: Page => Url.Action("Index", new { pageNum = Page, isQuery = true, BRProjID = Model.BRProjID}))
-            }
-        }
-
-    </div>
 </div>
+@if (Model.ResultList != null)
+{
+    <div class="row card">
+
+        @if (Model.ResultList.Count < 1)
+                {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+                <tr>
+                    <th width="6"></th>
+                    <th width="15">
+                        @Html.DisplayNameFor(model => model.ResultList[0].BRProjID)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].BusiReqNo)
+                    </th>
+                    <th width="15">
+                        @Html.DisplayNameFor(model => model.ResultList[0].BusiReqName)
+                    </th>
+                    <th width="24">
+                        @Html.DisplayNameFor(model => model.ResultList[0].Desc)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].CreateDate)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].Stat)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                    </th>
+                </tr>
+                @foreach (var item in Model.ResultList)
+                    {
+                    <tr>
+                        <td>
+                            <a href="#" onclick="doEdit('@item.BRID','@item.ProjName')">编辑</a>
+                            | <a href="#" onclick="doDelete('@item.BRID','@item.ProjName @item.BusiReqName')">删除</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProjName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BusiReqNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BusiReqName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Desc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreateDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Stat)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remark)
+                        </td>
+                    </tr>
+                }
+            </table>
+                <!--分页-->
+                    @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.BusiReq>,
+         generatePageUrl: Page => Url.Action("Index", new { pageNum = Page, isQuery = true, BRProjID = Model.BRProjID }))
+        }
+    </div>
+}
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "用户管理";
 }
-<h2>用户管理</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>  
@@ -25,56 +25,59 @@
         });
     }
 </script>
-@Html.ValidationSummary()
+
 @if (Model != null)
 {
-    <p>
-        <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加用户" />
-    </p>
+    <div class="row card">
+        <p>
+            <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加用户" />
+        </p>
 
-    <table class="table table-bordered">
-        <tr>
-            <th></th>
-            <th>
-                @Html.DisplayNameFor(model => model.Username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Realname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAdmin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserType)
-            </th>
-        </tr>
-        @foreach (var item in Model)
-        {
+        <table class="table table-bordered">
             <tr>
-                <td>
-                    @Html.ActionLink("编辑", "Edit")
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Username)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Realname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Phone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsAdmin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserTypeName)
-                </td>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Username)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Realname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsAdmin)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserType)
+                </th>
             </tr>
-        }
-    </table>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink("编辑", "Edit")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Username)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Realname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsAdmin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserTypeName)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    
 }
 
 <!-- 对话框2：新增页面 -->

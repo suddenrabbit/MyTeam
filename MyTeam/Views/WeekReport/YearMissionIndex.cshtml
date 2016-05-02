@@ -6,11 +6,8 @@
     ViewBag.Title = "年度重点任务";
 }
 
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<p>
-    <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加年度重点任务" />
-</p>
 
 <!-- Ajax删除 -->
 <script>
@@ -76,83 +73,89 @@
     }
 </script>
 
-<table class="table table-condensed table-bordered" style="font-size:0.8em">
-    <tr>
-        <th></th>
-        <th>
-            @Html.DisplayNameFor(model => model.MissionDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MissionSource)
-        </th>        
-        <th>
-            @Html.DisplayNameFor(model => model.WorkMission)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WorkStage)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Person)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OutSource)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Progress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PlanDeadLine)
-        </th>               
-        <th>
-            @Html.DisplayNameFor(model => model.Remark)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DoNotTrack)
-        </th>
-    </tr>
-    @foreach (var item in Model)
-    {
+<div class="row card">
+    <p>
+        <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加年度重点任务" />
+    </p>
+    <table class="table table-condensed table-bordered" style="font-size:0.8em">
         <tr>
-            <td>
-                <a href="#" onclick="doEdit('@item.YMID','年度重点任务')">编辑</a> |
-                <a href="#" onclick="doDelete('@item.YMID','年度重点任务')">删除</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MissionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MissionSource)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkMission)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WorkStage)
-            </td>            
-            <td>
-                @Html.DisplayFor(modelItem => item.Person)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OutSource)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Progress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PlanDeadLine)
-            </td>           
-            <td>
-                @Html.DisplayFor(modelItem => item.Remark)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DoNotTrack)
-            </td>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.MissionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MissionSource)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkMission)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WorkStage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Person)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OutSource)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Progress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlanDeadLine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remark)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoNotTrack)
+            </th>
         </tr>
-    }
-</table>
-<!--分页-->
-@Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.YearMission>,
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="#" onclick="doEdit('@item.YMID','年度重点任务')">编辑</a> |
+                    <a href="#" onclick="doDelete('@item.YMID','年度重点任务')">删除</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MissionDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MissionSource)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WorkMission)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WorkStage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Person)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OutSource)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Progress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlanDeadLine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remark)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DoNotTrack)
+                </td>
+            </tr>
+        }
+    </table>
+    <!--分页-->
+    @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.YearMission>,
     generatePageUrl: Page => Url.Action("YearMissionIndex", new { pageNum = Page }))
+</div>
+
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

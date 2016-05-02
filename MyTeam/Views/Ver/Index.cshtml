@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "年度版本下发记录管理";
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
@@ -82,10 +82,10 @@
         });
     }
 </script>
-<div class="row">
+<div class="row card">
     <div class="col-md-8">
         @using (Html.BeginForm("Index", "Ver", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -117,89 +117,91 @@
             </table>
         }
     </div>
-    <div class="col-md-12">
-        @if (Model.ResultList != null)
+</div>
+
+@if (Model.ResultList != null)
+{
+    <h2>查询结果</h2>
+    <div class="row card">
+        @if (Model.ResultList.Count < 1)
         {
-            if (Model.ResultList.Count < 1)
-            {
-                <p class="alert alert-warning">没有符合条件的结果！</p>
-            }
-            else
-            {
-                <table class="table table-condensed table-bordered" style="font-size:0.8em">
-                    <tr>
-                        <th></th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].SysId)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].VerYear)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReleaseFreq)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].PublishTime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].VerNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].DraftTime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].DraftPersonID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].VerType)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                        </th>
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em">
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].SysId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].VerYear)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReleaseFreq)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].PublishTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].VerNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].DraftTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].DraftPersonID)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].VerType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                    </th>
+                </tr>
+                @foreach (var item in Model.ResultList)
+                {
+                    var trid = "resultTR" + item.VerID;
+                    <tr id="@trid">
+                        <td>
+                            <a href="#" onclick="doEdit('@item.VerID','@item.SysName')">编辑</a> |
+                            <a href="#" onclick="doDelete('@item.VerID','@item.SysName 的年度版本下发记录')">删除</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SysName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VerYear)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReleaseFreq)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PublishTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VerNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DraftTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DraftPersonName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VerType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remark)
+                        </td>
                     </tr>
-                    @foreach (var item in Model.ResultList)
-                    {
-                        var trid = "resultTR" + item.VerID;
-                        <tr id="@trid">
-                            <td>
-                                <a href="#" onclick="doEdit('@item.VerID','@item.SysName')">编辑</a> |
-                                <a href="#" onclick="doDelete('@item.VerID','@item.SysName 的年度版本下发记录')">删除</a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SysName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.VerYear)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReleaseFreq)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PublishTime)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.VerNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DraftTime)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DraftPersonName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.VerType)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Remark)
-                            </td>
-                        </tr>
-                    }
-                </table>
-                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Ver>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
-            }
+                }
+            </table>
+            @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Ver>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
         }
     </div>
-</div>
+}
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

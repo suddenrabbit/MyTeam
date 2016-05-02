@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "维护需求管理";
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
@@ -80,7 +80,7 @@
     }
 
     // 在modal中新增
-    function doCreate() {        
+    function doCreate() {
         // 记录下当前页面中选中的系统
         var sysId = $("#SysId").val();
         var url = "/ReqManage/Create/" + sysId;
@@ -99,14 +99,13 @@
         });
     }
 </script>
-<div class="row">
-    <div class="col-md-12 card">
-        @using (Html.BeginForm("Index", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
-        {
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="row card">
+    @using (Html.BeginForm("Index", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <input type="hidden" name="isQuery" value="True" />
+        <input type="hidden" name="isQuery" value="True" />
             <input type="hidden" id="isExcel" name="isExcel" value="False" />
 
             <table class="table table-condensed query-table">
@@ -137,7 +136,7 @@
                 <tr>
                     <td>@Html.LabelFor(model => model.AnyRlsNo, new { @class = "control-label" })</td>
                     <td>
-                        @Html.TextBoxFor(model => model.AnyRlsNo, new { @class = "form-control" , @placeholder="主副下发编号均可，只能填一个"})
+                        @Html.TextBoxFor(model => model.AnyRlsNo, new { @class = "form-control", @placeholder = "主副下发编号均可，只能填一个" })
                         @Html.ValidationMessageFor(model => model.AnyRlsNo, "", new { @class = "text-danger" })
                     </td>
                     <td>@Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })</td>
@@ -172,101 +171,100 @@
                     </td>
                 </tr>
             </table>
-        }
-    </div>
-    @if (Model.ResultList != null)
-    {
-        <h2>查询结果</h2>
-        <div class="col-md-12 card">
+    }
+</div>
+@if (Model.ResultList != null)
+{
+    <h2>查询结果</h2>
+        <div class="row card">
 
             @if (Model.ResultList.Count < 1)
             {
-            <p class="alert alert-warning">没有符合条件的结果！</p>
+                <p class="alert alert-warning">没有符合条件的结果！</p>
             }
             else
             {
-            <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
-                <tr>
-                    <th width="2"></th>
-                    <th width="13">
-                        @Html.DisplayNameFor(model => model.ResultList[0].SysId)
-                    </th>
-                    <th width="3">
-                        @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
-                    </th>
-                    <th width="5">
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
-                    </th>
-                    <th width="5">
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
-                    </th>
-                    <th width="12">
-                        @Html.DisplayNameFor(model => model.ResultList[0].AnyRlsNo)
-                    </th>
-                    <th width="18">
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
-                    </th>
-                    <th width="23">
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
-                    </th>
-                    <th width="1">
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
-                    </th>
-                    <th width="8">
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqAcptPerson)
-                    </th>
-                    <th width="10">
-                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                    </th>
-                </tr>
-                @foreach (var item in Model.ResultList)
-                {
-                    var trid = "resultTR" + item.RID;
-                    <tr id="@trid">
-                        <td style="font-size:1.5em; text-align:center">
-                            <span class="glyphicon glyphicon-edit text-warning" style="cursor:pointer" aria-hidden="true" onclick="doEdit('@item.RID','@item.SysName')" title="编辑"></span>&nbsp;
-                            <span class="glyphicon glyphicon-info-sign text-info" style="cursor:pointer" aria-hidden="true" onclick="showDetail('@item.RID','@item.SysName 的维护需求')" title="详情"></span>&nbsp;
-                            <span class="glyphicon glyphicon-remove text-danger" style="cursor:pointer" aria-hidden="true" onclick="doDelete('@item.RID','@item.SysName 的维护需求')" title="删除"></span>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SysName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AcptDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqDetailNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AnyRlsNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ShortReqReason)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ShortReqDesc)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqStat)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqAcptPersonNamePhone)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Remark)
-                        </td>
+                <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+                    <tr>
+                        <th width="2"></th>
+                        <th width="13">
+                            @Html.DisplayNameFor(model => model.ResultList[0].SysId)
+                        </th>
+                        <th width="3">
+                            @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
+                        </th>
+                        <th width="5">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
+                        </th>
+                        <th width="5">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
+                        </th>
+                        <th width="12">
+                            @Html.DisplayNameFor(model => model.ResultList[0].AnyRlsNo)
+                        </th>
+                        <th width="18">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
+                        </th>
+                        <th width="23">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
+                        </th>
+                        <th width="1">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
+                        </th>
+                        <th width="8">
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqAcptPerson)
+                        </th>
+                        <th width="10">
+                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                        </th>
                     </tr>
-                }
-            </table>
-            @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Req>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+                    @foreach (var item in Model.ResultList)
+                    {
+                        var trid = "resultTR" + item.RID;
+                        <tr id="@trid">
+                            <td style="font-size:1.5em; text-align:center">
+                                <span class="glyphicon glyphicon-edit text-warning" style="cursor:pointer" aria-hidden="true" onclick="doEdit('@item.RID','@item.SysName')" title="编辑"></span>&nbsp;
+                                <span class="glyphicon glyphicon-info-sign text-info" style="cursor:pointer" aria-hidden="true" onclick="showDetail('@item.RID','@item.SysName 的维护需求')" title="详情"></span>&nbsp;
+                                <span class="glyphicon glyphicon-remove text-danger" style="cursor:pointer" aria-hidden="true" onclick="doDelete('@item.RID','@item.SysName 的维护需求')" title="删除"></span>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SysName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AcptDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqDetailNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AnyRlsNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ShortReqReason)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ShortReqDesc)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqStat)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReqAcptPersonNamePhone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Remark)
+                            </td>
+                        </tr>
+                    }
+                </table>
+                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Req>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
             }
         </div>
-    }
-    
-</div>
+}
+
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

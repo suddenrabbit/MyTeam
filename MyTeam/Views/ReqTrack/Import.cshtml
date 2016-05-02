@@ -3,8 +3,8 @@
 @{
     ViewBag.Title = "业需软需状态跟踪表导入";
 }
-<h2>@ViewBag.Title。</h2>
-<div class="row">
+<h2>@ViewBag.Title</h2>
+<div class="row card">
     <div class="col-md-10">
         @if (!string.IsNullOrEmpty(ViewBag.Msg))
         {
@@ -29,10 +29,12 @@
         }
     </div>
 </div>
-<div class="panel panel-default">
-    <div class="panel-heading">TIPS</div>
-    <div class="panel-body">
-        1、请务必按照模板格式上传Excel文件！<a href="/ReqTrack/DownTemplate">点此下载模板文件</a><br />
-        2、同一个系统，"业需编号+软需编号"不能重复。
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">TIPS</div>
+        <div class="panel-body">
+            1、请务必按照模板格式上传Excel文件！<a href="/ReqTrack/DownTemplate">点此下载模板文件</a><br />
+            2、同一个系统，"业需编号+软需编号"不能重复。
+        </div>
     </div>
 </div>

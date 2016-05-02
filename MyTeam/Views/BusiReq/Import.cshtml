@@ -3,12 +3,12 @@
 @{
     ViewBag.Title = "业务需求上传";
 }
-<h2>@ViewBag.Title。</h2>
+<h2>@ViewBag.Title</h2>
 
 
-<div class="row">
+<div class="row card">
     <div class="col-md-8">
-        @if(!string.IsNullOrEmpty(ViewBag.Msg))
+        @if (!string.IsNullOrEmpty(ViewBag.Msg))
         {
             @Html.Raw(ViewBag.Msg);
         }
@@ -20,7 +20,7 @@
                     <td>
                         <!--业需项目下拉选择-->
                         @Html.DropDownList("BRProjID", ViewBag.BRProjLs as SelectList, new { @class = "form-control" })
-                    </td>   
+                    </td>
                     <td class="form-inline">
                         <input type="file" name="file" class="form-control" />
                         <input type="submit" value="上传" class="btn btn-primary" />
@@ -29,14 +29,17 @@
                 </tr>
             </table>
         }
-        
+
     </div>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">TIPS</div>
-    <div class="panel-body">
-        1、请务必按照模板格式上传Excel文件！<a href="/BusiReq/DownTemplate">点此下载模板文件</a><br />
-        2、同一个系统、同一个需求编号只能导入一次。
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">TIPS</div>
+        <div class="panel-body">
+            1、请务必按照模板格式上传Excel文件！<a href="/BusiReq/DownTemplate">点此下载模板文件</a><br />
+            2、同一个系统、同一个需求编号只能导入一次。
+        </div>
     </div>
 </div>
+
