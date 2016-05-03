@@ -170,7 +170,7 @@ namespace MyTeam.Controllers
                 ls = ls.OrderByDescending(a => a.RptDate);
             }
 
-            ViewBag.OrdeyByTypeParam = "&orderByType=" + orderByType;
+            ViewBag.OrdeyByTypeParam = orderByType;
 
             return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }

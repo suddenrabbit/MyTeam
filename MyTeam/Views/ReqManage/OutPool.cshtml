@@ -20,12 +20,13 @@
     }
 </script>
 <div class="row card">
-    @using (Html.BeginForm("OutPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
-    {
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="col-md-10">
+        @using (Html.BeginForm("OutPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                            new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <input type="hidden" name="isQuery" value="True" />
+            <input type="hidden" name="isQuery" value="True" />
             <input type="hidden" id="isExcel" name="isExcel" value="False" />
             <div class="form-group">
                 @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
@@ -55,11 +56,12 @@
                 </div>
             </div>
 
-    }
+        }
+    </div>
 </div>
 @if (Model.ResultList != null)
 {
-    <h2>查询结果</h2>
+    <h3>查询结果</h3>
     <div class="row card">
         @if (Model.ResultList.Count < 1)
         {

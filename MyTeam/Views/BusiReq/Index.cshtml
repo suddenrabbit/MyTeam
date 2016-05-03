@@ -1,5 +1,4 @@
-﻿@using PagedList
-@using PagedList.Mvc
+﻿@using PagedList.Mvc
 @model MyTeam.Models.BusiReqQuery
 @{
     ViewBag.Title = "业务需求管理";
@@ -105,6 +104,7 @@
 </div>
 @if (Model.ResultList != null)
 {
+    <h3>查询结果</h3>
     <div class="row card">
 
         @if (Model.ResultList.Count < 1)

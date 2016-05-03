@@ -9,7 +9,7 @@
     return;
 }
 
-<div class="row">
+<div class="row card">
     <div class="col-md-8">
         @if (!string.IsNullOrEmpty(ViewBag.Message))
         {
@@ -17,7 +17,7 @@
         }
         <div id="info"></div>
         @using (Ajax.BeginForm("Edit", "User", null, new AjaxOptions { UpdateTargetId = "info" },
-                 new { @class = "form-horizontal", role = "form" }))
+                     new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -49,11 +49,9 @@
                 if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
                 {
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(model => model.IsAdmin)
-                                是否管理员
-                            </div>
+                        @Html.LabelFor(model => model.IsAdmin, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(model => model.IsAdmin)
                         </div>
                     </div>
                 }
@@ -73,7 +71,6 @@
     </div>
 </div>
 
-<script src="~/Scripts/jquery-1.10.2.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>

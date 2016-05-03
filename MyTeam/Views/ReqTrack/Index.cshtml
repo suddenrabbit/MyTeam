@@ -1,5 +1,4 @@
-﻿@using PagedList
-@using PagedList.Mvc
+﻿@using PagedList.Mvc
 @model MyTeam.Models.ReqTrackQuery
 @{
     ViewBag.Title = "业需软需状态跟踪管理";
@@ -68,10 +67,10 @@
         });
     }
 </script>
-<div class="row">
+<div class="row card">
     <div class="col-md-8">
         @using (Html.BeginForm("Index", "ReqTrack", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                    new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -93,102 +92,106 @@
 
         }
     </div>
-    <div class="col-md-12">
-        @if (Model.ResultList != null)
-        {
-            if (Model.ResultList.Count < 1)
-            {
-                <p class="alert alert-warning">没有符合条件的结果！</p>
-            }
-            else
-            {
-                <table class="table table-condensed table-bordered" style="font-size:0.8em">
-                    <tr>
-                        <th></th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].Priority)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].PlanDeadLine)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].RealDeadLine)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ChangeChar)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ApproveDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].SoftReqNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].SoftReqName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
-                        </th>
-                    </tr>
-                    @foreach (var item in Model.ResultList)
-                    {
-                        <tr>
-                            <td>
-                                <a href="#" onclick="doEdit('@item.TrackID','@item.ProjName')">编辑</a> |
-                                <a href="#" onclick="doDelete('@item.TrackID','@item.ProjName 的业需软需状态跟踪记录')">删除</a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ProjName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Priority)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PlanDeadLine)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RealDeadLine)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ChangeChar)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ApproveDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SoftReqNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SoftReqName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqStat)
-                            </td>
-                        </tr>
-                    }
-                </table>
-                <!--分页-->
-                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ReqTrack>,
-         generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
-            }
-        }
-    </div>
 </div>
+
+@if (Model.ResultList != null)
+{
+    <h3>查询结果</h3>
+            <div class="row card">
+                @if (Model.ResultList.Count < 1)
+                {
+                    <p class="alert alert-warning">没有符合条件的结果！</p>
+                }
+                else
+                {
+                    <table class="table table-condensed table-bordered" style="font-size:0.8em">
+                        <tr>
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].ProjID)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].ReqName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].Priority)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].PlanDeadLine)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].RealDeadLine)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].ChangeChar)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].ApproveDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].SoftReqNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].SoftReqName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
+                            </th>
+                        </tr>
+                        @foreach (var item in Model.ResultList)
+                    {
+                            <tr>
+                                <td>
+                                    <a href="#" onclick="doEdit('@item.TrackID','@item.ProjName')">编辑</a> |
+                                    <a href="#" onclick="doDelete('@item.TrackID','@item.ProjName 的业需软需状态跟踪记录')">删除</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProjName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReqNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReqName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Priority)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PlanDeadLine)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RealDeadLine)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ChangeChar)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ApproveDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SoftReqNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SoftReqName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReqStat)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                <!--分页-->
+                    @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ReqTrack>,
+         generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+                }
+            </div>
+}
+
+
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"

@@ -7,39 +7,17 @@ namespace MyTeam.Models
 {
     public class HomeResult
     {
-        public List<HomeReqDelay> ReqDelayLS {get; set;}
 
         public List<HomeReq> ReqLs { get; set; }
 
-        public List<WeekReportDetail> Works { get; set; }
+        public List<HomeReq> ReqDelayLS { get; set; }
+
+        public List<HomeReq> ReqInpoolDelayLS { get; set; }
+
 
         public List<HomeProjDelay> ProjDetails { get; set; }
 
-        public List<HomeInpoolReqDelay> ReqInpoolDelayLS { get; set; }
-
         public List<HomeRlsDelay> RlsDelayLS { get; set; }
-    }
-
-    public class HomeReqDelay
-    {
-        public int SysId { get; set; }
-
-        public int ReqDelayNum { get; set; }
-
-        public int ReqAcptPerson { get; set; }
-
-        public string SysName
-        {
-            get
-            {
-                var r = (from a in Constants.SysList
-                         where a.SysID == this.SysId
-                         select a.SysShortName).FirstOrDefault();
-
-                return r == null ? "未知" : r.ToString();
-            }
-            set { this.SysName = value; }
-        }
     }
 
     public class HomeReq
@@ -84,27 +62,6 @@ namespace MyTeam.Models
         }
     }
 
-    public class HomeInpoolReqDelay
-    {
-        public int SysId { get; set; }
-
-        public int ReqDelayNum { get; set; }
-
-        public int ReqAcptPerson { get; set; }
-
-        public string SysName
-        {
-            get
-            {
-                var r = (from a in Constants.SysList
-                         where a.SysID == this.SysId
-                         select a.SysShortName).FirstOrDefault();
-
-                return r == null ? "未知" : r.ToString();
-            }
-            set { this.SysName = value; }
-        }
-    }
 
     public class HomeRlsDelay
     {

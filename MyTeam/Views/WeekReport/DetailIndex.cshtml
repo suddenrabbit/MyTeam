@@ -1,6 +1,9 @@
-﻿@using PagedList
-@using PagedList.Mvc
+﻿@using PagedList.Mvc
 @model IEnumerable<MyTeam.Models.WeekReportDetail>
+
+@{
+    ViewBag.Title = "每周工作";
+}
 
 <h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
@@ -115,9 +118,16 @@
             </th>
 
         </tr>
-        @foreach (var item in Model)
+        @for (int i = 0; i < Model.Count(); i++)
         {
-            <tr>
+            var item = Model.ToList()[i];
+            string splitLine = "";
+            if (ViewBag.OrdeyByTypeParam == 1 && i < Model.Count() - 1 && item.RptDate != Model.ToList()[i + 1].RptDate)
+            {
+                splitLine = "class=splitLine";
+            }
+
+            <tr @splitLine>
                 <td width="8%">
                     <a href="#" onclick="doEdit('@item.WRDetailID','@item.RptDate')">编辑</a> |
                     <a href="#" onclick="doDelete('@item.WRDetailID','@item.RptDate 的工作任务')">删除</a>
@@ -163,7 +173,7 @@
     </table>
     <!--分页-->
     @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.WeekReportDetail>,
-        generatePageUrl: Page => Url.Action("DetailIndex", new { pageNum = Page }) + ViewBag.OrdeyByTypeParam)
+        generatePageUrl: Page => Url.Action("DetailIndex", new { pageNum = Page }) + "&orderByType=" + ViewBag.OrdeyByTypeParam)<MyTeam.Models.WeekReportDetail>
 
 
 </div>

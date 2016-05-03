@@ -1,6 +1,4 @@
-﻿@using PagedList
-@using PagedList.Mvc
-@model MyTeam.Models.TargetMissionResult
+﻿@model MyTeam.Models.TargetMissionResult
 @{
     ViewBag.Title = "量化指标对应工作任务管理";
     bool isAdmin = ViewBag.IsAdmin;
@@ -77,10 +75,10 @@
         });
     }
 </script>
-<div class="row">
+<div class="row card">
     <div class="col-md-8">
         @using (Html.BeginForm("Index", "TargetMission", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                                new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -99,87 +97,34 @@
             </table>
         }
     </div>
-
 </div>
-@if (!isAdmin)
-{<blockquote>
-        <p>我主办的项目</p>
-    </blockquote>
-}
-
-<table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
-    <tr>
-        <th width="10"></th>
-        <th width="20">
-            @Html.DisplayNameFor(model => model.HostLs[0].TID)
-        </th>
-        <th width="30">
-            @Html.DisplayNameFor(model => model.HostLs[0].Mission)
-        </th>
-        <th width="10">
-            @Html.DisplayNameFor(model => model.HostLs[0].PersonID)
-        </th>
-        <th width="20">
-            @Html.DisplayNameFor(model => model.HostLs[0].SidePerson)
-        </th>
-        <th width="10">
-            @Html.DisplayNameFor(model => model.HostLs[0].Stat)
-        </th>
-
-    </tr>
-    @foreach (var item in Model.HostLs)
-    {
-        <tr>
-            <td>
-                <a href="#" onclick="doEdit('@item.TMID','@item.PersonName - @item.TargetName')">编辑</a>
-                | <a href="#" onclick="doDelete('@item.TMID','@item.PersonName - @item.TargetName')">删除</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TargetName)
-            </td>
-            <td>
-                @Html.Raw(item.Mission)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PersonName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SidePerson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stat)
-            </td>
-
-        </tr>
-    }
-</table>
 
 @if (!isAdmin)
 {
-    <blockquote>
-        <p>我协办的项目</p>
-    </blockquote>
+    <h3>我主办的项目</h3>
+}
+<div class="row card">
     <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
         <tr>
             <th width="10"></th>
             <th width="20">
-                @Html.DisplayNameFor(model => model.SideLs[0].TID)
+                @Html.DisplayNameFor(model => model.HostLs[0].TID)
             </th>
             <th width="30">
-                @Html.DisplayNameFor(model => model.SideLs[0].Mission)
+                @Html.DisplayNameFor(model => model.HostLs[0].Mission)
             </th>
             <th width="10">
-                @Html.DisplayNameFor(model => model.SideLs[0].PersonID)
+                @Html.DisplayNameFor(model => model.HostLs[0].PersonID)
             </th>
             <th width="20">
-                @Html.DisplayNameFor(model => model.SideLs[0].SidePerson)
+                @Html.DisplayNameFor(model => model.HostLs[0].SidePerson)
             </th>
             <th width="10">
-                @Html.DisplayNameFor(model => model.SideLs[0].Stat)
+                @Html.DisplayNameFor(model => model.HostLs[0].Stat)
             </th>
 
         </tr>
-        @foreach (var item in Model.SideLs)
+        @foreach (var item in Model.HostLs)
         {
             <tr>
                 <td>
@@ -205,6 +150,59 @@
             </tr>
         }
     </table>
+</div>
+
+@if (!isAdmin)
+{
+    <h3>我协办的项目</h3>
+    <div class="row card">
+        <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+            <tr>
+                <th width="10"></th>
+                <th width="20">
+                    @Html.DisplayNameFor(model => model.SideLs[0].TID)
+                </th>
+                <th width="30">
+                    @Html.DisplayNameFor(model => model.SideLs[0].Mission)
+                </th>
+                <th width="10">
+                    @Html.DisplayNameFor(model => model.SideLs[0].PersonID)
+                </th>
+                <th width="20">
+                    @Html.DisplayNameFor(model => model.SideLs[0].SidePerson)
+                </th>
+                <th width="10">
+                    @Html.DisplayNameFor(model => model.SideLs[0].Stat)
+                </th>
+
+            </tr>
+            @foreach (var item in Model.SideLs)
+                {
+                <tr>
+                    <td>
+                        <a href="#" onclick="doEdit('@item.TMID','@item.PersonName - @item.TargetName')">编辑</a>
+                        | <a href="#" onclick="doDelete('@item.TMID','@item.PersonName - @item.TargetName')">删除</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TargetName)
+                    </td>
+                    <td>
+                        @Html.Raw(item.Mission)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PersonName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SidePerson)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Stat)
+                    </td>
+
+                </tr>
+            }
+        </table>
+    </div>
 }
 
 <!--因为分段显示，所以不分页了-->

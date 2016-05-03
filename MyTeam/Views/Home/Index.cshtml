@@ -35,11 +35,11 @@
         </div>
 
         <div class="list-group infolist">
-            @foreach (HomeReqDelay r in Model.ReqDelayLS)
+            @foreach (HomeReq r in Model.ReqDelayLS)
             {
                 string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SpecialQuery=1&SysId=" + r.SysId + "&ReqAcptPerson=" + r.ReqAcptPerson;
                 <a class="list-group-item" href=@s>
-                    <span class="badge">@r.ReqDelayNum</span>
+                    <span class="badge">@r.ReqNum</span>
                     @r.SysName
                 </a>
             }
@@ -52,11 +52,11 @@
         </div>
         
         <div class="list-group infolist">
-            @foreach (HomeInpoolReqDelay r in Model.ReqInpoolDelayLS)
+            @foreach (HomeReq r in Model.ReqInpoolDelayLS)
             {
                 string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SpecialQuery=2&SysId=" + r.SysId + "&ReqAcptPerson=" + r.ReqAcptPerson;
                 <a class="list-group-item" href=@s>
-                    <span class="badge">@r.ReqDelayNum</span>
+                    <span class="badge">@r.ReqNum</span>
                     @r.SysName
                 </a>
             }

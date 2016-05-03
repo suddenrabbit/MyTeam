@@ -1,5 +1,4 @@
-﻿@using PagedList
-@using PagedList.Mvc
+﻿@using PagedList.Mvc
 @model IEnumerable<MyTeam.Models.Target>
 @{
     ViewBag.Title = "量化考核指标管理";
@@ -76,20 +75,20 @@
         });
     }
 </script>
-<div class="row">
+<div class="row card">
     <div class="col-md-8">
         @using (Html.BeginForm("Index", "TargetManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                    new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <table class="table table-condensed query-table">
                 <tr>
                     <td><label for="year" class="control-label">指标年度</label></td>
-                        <!--年度-->
+                    <!--年度-->
                     <td>
                         <input type="text" id="year" name="year" class="form-control Wdate datepicker" required="required" onclick="WdatePicker({ dateFmt: 'yyyy' })" placeholder="请选择年份" />
-                    </td>                
+                    </td>
                     <td>
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" onclick="doCreate('Create')" class="btn btn-default" value="添加一条" />
@@ -98,6 +97,8 @@
             </table>
         }
     </div>
+</div>
+<div class="row card">
     <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
         <tr>
             <th width="15"></th>
@@ -113,15 +114,15 @@
             <th width="10">
                 @Html.DisplayNameFor(model => model.TargetPoint)
             </th>
-           
+
         </tr>
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    <a href="#" onclick="doEdit('@item.TID','@item.TargetName')">编辑</a>                 
-                    | <a href="#" onclick="doDelete('@item.TID','@item.TargetName')">删除</a>  
-                    | <a href="/TargetMission/Index?TID=@item.TID">相关工作任务</a>                  
+                    <a href="#" onclick="doEdit('@item.TID','@item.TargetName')">编辑</a>
+                    | <a href="#" onclick="doDelete('@item.TID','@item.TargetName')">删除</a>
+                    | <a href="/TargetMission/Index?TID=@item.TID">相关工作任务</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TargetName)
@@ -131,12 +132,12 @@
                 </td>
                 <td>
                     @Html.Raw(item.TargetRule)
-                    
+
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.TargetPoint)
                 </td>
-                             
+
             </tr>
         }
     </table>

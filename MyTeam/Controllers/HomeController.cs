@@ -49,18 +49,18 @@ namespace MyTeam.Controllers
             // 判断入池已超过三个月，但是没有出池的需求记录
             if (user.IsAdmin)
             {
-                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReqDelay>("select t.SysId, count(1) as ReqDelayNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) group by t.SysId").ToList();
+                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) group by t.SysId").ToList();
             }
             else
             {
-                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReqDelay>("select t.SysId, count(1) as ReqDelayNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
+                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
             }
 
             // 统计计算三个月未出池的需求总数
             int reqDelayLsSum = 0;
-            foreach (HomeReqDelay q in hr.ReqDelayLS)
+            foreach (HomeReq q in hr.ReqDelayLS)
             {
-                reqDelayLsSum += q.ReqDelayNum;
+                reqDelayLsSum += q.ReqNum;
             }
 
             ViewBag.ReqDelayLsSum = reqDelayLsSum;
@@ -70,18 +70,18 @@ namespace MyTeam.Controllers
             // 判断超过两周还没入池的记录（状态为「待评估」）
             if (user.IsAdmin)
             {
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeInpoolReqDelay>("select t.SysId, count(1) as ReqDelayNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) group by t.SysId").ToList();
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) group by t.SysId").ToList();
             }
             else
             {
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeInpoolReqDelay>("select t.SysId, count(1) as ReqDelayNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
             }
 
             // 统计计算超过2周未入池的需求总数
             int reqInpoolDelayLsSum = 0;
-            foreach (HomeInpoolReqDelay q in hr.ReqInpoolDelayLS)
+            foreach (HomeReq q in hr.ReqInpoolDelayLS)
             {
-                reqInpoolDelayLsSum += q.ReqDelayNum;
+                reqInpoolDelayLsSum += q.ReqNum;
             }
 
             ViewBag.ReqInpoolDelayLsSum = reqInpoolDelayLsSum;

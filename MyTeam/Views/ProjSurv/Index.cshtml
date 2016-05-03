@@ -1,5 +1,4 @@
-﻿@using PagedList
-@using PagedList.Mvc
+﻿@using PagedList.Mvc
 @model MyTeam.Models.ProjSurvQuery
 
 @{
@@ -102,6 +101,7 @@
 
 @if (Model.ResultList != null)
 {
+    <h3>查询结果</h3>
     <div class="row card">
         @if (Model.ResultList.Count < 1)
         {
