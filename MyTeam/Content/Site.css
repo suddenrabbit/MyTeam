@@ -67,6 +67,12 @@ footer{
     color:darkgrey;
 }
 
-.splitLine {
-    border-bottom-style:double!important;
+.splitLine td {
+    /*border-bottom-style:double!important;*/
+	border-bottom-color:#7D9EC0!important;
+}
+
+.tableHead th {
+	border-top-color:#7D9EC0!important;
+	border-bottom-color:#7D9EC0!important;
 }
