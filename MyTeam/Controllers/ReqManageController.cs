@@ -364,6 +364,16 @@ namespace MyTeam.Controllers
         {
             try
             {
+                // 保证副下发为NULL
+                if (string.IsNullOrEmpty(secondRlsNo))
+                {
+                    secondRlsNo = "NULL";
+                }
+                else
+                {
+                    secondRlsNo = "'" + secondRlsNo + "'";
+                }
+
                 // 拼出sql中的in条件
                 string whereIn = this.GetWhereIn(reqs);
 
@@ -879,7 +889,17 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string QuickUpdateRlsNo(string Reqs, string RlsNo, string SecondRlsNo)
         {
-            string sql = string.Format("update Reqs set RlsNo='{0}', SecondRlsNo='{1}', UpdateTime='{2}' where RID in ({3})", RlsNo, SecondRlsNo, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
+            // 保证副下发为NULL
+            if(string.IsNullOrEmpty(SecondRlsNo))
+            {
+                SecondRlsNo = "NULL";
+            }
+            else
+            {
+                SecondRlsNo = "'" + SecondRlsNo + "'";
+            }
+
+            string sql = string.Format("update Reqs set RlsNo='{0}', SecondRlsNo={1}, UpdateTime='{2}' where RID in ({3})", RlsNo, SecondRlsNo, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
             try
             {
                 // 批量更新，直接执行SQL

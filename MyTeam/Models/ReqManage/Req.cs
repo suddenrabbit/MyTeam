@@ -107,6 +107,7 @@ namespace MyTeam.Models
         public string RlsNo { get; set; }
 
         [Display(Name = "副下发通知编号")]
+        [StringLength(128, ErrorMessage = "不能超过128位")]
         public string SecondRlsNo { get; set; }
 
         [Display(Name = "副实际下发日期")]
