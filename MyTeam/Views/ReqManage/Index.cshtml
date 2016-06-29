@@ -1,5 +1,4 @@
-﻿@using PagedList
-@using PagedList.Mvc
+﻿@using PagedList.Mvc
 @model MyTeam.Models.ReqQuery
 @{
     ViewBag.Title = "维护需求管理";
@@ -159,7 +158,7 @@
                         <select id="SpecialQuery" name="SpecialQuery" class="form-control" onchange="changeReqStat()">
                             <option value="0">无</option>
                             <option value="1">超过3个月未出池</option>
-                            <option value="2">超过2周未入池</option>
+                            <option value="2">超过10天未入池</option>
                         </select>
                     </td>
                 </tr>
@@ -222,10 +221,10 @@
                     {
                         var trid = "resultTR" + item.RID;
                         <tr id="@trid">
-                            <td style="font-size:1.5em; text-align:center">
-                                <span class="glyphicon glyphicon-edit text-warning" style="cursor:pointer" aria-hidden="true" onclick="doEdit('@item.RID','@item.SysName')" title="编辑"></span>&nbsp;
-                                <span class="glyphicon glyphicon-info-sign text-info" style="cursor:pointer" aria-hidden="true" onclick="showDetail('@item.RID','@item.SysName 的维护需求')" title="详情"></span>&nbsp;
-                                <span class="glyphicon glyphicon-remove text-danger" style="cursor:pointer" aria-hidden="true" onclick="doDelete('@item.RID','@item.SysName 的维护需求')" title="删除"></span>
+                            <td>
+                                <a href="#" onclick="showDetail('@item.RID','@item.SysName 的维护需求')">详情</a>|
+                                <a href="#" onclick="doEdit('@item.RID', '@item.SysName')">编辑</a>|
+                                <a href="#" onclick="doDelete('@item.RID','@item.SysName 的维护需求')">删除</a>                                
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.SysName)

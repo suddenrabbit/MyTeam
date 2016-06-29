@@ -205,10 +205,10 @@ namespace MyTeam.Controllers
         // 按照查询条件查询结果：为使用分页功能，GET模式查询
         public ActionResult Index(ReqQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            if (this.GetSessionCurrentUser() == null)
+            /*if (this.GetSessionCurrentUser() == null)
             {
                 return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage" });
-            }
+            }*/
             if (isQuery)
             {
                 var ls = from a in dbContext.Reqs
@@ -255,7 +255,7 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
                 }
 
-                // 特殊查询：0-无 1-超过3个月未出池 2-超过2周未入池
+                // 特殊查询：0-无 1-超过3个月未出池 2-超过10天未入池
                 if (query.SpecialQuery == 1)
                 {
                     DateTime time = DateTime.Now.AddMonths(-3);
@@ -264,7 +264,7 @@ namespace MyTeam.Controllers
 
                 else if (query.SpecialQuery == 2)
                 {
-                    DateTime time = DateTime.Now.AddDays(-14);
+                    DateTime time = DateTime.Now.AddDays(-10);
                     ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0);
                 }
 
@@ -365,19 +365,15 @@ namespace MyTeam.Controllers
             try
             {
                 // 保证副下发为NULL
-                if (string.IsNullOrEmpty(secondRlsNo))
+                if (!string.IsNullOrEmpty(secondRlsNo))               
                 {
-                    secondRlsNo = "NULL";
-                }
-                else
-                {
-                    secondRlsNo = "'" + secondRlsNo + "'";
+                    secondRlsNo = "'" + secondRlsNo + "', ";
                 }
 
                 // 拼出sql中的in条件
                 string whereIn = this.GetWhereIn(reqs);
 
-                string sql = string.Format("update Reqs set RlsNo='{0}',SecondRlsNo='{1}', UpdateTime='{2}' where ReqDetailNo in ({3})", rlsNo.Trim(), secondRlsNo.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn);
+                string sql = string.Format("update Reqs set RlsNo='{0}', {1} UpdateTime='{2}' where ReqDetailNo in ({3})", rlsNo.Trim(), secondRlsNo.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn);
                 if (rlsNoProtect == "true")
                 {
                     sql += " and ReqStat = N'出池'";
@@ -546,8 +542,11 @@ namespace MyTeam.Controllers
                 }
 
                 // 去除空格：
-                req.ReqNo = req.ReqNo.Trim();
-                req.ReqDetailNo = req.ReqDetailNo.Trim();
+                string reqNo = req.ReqNo;
+                string reqDetailNo = req.ReqDetailNo;
+
+                req.ReqNo = reqNo.Trim();
+                req.ReqDetailNo = string.IsNullOrEmpty(reqDetailNo) ? "" : reqDetailNo.Trim();
 
                 // 加入创建时间和更新时间
                 req.CreateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -890,16 +889,12 @@ namespace MyTeam.Controllers
         public string QuickUpdateRlsNo(string Reqs, string RlsNo, string SecondRlsNo)
         {
             // 保证副下发为NULL
-            if(string.IsNullOrEmpty(SecondRlsNo))
+            if(!string.IsNullOrEmpty(SecondRlsNo))            
             {
-                SecondRlsNo = "NULL";
-            }
-            else
-            {
-                SecondRlsNo = "'" + SecondRlsNo + "'";
-            }
+                SecondRlsNo = "SecondRlsNo='" + SecondRlsNo + "', ";
+            }            
 
-            string sql = string.Format("update Reqs set RlsNo='{0}', SecondRlsNo={1}, UpdateTime='{2}' where RID in ({3})", RlsNo, SecondRlsNo, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
+            string sql = string.Format("update Reqs set RlsNo='{0}', {1} UpdateTime='{2}' where RID in ({3})", RlsNo, SecondRlsNo, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
             try
             {
                 // 批量更新，直接执行SQL

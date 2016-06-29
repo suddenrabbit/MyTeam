@@ -67,17 +67,17 @@ namespace MyTeam.Controllers
 
             //////////////////////////////////////////////////////////////////////
 
-            // 判断超过两周还没入池的记录（状态为「待评估」）
+            // 判断超过10天还没入池的记录（状态为「待评估」）
             if (user.IsAdmin)
             {
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) group by t.SysId").ToList();
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-10,GETDATE()) group by t.SysId").ToList();
             }
             else
             {
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-14,GETDATE()) and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-10,GETDATE()) and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
             }
 
-            // 统计计算超过2周未入池的需求总数
+            // 统计计算超过10天未入池的需求总数
             int reqInpoolDelayLsSum = 0;
             foreach (HomeReq q in hr.ReqInpoolDelayLS)
             {
@@ -167,6 +167,7 @@ namespace MyTeam.Controllers
 
             // 列出超过计划下发日期仍未下发的
             string sql = "select distinct t.RlsNo, t.SecondRlsNo, t.PlanRlsDate from Reqs t where ((t.RlsNo is not null and t.RlsDate is null ) or (t.SecondRlsNo is not null and t.SecondRlsDate is null )) and t.PlanRlsDate < getdate()-1 and t.ReqStat=N'出池'";
+
             if (!IsAdminNow())
             {
                 sql += " and t.ReqAcptPerson = " + user.UID;
