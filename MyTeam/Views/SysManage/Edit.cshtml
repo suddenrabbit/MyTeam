@@ -110,6 +110,17 @@
             </div>
 
             <div class="form-group">
+                @Html.LabelFor(model => model.SysStat, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <select id="SysStatEdit" name="SysStat" class="form-control">
+                        <option value="0">已下线</option>
+                        <option value="1">正常</option>
+                        <option value="2">建设中</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                     <input type="submit" value="保存" class="btn btn-primary" />
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
@@ -121,8 +132,10 @@
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script>
-    // 选中 研发中心下拉列表
+    // 选中 研发中心下拉列表、系统状态列表
     $(function () {
         $("#DevCenter").val('@Model.DevCenter');
+        $("#SysStatEdit").val('@Model.SysStat');
+        
     });
 </script>

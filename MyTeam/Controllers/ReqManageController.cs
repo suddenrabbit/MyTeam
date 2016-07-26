@@ -38,7 +38,7 @@ namespace MyTeam.Controllers
             }
             MainRegReq mainRegReq = new MainRegReq();
             // 1、生成系统列表
-            SelectList sl1 = new SelectList(this.GetSysList(), "SysID", "SysName");
+            SelectList sl1 = new SelectList(this.GetNormalSysList(), "SysID", "SysName");
 
             ViewBag.SysList = sl1;
 
@@ -305,7 +305,7 @@ namespace MyTeam.Controllers
             // 为了保证查询部分正常显示，对下拉列表处理
 
             // 系统列表下拉
-            List<RetailSystem> sysList = this.GetSysList();
+            List<RetailSystem> sysList = this.GetSysList(); // 仅查询时可以选择所有系统
             // 加上“全部”
             sysList.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
             ViewBag.SysList = new SelectList(sysList, "SysID", "SysName", query.SysId);
@@ -492,7 +492,7 @@ namespace MyTeam.Controllers
         public ActionResult Create(int id = 0)
         {
             // 1、生成系统列表
-            List<RetailSystem> ls1 = this.GetSysList();
+            List<RetailSystem> ls1 = this.GetNormalSysList();
 
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName", id); // 选中传进来的值
 
@@ -576,7 +576,7 @@ namespace MyTeam.Controllers
 
             // 下拉框预处理
             // 1、生成系统列表
-            List<RetailSystem> ls1 = this.GetSysList();
+            List<RetailSystem> ls1 = this.GetNormalSysList();
 
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName", req.SysId);
 
@@ -746,7 +746,7 @@ namespace MyTeam.Controllers
             }
 
             // 系统列表下拉
-            List<RetailSystem> ls1 = this.GetSysList();
+            List<RetailSystem> ls1 = this.GetNormalSysList();
             // 加上“全部”
             ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysId);
@@ -856,7 +856,7 @@ namespace MyTeam.Controllers
         public ActionResult QuickOutPool()
         {
             // 提供系统列表
-            List<RetailSystem> ls1 = this.GetSysList();
+            List<RetailSystem> ls1 = this.GetNormalSysList();
             // 加上“请选择系统”
             ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "请选择系统" });
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName");

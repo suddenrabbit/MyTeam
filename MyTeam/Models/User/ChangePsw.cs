@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 
 namespace MyTeam.Models
 {
@@ -14,7 +13,7 @@ namespace MyTeam.Models
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "确认新密码")]
-        [Compare("NewPsw", ErrorMessage = "密码必须一致")]
+        [System.Web.Mvc.Compare("NewPsw", ErrorMessage = "密码必须一致")]
         public string NewPswRep { get; set; }
     }
 }

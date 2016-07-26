@@ -160,5 +160,15 @@ namespace MyTeam.Controllers
                 return obj.ToString();
             }
         }
+
+        // 2016.7.16新增：获取状态为1的系统列表（用于维护需求相关）
+        /// <summary>
+        /// 获取内存中的系统列表
+        /// </summary>
+        /// <returns></returns>
+        protected List<RetailSystem> GetNormalSysList()
+        {
+            return GetSysList().Where(p => p.SysStat == 1).ToList();
+        }
     }
 }

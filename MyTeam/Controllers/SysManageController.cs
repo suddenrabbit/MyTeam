@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using MyTeam.Utils;
 using MyTeam.Models;
 using PagedList;
+using System.Linq;
 
 namespace MyTeam.Controllers
 {
@@ -14,15 +15,51 @@ namespace MyTeam.Controllers
         //
         // GET: /SysManage/
 
-        public ActionResult Index(int pageNum = 1)
+        public ActionResult Index(SysQuery sys, bool isQuery = false, int pageNum = 1)
         {
-            if (this.GetSessionCurrentUser() == null)
+            if (GetSessionCurrentUser() == null)
             {
                 return RedirectToAction("Login", "User", new { ReturnUrl = "/SysManage" });
             }
-            // 分页
-            var ls = this.GetSysList().ToPagedList(pageNum, Constants.PAGE_SIZE);
-            return View(ls);
+
+            if(isQuery)
+            {
+                // 按照查询条件筛选
+                var ls = from a in dbContext.RetailSystems
+                         select a;
+
+                if (!string.IsNullOrEmpty(sys.SysName))
+                {
+                    ls = ls.Where(p => p.SysName.Contains(sys.SysName));
+                }
+
+                if (sys.ReqPersonID != 0)
+                {
+                    ls = ls.Where(p => p.ReqPersonID == sys.ReqPersonID);
+                }
+
+                if (!string.IsNullOrEmpty(sys.SysStat))
+                {
+                    ls = ls.Where(p => p.SysStat.ToString() == sys.SysStat);
+                }
+                sys.ResultList = ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE); 
+            }
+            else
+            {
+                sys = new SysQuery();
+            }
+                       
+
+            // 需求受理用户列表
+            var ls1 = GetUserList().Where(p => p.UserType == 1).ToList();
+
+            ls1.Insert(0, new User() { UID = 0, Realname = "全部" });
+
+            SelectList sl = new SelectList(ls1, "UID", "Realname", sys.ReqPersonID); // 选中当前值
+
+            ViewBag.ReqPersonList = sl;
+
+            return View(sys);
         }
 
         //
@@ -30,9 +67,21 @@ namespace MyTeam.Controllers
 
         public ActionResult Create()
         {
-            SelectList sl = new SelectList(this.GetUserList(), "UID", "Realname");
+            // 需求受理用户列表
+            var ls1 = GetUserList().Where(p => p.UserType == 1).ToList();
+
+            SelectList sl = new SelectList(ls1, "UID", "Realname"); // 选中当前值
 
             ViewBag.ReqPersonList = sl;
+
+            // 需求编辑用户列表
+            var ls2 = GetUserList().Where(p => p.UserType == 2).ToList();
+
+            ls2.Insert(0, new User() { UID = 0, Realname = "暂无" });
+
+            SelectList s2 = new SelectList(ls2, "UID", "Realname"); // 选中当前值
+
+            ViewBag.ReqEditPersonList = s2;
 
             return View();
         }
@@ -44,7 +93,7 @@ namespace MyTeam.Controllers
         public string Create(RetailSystem sys)
         {
             // 判断是否有重复的系统名称，如有重复不允许新增
-            RetailSystem rs = this.GetSysList().Find(a => a.SysName == sys.SysName);
+            RetailSystem rs = GetSysList().Find(a => a.SysName == sys.SysName);
             if (rs != null)
             {
                 return "<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许重复添加！" + "</p>";
@@ -55,7 +104,7 @@ namespace MyTeam.Controllers
                 dbContext.RetailSystems.Add(sys);
                 dbContext.SaveChanges();
                 // 更新内存
-                this.Update(2);
+                Update(2);
 
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
 
@@ -72,7 +121,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Edit(int id)
         {
-            RetailSystem sys = this.GetSysList().Find(a => a.SysID == id);
+            RetailSystem sys = GetSysList().Find(a => a.SysID == id);
 
             if (sys == null)
             {
@@ -81,13 +130,19 @@ namespace MyTeam.Controllers
 
             sys.OldSysName = sys.SysName;
 
-            // 用户列表
-            SelectList sl = new SelectList(this.GetUserList(), "UID", "Realname", sys.ReqPersonID); // 选中当前值
+            // 需求受理用户列表
+            var ls1 = GetUserList().Where(p => p.UserType == 1).ToList();
+
+            SelectList sl = new SelectList(ls1, "UID", "Realname", sys.ReqPersonID); // 选中当前值
 
             ViewBag.ReqPersonList = sl;
 
-            // 用户列表
-            SelectList s2 = new SelectList(this.GetUserList(), "UID", "Realname", sys.ReqEditPersonID); // 选中当前值
+            // 需求编辑用户列表
+            var ls2 = GetUserList().Where(p => p.UserType == 2).ToList();
+
+            ls2.Insert(0, new User() { UID = 0, Realname = "暂无" });
+
+            SelectList s2 = new SelectList(ls2, "UID", "Realname", sys.ReqEditPersonID); // 选中当前值
 
             ViewBag.ReqEditPersonList = s2;
 
@@ -104,7 +159,7 @@ namespace MyTeam.Controllers
             if (sys.SysName != sys.OldSysName)
             {
                 // 若系统名称改变，则判断新改的系统名称是否有重复，如有重复不允许新增
-                RetailSystem rs = this.GetSysList().Find(a => a.SysName == sys.SysName);
+                RetailSystem rs = GetSysList().Find(a => a.SysName == sys.SysName);
                 if (rs != null)
                 {
                     return "<p class='alert alert-danger'>出错了: " + sys.SysName + "已存在，不允许更新！" + "</p>";
@@ -116,7 +171,7 @@ namespace MyTeam.Controllers
                 dbContext.Entry(sys).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
                 // 更新内存
-                this.Update(2);
+                Update(2);
 
                 return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
@@ -133,11 +188,11 @@ namespace MyTeam.Controllers
         {
             try
             {
-                RetailSystem sys = this.GetSysList().Find(a => a.SysID == id);
+                RetailSystem sys = GetSysList().Find(a => a.SysID == id);
                 dbContext.Entry(sys).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
                 // 更新内存
-                this.Update(2);
+                Update(2);
 
                 return "删除成功";
             }

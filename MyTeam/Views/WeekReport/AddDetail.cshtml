@@ -25,7 +25,7 @@
     <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("AddDetail", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                new { @class = "form-horizontal", role = "form" }))
+                        new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -131,11 +131,20 @@
                     @Html.ValidationMessageFor(model => model.WorkTime, "", new { @class = "text-danger" })
                 </div>
             </div>
+
             <div class="form-group">
                 @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-3 "></div>
+                <div class="col-md-9">
+                    <input type="checkbox" onclick="NotPlanned()" id="noplan" />
+                    &nbsp;计划外 <div class="text-info">（额外记录上周工作时请勾选！）</div>
                 </div>
             </div>
 
@@ -158,7 +167,7 @@
 <script>
     $('#WorkNameDiv2').hide();
 
-    function ChangeWorkName() {        
+    function ChangeWorkName() {
         var d1 = $('#WorkNameDiv1');
         var d2 = $('#WorkNameDiv2');
 
@@ -175,6 +184,19 @@
             d2.hide();
             n1.attr("name", "WorkName");
             n2.attr("name", "WorkNameFalse");
-        }       
+        }
+    }
+
+    function NotPlanned() {
+        var originRemark = $("#Remark").val();
+
+        var word = "(计划外新增)";
+
+        if ($('#noplan').prop('checked')) {
+            $("#Remark").val(originRemark + word);
+        }
+        else {
+            $("#Remark").val(originRemark.replace(word, ""));
+        }
     }
 </script>

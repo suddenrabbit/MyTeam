@@ -32,7 +32,7 @@ namespace MyTeam.Controllers
             }
             else
             {
-                hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'入池' and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
+                hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'入池' and t.SysId in (select rs.SysId from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
             }
 
             // 统计计算未出池的需求总数
@@ -53,7 +53,7 @@ namespace MyTeam.Controllers
             }
             else
             {
-                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
+                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'入池' and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.SysId in (select rs.SysId from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
             }
 
             // 统计计算三个月未出池的需求总数
@@ -74,7 +74,7 @@ namespace MyTeam.Controllers
             }
             else
             {
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-10,GETDATE()) and t.ReqAcptPerson = @p0 group by t.SysId", user.UID).ToList();
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-10,GETDATE()) and t.SysId in (select rs.SysId from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
             }
 
             // 统计计算超过10天未入池的需求总数

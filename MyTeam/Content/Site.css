@@ -76,3 +76,9 @@ footer{
 	border-top-color:#7D9EC0!important;
 	border-bottom-color:#7D9EC0!important;
 }
+
+.homeNum {
+    font-weight:bold; 
+    font-size:4em;
+    text-align:right;
+}

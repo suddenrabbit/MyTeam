@@ -1,5 +1,5 @@
 ﻿@using PagedList.Mvc
-@model IEnumerable<MyTeam.Models.RetailSystem>
+@model MyTeam.Models.SysQuery
 @{
     ViewBag.Title = "零售条线系统管理";
 }
@@ -21,13 +21,13 @@
             url: url,
             success: function (msg) {
                 $('#procResult').html(msg);
-                
+
             },
             error: function () {
                 $('#procResult').html("处理失败，请联系管理员");
             },
             complete: function () {
-                $('#myModal2').modal();                
+                $('#myModal2').modal();
             }
         });
     }
@@ -71,92 +71,149 @@
 </script>
 
 <div class="row card">
-    <p>
-        <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加系统" />
-    </p>
-    <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
-        <tr>
-            <th width="10"></th>
-            <th width="10">
-                @Html.DisplayNameFor(model => model.SysNO)
-            </th>
-            <th width="10">
-                @Html.DisplayNameFor(model => model.SysName)
-            </th>
-            <th width="10">
-                @Html.DisplayNameFor(model => model.SysShortName)
-            </th>
-            <th width="10">
-                @Html.DisplayNameFor(model => model.HostDept)
-            </th>
-            <th width="10">
-                @Html.DisplayNameFor(model => model.SecondDept)
-            </th>
-            <th width="8">
-                @Html.DisplayNameFor(model => model.BusiPerson)
-            </th>
-            <th width="8">
-                @Html.DisplayNameFor(model => model.DevCenter)
-            </th>
-            <th width="8">
-                @Html.DisplayNameFor(model => model.DevPerson)
-            </th>
-            <th width="8">
-                @Html.DisplayNameFor(model => model.ReqPersonID)
-            </th>
-            <th width="8">
-                @Html.DisplayNameFor(model => model.ReqEditPersonID)
-            </th>
-        </tr>
-        @foreach (var item in Model)
-        {
+    @using (Html.BeginForm("Index", "SysManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                                                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+    {
+        <input type="hidden" name="isQuery" value="true" />
+        <table class="table table-condensed query-table">
             <tr>
+                <td>@Html.LabelFor(model => model.SysName, new { @class = "control-label" })</td>
                 <td>
-                    <a href="#" onclick="doEdit('@item.SysID','@item.SysName')">编辑</a>
-                    @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
-                {
-                    <!--只有管理员可以删除-->
-                        <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysName')">删除</a></span>
-                    }
+                    @Html.TextBoxFor(model => model.SysName, new { @class = "form-control" })
+                    <span class="text-info">（支持模糊查询）</span>
                 </td>
+                <td>@Html.LabelFor(model => model.ReqPersonID, new { @class = "control-label" })</td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SysNO)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SysName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SysShortName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.HostDept)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SecondDept)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BusiPerson)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DevCenter)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DevPerson)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReqPersonName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ReqEditPersonName)
+                    @Html.DropDownListFor(model => model.ReqPersonID, ViewBag.ReqPersonList as SelectList, new { @class = "form-control" })
                 </td>
             </tr>
-        }
-    </table>
-    <!--分页-->
-    @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.RetailSystem>,
-    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+            <tr>
+                <td>@Html.LabelFor(model => model.SysStat, new { @class = "control-label" })</td>
+                <td>
+                    <select id="SysStat" name="SysStat" class="form-control">
+                        <option value="">全部</option>
+                        <option value="0">已下线</option>
+                        <option value="1">正常</option>
+                        <option value="2">建设中</option>
+                    </select>
+                </td>
+                <td colspan="2">
+                    <input type="submit" value="查询" class="btn btn-primary" />
+                    @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+                    {
+                        <input type="button" onclick="doCreate()" class="btn btn-default" value="添加系统" />
+                    }
+                </td>
+            </tr>
+
+        </table>
+    }
 
 </div>
+
+@if (Model.ResultList != null)
+{
+    <h3>查询结果</h3>
+    <div class="row card">
+        @if (Model.ResultList.Count < 1)
+        {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+                <tr>
+                    <th width="6"></th>
+                    <th width="6">
+                        @Html.DisplayNameFor(model => model.ResultList[0].SysNO)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].SysName)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].SysShortName)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].HostDept)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].SecondDept)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].BusiPerson)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].DevCenter)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].DevPerson)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqPersonID)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqEditPersonID)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].SysStat)
+                    </th>
+                </tr>
+
+                @foreach (var item in Model.ResultList)
+                {
+                    <tr>
+                        <td>
+                            <a href="#" onclick="doEdit('@item.SysID','@item.SysName')">编辑</a>
+                            @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+                        {
+                    <!--只有管理员可以删除-->
+                                <span>| <a href="#" onclick="doDelete('@item.SysID','@item.SysName')">删除</a></span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SysNO)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SysName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SysShortName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.HostDept)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SecondDept)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BusiPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DevCenter)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DevPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqPersonName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqEditPersonName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SysStatName)
+                        </td>
+                    </tr>
+                }
+            </table>
+        <!--分页-->
+            @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.RetailSystem>,
+    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+        }
+    </div>
+}
+
+
 
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -194,13 +251,13 @@
      aria-labelledby="myModal2Label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">               
+            <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">
                     处理结果
                 </h4>
             </div>
             <div class="modal-body">
-                <span id="procResult"></span>                
+                <span id="procResult"></span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
@@ -253,3 +310,9 @@
     </div>
 </div>
 
+<script>
+    // 选中 系统状态列表
+    $(function () {
+        $("#SysStat").val('@Model.SysStat');
+    });
+</script>

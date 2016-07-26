@@ -61,6 +61,10 @@ namespace MyTeam.Models
         {
             get
             {
+                if (ReqPersonID == 0)
+                {
+                    return "暂无";
+                }
                 var s = (from a in Constants.UserList
                          where a.UID == this.ReqPersonID
                          select a.Realname).FirstOrDefault();
@@ -80,6 +84,10 @@ namespace MyTeam.Models
         {
             get
             {
+                if(ReqEditPersonID==0)
+                {
+                    return "暂无";
+                }
                 var s = (from a in Constants.UserList
                          where a.UID == this.ReqEditPersonID
                          select a.Realname).FirstOrDefault();
@@ -90,5 +98,35 @@ namespace MyTeam.Models
                 this.ReqEditPersonName = value;
             }
         } //用于显示UID对应的名字
+
+
+        // 2016.7.16新增： 系统状态
+        [Display(Name = "系统状态")]
+        public int SysStat { get; set; } // 0-下线 1-正常 2-建设中
+
+        [NotMapped]
+        public string SysStatName
+        {
+            get
+            {
+                switch (SysStat)
+                {
+                    case 0:
+                        return "已下线";
+                    case 1:
+                        return "正常";
+                    case 2:
+                        return "建设中";
+                    default:
+                        return "未知";
+                }
+
+            }
+
+            set
+            {
+                this.SysStatName = value;
+            }
+        }
     }
 }
