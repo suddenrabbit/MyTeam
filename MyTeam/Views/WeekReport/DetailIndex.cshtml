@@ -53,9 +53,27 @@
             }
         });
     }
-    // 在modal中新增
+    // 在modal中新增    
     function doCreate() {
         var url = "/WeekReport/AddDetail/";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateDetail').html(msg);
+            },
+            error: function () {
+                $('#CreateDetail').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal();
+            }
+        });
+    }
+
+    // // 2016.7.28新增：复制
+    function doCopy(id) {
+        var url = "/WeekReport/AddDetail?isCopy=true&id="+id;
         $.ajax({
             type: 'GET',
             url: url,
@@ -130,7 +148,8 @@
             <tr @splitLine>
                 <td width="8%">
                     <a href="#" onclick="doEdit('@item.WRDetailID','@item.RptDate')">编辑</a> |
-                    <a href="#" onclick="doDelete('@item.WRDetailID','@item.RptDate 的工作任务')">删除</a>
+                    <a href="#" onclick="doDelete('@item.WRDetailID','@item.RptDate 的工作任务')">删除</a> |
+                    <a href="#" onclick="doCopy('@item.WRDetailID')">复制</a>
                 </td>
                 <td width="10%">
                     @Html.DisplayFor(modelItem => item.RptDate)

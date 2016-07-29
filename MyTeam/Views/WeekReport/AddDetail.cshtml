@@ -120,7 +120,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.PlanDeadLine, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.PlanDeadLine)
+                    @Html.EditorFor(model => model.PlanDeadLine, "DateTime")
                     @Html.ValidationMessageFor(model => model.PlanDeadLine, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -199,4 +199,13 @@
             $("#Remark").val(originRemark.replace(word, ""));
         }
     }
+
+    $(function () {
+        $('#Priority').val('@Model.Priority');
+
+        ChangeWorkName(); // 先根据IsWithMain处理好页面的WorkName
+
+        $('#WorkName1').val('@Model.WorkName');
+        $('#WorkName2').val('@Model.WorkName');
+    })
 </script>

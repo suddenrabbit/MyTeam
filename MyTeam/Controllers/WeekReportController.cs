@@ -53,7 +53,7 @@ namespace MyTeam.Controllers
                 user = Constants.UserList.FirstOrDefault<User>(); // 若获取不到则去第一个
             }
 
-            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID = user.UID, Person = user.Realname , WorkYear = DateTime.Now.Year.ToString()};
+            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID = user.UID, Person = user.Realname, WorkYear = DateTime.Now.Year.ToString() };
             return View(main);
         }
 
@@ -82,7 +82,7 @@ namespace MyTeam.Controllers
             }
 
             // 若workYear为空，自动填上今年的日期
-            if(string.IsNullOrEmpty(main.WorkYear))
+            if (string.IsNullOrEmpty(main.WorkYear))
             {
                 main.WorkYear = DateTime.Now.Year.ToString();
             }
@@ -135,7 +135,7 @@ namespace MyTeam.Controllers
         /* 每周工作 */
 
         // 每周工作页面
-        public ActionResult DetailIndex(int pageNum = 1, int orderByType =  1)
+        public ActionResult DetailIndex(int pageNum = 1, int orderByType = 1)
         {
             var ls = from a in dbContext.WeekReportDetails select a;
             // 若非管理员只显示负责人中含有自己姓名的记录
@@ -161,7 +161,7 @@ namespace MyTeam.Controllers
             }
 
             // 按照 orderByType 排序 (1-按照周报倒序；2-按照项目名称）
-            if(orderByType == 2)
+            if (orderByType == 2)
             {
                 ls = ls.OrderBy(a => a.WorkName);
             }
@@ -176,7 +176,7 @@ namespace MyTeam.Controllers
         }
 
         // 添加每周工作
-        public ActionResult AddDetail(bool forMain = false)
+        public ActionResult AddDetail(int id = 0, bool isCopy = false)
         {
             // 当前用户
             User user = this.GetSessionCurrentUser();
@@ -197,14 +197,25 @@ namespace MyTeam.Controllers
             SelectList sl2 = MyTools.GetSelectList(Constants.WorkTypeList);
             ViewBag.WorkTypeList = sl2;
 
-            WeekReportDetail detail = new WeekReportDetail()
+            WeekReportDetail detail = null;
+
+            // 若是复制则直接读取现有的
+            if (isCopy)
             {
-                RptDate = DateTime.Now.Year + "年",
-                Person = user.Realname,
-                RptPersonID = user.UID,
-                Progress = 100,
-                IsWithMain = forMain
-            };
+                detail = dbContext.WeekReportDetails.ToList().Find(a => a.WRDetailID == id);
+            }
+            else
+            {
+                detail = new WeekReportDetail()
+                {
+                    RptDate = DateTime.Now.Year + "年",
+                    Person = user.Realname,
+                    RptPersonID = user.UID,
+                    Progress = 100,
+                    IsWithMain = false
+                };
+            }
+
 
             // 重点项目下拉
             var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack != true);
