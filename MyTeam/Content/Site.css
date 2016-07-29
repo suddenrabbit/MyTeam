@@ -1,7 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
-    background-color:#f1f1f1;
+    background-color: #f1f1f1;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -25,60 +25,73 @@ textarea {
 }
 
 .tips {
-    font-size:12px;
-    color:grey;
-    margin-top:20px;
-}
-.tips p {
-    margin:0;
-}
-.datepicker {
-  cursor: pointer!important;
-  background-color:#FFF!important;
+    font-size: 12px;
+    color: grey;
+    margin-top: 20px;
 }
 
-.query-table, .query-table tr,  .query-table td{
-    border:none!important;
-    border-color:none!important;
+    .tips p {
+        margin: 0;
+    }
+
+.datepicker {
+    cursor: pointer !important;
+    background-color: #FFF !important;
+}
+
+.query-table, .query-table tr, .query-table td {
+    border: none !important;
+    border-color: none !important;
 }
 
 .infobox {
-    border:solid 1px #ddd;
+    border: solid 1px #ddd;
     padding-left: 10px;
-    padding-top:10px;
-    margin-bottom:15px;
-    box-shadow:2px 2px 5px #ddd;
-    border-radius:4px;
+    padding-top: 10px;
+    margin-bottom: 15px;
+    box-shadow: 2px 2px 5px #ddd;
+    border-radius: 4px;
 }
 
 .infolist {
-    font-size:0.8em;
+    font-size: 0.8em;
 }
 
-.card{
-    background-color:#FFF;
-    margin-bottom:20px;
-    padding:20px;
-    box-shadow:2px 2px 5px #ddd;
+.card {
+    background-color: #FFF;
+    margin-bottom: 20px;
+    padding: 20px;
+    box-shadow: 2px 2px 5px #ddd;
 }
 
-footer{
-    margin-top:30px;
-    color:darkgrey;
+footer {
+    margin-top: 30px;
+    color: darkgrey;
 }
 
 .splitLine td {
     /*border-bottom-style:double!important;*/
-	border-bottom-color:#7D9EC0!important;
+    border-bottom-color: #7D9EC0 !important;
 }
 
 .tableHead th {
-	border-top-color:#7D9EC0!important;
-	border-bottom-color:#7D9EC0!important;
+    border-top-color: #7D9EC0 !important;
+    border-bottom-color: #7D9EC0 !important;
 }
 
 .homeNum {
-    font-weight:bold; 
-    font-size:4em;
-    text-align:right;
+    font-weight: bold;
+    font-size: 4em;
+    text-align: right;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/roboto-regular.woff2') format('woff2'), url('../fonts/roboto-regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/roboto-bold.woff2') format('woff2'), url('../fonts/roboto-bold.woff') format('woff');
+    font-weight: bold;
 }
