@@ -87,11 +87,11 @@ footer {
 
 @font-face {
     font-family: 'Roboto';
-    src: url('../fonts/roboto-regular.woff2') format('woff2'), url('../fonts/roboto-regular.woff') format('woff');
+    src: url('../fonts/Roboto-Regular.ttf');
 }
 
 @font-face {
     font-family: 'Roboto';
-    src: url('../fonts/roboto-bold.woff2') format('woff2'), url('../fonts/roboto-bold.woff') format('woff');
+    src: url('../fonts/Roboto-Bold.ttf');
     font-weight: bold;
 }
