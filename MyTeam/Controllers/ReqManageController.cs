@@ -365,7 +365,7 @@ namespace MyTeam.Controllers
             try
             {
                 // 保证副下发为NULL
-                if (!string.IsNullOrEmpty(secondRlsNo))               
+                if (!string.IsNullOrEmpty(secondRlsNo))
                 {
                     secondRlsNo = "'" + secondRlsNo + "', ";
                 }
@@ -404,7 +404,7 @@ namespace MyTeam.Controllers
                 {
                     condition = string.Format("ReqDetailNo in ({0})", this.GetWhereIn(reqs));
                 }
-                else if(!string.IsNullOrEmpty(rlsNoToBatRlsDate))
+                else if (!string.IsNullOrEmpty(rlsNoToBatRlsDate))
                 {
                     condition = string.Format("RlsNo = '{0}'", rlsNoToBatRlsDate);
                 }
@@ -421,7 +421,7 @@ namespace MyTeam.Controllers
                 int r = 0;
 
                 // 下发日期的更新原则：为空的不更新
-                if(!string.IsNullOrEmpty(rlsDate))
+                if (!string.IsNullOrEmpty(rlsDate))
                 {
                     sql = string.Format("update Reqs set RlsDate='{0}', UpdateTime='{1}' where {2}", rlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), condition);
                     // 批量更新，直接执行SQL
@@ -434,7 +434,7 @@ namespace MyTeam.Controllers
                     r = dbContext.Database.ExecuteSqlCommand(sql);
                 }
 
-                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";                
+                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
             }
             catch (Exception e1)
             {
@@ -866,16 +866,48 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public string QuickOutPool(string Reqs, string Version, string OutDate, string PlanRlsDate, string SysId)
+        public string QuickOutPool(string Reqs, string Version, string OutDate, string PlanRlsDate, int SysId, bool IsPatch)
         {
-            string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat=N'出池', UpdateTime='{3}' where RID in ({4})", Version, OutDate, PlanRlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
+            // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理
+            string realVersion = Version;
+            if (!IsPatch) // 常规版本
+            {
+                Ver v = dbContext.Vers.Where(p => p.VerID.ToString() == Version).FirstOrDefault();
+                realVersion = v.VerNo;
+                // 更新版本计划信息
+                v.DraftTime = DateTime.Parse(PlanRlsDate); // 制定时间改为计划下发日期
+                v.DraftPersonID = this.GetSessionCurrentUser().UID;
+                dbContext.Entry(v).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+            }
+            else // 补丁版本
+            {
+
+                // 新增一条记录
+                DateTime newTime = DateTime.Parse(PlanRlsDate);
+                Ver v = new Ver()
+                {
+                    SysId = SysId,
+                    VerNo = realVersion,
+                    VerYear = DateTime.Now.Year.ToString(),
+                    ReleaseFreq = 0, // 补丁版本的频率记为0
+                    DraftTime = newTime, 
+                    PublishTime = newTime,// 发布时间、制定时间均为计划下发日期
+                    DraftPersonID = this.GetSessionCurrentUser().UID,
+                    VerType = "补丁版本"
+                };
+                dbContext.Vers.Add(v);
+                dbContext.SaveChanges();
+            }
+
+            string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat=N'出池', UpdateTime='{3}' where RID in ({4})", realVersion, OutDate, PlanRlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
             try
             {
                 // 批量更新，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
                 // 下载出池计划文档接口
-                string downfile = string.Format("/ReqManage/OutPool?isQuery=True&isExcel=True&SysId={0}&Version={1}", SysId, Version);
+                string downfile = string.Format("/ReqManage/OutPool?isQuery=True&isExcel=True&SysId={0}&Version={1}", SysId, realVersion);
 
                 return string.Format("<p class='alert alert-success'>" + r + "条需求成功出池！<a href='{0}'>点击</a>导出出池计划文档<p>", downfile);
             }
@@ -889,17 +921,17 @@ namespace MyTeam.Controllers
         public string QuickUpdateRlsNo(string Reqs, string RlsNo, string SecondRlsNo)
         {
             // 保证副下发为NULL
-            if(!string.IsNullOrEmpty(SecondRlsNo))            
+            if (!string.IsNullOrEmpty(SecondRlsNo))
             {
                 SecondRlsNo = "SecondRlsNo='" + SecondRlsNo + "', ";
-            }            
+            }
 
             string sql = string.Format("update Reqs set RlsNo='{0}', {1} UpdateTime='{2}' where RID in ({3})", RlsNo, SecondRlsNo, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
             try
             {
                 // 批量更新，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
-                               
+
                 return "<p class='alert alert-success'>" + r + "条记录更新成功！";
             }
             catch (Exception e1)
@@ -935,6 +967,43 @@ namespace MyTeam.Controllers
             foreach (Req r in list)
             {
                 sb.Append(string.Format("<option value='{0}'>{1}</option>", r.RID, r.ReqDetailNo));
+            }
+
+            sb.Append("</select>");
+
+            return sb.ToString();
+
+        }
+
+        // 2016年8月10日 新增
+
+        /// <summary>
+        /// Ajax接口，根据SysId获取可以出池的版本
+        /// </summary>
+        /// <param name="sysId"></param>
+        /// <returns></returns>
+        public string GetVersToOutPool(int sysId)
+        {
+            if (sysId == 0)
+            {
+                return "<option>请选择系统</option>";
+            }
+
+            List<Ver> list = dbContext.Vers.Where(p => p.SysId == sysId && p.VerYear == DateTime.Now.Year.ToString() && p.VerType=="计划版本").ToList();
+
+
+            int size = list.Count;
+
+            if (size == 0)
+            {
+                return "<option value=0>未找到版本计划</option>";
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Ver r in list)
+            {
+                sb.Append(string.Format("<option value='{0}'>{1}</option>", r.VerID, r.VerNo));
             }
 
             sb.Append("</select>");

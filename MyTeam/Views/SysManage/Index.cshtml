@@ -71,44 +71,46 @@
 </script>
 
 <div class="row card">
-    @using (Html.BeginForm("Index", "SysManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                                                new { @class = "form-horizontal", role = "form", id = "myForm" }))
-    {
-        <input type="hidden" name="isQuery" value="true" />
-        <table class="table table-condensed query-table">
-            <tr>
-                <td>@Html.LabelFor(model => model.SysName, new { @class = "control-label" })</td>
-                <td>
-                    @Html.TextBoxFor(model => model.SysName, new { @class = "form-control" })
-                    <span class="text-info">（支持模糊查询）</span>
-                </td>
-                <td>@Html.LabelFor(model => model.ReqPersonID, new { @class = "control-label" })</td>
-                <td>
-                    @Html.DropDownListFor(model => model.ReqPersonID, ViewBag.ReqPersonList as SelectList, new { @class = "form-control" })
-                </td>
-            </tr>
-            <tr>
-                <td>@Html.LabelFor(model => model.SysStat, new { @class = "control-label" })</td>
-                <td>
-                    <select id="SysStat" name="SysStat" class="form-control">
-                        <option value="">全部</option>
-                        <option value="0">已下线</option>
-                        <option value="1">正常</option>
-                        <option value="2">建设中</option>
-                    </select>
-                </td>
-                <td colspan="2">
-                    <input type="submit" value="查询" class="btn btn-primary" />
-                    @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
-                    {
-                        <input type="button" onclick="doCreate()" class="btn btn-default" value="添加系统" />
-                    }
-                </td>
-            </tr>
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "SysManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                                                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            <input type="hidden" name="isQuery" value="true" />
+            <table class="table table-condensed query-table">
+                <tr>
+                    <td>@Html.LabelFor(model => model.SysName, new { @class = "control-label" })</td>
+                    <td>
+                        @Html.TextBoxFor(model => model.SysName, new { @class = "form-control" })
+                        <span class="text-info">（支持模糊查询）</span>
+                    </td>
+                    <td>@Html.LabelFor(model => model.ReqPersonID, new { @class = "control-label" })</td>
+                    <td>
+                        @Html.DropDownListFor(model => model.ReqPersonID, ViewBag.ReqPersonList as SelectList, new { @class = "form-control" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.SysStat, new { @class = "control-label" })</td>
+                    <td>
+                        <select id="SysStat" name="SysStat" class="form-control">
+                            <option value="">全部</option>
+                            <option value="0">已下线</option>
+                            <option value="1">正常</option>
+                            <option value="2">建设中</option>
+                        </select>
+                    </td>
+                    <td colspan="2">
+                        <input type="submit" value="查询" class="btn btn-primary" />
+                        @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+                        {
+                            <input type="button" onclick="doCreate()" class="btn btn-default" value="添加系统" />
+                        }
+                    </td>
+                </tr>
 
-        </table>
-    }
+            </table>
+        }
 
+    </div>
 </div>
 
 @if (Model.ResultList != null)

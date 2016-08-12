@@ -25,7 +25,8 @@ namespace MyTeam.Models
         {
             return new StringBuilder("&SysName=").Append(this.SysName)
                 .Append("&ReqPersonID=").Append(this.ReqPersonID)
-                .Append("&SysStat=").Append(this.SysStat).ToString();
+                .Append("&SysStat=").Append(this.SysStat)
+                .Append("&isQuery=True").ToString();
         }
     }
 }

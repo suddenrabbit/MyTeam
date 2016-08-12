@@ -113,38 +113,38 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td width="4%">
                     <a href="#" onclick="doEdit('@item.YMID','年度重点任务')">编辑</a> |
                     <a href="#" onclick="doDelete('@item.YMID','年度重点任务')">删除</a>
                 </td>
-                <td>
+                <td width="5%">
                     @Html.DisplayFor(modelItem => item.MissionDate)
                 </td>
-                <td>
+                <td width="9%">
                     @Html.DisplayFor(modelItem => item.MissionSource)
                 </td>
-                <td>
+                <td width="20%">
                     @Html.DisplayFor(modelItem => item.WorkMission)
                 </td>
-                <td>
+                <td width="15%">
                     @Html.DisplayFor(modelItem => item.WorkStage)
                 </td>
-                <td>
+                <td width="5%">
                     @Html.DisplayFor(modelItem => item.Person)
                 </td>
-                <td>
+                <td width="9%">
                     @Html.DisplayFor(modelItem => item.OutSource)
                 </td>
-                <td>
+                <td width="6%">
                     @Html.DisplayFor(modelItem => item.Progress)
                 </td>
-                <td>
+                <td width="10%">
                     @Html.DisplayFor(modelItem => item.PlanDeadLine)
                 </td>
-                <td>
+                <td width="10%">
                     @Html.DisplayFor(modelItem => item.Remark)
                 </td>
-                <td>
+                <td width="7%">
                     @Html.DisplayFor(modelItem => item.DoNotTrack)
                 </td>
             </tr>

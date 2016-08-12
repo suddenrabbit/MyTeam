@@ -38,7 +38,7 @@ namespace MyTeam.Utils
         /// <summary>
         /// 需求状态列表
         /// </summary>
-        public static List<string> ReqStatList = new List<string>() { "未办结", "待评估", "入池", "出池", "办结", "作废", "拒绝", "整合", "纳入升级" };
+        public static List<string> ReqStatList = new List<string>() { "未办结", "待评估", "入池", "出池", "办结", "作废", "拒绝", "整合", "纳入升级", "取消" };
 
         /// <summary>
         /// 任务阶段列表
@@ -95,7 +95,7 @@ namespace MyTeam.Utils
         /// <summary>
         /// 年度版本下发计划发布频率列表
         /// </summary>
-        public static List<string> ReleaseFreqList = new List<string>() { "1", "2", "3", "4", "6", "12" };
+        public static List<string> ReleaseFreqList = new List<string>() { "1", "2", "3", "4", "6", "12", "0" };
 
         /// <summary>
         /// AJAX新增成功后统一返回HTML值

@@ -120,43 +120,43 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td width="4%">
                     <a href="#" onclick="doEdit('@item.WRMainID','@item.WorkName')">编辑</a> |
                     <a href="#" onclick="doDelete('@item.WRMainID','@item.WorkName')">删除</a>
                 </td>
-                <td>
+                <td width="5%">
                     @Html.DisplayFor(modelItem => item.WorkYear)
                 </td>
-                <td>
+                <td width="5%">
                     @Html.DisplayFor(modelItem => item.WorkType)
                 </td>
-                <td>
+                <td width="8%">
                     @Html.DisplayFor(modelItem => item.WorkName)
                 </td>
-                <td>
+                <td width="16%">
                     @Html.DisplayFor(modelItem => item.WorkMission)
                 </td>
-                <td>
+                <td width="12%">
                     @Html.DisplayFor(modelItem => item.WorkStage)
                 </td>
-                <td>
+                <td width="8%">
                     @Html.DisplayFor(modelItem => item.Person)
                 </td>
-                <td>
+                <td width="9%">
                     @Html.DisplayFor(modelItem => item.OutSource)
                 </td>
-                <td>
+                <td width="7%">
                     @Html.DisplayFor(modelItem => item.Progress)%
                 </td>
-                <td>
+                <td width="8%">
                     @Html.DisplayFor(modelItem => item.PlanDeadLine)
                 </td>
 
-                <td>
+                <td width="12%">
                     @Html.DisplayFor(modelItem => item.Remark)
                 </td>
 
-                <td>
+                <td width="6%">
                     @Html.DisplayFor(modelItem => item.DoNotTrack)
                 </td>
             </tr>

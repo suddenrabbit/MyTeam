@@ -15,7 +15,7 @@ namespace MyTeam.Controllers
         // GET: /Ver/     
         public ActionResult Index(VerQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            if(this.GetSessionCurrentUser() == null)
+            if (this.GetSessionCurrentUser() == null)
             {
                 return RedirectToAction("Login", "User", new { ReturnUrl = "/Ver" });
             }
@@ -28,13 +28,14 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.SysId == query.SysId);
                 }
+               
                 if (!string.IsNullOrEmpty(query.VerYear))
                 {
                     ls = ls.Where(p => p.VerYear == query.VerYear);
                 }
 
-                // 按照系统、发布时间排序
-                ls = ls.OrderByDescending(p => p.VerYear);
+                // 按照发布时间排序
+                ls = ls.OrderBy(p => p.SysId).ThenByDescending(p => p.PublishTime);                
 
                 var result = ls.ToList();
                 // 若isExcel为true，导出Excel
@@ -54,13 +55,13 @@ namespace MyTeam.Controllers
             }
             else
             {
-                query = new VerQuery();
+                query = new VerQuery() { VerYear = DateTime.Now.Year.ToString() }; // 默认只今年
             }
 
             // 项目列表
             List<RetailSystem> sysLs = dbContext.RetailSystems.ToList();
             sysLs.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            ViewBag.sysList = new SelectList(sysLs, "SysID", "SysName");           
+            ViewBag.sysList = new SelectList(sysLs, "SysID", "SysName");
 
             return View(query);
         }
@@ -286,9 +287,10 @@ namespace MyTeam.Controllers
                         SysId = ver.SysId,
                         VerYear = verYear,
                         ReleaseFreq = freq,
-                        PublishTime = DateTime.Parse(verYear + "/" + verMonth + "/1"),
+                        PublishTime = GetFourthThursday(verYear, verMonth.ToString()), // 自动设计为每月第四个周四
                         VerNo = verNos[0] + "." + changeVerNo,
-                        DraftPersonID = ver.DraftPersonID
+                        DraftPersonID = ver.DraftPersonID,
+                        VerType = "计划版本"
                     };
                     dbContext.Vers.Add(v);
 
@@ -307,6 +309,33 @@ namespace MyTeam.Controllers
             {
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
+
+        }
+
+        /// <summary>
+        /// 获取当月的第四个周四
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public DateTime GetFourthThursday(string year, string month)
+        {
+            DateTime day = DateTime.Parse(year + "/" + month + "/1");
+
+            while (true)
+            {
+                if (day.DayOfWeek == DayOfWeek.Thursday)
+                {
+                    day = day.AddDays(21);
+                    break;
+                }
+                else
+                {
+                    day = day.AddDays(1);
+                }
+            }
+
+            return day;
 
         }
     }
