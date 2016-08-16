@@ -10,142 +10,73 @@
     });
 
     function check() {
-        $("#info").html("");
-        var reqs = $("#Reqs");
+        var reqs = $("#Reqs").val();
         // 需求编号不能为空
-        if (reqs.val().length < 1) {
-            $("#info").html("<p class='alert alert-danger'>需求编号不能为空！</p>");
-            //reqs.attr("style", "border-color:red");
-            reqs.focus();
+        if (reqs.length < 1) {
+            alert("需求编号不能为空！");
+            $("#Reqs").focus();
             return false;
-        } else {
-            return true;
-        }
+        } 
 
-    }
-
-    // 批量更新出池信息
-    function OutPool() {
-        var reqs = $("#Reqs").val();
-        var version = $("#Version").val();
-        var outDate = $("#OutDate").val();
-        var planRlsDate = $("#PlanRlsDate").val();
-        if (check() && confirm("确定要批量出池吗？")) {
-            var outPoolProtect = $("#OutPoolProtect").is(":checked");
-            var url = "/ReqManage/BatOutPool";
-            var data = "reqs=" + reqs + "&version=" + version + "&outDate=" + outDate + "&planRlsDate=" + planRlsDate + "&outPoolProtect=" + outPoolProtect;
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: data,
-                success: function (msg) {
-                    $("#info").html(msg);
-                },
-                error: function () {
-                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
-                }
-            });
-
-        }
-    }
-    // 批量更新下发通知编号
-    function BatRlsNo() {
-        var reqs = $("#Reqs").val();
-        var rlsNo = $("#RlsNo").val();
-        var secondRlsNo = $("#SecondRlsNo").val();
-
-        // 下发通知编号格式控制
+        // 下发通知编号的格式控制
         var rname = /[\u4E00-\u9FA5]/;
+
+        // 主下发通知编号
+        var rlsNo = $("#RlsNo").val();
+
         if (rlsNo.length > 0) {
             if (rname.test(rlsNo)) {
                 alert("下发通知编号不能含有汉字");
                 $("#RlsNo").focus();
-                return;
+                return false;
             }
-          
+
             if (rlsNo.length != 12) {
                 alert("下发通知编号必须是形如YFZX20160101");
                 $("#RlsNo").focus();
-                return;
+                return false;
             }
         }
 
-        // 副下发通知编号格式控制
+        // 副下发通知编号
+        var secondRlsNo = $("#SecondRlsNo").val();
+
         if (secondRlsNo.length > 0) {
             if (rname.test(secondRlsNo)) {
                 alert("副下发通知编号不能含有汉字");
                 $("#SecondRlsNo").focus();
-                return;
+                return false;
             }
             if (secondRlsNo.length != 12) {
                 alert("下发通知编号必须是形如YFZX20160101");
                 $("#SecondRlsNo").focus();
-                return;
+                return false;
             }
         }
 
-
-        if (check() && confirm("确定要批量更新下发通知编号吗？")) {
-            var rlsNoProtect = $("#RlsNoProtect").is(":checked");
-            var url = "/ReqManage/BatRlsNo";
-            var data = "reqs=" + reqs + "&rlsNo=" + rlsNo + "&secondRlsNo=" + secondRlsNo + "&rlsNoProtect=" + rlsNoProtect;
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: data,
-                success: function (msg) {
-                    $("#info").html(msg);
-                },
-                error: function () {
-                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
-                }
-            });
-
-        }
+        return true;
     }
-    // 批量更新实际下发日期
-    function BatRlsDate() {
+
+    // 批量更新
+    function BatProc() {
+        $("#info").html("");
+
         var reqs = $("#Reqs").val();
-        var rlsNoToBatRlsDate = $("#RlsNoToBatRlsDate").val();
+
+        var version = $("#Version").val();
+        var outDate = $("#OutDate").val();
+        var planRlsDate = $("#PlanRlsDate").val();
+        var rlsNo = $("#RlsNo").val();
+        var secondRlsNo = $("#SecondRlsNo").val();
         var rlsDate = $("#RlsDate").val();
-        var secondRlsNoToBatRlsDate = $("#SecondRlsNoToBatRlsDate").val();
         var secondRlsDate = $("#SecondRlsDate").val();
-
-        if ((reqs.length > 0 && rlsNoToBatRlsDate.length > 0) || (reqs.length > 0 && secondRlsNoToBatRlsDate.length > 0)) {
-            $("#info").html("<p class='alert alert-danger'>维护需求编号和下发通知编号不可同时填写</p>");
-            return;
-        }
-        if (reqs.length == 0 && rlsNoToBatRlsDate.length == 0 && secondRlsNoToBatRlsDate.length == 0) {
-            $("#info").html("<p class='alert alert-danger'>维护需求编号和下发通知编号不可同时为空</p>");
-            return;
-        }
-
-        if (confirm("确定要批量更新实际下发日期吗？")) {
-            var rlsDateProtect = $("#RlsDateProtect").is(":checked");
-            var url = "/ReqManage/BatRlsDate";
-            var data = "reqs=" + reqs + "&rlsDate=" + rlsDate + "&rlsDateProtect=" + rlsDateProtect + "&rlsNoToBatRlsDate=" + rlsNoToBatRlsDate + "&secondRlsNoToBatRlsDate=" + secondRlsNoToBatRlsDate + "&secondRlsDate=" + secondRlsDate;
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: data,
-                success: function (msg) {
-                    $("#info").html(msg);
-                },
-                error: function () {
-                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
-                }
-            });
-
-        }
-    }
-    // 批量更新备注
-    function BatRemark() {
-        var reqs = $("#Reqs").val();
         var remark = $("#remark").val();
 
-        if (check() && confirm("确定要批量更新备注吗？")) {
-            var url = "/ReqManage/BatRemark";
-            var data = "reqs=" + reqs + "&remark=" + remark;
+
+        if (check() && confirm("确定要批量更新吗？")) {
+            var url = "/ReqManage/BatProc";
+            var data = "reqs=" + reqs + "&version=" + version + "&outDate=" + outDate + "&planRlsDate=" + planRlsDate + "&rlsNo=" + rlsNo + "&secondRlsNo=" + secondRlsNo
+                + "&rlsDate=" + rlsDate + "&secondRlsDate=" + secondRlsDate + "&remark=" + remark;
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -159,7 +90,8 @@
             });
 
         }
-    }
+    }   
+    
     // 批量删除
     function BatDel() {
         var reqs = $("#Reqs").val();
@@ -193,11 +125,9 @@
             </div>
             <div id="info"></div>
             <ul class="nav nav-tabs" id="myTab">
-                <li><a href="#tabs1" data-toggle="tab">批量出池</a></li>
-                <li><a href="#tabs2" data-toggle="tab">下发通知编号</a></li>
-                <li><a href="#tabs3" data-toggle="tab">实际下发日期</a></li>
-                <li><a href="#tabs4" data-toggle="tab">批量更新备注</a></li>
-                <li><a href="#tabs5" data-toggle="tab">批量删除</a></li>
+                <li><a href="#tabs1" data-toggle="tab">批量更新</a></li>
+                <li><a href="#tabs2" data-toggle="tab">实际下发日期</a></li>
+                <li><a href="#tabs3" data-toggle="tab">批量删除</a></li>
             </ul>
             <div class="tab-content" style="margin-top:20px">
                 <div id="tabs1" class="tab-pane fade in active">
@@ -220,15 +150,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="button" value="出池" onclick="OutPool()" class="btn btn-primary" />&nbsp;&nbsp;
-                            <input type="checkbox" checked="checked" id="OutPoolProtect" />仅更新未出池需求
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tabs2" class="tab-pane fade in active">
+                   
                     <div class="form-group">
                         <label for="RlsNo" class="col-md-2 control-label">主下发通知编号</label>
                         <div class="col-md-10">
@@ -241,49 +163,21 @@
                             <input id="SecondRlsNo" type="text" class="form-control" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="button" value="更新" onclick="BatRlsNo()" class="btn btn-primary" />&nbsp;&nbsp;
-                            <input type="checkbox" checked="checked" id="RlsNoProtect" />仅更新已出池需求
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tabs3" class="tab-pane fade in active">
-                    <div class="form-group">
-                        <label for="RlsNoToBatRlsDate" class="col-md-2 control-label">主下发通知编号</label>
-                        <div class="col-md-10">
-                            <input id="RlsNoToBatRlsDate" type="text" class="form-control" />
-                            <div class="text-info">(可以按照下发通知编号更新，维护需求编号请留空)</div>
-                        </div>
-                    </div>
+                   
                     <div class="form-group">
                         <label for="RlsDate" class="col-md-2 control-label">主实际下发日期</label>
                         <div class="col-md-10">
                             <input id="RlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="SecondRlsNoToBatRlsDate" class="col-md-2 control-label">副下发通知编号</label>
-                        <div class="col-md-10">
-                            <input id="SecondRlsNoToBatRlsDate" type="text" class="form-control" />
-                            <div class="text-info">(可以按照下发通知编号更新，维护需求编号请留空)</div>
-                        </div>
-                    </div>
+                    
                     <div class="form-group">
                         <label for="SecondRlsDate" class="col-md-2 control-label">副实际下发日期</label>
                         <div class="col-md-10">
                             <input id="SecondRlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="button" value="更新" onclick="BatRlsDate()" class="btn btn-primary" />&nbsp;&nbsp;
-                            <input type="checkbox" checked="checked" id="RlsDateProtect" />仅更新已出池需求
-                        </div>
-                    </div>
-                </div>
-                <div id="tabs4" class="tab-pane fade in active">
+                    </div>                   
+               
                     <div class="form-group">
                         <label for="remark" class="col-md-2 control-label">备注</label>
                         <div class="col-md-10">
@@ -292,11 +186,16 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <input type="button" value="更新" onclick="BatRemark()" class="btn btn-primary" />
+                            <input type="button" value="更新" onclick="BatProc()" class="btn btn-primary" />
                         </div>
                     </div>
                 </div>
-                <div id="tabs5" class="tab-pane fade in active">
+                <div id="tabs2" class="tab-pane fade in active">
+                    <div style="margin-bottom:15px">
+                        根据下发通知编号更新实际下发日期功能已经转移至【<a href="/ReqManage/UpdateRlsDate">第四步-更新实际下发日期</a>】，可从下拉菜单直接进入
+                    </div>
+                </div>
+                <div id="tabs3" class="tab-pane fade in active">
                     <div style="margin-bottom:15px">
                         <input type="button" value="删除" onclick="BatDel()" class="btn btn-primary" />
                     </div>
@@ -311,7 +210,7 @@
         <div class="panel-heading">TIPS</div>
         <div class="panel-body">
             1、维护需求编号每行一个；<br />
-            2、下方的输入框若留空，则会将相应的值更新为空值。
+            2、输入框为空的项不会被更新。
         </div>
     </div>
 </div>

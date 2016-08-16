@@ -332,135 +332,84 @@ namespace MyTeam.Controllers
             return View();
         }
 
-        // Ajax调用，批量出池       
+        // 2016年8月16日：批量功能统一为「批量更新」
+        // Ajax调用，批量更新       
         [HttpPost]
-        public string BatOutPool(string reqs, string version, string outDate, string planRlsDate, string outPoolProtect)
+        public string BatProc(string reqs, string version, string outDate, string planRlsDate, string rlsNo, string secondRlsNo, string rlsDate, string secondRlsDate, string remark)
         {
+            // 拼出sql中的in条件
+            string whereIn = this.GetWhereIn(reqs);
+
+            // 仅更新不为空的
+            int updateFiledNum = 0;
+
+            StringBuilder sb = new StringBuilder("update Reqs set SysId=SysId");
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                sb.Append(", Version='" + version + "'");
+                updateFiledNum++;
+            }
+
+            if (!string.IsNullOrEmpty(outDate))
+            {
+                sb.Append(", OutDate='" + outDate + "'");
+                updateFiledNum++;
+            }
+
+            if (!string.IsNullOrEmpty(planRlsDate))
+            {
+                sb.Append(", PlanRlsDate='" + planRlsDate + "'");
+                updateFiledNum++;
+            }
+
+            if (!string.IsNullOrEmpty(rlsNo))
+            {
+                sb.Append(", RlsNo='" + rlsNo + "'");
+                updateFiledNum++;
+            }
+
+            if (!string.IsNullOrEmpty(secondRlsNo))
+            {
+                sb.Append(", SecondRlsNo='" + secondRlsNo + "'");
+                updateFiledNum++;
+            }
+
+            if (!string.IsNullOrEmpty(rlsDate))
+            {
+                sb.Append(", RlsDate='" + rlsDate + "'");
+                updateFiledNum++;
+            }
+
+            if (!string.IsNullOrEmpty(secondRlsDate))
+            {
+                sb.Append(", SecondRlsDate='" + secondRlsDate + "'");
+                updateFiledNum++;
+            }
+
+            if (!string.IsNullOrEmpty(remark))
+            {
+                sb.Append(", Remark='" + remark + "'");
+                updateFiledNum++;
+            }
+
+            if (updateFiledNum == 0)
+            {
+                return "<p class='alert alert-info'>因所有输入框为空，未更新任何信息！</p>";
+            }
+
+            sb.Append(string.Format(", UpdateTime='{0}' where ReqDetailNo in ({1})", DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn));
+
             try
             {
-                // 拼出sql中的in条件
-                string whereIn = this.GetWhereIn(reqs);
-
-                string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat=N'出池', UpdateTime='{3}' where ReqDetailNo in ({4})", version, outDate, planRlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn);
-                if (outPoolProtect == "true")
-                {
-                    sql += " and ReqStat <> N'出池'";
-                }
-
                 // 批量更新，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sql);
+                int r = dbContext.Database.ExecuteSqlCommand(sb.ToString());
 
-                return "<p class='alert alert-success'>已更新" + r + "条记录！现在可以去<a href='/ReqManage/OutPool'>导出出池计划文档</a>了<p>";
+                return "<p class='alert alert-success'>已更新" + r + "条记录！</p>";
             }
             catch (Exception e1)
             {
-                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
-            }
-        }
-
-        // Ajax调用，批量更新下发编号       
-        [HttpPost]
-        public string BatRlsNo(string reqs, string rlsNo, string secondRlsNo, string rlsNoProtect)
-        {
-            try
-            {
-                // 保证副下发为NULL
-                if (!string.IsNullOrEmpty(secondRlsNo))
-                {
-                    secondRlsNo = "'" + secondRlsNo + "', ";
-                }
-
-                // 拼出sql中的in条件
-                string whereIn = this.GetWhereIn(reqs);
-
-                string sql = string.Format("update Reqs set RlsNo='{0}', {1} UpdateTime='{2}' where ReqDetailNo in ({3})", rlsNo.Trim(), secondRlsNo.Trim(), DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn);
-                if (rlsNoProtect == "true")
-                {
-                    sql += " and ReqStat = N'出池'";
-                }
-
-                // 批量更新，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sql);
-
-                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
-            }
-        }
-
-        // Ajax调用，批量更新实际下发日期       
-        [HttpPost]
-        public string BatRlsDate(string reqs, string rlsDate, string rlsDateProtect, string rlsNoToBatRlsDate, string secondRlsNoToBatRlsDate, string secondRlsDate)
-        {
-            try
-            {
-                string sql = "";
-
-                // 更新的条件：1、需求编号不为空，则按需求编号更新；2、否则按照下发通知编号更新
-                string condition = "";
-                if (!string.IsNullOrEmpty(reqs))
-                {
-                    condition = string.Format("ReqDetailNo in ({0})", this.GetWhereIn(reqs));
-                }
-                else if (!string.IsNullOrEmpty(rlsNoToBatRlsDate))
-                {
-                    condition = string.Format("RlsNo = '{0}'", rlsNoToBatRlsDate);
-                }
-                else
-                {
-                    condition = string.Format("SecondRlsNo = '{0}'", secondRlsNoToBatRlsDate);
-                }
-
-                if (rlsDateProtect == "true")
-                {
-                    condition += " and ReqStat = N'出池'";
-                }
-
-                int r = 0;
-
-                // 下发日期的更新原则：为空的不更新
-                if (!string.IsNullOrEmpty(rlsDate))
-                {
-                    sql = string.Format("update Reqs set RlsDate='{0}', UpdateTime='{1}' where {2}", rlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), condition);
-                    // 批量更新，直接执行SQL
-                    r = dbContext.Database.ExecuteSqlCommand(sql);
-                }
-                if (!string.IsNullOrEmpty(secondRlsDate))
-                {
-                    sql = string.Format("update Reqs set SecondRlsDate='{0}', UpdateTime='{1}' where {2}", secondRlsDate, DateTime.Now.ToString("yyyyMMddHHmmss"), condition);
-                    // 批量更新，直接执行SQL
-                    r = dbContext.Database.ExecuteSqlCommand(sql);
-                }
-
-                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
-            }
-        }
-
-        // Ajax调用，批量更新备注      
-        [HttpPost]
-        public string BatRemark(string reqs, string remark)
-        {
-            try
-            {
-                // 拼出sql中的in条件
-                string whereIn = this.GetWhereIn(reqs);
-
-                string sql = string.Format("update Reqs set Remark=N'{0}', UpdateTime='{1}' where ReqDetailNo in ({2})", remark, DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn);
-
-                // 批量更新，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sql);
-
-                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
+                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
             }
         }
 
@@ -468,13 +417,14 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string BatDel(string reqs)
         {
+
+            // 拼出sql中的in条件
+            string whereIn = this.GetWhereIn(reqs);
+
+            string sql = string.Format("delete from Reqs where ReqDetailNo in ({0})", whereIn);
+
             try
             {
-                // 拼出sql中的in条件
-                string whereIn = this.GetWhereIn(reqs);
-
-                string sql = string.Format("delete from Reqs where ReqDetailNo in ({0})", whereIn);
-
                 // 批量删除，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
@@ -482,7 +432,7 @@ namespace MyTeam.Controllers
             }
             catch (Exception e1)
             {
-                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
+                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
             }
         }
 
@@ -891,7 +841,7 @@ namespace MyTeam.Controllers
                     VerNo = realVersion,
                     VerYear = DateTime.Now.Year.ToString(),
                     ReleaseFreq = 0, // 补丁版本的频率记为0
-                    DraftTime = newTime, 
+                    DraftTime = newTime,
                     PublishTime = newTime,// 发布时间、制定时间均为计划下发日期
                     DraftPersonID = this.GetSessionCurrentUser().UID,
                     VerType = "补丁版本"
@@ -989,7 +939,7 @@ namespace MyTeam.Controllers
                 return "<option>请选择系统</option>";
             }
 
-            List<Ver> list = dbContext.Vers.Where(p => p.SysId == sysId && p.VerYear == DateTime.Now.Year.ToString() && p.VerType=="计划版本").ToList();
+            List<Ver> list = dbContext.Vers.Where(p => p.SysId == sysId && p.VerYear == DateTime.Now.Year.ToString() && p.VerType == "计划版本").ToList();
 
 
             int size = list.Count;
@@ -1012,5 +962,41 @@ namespace MyTeam.Controllers
 
         }
 
+        // 2016年8月16日 新增：更新实际下发日期重做
+        public ActionResult UpdateRlsDate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public string UpdateRlsDate(string rlsNo, string rlsDate, string secondRlsDate)
+        {
+
+            StringBuilder sb = new StringBuilder("update Reqs set SysId=SysId");
+
+            if (!string.IsNullOrEmpty(rlsDate))
+            {
+                sb.Append(", RlsDate='" + rlsDate + "'");
+            }
+
+            if (!string.IsNullOrEmpty(secondRlsDate))
+            {
+                sb.Append(", SecondRlsDate='" + secondRlsDate + "'");
+            }
+
+            sb.Append(string.Format(", UpdateTime='{0}' where RlsNo = '{1}' or SecondRlsNo='{2}'", DateTime.Now.ToString("yyyyMMddHHmmss"), rlsNo, rlsNo));
+
+            try
+            {
+                // 批量更新，直接执行SQL
+                int r = dbContext.Database.ExecuteSqlCommand(sb.ToString());
+
+                return "<p class='alert alert-success'>已更新" + r + "条记录！</p>";
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
+            }
+        }
     }
 }

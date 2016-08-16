@@ -389,6 +389,7 @@
     <Content Include="Views\AttendanceManage\Edit.cshtml" />
     <Content Include="Views\AttendanceManage\Index.cshtml" />
     <Content Include="Views\ReqManage\QuickOutPool.cshtml" />
+    <Content Include="Views\ReqManage\UpdateRlsDate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
