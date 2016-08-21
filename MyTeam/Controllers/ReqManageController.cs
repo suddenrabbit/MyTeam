@@ -808,7 +808,7 @@ namespace MyTeam.Controllers
             // 提供系统列表
             List<RetailSystem> ls1 = this.GetNormalSysList();
             // 加上“请选择系统”
-            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "请选择系统" });
+            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "--请选择系统--" });
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
             ViewBag.SysList = sl1;
 
@@ -899,7 +899,7 @@ namespace MyTeam.Controllers
         {
             if (sysId == 0)
             {
-                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>请选择系统</option></select>";
+                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--请选择系统--</option></select>";
             }
 
             List<Req> list = dbContext.Reqs.Where(p => p.SysId == sysId && p.ReqStat == "入池").ToList();
@@ -909,7 +909,7 @@ namespace MyTeam.Controllers
 
             if (size == 0)
             {
-                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>无可出池需求</option></select>";
+                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--无可出池需求--</option></select>";
             }
 
             StringBuilder sb = new StringBuilder("<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"5\">");
@@ -936,7 +936,7 @@ namespace MyTeam.Controllers
         {
             if (sysId == 0)
             {
-                return "<option>请选择系统</option>";
+                return "<option>--请选择系统--</option>";
             }
 
             List<Ver> list = dbContext.Vers.Where(p => p.SysId == sysId && p.VerYear == DateTime.Now.Year.ToString() && p.VerType == "计划版本").ToList();
@@ -946,7 +946,7 @@ namespace MyTeam.Controllers
 
             if (size == 0)
             {
-                return "<option value=0>未找到版本计划</option>";
+                return "<option value=0>--未找到版本计划--</option>";
             }
 
             StringBuilder sb = new StringBuilder();

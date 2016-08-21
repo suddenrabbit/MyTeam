@@ -174,7 +174,7 @@
             <div class="col-md-5">
                 <div id="ReqsDiv">
                     <select id="Reqs" name="Reqs" multiple="multiple" class="form-control" size="1">
-                        <option>请选择系统</option>
+                        <option>--请选择系统--</option>
                     </select>
                 </div>
 
@@ -187,7 +187,7 @@
             <label for="Version" class="col-md-2 control-label">版本号</label>
             <div class="col-md-10">
                 <select id="Ver1" class="form-control">
-                    <option>请选择系统</option>
+                    <option>--请选择系统--</option>
                 </select>
                 <input id="Ver2" type="text" class="form-control" style="display:none" />
 
@@ -241,3 +241,8 @@
         </div>
     </div>
 </div>
+
+<script>
+    $("#SysId").select2();
+    
+</script>

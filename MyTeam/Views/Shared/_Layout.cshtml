@@ -13,6 +13,9 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/respond.min.js"></script>
 
+    <link href="~/Content/select2.css" rel="stylesheet" />
+    <script src="~/Scripts/select2.min.js"></script>
+
     <script>
         /* xp指定显示宋体*/
         $(document).ready(function () {
@@ -21,22 +24,18 @@
                 $("body").attr("style", "font-family:arial,simsun!important");
             }
         });
-    </script>
-
-    <!--
-           <link href="http://fonts.useso.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css" />
-    -->
+    </script>  
 
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </button>
+                </button>*@
                 <a class="navbar-brand" href="/Home/Index" style="font-weight:bold">零售团队管理系统</a>
             </div>
             <div class="navbar-collapse collapse">
@@ -51,9 +50,11 @@
                             <li><a href="/ReqManage/InPool">第二步-需求入池</a></li>
                             <li><a href="/ReqManage/QuickOutPool">第三步-需求出池</a></li>
                             <li><a href="/ReqManage/UpdateRlsDate">第四步-更新实际下发日期</a></li>
+                            <li class="divider"></li>
                             <li><a href="/ReqManage/Index">维护需求管理</a></li>
                             <li><a href="/ReqManage/Bat">批量处理</a></li>
                             <li><a href="/ReqManage/OutPool">出池计划报表</a></li>
+                            <li class="divider"></li>
                             <li><a href="/SysManage">零售系统管理</a></li>
                             <li><a href="/Ver">年度版本计划管理</a></li>
                         </ul>
@@ -68,12 +69,13 @@
                             <li><a href="/WeekReport/DetailIndex">每周工作</a></li>
                             <li><a href="/WeekReport/RiskIndex">风险与待协调问题</a></li>
                             <li><a href="/WeekReport/YearMissionIndex">年度重点任务</a></li>
+                            <li class="divider"></li>
                             <li><a href="/WeekReport/Export">导出周报</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                            项目管理
+                            项目与业需管理
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
@@ -82,18 +84,12 @@
                             <li><a href="/ProjSurv">项目调研管理</a></li>
                             <li><a href="/ProjMeeting">项目会议管理</a></li>
                             <li><a href="/ReqTrack">业需软需状态跟踪管理</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
-                            业务需求管理
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
+                            <li class="divider"></li>
                             <li><a href="/BusiReqProj">业务需求项目管理</a></li>
                             <li><a href="/BusiReq">业务需求明细管理</a></li>
                         </ul>
                     </li>
+                   
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                             考核与考勤
@@ -131,8 +127,18 @@
     <footer>
         <p class="text-center">
             &copy; 2015-@DateTime.Now.Year  兴业银行信息科技部需求中心零售团队<br />
-            <span style="font-size:0.8em;">Made by ZhouMeng & ZhangJuan</span>
+            <span style="font-size:0.8em;">Made by ZhouMeng & ZhangJuan | <a href="/Home/About">about</a></span>
         </p>
     </footer>
+    <!--2016年8月20日：下拉菜单无需点击-->
+    <script>
+        $('.dropdown-toggle').on("mouseover", function () {
+            if ($(this).parent().is(".open")) {
+                return
+            }
+
+            $(this).dropdown("toggle");
+        });
+    </script>
 </body>
 </html>

@@ -86,9 +86,10 @@
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script>
-    // 选中 受理人
+    // 选中 受理人、系统列表下拉加入搜索
     $(function () {
         $("#ReqAcptPerson").val('@Model.ReqAcptPerson');
+        $("#SysId").select2();
     });
 
 </script>

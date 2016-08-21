@@ -28,79 +28,76 @@
         });
     </script>
 
-    <!--
-           <link href="http://fonts.useso.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css" />
-    -->
-
 </head>
 <body>
     <div class="container body-content" style="width:1300px">
         <!--[if lt IE 10]> <p class='alert alert-danger text-center'>本系统在旧版IE中可能会出现各种显示问题，建议使用Chrome或其他webkit内核浏览器！</p> <![endif]-->
         @model MyTeam.Models.UserLogin
-        <div class="row text-center">
+        <div class="row">
             <div style="height:30px"></div>
             <div class="col-md-12">
                 <div class="col-md-4"></div>
-                <div class="col-md-4" style="background-color:#ffffff; padding-left:0px; padding-right:0px; box-shadow:0 0 2px #ddd; border-radius:4px">
-                    <div style="background-color:#333;color:#ffffff; padding:10px; margin-bottom:40px; font-size:1.8em">零售团队管理系统</div>
-                    @if (!string.IsNullOrEmpty(ViewBag.ErrMsg))
-                    {
-                        <div style="margin-bottom:40px; color:#ff0000">@ViewBag.ErrMsg</div>
-                    }
-                    else
-                    {
-                        <div style="margin-bottom:40px">WELCOME. SIGN IN TO CONTINUE.</div>
-                    }
-
-                    @using (Html.BeginForm("Login", "User", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-
-
-
-                        <div class="form-group">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-10">
-                                @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @style = "display:inline", @placeholder = "用户名", @required = "required" })
-                                @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <div class="panel panel-login" id="loginPanel">
+                        <div class="panel-heading">
+                            <p class="panel-title">零售团队管理系统</p>
                         </div>
-
-                        <div class="form-group">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-10">
-                                @Html.PasswordFor(model => model.Password, new { @class = "form-control", @style = "display:inline", @placeholder = "密码", @required = "required" })
-                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        <div class="panel-body text-center">
+                            <div style="margin-top:10px;margin-bottom:25px">
+                                @if (string.IsNullOrEmpty(ViewBag.ErrMsg))
+                                {
+                                    <span>WELCOME. SIGN IN TO CONTINUE.</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">@ViewBag.ErrMsg</span>
+                                    <script>$('#loginPanel').attr("class","panel panel-danger")</script>
+                                }
                             </div>
-                            <div class="col-md-1"></div>
+                            @using (Html.BeginForm("Login", "User", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-group">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @style = "display:inline", @placeholder = "NotesID", @required = "required", @maxlength = "6" })
+                                        @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-10">
+                                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", @style = "display:inline", @placeholder = "密码", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-10">
+                                        <input type="submit" value="登录" class="btn btn-primary" style="width:100%" />
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+
+                            }
                         </div>
-
-                        <div class="form-group">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-10">
-                                <input type="submit" value="登录" class="btn btn-primary" style="width:100%" />
-                            </div>
-                            <div class="col-md-1"></div>
+                        <div class="panel-footer text-center">
+                            <p>
+                                &copy; 2015-@DateTime.Now.Year  兴业银行信息科技部需求中心零售团队<br />
+                                <span style="font-size:0.8em;">Made by ZhouMeng & ZhangJuan</span>
+                            </p>
                         </div>
-
-                    }
-
-                    <hr />
-
-                    <div style="margin-top:20px; margin-bottom:20px">
-                        <p>
-                            &copy; 2015-@DateTime.Now.Year  兴业银行信息科技部需求中心零售团队<br />
-                            <span style="font-size:0.8em;">Made by ZhouMeng & ZhangJuan</span>
-                        </p>
                     </div>
 
                 </div>
                 <div class="col-md-4"></div>
             </div>
         </div>
-
     </div>
 </body>
 </html>

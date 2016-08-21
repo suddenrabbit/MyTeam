@@ -95,3 +95,26 @@ footer {
     src: url('../fonts/Roboto-Bold.ttf');
     font-weight: bold;
 }
+
+footer a, footer a:hover, footer a:active{
+    color:darkgray;
+}
+
+.panel-login {
+  border-color: #34495e;
+}
+.panel-login > .panel-heading {
+  color: #fff;
+  background-color: #34495e;
+  border-color: #34495e;
+}
+.panel-login > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #34495e;
+}
+.panel-login > .panel-heading .badge {
+  color: #34495e;
+  background-color: #fff;
+}
+.panel-login > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #34495e;
+}

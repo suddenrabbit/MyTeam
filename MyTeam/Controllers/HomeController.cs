@@ -187,5 +187,10 @@ namespace MyTeam.Controllers
             return Content("已更新内存");
         }
 
+        public ActionResult About()
+        {
+            return View();
+        }
+
     }
 }
