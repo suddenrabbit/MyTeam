@@ -17,7 +17,7 @@ namespace MyTeam.Utils
         /// <param name="toEditValue"></param>
         /// <param name="staticList"></param>
         /// <returns></returns>
-        public static SelectList GetSelectList(List<string> sourceList, bool forQuery = false, bool forEdit = false, string toEditValue = null, bool staticList = true)
+        public static SelectList GetSelectList(List<string> sourceList, bool forQuery = false, bool forEdit = false, string toEditValue = null, bool staticList = true, string emptyText = "全部")
         {
             List<string> ls = null;
             if(staticList)
@@ -30,7 +30,7 @@ namespace MyTeam.Utils
             }
             if (forQuery)
             {
-                ls.Insert(0, "全部");
+                ls.Insert(0, emptyText);
             }
             SelectList sl = null;
             if (forEdit)

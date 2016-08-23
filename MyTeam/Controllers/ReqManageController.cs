@@ -329,13 +329,15 @@ namespace MyTeam.Controllers
         // 批处理统一入口
         public ActionResult Bat()
         {
+            // 需求状态下拉
+            ViewBag.ReqStatList = MyTools.GetSelectList(sourceList: Constants.ReqStatList, forQuery: true, emptyText:"不更新");
             return View();
         }
 
         // 2016年8月16日：批量功能统一为「批量更新」
         // Ajax调用，批量更新       
         [HttpPost]
-        public string BatProc(string reqs, string version, string outDate, string planRlsDate, string rlsNo, string secondRlsNo, string rlsDate, string secondRlsDate, string remark)
+        public string BatProc(string reqs, string version, string outDate, string planRlsDate, string rlsNo, string secondRlsNo, string rlsDate, string secondRlsDate, string remark, string reqStat)
         {
             // 拼出sql中的in条件
             string whereIn = this.GetWhereIn(reqs);
@@ -389,7 +391,13 @@ namespace MyTeam.Controllers
 
             if (!string.IsNullOrEmpty(remark))
             {
-                sb.Append(", Remark='" + remark + "'");
+                sb.Append(", Remark=N'" + remark + "'");
+                updateFiledNum++;
+            }
+
+            if (reqStat != "不更新")
+            {
+                sb.Append(", ReqStat=N'" + reqStat + "'");
                 updateFiledNum++;
             }
 

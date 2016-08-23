@@ -20,7 +20,7 @@ namespace MyTeam.Controllers
             }
 
             // 根据用户UID，
-            // （1）找到负责的系统，统计未出池的需求（未出池需求，超过三个月未出池需求，超过两个星期未入池需求）
+            // （1）找到负责的系统，统计未出池的需求（未出池需求，超过三个月未出池需求，超过8天未入池需求）
             // （2）根据项目计划判断有无超期
             // 若为管理员，则显示全部
 
@@ -67,17 +67,17 @@ namespace MyTeam.Controllers
 
             //////////////////////////////////////////////////////////////////////
 
-            // 判断超过10天还没入池的记录（状态为「待评估」）
+            // 判断超过8天还没入池的记录（状态为「待评估」）
             if (user.IsAdmin)
             {
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-10,GETDATE()) group by t.SysId").ToList();
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-8,GETDATE()) group by t.SysId").ToList();
             }
             else
             {
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-10,GETDATE()) and t.SysId in (select rs.SysId from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysId, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = N'待评估' and t.AcptDate <= DATEADD(day,-8,GETDATE()) and t.SysId in (select rs.SysId from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysId", user.UID).ToList();
             }
 
-            // 统计计算超过10天未入池的需求总数
+            // 统计计算超过8天未入池的需求总数
             int reqInpoolDelayLsSum = 0;
             foreach (HomeReq q in hr.ReqInpoolDelayLS)
             {
