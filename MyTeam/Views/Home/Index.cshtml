@@ -47,6 +47,23 @@
     </div>
     <div class="col-md-2">
         <div class="card">
+            <p>全部未入池的需求</p>
+            <p class="homeNum">@ViewBag.ReqInpoolLsSum</p>
+        </div>
+
+        <div class="list-group infolist">
+            @foreach (HomeReq r in Model.ReqInpoolLS)
+            {
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SysId=" + r.SysId;
+                <a class="list-group-item" href=@s>
+                    <span class="badge">@r.ReqNum</span>
+                    @r.SysName
+                </a>
+            }
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card">
             <p>超8天未入池的需求</p>
             <p class="homeNum">@ViewBag.ReqInpoolDelayLsSum</p>
         </div>
@@ -62,7 +79,7 @@
             }
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card">
             <p>延期项目</p>
             <p class="homeNum">@Model.ProjDetails.Count</p>
@@ -84,7 +101,7 @@
             </table>
         }
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card">
             <p>超时未完成的下发</p>
             <p class="homeNum">@Model.RlsDelayLS.Count</p>

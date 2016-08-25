@@ -121,7 +121,7 @@ namespace MyTeam.Controllers
                 dbContext.SaveChanges();
 
                 // 同时删除重点工作对应的每周工作
-                dbContext.Database.ExecuteSqlCommand("delete from WeekReportDetails where WorkMission = @p0 and IsWithMain = 1", id.ToString());
+                dbContext.Database.ExecuteSqlCommand("delete from WeekReportDetails where WorkName = @p0 and IsWithMain = 1", id.ToString());
 
                 return "删除成功";
             }

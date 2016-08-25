@@ -18,6 +18,8 @@ namespace MyTeam.Models
         public List<HomeProjDelay> ProjDetails { get; set; }
 
         public List<HomeRlsDelay> RlsDelayLS { get; set; }
+
+        public List<HomeReq> ReqInpoolLS { get; set; }
     }
 
     public class HomeReq

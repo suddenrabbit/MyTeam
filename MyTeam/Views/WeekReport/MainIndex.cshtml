@@ -70,6 +70,12 @@
             }
         });
     }
+
+    function changeDelBtn() {
+        var knownWarn = $('#knownWarn').prop("checked");
+        $('#realDelBtn').attr("disabled", !knownWarn);
+    }
+
 </script>
 
 <div class="row card">
@@ -182,15 +188,16 @@
                 </h4>
             </div>
             <div class="modal-body">
-                确定要删除【<span id="toDelName"></span>】吗？
+                确定要删除【<span id="toDelName"></span>】吗？<br /><br />
+                <p class="text-warning">注意：删除重点工作会同时删除所有相关的「每周工作」。一般情况下建议直接勾选「不再跟踪」即可！</p>
+                <input type="checkbox" id="knownWarn" onchange="changeDelBtn()" />已知悉，确定要删除
                 <input type="hidden" id="toDelId" />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                        data-dismiss="modal">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
                     取消
                 </button>
-                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal" disabled="disabled" id="realDelBtn">
                     确定
                 </button>
             </div>
