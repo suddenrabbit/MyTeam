@@ -7,7 +7,7 @@
 
 <div class="row card">
 @using (Html.BeginForm("DetailReg", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-    new { @class = "form-horizontal", role = "form", id = "MyForm" }))
+    new { @class = "form-horizontal", role = "form", id = "MyForm", onsubmit="return checkName()" }))
 {
 
     @Html.AntiForgeryToken()
@@ -91,5 +91,23 @@
         $("#ReqAcptPerson").val('@Model.ReqAcptPerson');
         $("#SysId").select2();
     });
+
+    // 检查业务发起人、业务测试人的格式
+    function checkName() {
+        var ts = /^[\u4e00-\u9fa5]{2,3}\/\d{6}$/;
+        if (!ts.test($('#ReqFromPerson').val())) {
+            alert("需求发起人请按照「姓名（2或3个汉字）/电话（6位数字）」格式填写");
+            $('#ReqFromPerson').focus();
+            return false;
+        }
+
+        if (!ts.test($('#ReqBusiTestPerson').val())) {
+            alert("业务测试人请按照「姓名（2或3个汉字）/电话（6位数字）」格式填写");
+            $('#ReqBusiTestPerson').focus();
+            return false;
+        }
+
+        return true;
+    }
 
 </script>

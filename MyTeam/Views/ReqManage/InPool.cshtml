@@ -9,7 +9,7 @@
 
 <div class="row card">
     @using (Html.BeginForm("InPoolStep2", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-                        new { @class = "form-horizontal", role = "form", id = "MyForm" }))
+                        new { @class = "form-horizontal", role = "form", id = "MyForm", onsubmit="return checkName()" }))
     {
 
         @Html.AntiForgeryToken()
@@ -60,3 +60,17 @@
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    // 研发人员的格式
+    function checkName() {
+        var ts = /^[\u4e00-\u9fa5]{2,3}\/\d{6}$/;
+        if (!ts.test($('#ReqDevPerson').val())) {
+            alert("研发联系人请按照「姓名（2或3个汉字）/电话（6位数字）」格式填写");
+            $('#ReqDevPerson').focus();
+            return false;
+        }             
+
+        return true;
+    }
+</script>
