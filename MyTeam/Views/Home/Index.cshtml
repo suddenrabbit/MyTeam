@@ -10,7 +10,7 @@
 </div>
 
 -->
-<div class="row" style="padding-top:30px">
+<div class="row home-row">
     <div class="col-md-2">
         <div class="card">
             <p>全部未出池的需求</p>
@@ -111,17 +111,22 @@
         {
             <table class="table table-condensed table-striped infolist" style="background-color:#FFF;">
                 <tr>
-                    <th>主下发通知编号</th>
-                    <th>副下发通知编号</th>
+                    <th>下发通知编号</th>
                     <th>计划下发日期</th>
                 </tr>
                 @foreach (HomeRlsDelay r in Model.RlsDelayLS)
                 {
                     string s = "/ReqManage/Index?IsQuery=True&SysId=0&ReqStat=出池&AnyRlsNo=" + r.RlsNo;
 
+                    string rlsNo = r.RlsNo;
+
+                    if (!string.IsNullOrEmpty(r.SecondRlsNo))
+                    {
+                        rlsNo += "<br/>" + r.SecondRlsNo;
+                    }
+
                     <tr>
-                        <td class="text-center"><a href=@s>@r.RlsNo</a></td>
-                        <td class="text-center">@r.SecondRlsNo</td>
+                        <td class="text-center"><a href=@s>@Html.Raw(rlsNo)</a></td>
                         <td class="text-center">@r.PlanRlsDate.Value.ToString("yyyy/M/d")  </td>
                     </tr>
                 }

@@ -255,7 +255,7 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
                 }
 
-                // 特殊查询：0-无 1-超过3个月未出池 2-超过10天未入池
+                // 特殊查询：0-无 1-超过3个月未出池 2-超过8天未入池
                 if (query.SpecialQuery == 1)
                 {
                     DateTime time = DateTime.Now.AddMonths(-3);
@@ -264,7 +264,7 @@ namespace MyTeam.Controllers
 
                 else if (query.SpecialQuery == 2)
                 {
-                    DateTime time = DateTime.Now.AddDays(-10);
+                    DateTime time = DateTime.Now.AddDays(-8);
                     ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0);
                 }
 
@@ -330,7 +330,7 @@ namespace MyTeam.Controllers
         public ActionResult Bat()
         {
             // 需求状态下拉
-            ViewBag.ReqStatList = MyTools.GetSelectList(sourceList: Constants.ReqStatList, forQuery: true, emptyText:"不更新");
+            ViewBag.ReqStatList = MyTools.GetSelectList(sourceList: Constants.ReqStatList, forQuery: true, emptyText: "不更新");
             return View();
         }
 
@@ -813,6 +813,11 @@ namespace MyTeam.Controllers
 
         public ActionResult QuickOutPool()
         {
+            if (this.GetSessionCurrentUser() == null)
+            {
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage/QuickOutPool" });
+            }
+
             // 提供系统列表
             List<RetailSystem> ls1 = this.GetNormalSysList();
             // 加上“请选择系统”
@@ -851,7 +856,7 @@ namespace MyTeam.Controllers
                     ReleaseFreq = 0, // 补丁版本的频率记为0
                     DraftTime = newTime,
                     PublishTime = newTime,// 发布时间、制定时间均为计划下发日期
-                    DraftPersonID = this.GetSessionCurrentUser().UID,
+                    DraftPersonID = this.GetSessionCurrentUser() == null ? 0 : this.GetSessionCurrentUser().UID,
                     VerType = "补丁版本"
                 };
                 dbContext.Vers.Add(v);

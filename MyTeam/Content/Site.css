@@ -118,3 +118,11 @@ footer a, footer a:hover, footer a:active{
 .panel-login > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #34495e;
 }
+
+.home-row {
+    padding-top:30px;
+}
+
+.home-row > .col-md-2 {
+    padding-right:0px;
+}
