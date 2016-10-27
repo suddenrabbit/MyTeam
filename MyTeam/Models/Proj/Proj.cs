@@ -189,5 +189,18 @@ namespace MyTeam.Models
         [Display(Name = "项目状态")]
         [StringLength(10)]
         public string ProjStat { get; set; }
+
+        [Display(Name = "项目类型")] // 0-项目 1-专项工作
+        public int ProjType { get; set; }
+
+        [NotMapped]
+        public string ProjTypeName {
+            get
+            {
+               
+                return this.ProjType == 1 ? "专项工作" : "项目";
+            }
+            set { this.ProjTypeName = value; }
+        }
     }
 }

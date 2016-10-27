@@ -128,6 +128,17 @@
                     </div>
 
                 </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ProjType, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        <select class="form-control" name="ProjType">
+                            <option value="0">项目</option>
+                            <option value="1">专项工作</option>
+                        </select>
+                    </div>
+
+                </div>
             </fieldset>
 
             <fieldset>
