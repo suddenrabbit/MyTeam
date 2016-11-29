@@ -15,7 +15,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "系统名称")]
-        public int SysId { get; set; }
+        public int SysID { get; set; }
 
         [Required]
         [Display(Name = "受理日期")]
@@ -135,7 +135,7 @@ namespace MyTeam.Models
             get
             {
                 var r = (from a in Constants.SysList
-                         where a.SysID == this.SysId
+                         where a.SysID == this.SysID
                          select a.SysName).FirstOrDefault();
 
                 return r == null ? "未知" : r.ToString();

@@ -7,7 +7,7 @@ namespace MyTeam.Models
     public class OutPoolQuery
     {
         [Display(Name = "系统名称")]
-        public int SysId { get; set; }
+        public int SysID { get; set; }
 
         [Display(Name="版本号")]
         public string Version { get; set; }
@@ -19,7 +19,7 @@ namespace MyTeam.Models
 
         public string ToQueryString()
         {
-            return new StringBuilder("&SysId=").Append(this.SysId)
+            return new StringBuilder("&SysID=").Append(this.SysID)
                 .Append("&Version=").Append(this.Version)
                 .Append("&MaintainYear=").Append(this.MaintainYear)
                 .Append("&isQuery=True").ToString();

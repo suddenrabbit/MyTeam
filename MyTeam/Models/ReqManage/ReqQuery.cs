@@ -11,7 +11,7 @@ namespace MyTeam.Models
     {
 
         [Display(Name = "系统名称")]
-        public int SysId { get; set; }
+        public int SysID { get; set; }
 
         [Display(Name = "受理年度")]
         public string AcptYear { get; set; }
@@ -45,7 +45,7 @@ namespace MyTeam.Models
 
         public string ToQueryString()
         {
-            return new StringBuilder("&SysId=").Append(this.SysId)
+            return new StringBuilder("&SysID=").Append(this.SysID)
                 .Append("&AcptYear=").Append(this.AcptYear)
                 .Append("&AcptMonth=").Append(this.AcptMonth)
                 .Append("&ReqNo=").Append(this.ReqNo)

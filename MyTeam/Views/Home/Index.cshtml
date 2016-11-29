@@ -14,13 +14,13 @@
     <div class="col-md-2">
         <div class="card">
             <p>全部未出池的需求</p>
-            <p class="homeNum">@ViewBag.ReqLsSum</p>
+            <div class="homeNum">@ViewBag.ReqLsSum</div>
         </div>
 
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqLs)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SysId=" + r.SysId;
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -31,13 +31,13 @@
     <div class="col-md-2">
         <div class="card">
             <p>超3个月未出池的需求</p>
-            <p class="homeNum">@ViewBag.ReqDelayLsSum</p>
+            <div class="homeNum">@ViewBag.ReqDelayLsSum</div>
         </div>
 
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqDelayLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SpecialQuery=1&SysId=" + r.SysId;
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=入池&SpecialQuery=1&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -48,13 +48,13 @@
     <div class="col-md-2">
         <div class="card">
             <p>全部未入池的需求</p>
-            <p class="homeNum">@ViewBag.ReqInpoolLsSum</p>
+            <div class="homeNum">@ViewBag.ReqInpoolLsSum</div>
         </div>
 
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SysId=" + r.SysId;
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -65,13 +65,13 @@
     <div class="col-md-2">
         <div class="card">
             <p>超8天未入池的需求</p>
-            <p class="homeNum">@ViewBag.ReqInpoolDelayLsSum</p>
+            <div class="homeNum">@ViewBag.ReqInpoolDelayLsSum</div>
         </div>
 
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolDelayLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SpecialQuery=2&SysId=" + r.SysId;
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=待评估&SpecialQuery=2&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -82,7 +82,7 @@
     <div class="col-md-2">
         <div class="card">
             <p>延期项目</p>
-            <p class="homeNum">@Model.ProjDetails.Count</p>
+            <div class="homeNum">@Model.ProjDetails.Count</div>
         </div>
 
         @if (Model.ProjDetails.Count > 0)
@@ -104,7 +104,7 @@
     <div class="col-md-2">
         <div class="card">
             <p>超时未完成的下发</p>
-            <p class="homeNum">@Model.RlsDelayLS.Count</p>
+            <div class="homeNum">@Model.RlsDelayLS.Count</div>
         </div>
 
         @if (Model.RlsDelayLS.Count > 0)
@@ -116,7 +116,7 @@
                 </tr>
                 @foreach (HomeRlsDelay r in Model.RlsDelayLS)
                 {
-                    string s = "/ReqManage/Index?IsQuery=True&SysId=0&ReqStat=出池&AnyRlsNo=" + r.RlsNo;
+                    string s = "/ReqManage/Index?IsQuery=True&SysID=0&ReqStat=出池&AnyRlsNo=" + r.RlsNo;
 
                     string rlsNo = r.RlsNo;
 

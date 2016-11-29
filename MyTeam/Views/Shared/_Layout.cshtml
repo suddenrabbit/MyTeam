@@ -15,16 +15,7 @@
     <link href="~/Content/select2.css" rel="stylesheet" />
     <script src="~/Scripts/select2.min.js"></script>
 
-    <script>
-        /* xp指定显示宋体*/
-        $(document).ready(function () {
-            var ua = navigator.userAgent;
-            if (ua.indexOf("Windows NT 5") != -1) {
-                $("body").attr("style", "font-family:arial,simsun!important");
-            }
-        });
-    </script>  
-
+    <link rel="shortcut icon" href="~/Content/favicon.ico" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -126,7 +117,7 @@
     <footer>
         <p class="text-center">
             &copy; 2015-@DateTime.Now.Year  兴业银行信息科技部需求中心零售团队<br />
-            <span style="font-size:0.8em;">Made by ZhouMeng & ZhangJuan | <a href="/Home/About">about</a></span>
+            <span style="font-size:0.8em;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span> | <a href="/Home/About" title="版本更新记录">about</a></span>
         </p>
     </footer>
     <!--2016年8月20日：下拉菜单无需点击-->

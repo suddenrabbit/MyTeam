@@ -24,9 +24,9 @@ namespace MyTeam.Controllers
                 var ls = from a in dbContext.Vers
                          select a;
 
-                if (query.SysId != 0)
+                if (query.SysID != 0)
                 {
-                    ls = ls.Where(p => p.SysId == query.SysId);
+                    ls = ls.Where(p => p.SysID == query.SysID);
                 }
                
                 if (!string.IsNullOrEmpty(query.VerYear))
@@ -35,7 +35,7 @@ namespace MyTeam.Controllers
                 }
 
                 // 按照发布时间排序
-                ls = ls.OrderBy(p => p.SysId).ThenByDescending(p => p.PublishTime);                
+                ls = ls.OrderBy(p => p.SysID).ThenByDescending(p => p.PublishTime);                
 
                 var result = ls.ToList();
                 // 若isExcel为true，导出Excel
@@ -211,7 +211,7 @@ namespace MyTeam.Controllers
             {
                 foreach (RetailSystem r in rs)
                 {
-                    if (s.SysId == r.SysID)
+                    if (s.SysID == r.SysID)
                     {
                         s.SysName = r.SysName;
                         sysNO = r.SysNO;
@@ -284,7 +284,7 @@ namespace MyTeam.Controllers
                 {
                     Ver v = new Ver()
                     {
-                        SysId = ver.SysId,
+                        SysID = ver.SysID,
                         VerYear = verYear,
                         ReleaseFreq = freq,
                         PublishTime = GetFourthThursday(verYear, verMonth.ToString()), // 自动设计为每月第四个周四

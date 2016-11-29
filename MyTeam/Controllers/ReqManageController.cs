@@ -83,7 +83,7 @@ namespace MyTeam.Controllers
             {
                 Req newReq = new Req()
                 {
-                    SysId = mainRegReq.SysId,
+                    SysID = mainRegReq.SysID,
                     AcptDate = mainRegReq.AcptDate,
                     ReqNo = mainRegReq.ReqNo.Trim(), // 去空格
                     ReqReason = mainRegReq.ReqReason,
@@ -213,9 +213,9 @@ namespace MyTeam.Controllers
             {
                 var ls = from a in dbContext.Reqs
                          select a;
-                if (query.SysId != 0)
+                if (query.SysID != 0)
                 {
-                    ls = ls.Where(p => p.SysId == query.SysId);
+                    ls = ls.Where(p => p.SysID == query.SysID);
                 }
                 if (!string.IsNullOrEmpty(query.AcptYear))
                 {
@@ -277,9 +277,9 @@ namespace MyTeam.Controllers
                     RetailSystem s = new RetailSystem();
                     string targetFileName = "";
 
-                    if (query.SysId != 0)
+                    if (query.SysID != 0)
                     {
-                        s = dbContext.RetailSystems.ToList().Find(a => a.SysID == query.SysId);
+                        s = dbContext.RetailSystems.ToList().Find(a => a.SysID == query.SysID);
                         targetFileName = "维护需求查询_" + s.SysName + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
                     }
                     else
@@ -308,7 +308,7 @@ namespace MyTeam.Controllers
             List<RetailSystem> sysList = this.GetSysList(); // 仅查询时可以选择所有系统
             // 加上“全部”
             sysList.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            ViewBag.SysList = new SelectList(sysList, "SysID", "SysName", query.SysId);
+            ViewBag.SysList = new SelectList(sysList, "SysID", "SysName", query.SysID);
 
             // 需求受理人下拉
             List<User> userList = this.GetUserList();
@@ -345,7 +345,7 @@ namespace MyTeam.Controllers
             // 仅更新不为空的
             int updateFiledNum = 0;
 
-            StringBuilder sb = new StringBuilder("update Reqs set SysId=SysId");
+            StringBuilder sb = new StringBuilder("update Reqs set SysID=SysID");
 
             if (!string.IsNullOrEmpty(version))
             {
@@ -536,7 +536,7 @@ namespace MyTeam.Controllers
             // 1、生成系统列表
             List<RetailSystem> ls1 = this.GetNormalSysList();
 
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", req.SysId);
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", req.SysID);
 
             ViewBag.SysList = sl1;
 
@@ -619,9 +619,9 @@ namespace MyTeam.Controllers
                 // 根据query条件查询结果
                 var ls = from a in dbContext.Reqs
                          select a;
-                if (query.SysId != 0)
+                if (query.SysID != 0)
                 {
-                    ls = ls.Where(p => p.SysId == query.SysId);
+                    ls = ls.Where(p => p.SysID == query.SysID);
                 }
                 if (!string.IsNullOrEmpty(query.Version))
                 {
@@ -684,7 +684,7 @@ namespace MyTeam.Controllers
                 if (isExcel)
                 {
                     string targetFileName = "零售条线出池计划";
-                    if (query.SysId != 0)
+                    if (query.SysID != 0)
                         targetFileName += "_" + resultExcelList[0].SysName;
                     if (!string.IsNullOrEmpty(query.Version))
                         targetFileName += "_" + query.Version;
@@ -707,7 +707,7 @@ namespace MyTeam.Controllers
             List<RetailSystem> ls1 = this.GetNormalSysList();
             // 加上“全部”
             ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysId);
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysID);
             ViewBag.SysList = sl1;
 
             return View(query);
@@ -829,7 +829,7 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public string QuickOutPool(string Reqs, string Version, string OutDate, string PlanRlsDate, int SysId, bool IsPatch)
+        public string QuickOutPool(string Reqs, string Version, string OutDate, string PlanRlsDate, int SysID, bool IsPatch)
         {
             // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理
             string realVersion = Version;
@@ -850,7 +850,7 @@ namespace MyTeam.Controllers
                 DateTime newTime = DateTime.Parse(PlanRlsDate);
                 Ver v = new Ver()
                 {
-                    SysId = SysId,
+                    SysID = SysID,
                     VerNo = realVersion,
                     VerYear = DateTime.Now.Year.ToString(),
                     ReleaseFreq = 0, // 补丁版本的频率记为0
@@ -870,7 +870,7 @@ namespace MyTeam.Controllers
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
                 // 下载出池计划文档接口
-                string downfile = string.Format("/ReqManage/OutPool?isQuery=True&isExcel=True&SysId={0}&Version={1}", SysId, realVersion);
+                string downfile = string.Format("/ReqManage/OutPool?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
 
                 return string.Format("<p class='alert alert-success'>" + r + "条需求成功出池！<a href='{0}'>点击</a>导出出池计划文档<p>", downfile);
             }
@@ -904,18 +904,18 @@ namespace MyTeam.Controllers
         }
 
         /// <summary>
-        /// Ajax接口，根据SysId获取可以出池的需求列表
+        /// Ajax接口，根据SysID获取可以出池的需求列表
         /// </summary>
-        /// <param name="sysId"></param>
+        /// <param name="sysID"></param>
         /// <returns></returns>
-        public string GetReqsToOutPool(int sysId)
+        public string GetReqsToOutPool(int sysID)
         {
-            if (sysId == 0)
+            if (sysID == 0)
             {
                 return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--请选择系统--</option></select>";
             }
 
-            List<Req> list = dbContext.Reqs.Where(p => p.SysId == sysId && p.ReqStat == "入池").ToList();
+            List<Req> list = dbContext.Reqs.Where(p => p.SysID == sysID && p.ReqStat == "入池").ToList();
 
 
             int size = list.Count;
@@ -941,18 +941,18 @@ namespace MyTeam.Controllers
         // 2016年8月10日 新增
 
         /// <summary>
-        /// Ajax接口，根据SysId获取可以出池的版本
+        /// Ajax接口，根据SysID获取可以出池的版本
         /// </summary>
-        /// <param name="sysId"></param>
+        /// <param name="sysID"></param>
         /// <returns></returns>
-        public string GetVersToOutPool(int sysId)
+        public string GetVersToOutPool(int sysID)
         {
-            if (sysId == 0)
+            if (sysID == 0)
             {
                 return "<option>--请选择系统--</option>";
             }
 
-            List<Ver> list = dbContext.Vers.Where(p => p.SysId == sysId && p.VerYear == DateTime.Now.Year.ToString() && p.VerType == "计划版本").ToList();
+            List<Ver> list = dbContext.Vers.Where(p => p.SysID == sysID && p.VerYear == DateTime.Now.Year.ToString() && p.VerType == "计划版本").ToList();
 
 
             int size = list.Count;
@@ -985,7 +985,7 @@ namespace MyTeam.Controllers
         public string UpdateRlsDate(string rlsNo, string rlsDate, string secondRlsDate)
         {
 
-            StringBuilder sb = new StringBuilder("update Reqs set SysId=SysId");
+            StringBuilder sb = new StringBuilder("update Reqs set SysID=SysID");
 
             if (!string.IsNullOrEmpty(rlsDate))
             {

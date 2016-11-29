@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
 using MyTeam.Models;
-using MyTeam.Utils;
 
 namespace MyTeam.Controllers
 {
@@ -104,7 +103,7 @@ namespace MyTeam.Controllers
                 return RedirectToAction("Login", "User", new { ReturnUrl = "/User/Index" });
             }
 
-            if (!user.IsAdmin)
+            if (!this.IsAdminNow())
             {
 
                 ModelState.AddModelError("", "您没有权限管理用户");
@@ -129,22 +128,19 @@ namespace MyTeam.Controllers
             {
                 // Password要MD5加密
                 user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "MD5");
-                // 检验是否已经存在该客户
+                // 检验是否已经存在该用户
                 var ls = this.GetUserList().Where(a => a.Username == user.Username);
                 if (ls.Count() > 0)
                 {
                     return "<p class='alert alert-danger'>该用户名已存在，无法添加！</p>";
                 }
-                else
-                {
-                    dbContext.Users.Add(user);
-                    dbContext.SaveChanges();
-                    // 更新内存
-                    this.Update(1);
-                }
+                
+                dbContext.Users.Add(user);
+                dbContext.SaveChanges();
+                // 更新内存
+                this.Update(1);
 
-
-                return Constants.AJAX_CREATE_SUCCESS_RETURN;
+                return "<p class='alert alert-success'>新增用户成功&nbsp;<a href='/User/Index'>返回</a></p>";
             }
             catch (Exception e1)
             {

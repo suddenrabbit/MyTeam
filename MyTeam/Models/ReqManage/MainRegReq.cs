@@ -7,7 +7,7 @@ namespace MyTeam.Models
     {
         [Required]
         [Display(Name = "系统名称")]
-        public int SysId { get; set; }
+        public int SysID { get; set; }
 
         [Required]
         [Display(Name = "受理日期")]

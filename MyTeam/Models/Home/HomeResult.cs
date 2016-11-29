@@ -24,7 +24,7 @@ namespace MyTeam.Models
 
     public class HomeReq
     {
-        public int SysId { get; set; }
+        public int SysID { get; set; }
 
         public int ReqNum { get; set; }
 
@@ -35,7 +35,7 @@ namespace MyTeam.Models
             get
             {
                 var r = (from a in Constants.SysList
-                         where a.SysID == this.SysId
+                         where a.SysID == this.SysID
                          select a.SysShortName).FirstOrDefault();
 
                 return r == null ? "未知" : r.ToString();

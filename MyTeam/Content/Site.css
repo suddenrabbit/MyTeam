@@ -85,6 +85,7 @@ footer {
     text-align: right;
 }
 
+
 @font-face {
     font-family: 'Roboto';
     src: url('../fonts/Roboto-Regular.ttf');
@@ -96,10 +97,12 @@ footer {
     font-weight: bold;
 }
 
+
 footer a, footer a:hover, footer a:active{
     color:darkgray;
 }
 
+/*
 .panel-login {
   border-color: #34495e;
 }
@@ -118,11 +121,17 @@ footer a, footer a:hover, footer a:active{
 .panel-login > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: #34495e;
 }
+*/
 
 .home-row {
-    padding-top:30px;
+    padding-top:30px;    
 }
 
 .home-row > .col-md-2 {
-    padding-right:0px;
+    padding-left:7px;
+    padding-right:7px;
+}
+
+h1,h2,h3, .navbar-brand, .modal-title, .home-row > .col-md-2 > .card > p {
+    font-family:"Microsoft YaHei"!important;
 }

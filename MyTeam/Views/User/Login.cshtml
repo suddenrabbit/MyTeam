@@ -18,16 +18,7 @@
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>
     <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-    <script>
-        /* xp指定显示宋体*/
-        $(document).ready(function () {
-            var ua = navigator.userAgent;
-            if (ua.indexOf("Windows NT 5") != -1) {
-                $("body").attr("style", "font-family:arial,simsun!important");
-            }
-        });
-    </script>
-
+    <link rel="shortcut icon" href="~/Content/favicon.ico" />
 </head>
 <body>
     <div class="container body-content" style="width:1300px">
@@ -38,7 +29,7 @@
             <div class="col-md-12">
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
-                    <div class="panel panel-login" id="loginPanel">
+                    <div class="panel panel-primary" id="loginPanel">
                         <div class="panel-heading">
                             <p class="panel-title">零售团队管理系统</p>
                         </div>
@@ -61,7 +52,7 @@
                                 <div class="form-group">
                                     <div class="col-md-1"></div>
                                     <div class="col-md-10">
-                                        @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @style = "display:inline", @placeholder = "NotesID", @required = "required", @maxlength = "6" })
+                                        @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @style = "display:inline", @placeholder = "NotesID", @required = "required", @maxlength = "20" })
                                         @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="col-md-1"></div>
@@ -89,7 +80,7 @@
                         <div class="panel-footer text-center">
                             <p>
                                 &copy; 2015-@DateTime.Now.Year  兴业银行信息科技部需求中心零售团队<br />
-                                <span style="font-size:0.8em;">Made by ZhouMeng & ZhangJuan</span>
+                                <span style="font-size:0.8em;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span></span>
                             </p>
                         </div>
                     </div>

@@ -7,7 +7,7 @@ namespace MyTeam.Models
     public class VerQuery
     {
         [Display(Name = "系统名称")]
-        public int SysId { get; set; }
+        public int SysID { get; set; }
 
         [Display(Name = "版本年度")]
         public string VerYear { get; set; }
@@ -16,7 +16,7 @@ namespace MyTeam.Models
 
         public string ToQueryString()
         {
-            return new StringBuilder("&SysId=").Append(this.SysId)
+            return new StringBuilder("&SysID=").Append(this.SysID)
                 .Append("&VerYear=").Append(this.VerYear)
                 .Append("&isQuery=True").ToString();
         }

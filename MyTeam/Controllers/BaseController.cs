@@ -13,9 +13,13 @@ namespace MyTeam.Controllers
 {
     public class BaseController : Controller
     {
-        protected MyTeamContext dbContext = new MyTeamContext();
+        protected MyTeamContext dbContext = null;   
 
-
+        public BaseController()
+        {
+            dbContext = new MyTeamContext();
+        }
+       
         protected void SetSessionCurrentUser(int UID)
         {
             Session["UID"] = UID;
@@ -23,6 +27,11 @@ namespace MyTeam.Controllers
 
         protected User GetSessionCurrentUser()
         {
+            if(Session["UID"] == null)
+            {
+                return null;
+            }
+
             User user = null;
             try
             {

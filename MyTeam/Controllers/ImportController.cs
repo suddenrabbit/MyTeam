@@ -106,10 +106,10 @@ namespace MyTeam.Controllers
                 // 第一列为空则结束
                 if (worksheet.Cells[row, 1] == null) break;
 
-                // 第一列，系统名称，转成SysId
+                // 第一列，系统名称，转成SysID
                 string sysName = worksheet.Cells[row, 1].GetValue<string>();
                 var sys = this.GetSysList().Find(a => a.SysName == sysName);
-                int sysId = sys == null ? 0 : sys.SysID;
+                int sysID = sys == null ? 0 : sys.SysID;
 
                 // 第11列，需求受理人，转成UID
                 string reqPerson = worksheet.Cells[row, 11].GetValue<string>();
@@ -121,7 +121,7 @@ namespace MyTeam.Controllers
 
                 Req r = new Req();
                 // 按列赋值
-                r.SysId = sysId;
+                r.SysID = sysID;
                 r.AcptDate = worksheet.Cells[row, 2].GetValue<DateTime>();
                 r.ReqNo = worksheet.Cells[row, 3].GetValue<string>();
                 r.ReqDetailNo = reqDetailNo;

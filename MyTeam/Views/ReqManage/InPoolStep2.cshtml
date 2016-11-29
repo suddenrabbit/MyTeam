@@ -17,17 +17,13 @@
                     @Html.DisplayNameFor(model => model[0].ReqDetailNo)
                 </th>
 
-                <th width="40%">
+                <th width="60%">
                     @Html.DisplayNameFor(model => model[0].ReqDesc)
                 </th>
 
                 <th width="10%">
                     @Html.DisplayNameFor(model => model[0].DevWorkload)
-                </th>
-
-                <th width="20%">
-                    @Html.DisplayNameFor(model => model[0].BusiReqNo)
-                </th>
+                </th>                
             </tr>
 
             @for (int i = 0; i < Model.Count(); i++)
@@ -40,20 +36,16 @@
                     <!-- 主键，用以更新-->
                     @Html.HiddenFor(model => model[i].RID)
                     <td>
-                        @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control text-center", @style = "margin:0 auto" })
+                        @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control", @style = "max-width:100%" })
                     </td>
 
                     <td>
-                        @Html.TextBoxFor(model => model[i].ReqDesc, new { @class = "form-control text-center", @style = "margin:0 auto" })
+                        @Html.TextBoxFor(model => model[i].ReqDesc, new { @class = "form-control", @style = "max-width:100%" })
                     </td>
 
                     <td>
-                        @Html.TextBoxFor(model => model[i].DevWorkload, new { @class = "form-control text-center", @style = "margin:0 auto", @type = "number" })
-                    </td>
-
-                    <td>
-                        @Html.TextBoxFor(model => model[i].BusiReqNo, new { @class = "form-control text-center", @style = "margin:0 auto" })
-                    </td>
+                        @Html.TextBoxFor(model => model[i].DevWorkload, new { @class = "form-control", @type = "number", @style = "max-width:100%" })
+                    </td>                   
                 </tr>
             }
         </table>

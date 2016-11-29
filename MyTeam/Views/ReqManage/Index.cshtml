@@ -81,8 +81,8 @@
     // 在modal中新增
     function doCreate() {
         // 记录下当前页面中选中的系统
-        var sysId = $("#SysId").val();
-        var url = "/ReqManage/Create/" + sysId;
+        var sysID = $("#SysID").val();
+        var url = "/ReqManage/Create/" + sysID;
         $.ajax({
             type: 'GET',
             url: url,
@@ -109,10 +109,10 @@
 
             <table class="table table-condensed query-table">
                 <tr>
-                    <td>@Html.LabelFor(model => model.SysId, new { @class = "control-label" })</td>
+                    <td>@Html.LabelFor(model => model.SysID, new { @class = "control-label" })</td>
                     <td>
                         <!--系统下拉选择-->
-                        @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.SysID, ViewBag.SysList as SelectList, new { @class = "form-control" })
                     </td>
                     <td><label class="control-label">受理年度/月份</label></td>
                     <td class="form-inline">
@@ -187,7 +187,7 @@
                     <tr>
                         <th width="2"></th>
                         <th width="13">
-                            @Html.DisplayNameFor(model => model.ResultList[0].SysId)
+                            @Html.DisplayNameFor(model => model.ResultList[0].SysID)
                         </th>
                         <th width="3">
                             @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
@@ -391,7 +391,7 @@
     $(function () {
         $("#SpecialQuery").val('@Model.SpecialQuery');
 
-        $("#SysId").select2();
+        $("#SysID").select2();
     });
 
     function changeReqStat() {

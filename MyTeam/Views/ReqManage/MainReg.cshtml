@@ -14,8 +14,8 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <table class="table table-condensed query-table">
         <tr>
-            <td> <!--系统下拉选择-->@Html.LabelFor(model => model.SysId, new { @class = "control-label" })</td>
-            <td>@Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })</td>
+            <td> <!--系统下拉选择-->@Html.LabelFor(model => model.SysID, new { @class = "control-label" })</td>
+            <td>@Html.DropDownListFor(model => model.SysID, ViewBag.SysList as SelectList, new { @class = "form-control" })</td>
             <td>@Html.LabelFor(model => model.AcptDate, new { @class = "control-label" })</td>
             <td>
                 @Html.EditorFor(model => model.AcptDate, "DateTime")
@@ -89,7 +89,7 @@
     // 选中 受理人、系统列表下拉加入搜索
     $(function () {
         $("#ReqAcptPerson").val('@Model.ReqAcptPerson');
-        $("#SysId").select2();
+        $("#SysID").select2();
     });
 
     // 检查业务发起人、业务测试人的格式

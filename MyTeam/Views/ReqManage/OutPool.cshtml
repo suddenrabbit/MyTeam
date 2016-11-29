@@ -29,10 +29,10 @@
             <input type="hidden" name="isQuery" value="True" />
             <input type="hidden" id="isExcel" name="isExcel" value="False" />
             <div class="form-group">
-                @Html.LabelFor(model => model.SysId, new { @class = "col-md-2 control-label" })
+                @Html.LabelFor(model => model.SysID, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     <!--系统下拉选择-->
-                    @Html.DropDownListFor(model => model.SysId, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.SysID, ViewBag.SysList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">

@@ -6,10 +6,10 @@
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
     function getReqs() {
-        var sysId = $('#SysId').val();
+        var sysID = $('#SysID').val();
         $.ajax({
             type: 'GET',
-            url: '/ReqManage/GetReqsToOutPool?sysId=' + sysId,
+            url: '/ReqManage/GetReqsToOutPool?sysID=' + sysID,
             success: function (msg) {
                 $('#ReqsDiv').html(msg);
             },
@@ -21,10 +21,10 @@
     }
     // 2016年8月10日新增：同时更新版本号下拉框
     function getVers() {
-        var sysId = $('#SysId').val();
+        var sysID = $('#SysID').val();
         $.ajax({
             type: 'GET',
-            url: '/ReqManage/GetVersToOutPool?sysId=' + sysId,
+            url: '/ReqManage/GetVersToOutPool?sysID=' + sysID,
             success: function (msg) {
                 $('#Ver1').html(msg);
             },
@@ -36,7 +36,7 @@
     }
 
     function quickOutPool() {
-        var sysId = $('#SysId').val();
+        var sysID = $('#SysID').val();
         var reqs = $('#Reqs').val();       
         var outDate = $('#OutDate').val();
         var planRlsDate = $('#PlanRlsDate').val();
@@ -49,7 +49,7 @@
             version = $('#Ver1').val();
         }
 
-        if (sysId == 0) {
+        if (sysID == 0) {
             alert("请选择系统！");
             return;
         }
@@ -75,7 +75,7 @@
         $.ajax({
             type: 'POST',
             url: '/ReqManage/QuickOutPool',
-            data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanRlsDate=" + planRlsDate + "&SysId=" + sysId + "&IsPatch=" + isPatch,
+            data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanRlsDate=" + planRlsDate + "&SysID=" + sysID + "&IsPatch=" + isPatch,
             success: function (msg) {
                 $('#OutPoolResult').html(msg);
                 $('#RlsNoDiv').show();
@@ -169,7 +169,7 @@
             <label class="col-md-2 control-label">选择需求</label>
             <div class="col-md-5">
                 <!--系统下拉选择-->
-                @Html.DropDownList("SysId", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqs();getVers()" })
+                @Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqs();getVers()" })
             </div>
             <div class="col-md-5">
                 <div id="ReqsDiv">
@@ -221,7 +221,7 @@
                 <div class="form-group">
                     <label for="RlsNo" class="col-md-2 control-label">主下发通知编号</label>
                     <div class="col-md-10">
-                        <input id="RlsNo" type="text" class="form-control" value="YFZX" />
+                        <input id="RlsNo" type="text" class="form-control" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -243,6 +243,6 @@
 </div>
 
 <script>
-    $("#SysId").select2();
-    
+    $("#SysID").select2();
+    $("#RlsNo").val('YFZX'+'@DateTime.Now.Year');
 </script>

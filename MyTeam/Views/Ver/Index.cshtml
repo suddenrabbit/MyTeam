@@ -93,10 +93,10 @@
 
             <table class="table table-condensed query-table">
                 <tr>
-                    <td>@Html.LabelFor(model => model.SysId, new { @class = "control-label" })</td>
+                    <td>@Html.LabelFor(model => model.SysID, new { @class = "control-label" })</td>
                     <td>
                         <!--项目下拉选择-->
-                        @Html.DropDownListFor(model => model.SysId, ViewBag.sysList as SelectList, new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.SysID, ViewBag.sysList as SelectList, new { @class = "form-control" })
                     </td>
                     <td>@Html.LabelFor(model => model.VerYear, new { @class = "control-label" })</td>
                     <td>
@@ -110,7 +110,7 @@
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
                         <input type="button" onclick="doCreate('Create')" class="btn btn-default" value="添加一条" />
-                        <input type="button" onclick="doCreate('QuickVer')" class="btn btn-default" value="批量制定版本计划" />
+                        <input type="button" onclick="doCreate('QuickVer')" class="btn btn-success" value="批量制定版本计划" />
                     </td>
                 </tr>
             </table>
@@ -132,7 +132,7 @@
                 <tr>
                     <th></th>
                     <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].SysId)
+                        @Html.DisplayNameFor(model => model.ResultList[0].SysID)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.ResultList[0].VerYear)
