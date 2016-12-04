@@ -14,11 +14,6 @@ namespace MyTeam.Controllers
         // GET: /ProjSurv/
         public ActionResult Index(ProjSurvQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ProjSurv" });
-            }
-
             if (isQuery)
             {
                 var ls = from a in dbContext.ProjSurvs select a;
@@ -28,7 +23,7 @@ namespace MyTeam.Controllers
                 }
                 var result = ls.ToList();
                 // 分页
-                query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); 
+                query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
             }
             else
             {
@@ -48,7 +43,7 @@ namespace MyTeam.Controllers
                 Proj p = projLs.Find(a => a.ProjID == rs.ProjID);
                 rs.ProjName = p == null ? "未知" : p.ProjName;
             }
-            
+
             // 调研方式
             ViewBag.SurveyWayList = MyTools.GetSelectList(Constants.SurveyWayList);
 
@@ -63,7 +58,7 @@ namespace MyTeam.Controllers
             //项目列表
             List<Proj> ls = dbContext.Projs.ToList();
             SelectList sl = null;
-            sl = new SelectList(ls, "ProjID","ProjName");
+            sl = new SelectList(ls, "ProjID", "ProjName");
 
             ViewBag.ProjList = sl;
 
@@ -81,10 +76,10 @@ namespace MyTeam.Controllers
         {
             try
             {
-                
-                    dbContext.ProjSurvs.Add(reqSurv);
-                    dbContext.SaveChanges();
-                
+
+                dbContext.ProjSurvs.Add(reqSurv);
+                dbContext.SaveChanges();
+
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
             }
             catch (Exception e1)
@@ -115,7 +110,7 @@ namespace MyTeam.Controllers
 
             // 调研方式列表
             ViewBag.SurveyWayList = MyTools.GetSelectList(Constants.SurveyWayList);
-            
+
             return View(reqSur);
         }
 
@@ -158,6 +153,6 @@ namespace MyTeam.Controllers
                 return "出错了: " + e1.Message;
             }
         }
-        
+
     }
 }

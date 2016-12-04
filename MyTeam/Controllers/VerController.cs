@@ -15,10 +15,6 @@ namespace MyTeam.Controllers
         // GET: /Ver/     
         public ActionResult Index(VerQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/Ver" });
-            }
             if (isQuery)
             {
                 var ls = from a in dbContext.Vers
@@ -28,14 +24,14 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.SysID == query.SysID);
                 }
-               
+
                 if (!string.IsNullOrEmpty(query.VerYear))
                 {
                     ls = ls.Where(p => p.VerYear == query.VerYear);
                 }
 
                 // 按照发布时间排序
-                ls = ls.OrderBy(p => p.SysID).ThenByDescending(p => p.PublishTime);                
+                ls = ls.OrderBy(p => p.SysID).ThenByDescending(p => p.PublishTime);
 
                 var result = ls.ToList();
                 // 若isExcel为true，导出Excel

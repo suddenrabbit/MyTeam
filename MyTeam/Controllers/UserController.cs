@@ -66,14 +66,9 @@ namespace MyTeam.Controllers
             return RedirectToAction("Login", "User");
         }
 
-        // 普通用户修改自己的密码页面
+        // 普通用户修改自己的密码页面       
         public ActionResult ChangePsw()
-        {
-            User user = this.GetSessionCurrentUser();
-            if (user == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/User/ChangePsw" });
-            }
+        {           
             return View();
         }
 
@@ -96,17 +91,11 @@ namespace MyTeam.Controllers
         // 管理页面
         public ActionResult Index()
         {
-            // 只允许管理员
-            User user = this.GetSessionCurrentUser();
-            if (user == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/User/Index" });
-            }
-
+            // 只允许管理员           
             if (!this.IsAdminNow())
             {
 
-                ModelState.AddModelError("", "您没有权限管理用户");
+                ViewBag.ErrMsg = "您没有权限管理用户";
 
                 return View();
             }
@@ -153,11 +142,7 @@ namespace MyTeam.Controllers
         public ActionResult Edit(string id)
         {
             User user = this.GetSessionCurrentUser();
-            if (user == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/User/Edit/" + id });
-            }
-
+            
             // 为避免直接访问/Edit或传入的id不正确，默认id为当前登陆用户
             int uid;
             try

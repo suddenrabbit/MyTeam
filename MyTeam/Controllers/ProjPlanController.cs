@@ -17,11 +17,6 @@ namespace MyTeam.Controllers
         // GET: /ProjPlan/
         public ActionResult Index(ProjPlanQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ProjPlan" });
-            }
-
             if (isQuery)
             {
                 var ls = from a in dbContext.ProjPlans select a;
@@ -29,7 +24,7 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ProjID == query.ProjID);
                 }
-                if(!string.IsNullOrEmpty(query.PlanYear))
+                if (!string.IsNullOrEmpty(query.PlanYear))
                 {
                     ls = ls.Where(p => p.PlanYear == query.PlanYear);
                 }
@@ -65,7 +60,7 @@ namespace MyTeam.Controllers
         public ActionResult Details(int id)
         {
             ProjPlan projPlan = dbContext.ProjPlans.ToList().Find(a => a.ProjID == id);
-         
+
             if (projPlan == null)
             {
                 return View();
@@ -281,7 +276,7 @@ namespace MyTeam.Controllers
                             if (!string.IsNullOrEmpty(SoftBudgetFinishDate)) p.SoftBudgetFinishDate = DateTime.Parse(worksheet.Cells[row, 15].GetValue<string>());
                             if (!string.IsNullOrEmpty(ImplementPlansStartDate)) p.ImplementPlansStartDate = DateTime.Parse(worksheet.Cells[row, 16].GetValue<string>());
                             if (!string.IsNullOrEmpty(ImplementPlansFinishDate)) p.ImplementPlansFinishDate = DateTime.Parse(worksheet.Cells[row, 17].GetValue<string>());
-                            
+
                             dbContext.ProjPlans.Add(p);
                             tmpLs.Add(p);
                         }

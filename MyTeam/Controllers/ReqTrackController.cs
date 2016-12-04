@@ -17,11 +17,6 @@ namespace MyTeam.Controllers
         // GET: /ReqTrack/
         public ActionResult Index(ReqTrackQuery query, int pageNum = 1, bool isQuery = false)
         {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqTrack" });
-            }
-
             var ls = from a in dbContext.ReqTracks select a;
             if (isQuery)
             {

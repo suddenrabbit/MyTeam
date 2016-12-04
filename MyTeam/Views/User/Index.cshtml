@@ -4,6 +4,11 @@
 }
 <h2>@ViewBag.Title</h2>
 
+@if(ViewBag.ErrMsg != null)
+{
+    <p class="alert alert-warning">@ViewBag.ErrMsg</p>
+}
+
 @if (Model != null)
 {
     <div class="row card">

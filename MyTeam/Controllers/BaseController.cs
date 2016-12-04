@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace MyTeam.Controllers
 {
+    [Authorize]
     public class BaseController : Controller
     {
         protected MyTeamContext dbContext = null;   

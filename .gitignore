@@ -192,3 +192,5 @@ MyTeam/Web.config
 MyTeam.sln
 *.config
 MyTeam/Web.config
+MyTeam/MyTeam.csproj
+MyTeam/Web.config

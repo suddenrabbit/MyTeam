@@ -17,11 +17,7 @@ namespace MyTeam.Controllers
         // GET: /AttendanceManage/
 
         public ActionResult Index(int pageNum = 1)
-        {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/AttendanceManage" });
-            }
+        {           
             // 分页
             var ls = dbContext.Attendances.OrderByDescending(a => a.AID).ToPagedList(pageNum, Constants.PAGE_SIZE);
             return View(ls);

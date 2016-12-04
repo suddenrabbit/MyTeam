@@ -17,12 +17,7 @@ namespace MyTeam.Controllers
         // GET: /TargetMission/
 
         public ActionResult Index(int year = 0, int TID = 0)
-        {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/TargetMission" });
-            }            
-
+        { 
             // 按照年份显示
             if (year == 0)
             {

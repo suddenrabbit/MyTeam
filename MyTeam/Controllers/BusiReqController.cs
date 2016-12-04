@@ -20,11 +20,6 @@ namespace MyTeam.Controllers
         // GET: /BusiReq/
         public ActionResult Index(BusiReqQuery query, int pageNum = 1, bool isQuery = false)
         {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/BusiReq" });
-            }
-
             var ls = from a in dbContext.BusiReqs select a;
             if (isQuery)
             {

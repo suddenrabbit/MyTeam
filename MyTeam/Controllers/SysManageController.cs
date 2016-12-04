@@ -17,12 +17,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Index(SysQuery sys, bool isQuery = false, int pageNum = 1)
         {
-            if (GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/SysManage" });
-            }
-
-            if(isQuery)
+            if (isQuery)
             {
                 // 按照查询条件筛选
                 var ls = from a in dbContext.RetailSystems

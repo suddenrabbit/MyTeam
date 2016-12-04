@@ -15,11 +15,6 @@ namespace MyTeam.Controllers
 
         public ActionResult Index(ProjMeetingQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ProjMeeting" });
-            }
-
             if (isQuery)
             {
                 var ls = from a in dbContext.ProjMeetings

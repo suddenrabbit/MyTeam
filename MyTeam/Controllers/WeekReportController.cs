@@ -180,11 +180,7 @@ namespace MyTeam.Controllers
         {
             // 当前用户
             User user = this.GetSessionCurrentUser();
-            if (user == null)
-            {
-                user = new User();
-            }
-
+           
             // RptDate备选（取最近的5个）            
             List<string> ls = this.GetRptDateList();
             ls.Insert(0, DateTime.Now.Year + "年");
@@ -346,11 +342,7 @@ namespace MyTeam.Controllers
         {
             // 默认加上当前的用户UID和姓名
             User user = this.GetSessionCurrentUser();
-            if (user == null)
-            {
-                user = new User();
-            }
-
+           
             // RptDate备选（取最近的5个）
             List<string> ls = this.GetRptDateList();
             ls.Insert(0, DateTime.Now.Year + "年");

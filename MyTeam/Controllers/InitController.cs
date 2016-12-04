@@ -1,4 +1,5 @@
 ﻿using MyTeam.Models;
+using System.Web.Mvc;
 
 namespace MyTeam.Controllers
 {
@@ -10,6 +11,7 @@ namespace MyTeam.Controllers
         /// 初始化一个管理员用户
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         public string InitUser()
         {
             var ls = this.GetUserList();

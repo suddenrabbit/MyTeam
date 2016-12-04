@@ -31,11 +31,7 @@ namespace MyTeam.Controllers
 
         // 登记受理：第一步，输入维护需求主信息
         public ActionResult MainReg()
-        {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage/MainReg" });
-            }
+        {           
             MainRegReq mainRegReq = new MainRegReq();
             // 1、生成系统列表
             SelectList sl1 = new SelectList(this.GetNormalSysList(), "SysID", "SysName");
@@ -202,13 +198,9 @@ namespace MyTeam.Controllers
          */
 
         // 默认页为查询页
-        // 按照查询条件查询结果：为使用分页功能，GET模式查询
+        // 按照查询条件查询结果：为使用分页功能，GET模式查询        
         public ActionResult Index(ReqQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
-        {
-            /*if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage" });
-            }*/
+        {           
             if (isQuery)
             {
                 var ls = from a in dbContext.Reqs
