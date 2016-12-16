@@ -173,12 +173,22 @@ namespace MyTeam.Controllers
 
         // 2016.7.16新增：获取状态为1的系统列表（用于维护需求相关）
         /// <summary>
-        /// 获取内存中的系统列表
+        /// 获取正常系统列表
         /// </summary>
         /// <returns></returns>
         protected List<RetailSystem> GetNormalSysList()
         {
             return GetSysList().Where(p => p.SysStat == 1).ToList();
+        }
+
+        // 2016.12.15新增：获取状态为1的用户列表
+        /// <summary>
+        /// 获取行员列表
+        /// </summary>
+        /// <returns></returns>
+        protected List<User> GetFormalUserList()
+        {
+            return GetUserList().Where(p => p.UserType == 1).ToList();
         }
     }
 }

@@ -42,16 +42,16 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                //sl = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                //sl = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", user.UID);
                 mainRegReq.ReqAcptPerson = user.UID;
             }
             else
             {
-                //sl = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                //sl = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
                 mainRegReq.ReqAcptPerson = 1;
             }
 
-            ViewBag.UserList = new SelectList(this.GetUserList(), "UID", "NamePhone");
+            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
 
             // 3、需求发起单位 
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
@@ -303,7 +303,7 @@ namespace MyTeam.Controllers
             ViewBag.SysList = new SelectList(sysList, "SysID", "SysName", query.SysID);
 
             // 需求受理人下拉
-            List<User> userList = this.GetUserList();
+            List<User> userList = this.GetFormalUserList();
             // 加上“全部”
             userList.Insert(0, new User() { UID = 0, Realname = "全部" });
             ViewBag.ReqAcptPerson = new SelectList(userList, "UID", "Realname", query.ReqAcptPerson);
@@ -454,11 +454,11 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", user.UID);
+                sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", user.UID);
             }
             else
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone");
+                sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
             }
 
             ViewBag.UserList = sl2;
@@ -535,7 +535,7 @@ namespace MyTeam.Controllers
             // 2、生成需求受理人列表
             SelectList sl2 = null;
 
-            sl2 = new SelectList(this.GetUserList(), "UID", "NamePhone", req.ReqAcptPerson);
+            sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", req.ReqAcptPerson);
 
             ViewBag.UserList = sl2;
 

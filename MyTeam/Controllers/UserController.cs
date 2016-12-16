@@ -33,6 +33,10 @@ namespace MyTeam.Controllers
                 User user = this.GetUserList().Find(a => a.Username == username && a.Password == password);
                 if (user != null)
                 {
+                    if(user.UserType == 3)
+                    {
+                        throw new Exception("已经离职的员工不能登陆系统");
+                    }
                     // 先用Session记录UID
                     this.SetSessionCurrentUser(user.UID);
                     // 控制部分菜单显示，session记录是否为管理员

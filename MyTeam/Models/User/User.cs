@@ -36,7 +36,7 @@ namespace MyTeam.Models
         public bool IsAdmin { get; set; }
 
         [Display(Name = "用户类别")]
-        public int UserType { get; set; } //0-系统用户 1-行员 2-外协
+        public int UserType { get; set; } //0-系统用户 1-行员 2-外协 3-离职
 
         [NotMapped]
         public string NamePhone { 
@@ -56,21 +56,33 @@ namespace MyTeam.Models
         public string UserTypeName { 
             get 
             {
-                if (this.UserType == 0)
-                    return "系统用户";
-                else if (this.UserType == 1)
-                    return "行员";
-                else if (this.UserType == 2)
-                    return "外协";
-                else
-                    return "未知";
+                string userTypeName;
+                switch (UserType)
+                {
+                    case 0:
+                        userTypeName = "系统用户";
+                        break;
+                    case 1:
+                        userTypeName = "行员";
+                        break;
+                    case 2:
+                        userTypeName = "外协";
+                        break;
+                    case 3:
+                        userTypeName = "离职";
+                        break;
+                    default:
+                        userTypeName = "未知";
+                        break;
+                }
+                return userTypeName;
             } 
             set 
             { 
                 this.UserTypeName = value;
             } 
         }
-        //0-系统用户 1-行员 2-外协
+        //0-系统用户 1-行员 2-外协 3-离职
     }
 
     
