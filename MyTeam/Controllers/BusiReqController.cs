@@ -180,7 +180,7 @@ namespace MyTeam.Controllers
                          ReqReason = req.ReqReason,
                          ReqDesc = req.ReqDesc,
                          ReqFromPerson = req.ReqFromPerson,
-                         ReqType = req.ReqType,
+                         ReqType = req.ReqTypeName,
                          RlsDate = req.RlsDate
                      };
 

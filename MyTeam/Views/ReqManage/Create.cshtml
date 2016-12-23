@@ -151,12 +151,11 @@
                 </div>
             </div>
 			
-			<!--需求类型下拉选择-->
+
 			<div class="form-group">
                 @Html.LabelFor(model => model.ReqType, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.ReqType, ViewBag.ReqTypeList as SelectList, new { @class = "form-control" })
-
+                <div class="col-md-9 form-control-static">
+                    （需求类型将根据需求编号自动生成）
                 </div>
             </div>
 						

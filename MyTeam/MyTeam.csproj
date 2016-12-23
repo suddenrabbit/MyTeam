@@ -198,10 +198,11 @@
     <Compile Include="Models\Proj\Proj.cs" />
     <Compile Include="Models\Proj\ReqTrack.cs" />
     <Compile Include="Models\ReqManage\InPoolReq.cs" />
+    <Compile Include="Models\ReqManage\RegReq.cs" />
     <Compile Include="Models\ReqManage\OutPoolQuery.cs" />
     <Compile Include="Models\ReqManage\OutPoolResultExcel.cs" />
     <Compile Include="Models\ReqManage\OutPoolResult.cs" />
-    <Compile Include="Models\ReqManage\MainRegReq.cs" />
+    <Compile Include="Models\ReqManage\ReqEnums.cs" />
     <Compile Include="Models\ReqManage\ReqExcel.cs" />
     <Compile Include="Models\ReqManage\ReqQuery.cs" />
     <Compile Include="Models\System\SysQuery.cs" />
@@ -373,8 +374,6 @@
     <Content Include="Views\ProjPlan\Edit.cshtml" />
     <Content Include="Views\ProjPlan\Import.cshtml" />
     <Content Include="Views\ReqManage\InPool.cshtml" />
-    <Content Include="Views\ReqManage\DetailReg.cshtml" />
-    <Content Include="Views\ReqManage\MainReg.cshtml" />
     <Content Include="Views\ReqManage\InPoolStep2.cshtml" />
     <Content Include="Views\ReqManage\InPoolResult.cshtml" />
     <Content Include="Views\ProjPlan\Details.cshtml" />
@@ -394,6 +393,7 @@
     <Content Include="Views\ReqManage\QuickOutPool.cshtml" />
     <Content Include="Views\ReqManage\UpdateRlsDate.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\ReqManage\Reg.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -401,6 +401,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Domino">
+      <Guid>{29131520-2EED-1069-BF5D-00DD011186B7}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>2</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

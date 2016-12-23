@@ -17,10 +17,10 @@ namespace MyTeam.Models
         [Display(Name = "系统名称")]
         public int SysID { get; set; }
 
-        [Required]
+        
         [Display(Name = "受理日期")]
         [DataType(DataType.Date)]
-        public DateTime AcptDate { get; set; }
+        public DateTime? AcptDate { get; set; }
 
         [Required]
         [Display(Name = "申请编号")]
@@ -80,8 +80,8 @@ namespace MyTeam.Models
 
 
         [Display(Name = "需求类型")]
-        [StringLength(8)]
-        public string ReqType { get; set; }
+        
+        public int ReqType { get; set; }
 
         [Display(Name = "研发评估工作量")]
         public int? DevWorkload { get; set; }
@@ -218,5 +218,19 @@ namespace MyTeam.Models
         [Display(Name = "最后一次更新日期")]
         [StringLength(16)]
         public string UpdateTime { get; set; }
+
+
+        [NotMapped]
+        public string ReqTypeName 
+        {
+            get
+            {
+                return Enum.GetName(typeof(ReqTypeEnum), ReqType);
+            }
+            set
+            {
+                this.ReqTypeName = value;
+            }
+        }
     }
 }

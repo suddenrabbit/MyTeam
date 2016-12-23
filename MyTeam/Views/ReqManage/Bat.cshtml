@@ -5,10 +5,6 @@
 <h2>@ViewBag.Title</h2>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
-    $(document).ready(function () {
-        $("#myTab a:first").tab('show')
-    });
-
     function check() {
         var reqs = $("#Reqs").val();
         // 需求编号不能为空
@@ -73,10 +69,13 @@
         var remark = $("#Remark").val();
         var reqStat = $("#ReqStat").val();
 
+        var acptDate = $("#AcptDate").val();
+        var clearAcptDate = $('#ClearAcptDate').prop("checked");
+
         if (check() && confirm("确定要批量更新吗？")) {
             var url = "/ReqManage/BatProc";
             var data = "reqs=" + reqs + "&version=" + version + "&outDate=" + outDate + "&planRlsDate=" + planRlsDate + "&rlsNo=" + rlsNo + "&secondRlsNo=" + secondRlsNo
-                + "&rlsDate=" + rlsDate + "&secondRlsDate=" + secondRlsDate + "&remark=" + remark + "&reqStat=" + reqStat;
+                + "&rlsDate=" + rlsDate + "&secondRlsDate=" + secondRlsDate + "&remark=" + remark + "&reqStat=" + reqStat + "&acptDate=" + acptDate + "&clearAcptDate=" + clearAcptDate;
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -113,74 +112,91 @@
 
         }
     }
+
+    function clearAcptDate() {
+        var checked = $('#ClearAcptDate').prop("checked");
+        if (checked) {
+            $('#AcptDate').val("").attr("disabled", "disabled").removeClass("Wdate").removeClass("datepicker");
+        } else {
+            $('#AcptDate').removeAttr("disabled").addClass("Wdate").addClass("datepicker");
+        }
+
+    }
 </script>
 <div class="row card">
-    <div class="col-md-10">
+    <div class="col-md-9">
         <form class="form-horizontal" role="form">
             <div class="form-group">
-                <label for="Reqs" class="control-label col-md-2">待处理的需求编号</label>
-                <div class="col-md-10">
+                <label for="Reqs" class="control-label col-md-3">待处理的需求申请编号/维护需求编号</label>
+                <div class="col-md-9">
                     <textarea id="Reqs" name="Reqs" class="form-control" rows="5"></textarea>
                 </div>
             </div>
             <div id="info"></div>
             <hr>
             <div class="form-group">
-                <label for="Version" class="col-md-2 control-label">版本号</label>
-                <div class="col-md-10">
+                <label for="AcptDate" class="col-md-3 control-label">需求受理日期</label>
+                <div class="col-md-9">
+                    <input id="AcptDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
+                    <input id="ClearAcptDate" type="checkbox" onclick="clearAcptDate()" />清空需求受理日期
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Version" class="col-md-3 control-label">版本号</label>
+                <div class="col-md-9">
                     <input id="Version" type="text" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
-                <label for="OutDate" class="col-md-2 control-label">出池日期</label>
-                <div class="col-md-10">
+                <label for="OutDate" class="col-md-3 control-label">出池日期</label>
+                <div class="col-md-9">
                     <input id="OutDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                 </div>
             </div>
             <div class="form-group">
-                <label for="PlanRlsDate" class="col-md-2 control-label">计划下发日期</label>
-                <div class="col-md-10">
+                <label for="PlanRlsDate" class="col-md-3 control-label">计划下发日期</label>
+                <div class="col-md-9">
                     <input id="PlanRlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                 </div>
             </div>
             <div class="form-group">
-                <label for="RlsNo" class="col-md-2 control-label">主下发通知编号</label>
-                <div class="col-md-10">
+                <label for="RlsNo" class="col-md-3 control-label">主下发通知编号</label>
+                <div class="col-md-9">
                     <input id="RlsNo" type="text" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
-                <label for="SecondRlsNo" class="col-md-2 control-label">副下发通知编号</label>
-                <div class="col-md-10">
+                <label for="SecondRlsNo" class="col-md-3 control-label">副下发通知编号</label>
+                <div class="col-md-9">
                     <input id="SecondRlsNo" type="text" class="form-control" />
                 </div>
             </div>                   
             <div class="form-group">
-                <label for="RlsDate" class="col-md-2 control-label">主实际下发日期</label>
-                <div class="col-md-10">
+                <label for="RlsDate" class="col-md-3 control-label">主实际下发日期</label>
+                <div class="col-md-9">
                     <input id="RlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                 </div>
             </div>                    
             <div class="form-group">
-                <label for="SecondRlsDate" class="col-md-2 control-label">副实际下发日期</label>
-                <div class="col-md-10">
+                <label for="SecondRlsDate" class="col-md-3 control-label">副实际下发日期</label>
+                <div class="col-md-9">
                     <input id="SecondRlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                 </div>
             </div>
             <div class="form-group">
-                <label for="ReqStat" class="col-md-2 control-label">需求状态</label>
-                <div class="col-md-10">
+                <label for="ReqStat" class="col-md-3 control-label">需求状态</label>
+                <div class="col-md-9">
                     @Html.DropDownList("ReqStat", ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
                 </div>
             </div>
             <div class="form-group">
-                <label for="Remark" class="col-md-2 control-label">备注</label>
-                <div class="col-md-10">
+                <label for="Remark" class="col-md-3 control-label">备注</label>
+                <div class="col-md-9">
                     <textarea id="Remark" name="Remark" class="form-control" rows="2"></textarea>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
+                <div class="col-md-offset-3 col-md-9">
                     <input type="button" value="更新" onclick="BatProc()" class="btn btn-primary" />
                     <input type="button" value="删除" onclick="BatDel()" class="btn btn-danger" />
                 </div>

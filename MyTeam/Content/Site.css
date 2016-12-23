@@ -39,7 +39,7 @@ textarea {
     background-color: #FFF !important;
 }
 
-.query-table, .query-table tr, .query-table td {
+.query-table, .query-table tr, .query-table td, .query-table th {
     border: none !important;
     border-color: none !important;
 }

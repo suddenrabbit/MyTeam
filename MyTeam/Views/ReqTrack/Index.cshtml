@@ -9,7 +9,7 @@
     function doDelete(id, name) {
         $('#toDelName').html(name);
         $('#toDelId').val(id);
-        $('#myModal').modal();
+        $('#myModal').modal({ backdrop: 'static' });
     }
 
     function realDelete() {
@@ -25,7 +25,7 @@
                 $('#procResult').html("处理失败，请联系管理员");
             },
             complete: function () {
-                $('#myModal2').modal();
+                $('#myModal2').modal({ backdrop: 'static' });
             }
         });
     }
@@ -44,7 +44,7 @@
                 $('#EditMain').html("处理失败，请联系管理员");
             },
             complete: function () {
-                $('#myModal3').modal();
+                $('#myModal3').modal({ backdrop: 'static' });
             }
         });
     }
@@ -62,7 +62,7 @@
                 $('#Create').html("处理失败，请联系管理员");
             },
             complete: function () {
-                $('#myModal4').modal();
+                $('#myModal4').modal({ backdrop: 'static' });
             }
         });
     }

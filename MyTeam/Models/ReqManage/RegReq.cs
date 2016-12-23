@@ -3,16 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyTeam.Models
 {
-    public class MainRegReq
+    public class RegReq
     {
         [Required]
         [Display(Name = "系统名称")]
         public int SysID { get; set; }
 
-        [Required]
         [Display(Name = "受理日期")]
         [DataType(DataType.Date)]
-        public DateTime AcptDate { get; set; }
+        public DateTime? AcptDate { get; set; }
 
         [Required]
         [Display(Name = "申请编号")]
@@ -36,26 +35,22 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "业务测试人/联系电话")]
-        public string ReqBusiTestPerson { get; set; }
-
-        /*
-         * 
-        [Required]
-        [Display(Name = "研发联系人/联系电话")]
-        public string ReqDevPerson { get; set; }
-         
-        [Display(Name = "研发受理日期")]
-        [DataType(DataType.Date)]
-        public DateTime? DevAcptDate { get; set; }
-
-        [Display(Name = "研发完成评估日期")]
-        [DataType(DataType.Date)]
-        public DateTime? DevEvalDate { get; set; }
-         * */
+        public string ReqBusiTestPerson { get; set; }         
 
         [Required]
         [Range(1,10, ErrorMessage="需求数量必须是1-10之间的数字")]
         [Display(Name = "需求数量")]
         public int ReqAmt { get; set; }
+
+        public System.Collections.Generic.List<DetailRegReq> DetailRegReqs { get; set; } 
+    }
+
+    public class DetailRegReq
+    {
+        [Display(Name = "需求或问题概述")]
+        public string ReqDesc { get; set; }
+
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
     }
 }

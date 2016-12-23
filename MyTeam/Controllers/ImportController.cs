@@ -134,7 +134,7 @@ namespace MyTeam.Controllers
                 r.ReqAcptPerson = uid;
                 r.ReqDevPerson = worksheet.Cells[row, 12].GetValue<string>();
                 r.ReqBusiTestPerson = worksheet.Cells[row, 13].GetValue<string>();
-                r.ReqType = worksheet.Cells[row, 14].GetValue<string>();
+                //r.ReqType = worksheet.Cells[row, 14].GetValue<string>();
 
                 var workload = worksheet.Cells[row, 17].GetValue<string>();
                 r.DevWorkload = string.IsNullOrEmpty(workload) ? 0 : int.Parse(workload);

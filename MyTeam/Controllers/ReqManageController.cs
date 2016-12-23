@@ -29,10 +29,10 @@ namespace MyTeam.Controllers
          * 【1】批量登记
          */
 
-        // 登记受理：第一步，输入维护需求主信息
-        public ActionResult MainReg()
-        {           
-            MainRegReq mainRegReq = new MainRegReq();
+        // 登记受理        
+        public ActionResult Reg()
+        {
+            RegReq regReq = new RegReq();
             // 1、生成系统列表
             SelectList sl1 = new SelectList(this.GetNormalSysList(), "SysID", "SysName");
 
@@ -43,12 +43,12 @@ namespace MyTeam.Controllers
             if (user != null)
             {
                 //sl = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", user.UID);
-                mainRegReq.ReqAcptPerson = user.UID;
+                regReq.ReqAcptPerson = user.UID;
             }
             else
             {
                 //sl = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
-                mainRegReq.ReqAcptPerson = 1;
+                regReq.ReqAcptPerson = 1;
             }
 
             ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
@@ -59,56 +59,62 @@ namespace MyTeam.Controllers
             // 4、需求数量
             List<int> reqAmtLs = new List<int>();
             for (int i = 1; i <= 10; i++)
+            {
                 reqAmtLs.Add(i);
+            }
+                
             ViewBag.ReqAmtList = new SelectList(reqAmtLs);
 
             // 5、需求受理日期自动置为今天
-            mainRegReq.AcptDate = DateTime.Now;
+            regReq.AcptDate = DateTime.Now;
 
-            return View(mainRegReq);
-        }
-
-        // 入池：第二步，输入明细信息
-
-        [HttpPost]
-        public ActionResult DetailReg(MainRegReq mainRegReq)
-        {
-            // 生成List，添加维护需求编号
-            List<Req> reqList = new List<Req>();
-            for (int i = 0; i < mainRegReq.ReqAmt; i++)
+            // 6、预先生成detail部分
+            regReq.DetailRegReqs = new List<DetailRegReq>();
+            for(int i=0; i<10; i++)
             {
+                regReq.DetailRegReqs.Add(new DetailRegReq());
+            }            
+
+            return View(regReq);
+        }
+               
+        // 受理登记完成
+        [HttpPost]
+        public ActionResult RegResult(RegReq regReq)
+        {
+            List<Req> reqList = new List<Req>();
+            for (int i = 0; i < regReq.ReqAmt; i++)
+            {
+                if(string.IsNullOrEmpty(regReq.DetailRegReqs[i].ReqDesc))
+                {
+                    continue;
+                }
+
                 Req newReq = new Req()
                 {
-                    SysID = mainRegReq.SysID,
-                    AcptDate = mainRegReq.AcptDate,
-                    ReqNo = mainRegReq.ReqNo.Trim(), // 去空格
-                    ReqReason = mainRegReq.ReqReason,
-                    ReqFromDept = mainRegReq.ReqFromDept,
-                    ReqFromPerson = mainRegReq.ReqFromPerson,
-                    ReqAcptPerson = mainRegReq.ReqAcptPerson,
-                    ReqBusiTestPerson = mainRegReq.ReqBusiTestPerson,
-                    DevWorkload = 0
+                    SysID = regReq.SysID,
+                    AcptDate = regReq.AcptDate,
+                    ReqNo = regReq.ReqNo.Trim(), // 去空格
+                    ReqReason = regReq.ReqReason.Trim(), // 去空格
+                    ReqFromDept = regReq.ReqFromDept,
+                    ReqFromPerson = regReq.ReqFromPerson,
+                    ReqAcptPerson = regReq.ReqAcptPerson,
+                    ReqBusiTestPerson = regReq.ReqBusiTestPerson,
+                    DevWorkload = 0,
+
+                    ReqDesc = regReq.DetailRegReqs[i].ReqDesc,
+                    Remark = regReq.DetailRegReqs[i].Remark,
                 };
                 reqList.Add(newReq);
             }
-            // 需求类型下拉列表
-            ViewBag.ReqTypeList = MyTools.GetSelectList(Constants.ReqTypeList);
-
-            return View(reqList);
-        }
-
-        // 受理登记完成
-        [HttpPost]
-        public ActionResult RegResult(List<Req> reqList)
-        {
-            List<Req> ls = dbContext.Reqs.ToList();
+                        
             string r = "";
 
             try
             {
                 // 登记
                 foreach (Req req in reqList)
-                {
+                {  
                     // 状态默认「待评估」
                     req.ReqStat = "待评估";
                     dbContext.Reqs.Add(req);
@@ -162,15 +168,37 @@ namespace MyTeam.Controllers
 
         [HttpPost]
         public ActionResult InPoolResult(List<Req> reqList)
-        {
-            List<Req> ls = dbContext.Reqs.ToList();
+        {           
             string r = "";
+
+            string fail = ""; // 记录因需求编号重复入池失败的信息
 
             try
             {
                 // 入库
                 foreach (Req req in reqList)
                 {
+                    req.ReqDetailNo = req.ReqDetailNo.Trim();// 去空格
+
+                    // 判断需求编号是否已存在
+                    var checkReq = dbContext.Reqs.Where(p => p.ReqDetailNo == req.ReqDetailNo).Count();
+                    if(checkReq > 0)
+                    {
+                        fail += req.ReqDetailNo + " ";
+                        continue;
+                    }
+
+                    // 根据需求编号确定需求类型
+                    req.ReqType = (int)ReqTypeEnum.未知;
+                    try
+                    {
+                        req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+                    }
+                    catch
+                    {
+                        // do nothing
+                    }
+                     
 
                     // 状态默认为「入池」
                     req.ReqStat = "入池";
@@ -178,11 +206,19 @@ namespace MyTeam.Controllers
                     req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
 
                     // 直接执行sql更新
-                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7, UpdateTime=@p8 where RID=@p9";
-                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo.Trim(), req.BusiReqNo, req.DevWorkload, "入池", req.ReqDesc, req.UpdateTime, req.RID);
+                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7, UpdateTime=@p8, ReqType=@p9 where RID=@p10";
+                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo, req.BusiReqNo, req.DevWorkload, "入池", req.ReqDesc, req.UpdateTime, req.ReqType, req.RID);
                 }
 
-                r = "<p class='alert alert-success'>入池成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
+                if(fail == "")
+                {
+                    r = "<p class='alert alert-success'>入池成功！</p>";
+                }
+                else
+                {
+                    r = "<p class='alert alert-warning'>未能全部入池成功，" + fail + "需求编号重复，未入池。</p>";
+                }
+                r += "<p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
             }
             catch (Exception e1)
             {
@@ -211,11 +247,11 @@ namespace MyTeam.Controllers
                 }
                 if (!string.IsNullOrEmpty(query.AcptYear))
                 {
-                    ls = ls.Where(p => p.AcptDate.Year.ToString() == query.AcptYear);
+                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.AcptYear);
                 }
                 if (!string.IsNullOrEmpty(query.AcptMonth))
                 {
-                    ls = ls.Where(p => p.AcptDate.Month.ToString() == query.AcptMonth);
+                    ls = ls.Where(p => p.AcptDate.Value.Month.ToString() == query.AcptMonth);
                 }
                 if (!string.IsNullOrEmpty(query.ReqNo))
                 {
@@ -251,13 +287,13 @@ namespace MyTeam.Controllers
                 if (query.SpecialQuery == 1)
                 {
                     DateTime time = DateTime.Now.AddMonths(-3);
-                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0);
+                    ls = ls.Where(p => p.AcptDate.Value.CompareTo(time) <= 0);
                 }
 
                 else if (query.SpecialQuery == 2)
                 {
                     DateTime time = DateTime.Now.AddDays(-8);
-                    ls = ls.Where(p => p.AcptDate.CompareTo(time) <= 0);
+                    ls = ls.Where(p => p.AcptDate.Value.CompareTo(time) <= 0);
                 }
 
                 // 统一按照受理日期倒序
@@ -329,7 +365,8 @@ namespace MyTeam.Controllers
         // 2016年8月16日：批量功能统一为「批量更新」
         // Ajax调用，批量更新       
         [HttpPost]
-        public string BatProc(string reqs, string version, string outDate, string planRlsDate, string rlsNo, string secondRlsNo, string rlsDate, string secondRlsDate, string remark, string reqStat)
+        public string BatProc(string reqs, string version, string outDate, string planRlsDate, string rlsNo, string secondRlsNo, string rlsDate, string secondRlsDate, 
+            string remark, string reqStat, string acptDate, bool clearAcptDate)
         {
             // 拼出sql中的in条件
             string whereIn = this.GetWhereIn(reqs);
@@ -338,6 +375,17 @@ namespace MyTeam.Controllers
             int updateFiledNum = 0;
 
             StringBuilder sb = new StringBuilder("update Reqs set SysID=SysID");
+
+            if(clearAcptDate)
+            {
+                sb.Append(", AcptDate=NULL");
+                updateFiledNum++;
+            }
+            else if(!string.IsNullOrEmpty(acptDate))
+            {
+                sb.Append(", AcptDate='" + acptDate + "'");
+                updateFiledNum++;
+            }
 
             if (!string.IsNullOrEmpty(version))
             {
@@ -398,7 +446,7 @@ namespace MyTeam.Controllers
                 return "<p class='alert alert-info'>因所有输入框为空，未更新任何信息！</p>";
             }
 
-            sb.Append(string.Format(", UpdateTime='{0}' where ReqDetailNo in ({1})", DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn));
+            sb.Append(string.Format(", UpdateTime='{0}' {1}", DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn));
 
             try
             {
@@ -421,14 +469,14 @@ namespace MyTeam.Controllers
             // 拼出sql中的in条件
             string whereIn = this.GetWhereIn(reqs);
 
-            string sql = string.Format("delete from Reqs where ReqDetailNo in ({0})", whereIn);
+            string sql = string.Format("delete from Reqs {0}", whereIn);
 
             try
             {
                 // 批量删除，直接执行SQL
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
-                return "<p class='alert alert-success'>已更新" + r + "条记录!<p>";
+                return "<p class='alert alert-success'>已删除" + r + "条记录!<p>";
             }
             catch (Exception e1)
             {
@@ -467,7 +515,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
 
             // 4、需求类型下拉列表
-            ViewBag.ReqTypeList = MyTools.GetSelectList(Constants.ReqTypeList);
+            //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);
 
             // 5、需求状态下拉列表
             ViewBag.ReqStatList = MyTools.GetSelectList(Constants.ReqStatList, false, true, "入池");
@@ -497,6 +545,17 @@ namespace MyTeam.Controllers
 
                 req.ReqNo = reqNo.Trim();
                 req.ReqDetailNo = string.IsNullOrEmpty(reqDetailNo) ? "" : reqDetailNo.Trim();
+
+                // 根据需求编号确定需求类型
+                req.ReqType = (int)ReqTypeEnum.未知;
+                try
+                {
+                    req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+                }
+                catch
+                {
+                    // do nothing
+                }
 
                 // 加入创建时间和更新时间
                 req.CreateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -543,7 +602,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList, false, true, req.ReqFromDept);
 
             // 5、需求类型下拉列表
-            ViewBag.ReqTypeList = MyTools.GetSelectList(Constants.ReqTypeList, false, true, req.ReqType);
+            //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);
 
             // 6、需求状态下拉列表
             ViewBag.ReqStatList = MyTools.GetSelectList(Constants.ReqStatList, false, true, req.ReqStat);
@@ -555,7 +614,7 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Edit(Req req)
         {
-            if (req.ReqDetailNo != req.OldReqDetailNo)
+            if (!string.IsNullOrEmpty(req.ReqDetailNo) && req.ReqDetailNo != req.OldReqDetailNo)
             {
                 Req r = dbContext.Reqs.Where(a => a.ReqDetailNo == req.ReqDetailNo).FirstOrDefault();
                 if (r != null)
@@ -566,6 +625,17 @@ namespace MyTeam.Controllers
 
             try
             {
+                // 根据需求编号确定需求类型
+                req.ReqType = (int)ReqTypeEnum.未知;
+                try
+                {
+                    req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+                }
+                catch
+                {
+                    // do nothing
+                }
+
                 // 更新时间
                 req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
 
@@ -625,7 +695,7 @@ namespace MyTeam.Controllers
                 }
                 if (!string.IsNullOrEmpty(query.MaintainYear))
                 {
-                    ls = ls.Where(p => p.AcptDate.Year.ToString() == query.MaintainYear);
+                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.MaintainYear);
                 }
 
                 // 将查询结果转换为OutPoolResult和OutPoolResultExcel（避免多出来的short字段影响）
@@ -635,7 +705,7 @@ namespace MyTeam.Controllers
                 {
                     OutPoolResult res = new OutPoolResult()
                     {
-                        AcptMonth = req.AcptDate.ToString("yyyy/M"),
+                        AcptMonth = req.AcptDate.Value.ToString("yyyy/M"),
                         SysName = req.SysName,
                         Version = req.Version,
                         ReqNo = req.ReqNo,
@@ -645,7 +715,7 @@ namespace MyTeam.Controllers
                         DevWorkload = req.DevWorkload,
                         ReqDevPerson = req.ReqDevPerson,
                         ReqBusiTestPerson = req.ReqBusiTestPerson,
-                        ReqType = req.ReqType,
+                        ReqType = req.ReqTypeName,
                         PlanRlsDate = req.PlanRlsDate,
                         RlsDate = req.RlsDate,
                         Remark = req.Remark
@@ -654,7 +724,7 @@ namespace MyTeam.Controllers
 
                     OutPoolResultExcel resExcel = new OutPoolResultExcel()
                     {
-                        AcptMonth = req.AcptDate.ToString("yyyy/M"),
+                        AcptMonth = req.AcptDate.Value.ToString("yyyy/M"),
                         SysName = req.SysName,
                         Version = req.Version,
                         ReqNo = req.ReqNo,
@@ -664,7 +734,7 @@ namespace MyTeam.Controllers
                         DevWorkload = req.DevWorkload,
                         ReqDevPerson = req.ReqDevPerson,
                         ReqBusiTestPerson = req.ReqBusiTestPerson,
-                        ReqType = req.ReqType,
+                        ReqType = req.ReqTypeName,
                         PlanRlsDate = req.PlanRlsDate,
                         RlsDate = req.RlsDate,
                         Remark = req.Remark
@@ -730,15 +800,47 @@ namespace MyTeam.Controllers
             // 拆分reqs
             string[] reqArr = reqs.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            StringBuilder sb = new StringBuilder();
+            // 分别判断是申请编号还是维护需求编号
+            StringBuilder reqNos = new StringBuilder();
+            StringBuilder reqDetailNos = new StringBuilder();
+
             foreach (string s in reqArr)
             {
-                sb.Append(string.Format("'{0}',", s));
+                if(s.Length == 15)
+                {
+                    reqNos.Append(string.Format("'{0}',", s));
+                }
+                else
+                {
+                    reqDetailNos.Append(string.Format("'{0}',", s));
+                }
+                
             }
-            // 去掉最后一个逗号
-            string result = sb.ToString();
-            result = result.Substring(0, result.Length - 1);
-            return result;
+
+            // 三种情况：1、只有申请编号；2、只有需求编号；3、两者皆有 （两者皆无会直接拦截）
+            string sql = " where ";
+            if (reqNos.Length > 0 && reqDetailNos.Length == 0)
+            {
+                string reqNosResult = reqNos.ToString();
+                sql += string.Format("ReqNo in ({0})", reqNosResult.Substring(0, reqNosResult.Length - 1));
+            }
+
+            else if (reqNos.Length == 0 && reqDetailNos.Length > 0)
+            {
+                string reqDetailNosResult = reqDetailNos.ToString();
+                sql += string.Format("ReqDetailNo in ({0})", reqDetailNosResult.Substring(0, reqDetailNosResult.Length - 1));
+            }
+
+            else
+            {
+                string reqNosResult = reqNos.ToString();
+                string reqDetailNosResult = reqDetailNos.ToString();
+
+                sql += string.Format("ReqNo in ({0}) or ReqDetailNo in ({1})", reqNosResult.Substring(0, reqNosResult.Length - 1), 
+                    reqDetailNosResult.Substring(0, reqDetailNosResult.Length - 1));
+            }
+                       
+            return sql;
         }
 
         /// <summary>
@@ -768,7 +870,7 @@ namespace MyTeam.Controllers
                     Version = s.Version,
                     BusiReqNo = s.BusiReqNo,
                     ReqDesc = s.ReqDesc,
-                    ReqType = s.ReqType,
+                    ReqType = s.ReqTypeName,
                     DevWorkload = s.DevWorkload,
                     ReqStat = s.ReqStat,
                     OutDate = s.OutDate,

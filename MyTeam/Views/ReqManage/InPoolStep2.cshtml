@@ -36,7 +36,7 @@
                     <!-- 主键，用以更新-->
                     @Html.HiddenFor(model => model[i].RID)
                     <td>
-                        @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control", @style = "max-width:100%" })
+                        @Html.TextBoxFor(model => model[i].ReqDetailNo, new { @class = "form-control", @style = "max-width:100%", @required="required" })
                     </td>
 
                     <td>
