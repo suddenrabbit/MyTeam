@@ -3,6 +3,8 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
 using MyTeam.Models;
+using MyTeam.Enums;
+using MyTeam.Utils;
 
 namespace MyTeam.Controllers
 {
@@ -33,7 +35,7 @@ namespace MyTeam.Controllers
                 User user = this.GetUserList().Find(a => a.Username == username && a.Password == password);
                 if (user != null)
                 {
-                    if(user.UserType == 3)
+                    if(user.UserType == (int)UserTypeEnums.离职)
                     {
                         throw new Exception("已经离职的员工不能登陆系统");
                     }
@@ -110,6 +112,8 @@ namespace MyTeam.Controllers
         // 新增用户页面
         public ActionResult Create()
         {
+            // 根据UserTypeEnums生成下拉框
+            ViewBag.UserTypeList = MyTools.GetSelectListByEnum(enumType: typeof(UserTypeEnums));
             return View();
         }
 
@@ -172,6 +176,9 @@ namespace MyTeam.Controllers
             {
                 ViewBag.ErrMsg = "无此用户！";
             }
+
+            // 根据UserTypeEnums生成下拉框
+            ViewBag.UserTypeList = MyTools.GetSelectListByEnum(enumType: typeof(UserTypeEnums), forEdit: true, toEditValue: user.UserType.ToString());
 
             return View(user);
         }

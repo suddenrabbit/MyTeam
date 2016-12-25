@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyTeam.Enums;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTeam.Models
@@ -56,33 +58,14 @@ namespace MyTeam.Models
         public string UserTypeName { 
             get 
             {
-                string userTypeName;
-                switch (UserType)
-                {
-                    case 0:
-                        userTypeName = "系统用户";
-                        break;
-                    case 1:
-                        userTypeName = "行员";
-                        break;
-                    case 2:
-                        userTypeName = "外协";
-                        break;
-                    case 3:
-                        userTypeName = "离职";
-                        break;
-                    default:
-                        userTypeName = "未知";
-                        break;
-                }
-                return userTypeName;
+                return Enum.GetName(typeof(UserTypeEnums), UserType);
             } 
             set 
             { 
                 this.UserTypeName = value;
             } 
         }
-        //0-系统用户 1-行员 2-外协 3-离职
+
     }
 
     

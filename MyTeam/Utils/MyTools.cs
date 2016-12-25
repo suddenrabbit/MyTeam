@@ -57,24 +57,25 @@ namespace MyTeam.Utils
         /// <returns></returns>
         public static SelectList GetSelectListByEnum(Type enumType, bool forQuery = false, bool forEdit = false, string toEditValue = null, string emptyText = "全部")
         {
-            List<SelectListItem> ls = null;
-            foreach (var e in Enum.GetValues(enumType))
+            List<SelectListItem> ls = new List<SelectListItem>();
+            foreach (int e in Enum.GetValues(enumType))
             {
                 ls.Add(new SelectListItem { Value = e.ToString(), Text = Enum.GetName(enumType, e) });
+                            
             }
 
             if (forQuery)
             {
-                ls.Insert(0, new SelectListItem { Value = "0", Text = emptyText });
+                ls.Insert(0, new SelectListItem { Value = "", Text = emptyText });
             }
             SelectList sl = null;
             if (forEdit)
             {
-                sl = new SelectList(ls, toEditValue);
+                sl = new SelectList(ls, "Value", "Text", toEditValue);
             }
             else
             {
-                sl = new SelectList(ls);
+                sl = new SelectList(ls, "Value", "Text");
             }
 
             return sl;

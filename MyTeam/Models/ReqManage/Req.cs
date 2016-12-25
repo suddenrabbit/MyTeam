@@ -3,6 +3,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyTeam.Utils;
+using MyTeam.Enums;
 
 namespace MyTeam.Models
 {
@@ -87,8 +88,7 @@ namespace MyTeam.Models
         public int? DevWorkload { get; set; }
 
         [Display(Name = "需求状态")]
-        [StringLength(8)]
-        public string ReqStat { get; set; }
+        public int ReqStat { get; set; }
 
         [Display(Name = "出池日期")]
         [DataType(DataType.Date)]
@@ -225,11 +225,24 @@ namespace MyTeam.Models
         {
             get
             {
-                return Enum.GetName(typeof(ReqTypeEnum), ReqType);
+                return Enum.GetName(typeof(ReqTypeEnums), ReqType);
             }
             set
             {
                 this.ReqTypeName = value;
+            }
+        }
+
+        [NotMapped]
+        public string ReqStatName
+        {
+            get
+            {
+                return Enum.GetName(typeof(ReqStatEnums), ReqStat);
+            }
+            set
+            {
+                this.ReqStatName = value;
             }
         }
     }
