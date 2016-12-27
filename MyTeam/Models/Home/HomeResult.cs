@@ -20,6 +20,13 @@ namespace MyTeam.Models
         public List<HomeRlsDelay> RlsDelayLS { get; set; }
 
         public List<HomeReq> ReqInpoolLS { get; set; }
+
+        public int ReqLsSum { get; internal set; }
+        public int ReqDelayLsSum { get; internal set; }
+        public int ReqInpoolLsSum { get; internal set; }
+        public int ReqInpoolDelayLsSum { get; internal set; }
+
+        public List<HomeNoRlsNo> NoRlsNoLS { get; internal set; }
     }
 
     public class HomeReq
@@ -70,5 +77,25 @@ namespace MyTeam.Models
         public string RlsNo { get; set; }
         public string SecondRlsNo { get; set; }
         public DateTime? PlanRlsDate { get; set; }
+    }
+
+    public class HomeNoRlsNo
+    {
+        public int SysID { get; set; }
+
+        public string Version { get; set; }
+
+        public string SysName
+        {
+            get
+            {
+                var r = (from a in Constants.SysList
+                         where a.SysID == this.SysID
+                         select a.SysShortName).FirstOrDefault();
+
+                return r == null ? "未知" : r.ToString();
+            }
+            set { this.SysName = value; }
+        }
     }
 }

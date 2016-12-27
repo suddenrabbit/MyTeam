@@ -395,6 +395,7 @@
     <Content Include="Views\ReqManage\UpdateRlsDate.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\ReqManage\Reg.cshtml" />
+    <Content Include="Views\Home\Notify.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

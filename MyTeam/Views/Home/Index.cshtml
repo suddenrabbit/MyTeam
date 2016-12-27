@@ -4,18 +4,12 @@
 @{
     ViewBag.Title = "欢迎";
 }
-<!--
 
-<div class="jumbotron">
-    <h1 style="font-weight:bold">零售团队管理系统</h1>
-</div>
-
--->
 <div class="row home-row">
     <div class="col-md-2">
         <div class="card">
             <p>全部未出池的需求</p>
-            <div class="homeNum">@ViewBag.ReqLsSum</div>
+            <div class="homeNum">@Model.ReqLsSum</div>
         </div>
 
         <div class="list-group infolist">
@@ -32,7 +26,7 @@
     <div class="col-md-2">
         <div class="card">
             <p>超3个月未出池的需求</p>
-            <div class="homeNum">@ViewBag.ReqDelayLsSum</div>
+            <div class="homeNum">@Model.ReqDelayLsSum</div>
         </div>
 
         <div class="list-group infolist">
@@ -49,7 +43,7 @@
     <div class="col-md-2">
         <div class="card">
             <p>全部未入池的需求</p>
-            <div class="homeNum">@ViewBag.ReqInpoolLsSum</div>
+            <div class="homeNum">@Model.ReqInpoolLsSum</div>
         </div>
 
         <div class="list-group infolist">
@@ -66,7 +60,7 @@
     <div class="col-md-2">
         <div class="card">
             <p>超8天未入池的需求</p>
-            <div class="homeNum">@ViewBag.ReqInpoolDelayLsSum</div>
+            <div class="homeNum">@Model.ReqInpoolDelayLsSum</div>
         </div>
 
         <div class="list-group infolist">
