@@ -208,7 +208,7 @@ namespace MyTeam.Controllers
 
                     // 直接执行sql更新
                     string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7, UpdateTime=@p8, ReqType=@p9 where RID=@p10";
-                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo, req.BusiReqNo, req.DevWorkload, "入池", req.ReqDesc, req.UpdateTime, req.ReqType, req.RID);
+                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo, req.BusiReqNo, req.DevWorkload, (int)ReqStatEnums.入池, req.ReqDesc, req.UpdateTime, req.ReqType, req.RID);
                 }
 
                 if (fail == "")
@@ -369,10 +369,10 @@ namespace MyTeam.Controllers
         public string BatProc(string reqs, string version, string outDate, string planRlsDate, string rlsNo, string secondRlsNo, string rlsDate, string secondRlsDate,
             string remark, string reqStat, string acptDate, bool clearAcptDate)
         {
-            // 若填写了下发日期，则下发状态应该为「已下发」
-            if ((!string.IsNullOrEmpty(rlsDate) || !string.IsNullOrEmpty(secondRlsDate)) && reqStat != ReqStatEnums.已下发.ToString())
+            // 若填写了下发日期，则下发状态应该为「办结」
+            if ((!string.IsNullOrEmpty(rlsDate) || !string.IsNullOrEmpty(secondRlsDate)) && reqStat != ReqStatEnums.办结.ToString())
             {
-                return "<p class='alert alert-danger'>出错了：填写了下发日期的情况下，需求状态必须为「已下发」</p>"; 
+                return "<p class='alert alert-danger'>出错了：填写了下发日期的情况下，需求状态必须为「办结」</p>"; 
             }
 
             // 拼出sql中的in条件
@@ -536,10 +536,10 @@ namespace MyTeam.Controllers
         {
             try
             {
-                // 若填写了下发日期，则下发状态应该为「已下发」
-                if ((req.RlsDate != null || req.SecondRlsDate != null) && req.ReqStat != (int)ReqStatEnums.已下发)
+                // 若填写了下发日期，则下发状态应该为「办结」
+                if ((req.RlsDate != null || req.SecondRlsDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
                 {
-                    throw new Exception("填写了下发日期的情况下，需求状态必须为「已下发」");
+                    throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
                 }
 
                 // 判断是否有重复的维护需求编号，如有重复不允许新增
@@ -629,10 +629,10 @@ namespace MyTeam.Controllers
         {
             try
             {
-                // 若填写了下发日期，则下发状态应该为「已下发」
-                if ((req.RlsDate != null || req.SecondRlsDate != null) && req.ReqStat != (int)ReqStatEnums.已下发)
+                // 若填写了下发日期，则下发状态应该为「办结」
+                if ((req.RlsDate != null || req.SecondRlsDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
                 {
-                    throw new Exception("填写了下发日期的情况下，需求状态必须为「已下发」");
+                    throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
                 }
 
                 // 判断有无重复需求编号
@@ -1112,7 +1112,7 @@ namespace MyTeam.Controllers
                 sb.Append(", SecondRlsDate='" + secondRlsDate + "'");
             }
 
-            sb.Append(string.Format(", ReqStat = {3}, UpdateTime='{0}' where RlsNo = '{1}' or SecondRlsNo='{2}'", DateTime.Now.ToString("yyyyMMddHHmmss"), rlsNo, rlsNo, (int)ReqStatEnums.已下发));
+            sb.Append(string.Format(", ReqStat = {3}, UpdateTime='{0}' where RlsNo = '{1}' or SecondRlsNo='{2}'", DateTime.Now.ToString("yyyyMMddHHmmss"), rlsNo, rlsNo, (int)ReqStatEnums.办结));
 
             try
             {
