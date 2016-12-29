@@ -1,0 +1,92 @@
+﻿@using MyTeam.Models
+
+@model MyTeam.Models.HomeResult
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Notify</title>
+</head>
+<body>
+    <p>【超3个月未出池的需求】</p>
+    <table>
+        @foreach (HomeReq r in Model.ReqDelayLS)
+        {
+
+            <tr>
+                <td>
+                    @r.SysName
+                </td>
+                <td style="text-align:right; padding-left:20px;">
+                    @r.ReqNum
+                </td>
+            </tr>
+        }
+    </table>
+
+    <p>【超8天未入池的需求】</p>
+    <table>
+        @foreach (HomeReq r in Model.ReqInpoolDelayLS)
+        {
+
+            <tr>
+                <td>
+                    @r.SysName
+                </td>
+                <td style="text-align:right; padding-left:20px;">
+                    @r.ReqNum
+                </td>
+            </tr>
+        }
+    </table>
+
+
+    <p>【延期项目】</p>
+    @if (Model.ProjDetails.Count == 0)
+    {
+        <p>暂无</p>
+    }
+    else
+    {
+        <table>
+            <tr><th>项目名称</th><th>延期阶段</th></tr>
+            @foreach (HomeProjDelay r in Model.ProjDetails)
+            {
+                <tr>
+                    <td>
+                        「@r.ProjName」：
+                    </td>
+                    <td>
+                        @r.DelayDetail
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+
+    @if(Model.NoRlsNoLS.Count > 0)
+    {
+        <p>【请补充以下系统版本的下发通知编号】</p>
+        <table>
+            @foreach (HomeNoRlsNo r in Model.NoRlsNoLS)
+            {
+                <tr>
+                    <td>
+                        @r.SysName
+                    </td>
+                    <td style="text-align:right; padding-left:20px;">
+                        @r.Version
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+
+</body>
+</html>

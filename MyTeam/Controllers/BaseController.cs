@@ -8,6 +8,7 @@ using MyTeam.Utils;
 using OfficeOpenXml;
 using System.IO;
 using System.Reflection;
+using MyTeam.Enums;
 
 namespace MyTeam.Controllers
 {
@@ -188,7 +189,7 @@ namespace MyTeam.Controllers
         /// <returns></returns>
         protected List<User> GetFormalUserList()
         {
-            return GetUserList().Where(p => p.UserType == 1).ToList();
+            return GetUserList().Where(p => p.UserType == (int)UserTypeEnums.行员).ToList();
         }
     }
 }

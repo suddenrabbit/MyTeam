@@ -65,12 +65,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.UserType, new { @class = "col-md-2 control-label" })
                         <div class="col-md-10">
-                            <select class="form-control" name="UserType" id="UserType">
-                                <option value="0">系统用户</option>
-                                <option value="1">行员</option>
-                                <option value="2">外协</option>
-                                <option value="3">离职</option>
-                            </select>
+                            @Html.DropDownListFor(model => model.UserType, ViewBag.UserTypeList as SelectList, new { @class = "form-control" })
                         </div>
                     </div>
                 }
@@ -97,6 +92,3 @@
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 
-<script>
-    $('#UserType').val('@Model.UserType');
-</script>

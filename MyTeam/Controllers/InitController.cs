@@ -24,7 +24,7 @@ namespace MyTeam.Controllers
             {
                 Username = "Admin",
                 Password = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("123456", "MD5"),
-                UserType = 0,
+                UserType = 9,
                 IsAdmin = true
             };
             dbContext.Users.Add(u);
