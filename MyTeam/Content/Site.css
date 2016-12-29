@@ -135,3 +135,8 @@ footer a, footer a:hover, footer a:active{
 h1,h2,h3, .navbar-brand, .modal-title, .home-row > .col-md-2 > .card > p {
     font-family:"Microsoft YaHei"!important;
 }
+
+.navbar-default {
+    background-color:#FFF;
+    border-bottom:2px solid #337ab7;  
+}
