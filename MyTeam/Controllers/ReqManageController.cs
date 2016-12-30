@@ -126,7 +126,7 @@ namespace MyTeam.Controllers
                 }
                 dbContext.SaveChanges();
 
-                r = "<p class='alert alert-success'>登记入库成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/MainReg'>继续登记</a></li></ul></p>";
+                r = "<p class='alert alert-success'>登记入库成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/Reg'>继续登记</a></li></ul></p>";
             }
             catch (Exception e1)
             {
