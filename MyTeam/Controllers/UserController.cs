@@ -214,7 +214,7 @@ namespace MyTeam.Controllers
             {
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
-            return "<p class='alert alert-success'>修改成功</p>";
+            return "<p class='alert alert-success'>修改成功&nbsp;<a href='/User/Index'>返回</a></p>";
         }
 
     }

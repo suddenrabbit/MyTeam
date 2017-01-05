@@ -13,10 +13,23 @@ namespace MyTeam.Controllers
         // GET: /Home/
         public ActionResult Index()
         {
-            // 首页显示 未出池的需求，未入池的需求，未完成的项目，未完成的下发
             User user = this.GetSessionCurrentUser();
 
-            return View(GetHomeResult(user));
+            HomeResult hr = GetHomeResult(user);
+
+            // 通过UserNews查看当前是否有需要提醒的用户
+            var un = dbContext.UserNews.Where(p => p.UID == user.UID && p.NotifyStat == 1).FirstOrDefault();
+
+            if (un != null)
+            {
+                var l = dbContext.UpgradeLogs.Where(p => p.LogID == un.LogID).FirstOrDefault();
+
+                hr.NewsLog = l;
+
+                ViewBag.NewsID = un.NewsID;
+            }            
+
+            return View(hr);
         }
 
         /// <summary>
@@ -35,7 +48,8 @@ namespace MyTeam.Controllers
         /// <returns></returns>
         public ActionResult About()
         {
-            return View();
+            var logs = dbContext.UpgradeLogs.OrderByDescending(p => p.ReleaseDate).ToList();
+            return View(logs);
         }
 
         /// <summary>
@@ -45,7 +59,7 @@ namespace MyTeam.Controllers
         [AllowAnonymous]
         public ActionResult Notify()
         {
-            return View(GetHomeResult(isNotify:true));
+            return View(GetHomeResult(isNotify: true));
         }
 
         protected HomeResult GetHomeResult(User user = null, bool isNotify = false)
@@ -73,7 +87,7 @@ namespace MyTeam.Controllers
 
             if (isAdmin)
             {
-                if(!isNotify)
+                if (!isNotify)
                 {
                     hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " group by t.SysID").ToList();
                     hr.ReqInpoolLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " group by t.SysID").ToList();
@@ -89,11 +103,11 @@ namespace MyTeam.Controllers
                 hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " and t.AcptDate <= DATEADD(day,-8,GETDATE()) and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
 
             }
-     
+
             if (!isNotify) //notify时不需要计算
             {
                 // 统计计算3个月未出池的需求总数
-                int reqLsSum = 0;                
+                int reqLsSum = 0;
                 foreach (HomeReq q in hr.ReqLs)
                 {
                     reqLsSum += q.ReqNum;
@@ -127,7 +141,7 @@ namespace MyTeam.Controllers
                 hr.ReqInpoolDelayLsSum = reqInpoolDelayLsSum;
 
             }
- 
+
             //////////////////////////////////////////////////////////////////////
 
             // 筛选出各个阶段延期的项目（只统计项目状态为：进行中）
@@ -219,10 +233,10 @@ namespace MyTeam.Controllers
             /////////////////////////////////////////////////////////////////////
 
             // notify中增加忘记填写下发通知编号的提醒
-            if(isNotify)
+            if (isNotify)
             {
                 sql = "select distinct t.SysId, t.Version from Reqs t where t.RlsNo is null and t.ReqStat=" + (int)ReqStatEnums.出池;
-                hr.NoRlsNoLS = dbContext.Database.SqlQuery<HomeNoRlsNo>(sql).ToList(); 
+                hr.NoRlsNoLS = dbContext.Database.SqlQuery<HomeNoRlsNo>(sql).ToList();
             }
 
             return hr;
@@ -234,7 +248,7 @@ namespace MyTeam.Controllers
         /// <returns></returns>
         public PartialViewResult LoginPartial()
         {
-            if(Session == null || Session["Realname"] == null)
+            if (Session == null || Session["Realname"] == null)
             {
                 var user = this.GetSessionCurrentUser();
                 Session["Realname"] = user.Realname;

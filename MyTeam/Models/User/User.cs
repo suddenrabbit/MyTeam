@@ -75,6 +75,10 @@ namespace MyTeam.Models
         {
             get
             {
+                if(this.UserType != (int)UserTypeEnums.外协 )
+                {
+                    return "暂不适用";
+                }
                 var r = (from a in Utils.Constants.UserList
                          where a.UID == this.BelongTo
                          select a.Realname).FirstOrDefault();

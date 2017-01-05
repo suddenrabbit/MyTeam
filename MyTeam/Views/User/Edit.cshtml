@@ -17,7 +17,7 @@
         }
         <div id="info"></div>
         @using (Ajax.BeginForm("Edit", "User", null, new AjaxOptions { UpdateTargetId = "info" },
-                     new { @class = "form-horizontal", role = "form" }))
+                         new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -53,7 +53,7 @@
                 </div>
 
                 <!--只有管理员可以控制用户是否为管理员、用户类型-->
-                if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+                if (Model.IsAdmin)
                 {
                     <div class="form-group">
                         @Html.LabelFor(model => model.IsAdmin, new { @class = "col-md-2 control-label" })
@@ -75,13 +75,22 @@
                     @Html.HiddenFor(model => model.UserType)
                 }
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BelongTo, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.BelongTo, ViewBag.BelongToList as SelectList, new { @class = "form-control" })
-                        <span class="text-info">（暂时只支持外协人员添加对口行员）</span>
+                <!--只有外协可以修改-->
+                if (Model.UserType == (int)MyTeam.Enums.UserTypeEnums.外协)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.BelongTo, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.BelongTo, ViewBag.BelongToList as SelectList, new { @class = "form-control" })
+                            <span class="text-info">（暂时只支持外协人员添加对口行员）</span>
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.BelongTo)
+                }
+
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">

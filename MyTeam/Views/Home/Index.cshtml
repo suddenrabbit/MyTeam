@@ -130,24 +130,47 @@
     </div>
 </div>
 
-<!--通知modal-->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">
-                    版本更新
-                </h4>
-            </div>
-            <div class="modal-body">
-                <span id="procResult"></span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
-                    确定
-                </button>
+@if (Model.NewsLog != null)
+{
+    <!--通知modal-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">
+                        版本更新 - @Model.NewsLog.SysVersion
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    @Html.Raw(Model.NewsLog.Description)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="readNews('@ViewBag.NewsID')">
+                        确定
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <script>
+    $('#myModal').modal({ backdrop: 'static' });
+    </script>
+
+    <script>
+        function readNews(newsId) {
+            $.ajax({
+                type: 'GET',
+                url: '/UserNews/ReadNews?NewsID=' + newsId,
+                success: function (msg) {
+                    //do nothing
+                },
+                error: function () {
+                    alert("未能成功将此新闻置为已读状态，请联系管理员");
+                }
+
+            });
+        }
+    </script>
+}

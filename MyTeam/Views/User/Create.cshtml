@@ -8,6 +8,14 @@
         if ($('#info > p').attr('class') == 'alert alert-success')
             $('form').hide()
     }
+
+    function changeBelongTo(userType) {
+        if (userType != 2) {
+            $('#BelongTo').val('0').attr("disabled", "disabled");
+        } else {
+            $('#BelongTo').removeAttr("disabled");
+        }
+    }
 </script>
 
 <div class="row card">
@@ -63,7 +71,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.UserType, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
-                     @Html.DropDownListFor(model => model.UserType, ViewBag.UserTypeList as SelectList, new { @class = "form-control" })
+                     @Html.DropDownListFor(model => model.UserType, ViewBag.UserTypeList as SelectList, new { @class = "form-control" , @onchange="changeBelongTo(this.value)"})
                 </div>
             </div>
             <div class="form-group">
@@ -87,3 +95,8 @@
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script>
+    $('#BelongTo').append("<option value=0>暂不适用</option>");
+    changeBelongTo($('#UserType').val());
+</script>

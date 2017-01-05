@@ -52,13 +52,10 @@
         public DbSet<YearMission> YearMissions { get; set; }
 
         public DbSet<Attendance> Attendances { get; set; }
+
+        public DbSet<UpgradeLog> UpgradeLogs { get; set; }
+
+        public DbSet<UserNews> UserNews { get; set; }
     }
-
-    //public class MyEntity
-    //{
-    //    public int Id { get; set; }
-    //    public string Name { get; set; }
-    //}
-
-    
+   
 }

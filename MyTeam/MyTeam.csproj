@@ -172,6 +172,7 @@
     <Compile Include="Controllers\TargetManageController.cs" />
     <Compile Include="Controllers\SysManageController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UserNewsController.cs" />
     <Compile Include="Controllers\VerController.cs" />
     <Compile Include="Controllers\WeekReportController.cs" />
     <Compile Include="Enums\UserEnums.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Models\Attendance\AttendaceResult.cs" />
     <Compile Include="Models\BusiReq\BusiReqProj.cs" />
     <Compile Include="Models\Home\HomeResult.cs" />
+    <Compile Include="Models\Home\UpgradeLog.cs" />
     <Compile Include="Models\Proj\ProjPlanQuery.cs" />
     <Compile Include="Models\Proj\ProjPlan.cs" />
     <Compile Include="Models\Proj\ProjSurvQuery.cs" />
@@ -211,6 +213,7 @@
     <Compile Include="Models\Target\TargetMission.cs" />
     <Compile Include="Models\Target\Target.cs" />
     <Compile Include="Models\Target\TargetMissionResult.cs" />
+    <Compile Include="Models\UserNews\UserNews.cs" />
     <Compile Include="Models\User\ChangePsw.cs" />
     <Compile Include="Models\MyTeamContext.cs" />
     <Compile Include="Models\ReqManage\Req.cs" />

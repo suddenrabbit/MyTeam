@@ -27,6 +27,8 @@ namespace MyTeam.Models
         public int ReqInpoolDelayLsSum { get; internal set; }
 
         public List<HomeNoRlsNo> NoRlsNoLS { get; internal set; }
+
+        public UpgradeLog NewsLog { get; internal set; }
     }
 
     public class HomeReq
