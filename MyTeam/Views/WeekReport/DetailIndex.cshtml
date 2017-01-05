@@ -104,9 +104,9 @@
             <th>
                 <a href="/WeekReport/DetailIndex?orderByType=1">@Html.DisplayNameFor(model => model.RptDate)</a>
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Priority)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.WorkType)
             </th>
@@ -132,6 +132,9 @@
                 @Html.DisplayNameFor(model => model.PlanDeadLine)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.RptPersonID)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Remark)
             </th>
 
@@ -154,9 +157,9 @@
                 <td width="10%">
                     @Html.DisplayFor(modelItem => item.RptDate)
                 </td>
-                <td width="6%">
+                @*<td width="6%">
                     @Html.DisplayFor(modelItem => item.Priority)
-                </td>
+                </td>*@
                 <td width="8%">
                     @Html.DisplayFor(modelItem => item.WorkType)
                 </td>
@@ -174,14 +177,17 @@
                 <td width="5%">
                     @Html.DisplayFor(modelItem => item.Person)
                 </td>
-                <td width="10%">
+                <td width="8%">
                     @Html.DisplayFor(modelItem => item.OutSource)
                 </td>
                 <td width="5%">
                     @Html.DisplayFor(modelItem => item.Progress)%
                 </td>
-                <td width="5%">
+                <td width="7%">
                     @Html.DisplayFor(modelItem => item.PlanDeadLine)
+                </td>
+                <td width="6%">
+                    @Html.DisplayFor(modelItem => item.RptPersonName)
                 </td>
                 <td width="5%">
                     @Html.DisplayFor(modelItem => item.Remark)

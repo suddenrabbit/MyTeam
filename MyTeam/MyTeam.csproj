@@ -280,7 +280,6 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\js.cookie.js" />
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
@@ -345,7 +344,6 @@
     <Content Include="Views\WeekReport\EditDetail.cshtml" />
     <Content Include="Views\Proj\Edit.cshtml" />
     <Content Include="Views\Proj\Details.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\ReqManage\OutPool.cshtml" />
     <Content Include="Views\ProjMeeting\Create.cshtml" />
     <Content Include="Views\ProjMeeting\Details.cshtml" />
@@ -397,6 +395,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\ReqManage\Reg.cshtml" />
     <Content Include="Views\Home\Notify.cshtml" />
+    <Content Include="Views\Home\LoginPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

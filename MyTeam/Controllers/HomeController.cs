@@ -15,7 +15,7 @@ namespace MyTeam.Controllers
         {
             // 首页显示 未出池的需求，未入池的需求，未完成的项目，未完成的下发
             User user = this.GetSessionCurrentUser();
-            
+
             return View(GetHomeResult(user));
         }
 
@@ -50,13 +50,24 @@ namespace MyTeam.Controllers
 
         protected HomeResult GetHomeResult(User user = null, bool isNotify = false)
         {
-            bool isAdmin = true;
+            var isAdmin = true;
+
+            var uid = 0;
+
             if (user != null)
             {
                 isAdmin = user.IsAdmin;
+                // 2017年1月5日新增：外协根据BelongTo可以看到相应的内容
+                uid = user.UID;
+                if (user.UserType == (int)UserTypeEnums.外协)
+                {
+                    uid = user.BelongTo;
+                }
+
             }
 
             // 管理员可以查看所有，否则只能看到自己负责的系统或项目
+
 
             HomeResult hr = new HomeResult();
 
@@ -72,10 +83,10 @@ namespace MyTeam.Controllers
             }
             else
             {
-                hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", user.UID).ToList();
-                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", user.UID).ToList();
-                hr.ReqInpoolLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", user.UID).ToList();
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " and t.AcptDate <= DATEADD(day,-8,GETDATE()) and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", user.UID).ToList();
+                hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
+                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
+                hr.ReqInpoolLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
+                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " and t.AcptDate <= DATEADD(day,-8,GETDATE()) and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
 
             }
      
@@ -132,10 +143,10 @@ namespace MyTeam.Controllers
                 {
                     p = projs.Find(a => a.ProjID == plan.ProjID);
                 }
-                // 如果是非管理员登陆，显示自己的延期项目
+                // 如果是非管理员登录，显示自己的延期项目
                 else
                 {
-                    p = projs.Find(a => a.ProjID == plan.ProjID && a.ReqAnalysisID == user.UID);
+                    p = projs.Find(a => a.ProjID == plan.ProjID && a.ReqAnalysisID == uid);
                 }
 
                 // 如果筛选出项目在项目计划列表中，那么判断时间是否延期
@@ -201,7 +212,7 @@ namespace MyTeam.Controllers
 
             if (!isAdmin)
             {
-                sql += " and t.ReqAcptPerson = " + user.UID;
+                sql += " and t.ReqAcptPerson = " + uid;
             }
             hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeRlsDelay>(sql).ToList();
 
@@ -215,6 +226,22 @@ namespace MyTeam.Controllers
             }
 
             return hr;
+        }
+
+        /// <summary>
+        /// 右上角用户信息和登录退出分部视图
+        /// </summary>
+        /// <returns></returns>
+        public PartialViewResult LoginPartial()
+        {
+            if(Session == null || Session["Realname"] == null)
+            {
+                var user = this.GetSessionCurrentUser();
+                Session["Realname"] = user.Realname;
+                Session["IsAdmin"] = user.IsAdmin;
+            }
+
+            return PartialView();
         }
     }
 }

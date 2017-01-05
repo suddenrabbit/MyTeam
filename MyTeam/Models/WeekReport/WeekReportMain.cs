@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MyTeam.Utils;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace MyTeam.Models
 {
@@ -60,5 +63,20 @@ namespace MyTeam.Models
 
         [Display(Name = "不再跟踪")]
         public bool DoNotTrack { get; set; }
+
+        [NotMapped]
+        public string RptPersonName
+        {
+            get {
+                var s = (from a in Constants.UserList
+                         where a.UID == this.RptPersonID
+                         select a.Realname).FirstOrDefault();
+                return s == null ? "未知" : s.ToString();
+            }
+            set
+            {
+                this.RptPersonName = value;
+            }
+        }
     }
 }

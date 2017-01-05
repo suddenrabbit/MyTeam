@@ -1,5 +1,8 @@
-﻿using System;
+﻿using MyTeam.Utils;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace MyTeam.Models
 {
@@ -10,7 +13,7 @@ namespace MyTeam.Models
 
         [Required]
         [Display(Name = "周报日期")]
-        [StringLength(16, ErrorMessage = "不能超过16位")]
+        [StringLength(16, MinimumLength = 14,ErrorMessage = "请填入正确的周报日期")]
         public string RptDate { get; set; }
 
         [Display(Name = "工作内容")]
@@ -69,5 +72,21 @@ namespace MyTeam.Models
         [Display(Name = "任务名称")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string WorkName { get; set; }
+
+        [NotMapped]
+        public string RptPersonName
+        {
+            get
+            {
+                var s = (from a in Constants.UserList
+                         where a.UID == this.RptPersonID
+                         select a.Realname).FirstOrDefault();
+                return s == null ? "未知" : s.ToString();
+            }
+            set
+            {
+                this.RptPersonName = value;
+            }
+        }
     }
 }

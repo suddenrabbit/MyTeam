@@ -34,6 +34,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.UserType)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BelongTo)
+                </th>
             </tr>
             @foreach (var item in Model)
             {
@@ -55,6 +58,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.UserTypeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BelongToName)
                     </td>
                 </tr>
             }

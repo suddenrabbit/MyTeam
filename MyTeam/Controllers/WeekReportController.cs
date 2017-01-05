@@ -8,6 +8,7 @@ using MyTeam.Utils;
 using OfficeOpenXml;
 using System.IO;
 using PagedList;
+using MyTeam.Enums;
 
 namespace MyTeam.Controllers
 {
@@ -41,19 +42,21 @@ namespace MyTeam.Controllers
         // 填报:重点工作
         public ActionResult AddMain()
         {
+            User user = this.GetSessionCurrentUser();
+            if(user == null || user.UserType == (int)UserTypeEnums.系统用户)
+            {
+                return Content("登录信息失效或您在使用系统用户，不允许填写周报。请重新以普通用户身份登录！");
+            }
+
             // 工作类型下拉列表
             SelectList sl = MyTools.GetSelectList(Constants.WorkTypeList);
             ViewBag.WorkTypeList = sl;
 
+            // 填报人下拉列表
+            ViewBag.RptPersonIDList = new SelectList(GetStaffList(), "UID", "Realname");
 
-            // 默认加上当前的用户UID和姓名
-            User user = this.GetSessionCurrentUser();
-            if (user == null)
-            {
-                user = Constants.UserList.FirstOrDefault<User>(); // 若获取不到则去第一个
-            }
-
-            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID = user.UID, Person = user.Realname, WorkYear = DateTime.Now.Year.ToString() };
+            // 默认加上当前的用户UID和姓名          
+            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID=user.UID, Person = user.Realname, WorkYear = DateTime.Now.Year.ToString() };
             return View(main);
         }
 
@@ -90,6 +93,9 @@ namespace MyTeam.Controllers
             // 工作类型下拉列表
             SelectList sl = MyTools.GetSelectList(Constants.WorkTypeList, false, true, main.WorkType);
             ViewBag.WorkTypeList = sl;
+
+            // 填报人下拉列表
+            ViewBag.RptPersonIDList = new SelectList(GetStaffList(), "UID", "Realname", main.RptPersonID);
 
             return View(main);
         }
@@ -178,9 +184,12 @@ namespace MyTeam.Controllers
         // 添加每周工作
         public ActionResult AddDetail(int id = 0, bool isCopy = false)
         {
-            // 当前用户
             User user = this.GetSessionCurrentUser();
-           
+            if (user == null || user.UserType == (int)UserTypeEnums.系统用户)
+            {
+                return Content("登录信息失效或您在使用系统用户，不允许填写周报。请重新以普通用户身份登录！");
+            }
+
             // RptDate备选（取最近的5个）            
             List<string> ls = this.GetRptDateList();
             ls.Insert(0, DateTime.Now.Year + "年");
@@ -205,18 +214,20 @@ namespace MyTeam.Controllers
                 detail = new WeekReportDetail()
                 {
                     RptDate = DateTime.Now.Year + "年",
-                    Person = user.Realname,
                     RptPersonID = user.UID,
+                    Person = user.Realname,
                     Progress = 100,
                     IsWithMain = false
                 };
             }
 
-
             // 重点项目下拉
             var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack != true);
             SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
             ViewBag.WorkNameList = sl3;
+
+            // 填报人下拉列表
+            ViewBag.RptPersonIDList = new SelectList(GetStaffList(), "UID", "Realname");
 
             return View(detail);
         }
@@ -266,6 +277,9 @@ namespace MyTeam.Controllers
             var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack != true);
             SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
             ViewBag.WorkNameList = sl3;
+
+            // 填报人下拉列表
+            ViewBag.RptPersonIDList = new SelectList(GetStaffList(), "UID", "Realname", detail.RptPersonID);
 
             return View(detail);
         }
@@ -340,9 +354,12 @@ namespace MyTeam.Controllers
         // 填报:风险与待协调问题
         public ActionResult AddRisk()
         {
-            // 默认加上当前的用户UID和姓名
             User user = this.GetSessionCurrentUser();
-           
+            if (user == null || user.UserType == (int)UserTypeEnums.系统用户)
+            {
+                return Content("登录信息失效或您在使用系统用户，不允许填写周报。请重新以普通用户身份登录！");
+            }
+
             // RptDate备选（取最近的5个）
             List<string> ls = this.GetRptDateList();
             ls.Insert(0, DateTime.Now.Year + "年");
@@ -586,62 +603,43 @@ namespace MyTeam.Controllers
             }
 
             // 【4】本周工作
-            var thisWeekDetailList = (from a in dbContext.WeekReportDetails
-                                      where a.RptDate == thisWeek
-                                      orderby a.Person, a.OutSource
-                                      select a).ToList();
-
-            size = thisWeekDetailList.Count();
-            // 在cursor+1位置插入size-1行
-            sheet.InsertRow(cursor + 1, size - 1, cursor);
-
-            // 插入数据
-            foreach (var s in thisWeekDetailList)
-            {
-                string workName = "";
-                if (s.IsWithMain)
-                {
-                    WeekReportMain main = mainList.Find(a => a.WRMainID.ToString() == s.WorkName);
-                    if (main != null)
-                    {
-                        workName = main.WorkName;
-                    }
-                }
-                else
-                {
-                    workName = s.WorkName;
-                }
-
-                sheet.Cells[cursor, 1].Value = s.Priority;
-                sheet.Cells[cursor, 2].Value = s.WorkType;
-                sheet.Cells[cursor, 3].Value = workName;
-                sheet.Cells[cursor, 4].Value = s.WorkMission;
-                sheet.Cells[cursor, 5].Value = s.WorkTarget;
-                sheet.Cells[cursor, 6].Value = s.Person;
-                sheet.Cells[cursor, 7].Value = s.OutSource;
-                sheet.Cells[cursor, 8].Value = s.Progress + "%";
-                sheet.Cells[cursor, 9].Value = s.PlanDeadLine == null ? "" : s.PlanDeadLine.Value.ToString("yyyy/M/d");
-                sheet.Cells[cursor, 10].Value = s.Remark;
-
-                // 下移一行
-                cursor++;
-            }
+            this.makeWeekDetails(ref cursor, thisWeek, ref sheet, mainList);
 
             // 游标下移3行，因为有3个标题行
             cursor += 3;
 
             // 【4】下周计划
-            var nextWeekDetailList = (from a in dbContext.WeekReportDetails
-                                      where a.RptDate == nextWeek
-                                      orderby a.Person, a.OutSource
-                                      select a).ToList();
+            this.makeWeekDetails(ref cursor, nextWeek, ref sheet, mainList);
+        }
 
-            size = nextWeekDetailList.Count();
+        // 每周工作的通用方法
+        private void makeWeekDetails(ref int cursor, string week, ref ExcelWorksheet sheet, List<WeekReportMain> mainList)
+        {
+            var weekDetailListInit = from a in dbContext.WeekReportDetails
+                                      where a.RptDate == week                                     
+                                      select a;
+
+            var weekDetailList = new List<WeekReportDetail>();
+
+            // 按照填报人分组
+            foreach (var u in this.GetFormalUserList())
+            {
+                var uid = u.UID;
+                var outsources = GetUserList().Where(p => p.BelongTo == uid);
+                weekDetailList.AddRange(weekDetailListInit.Where(p => p.RptPersonID == uid));
+                foreach (User tempu in outsources)
+                {
+                    weekDetailList.AddRange(weekDetailListInit.Where(p => p.RptPersonID == tempu.UID));
+                }
+                
+            }
+
+            var size = weekDetailList.Count();
             // 在cursor+1位置插入size-1行
             sheet.InsertRow(cursor + 1, size - 1, cursor);
 
             // 插入数据
-            foreach (var s in nextWeekDetailList)
+            foreach (var s in weekDetailList)
             {
                 string workName = "";
                 if (s.IsWithMain)
@@ -670,7 +668,6 @@ namespace MyTeam.Controllers
 
                 // 下移一行
                 cursor++;
-
             }
         }
 

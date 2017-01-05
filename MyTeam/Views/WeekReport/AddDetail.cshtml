@@ -148,7 +148,12 @@
                 </div>
             </div>
 
-            @Html.HiddenFor(model => model.RptPersonID, new { @class = "form-control" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.RptPersonID, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.RptPersonID, ViewBag.RptPersonIDList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">

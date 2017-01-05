@@ -19,17 +19,17 @@ namespace MyTeam.Controllers
 
         public BaseController()
         {
-            dbContext = new MyTeamContext();
+            dbContext = new MyTeamContext();            
         }
        
-        protected void SetSessionCurrentUser(int UID)
+        /*protected void SetSessionCurrentUser(int UID)
         {
             Session["UID"] = UID;
-        }
+        }*/
 
         protected User GetSessionCurrentUser()
         {
-            if(Session["UID"] == null)
+            if(!User.Identity.IsAuthenticated || User.Identity.Name == "")
             {
                 return null;
             }
@@ -37,7 +37,7 @@ namespace MyTeam.Controllers
             User user = null;
             try
             {
-                user = this.GetUserList().Find(a => a.UID == (int)Session["UID"]);
+                user = this.GetUserList().Find(a => a.UID.ToString() == User.Identity.Name);
             }
             catch
             {
@@ -190,6 +190,15 @@ namespace MyTeam.Controllers
         protected List<User> GetFormalUserList()
         {
             return GetUserList().Where(p => p.UserType == (int)UserTypeEnums.行员).ToList();
+        }
+
+        /// <summary>
+        /// 获取行员+外协列表
+        /// </summary>
+        /// <returns></returns>
+        protected List<User> GetStaffList()
+        {
+            return GetUserList().Where(p => p.UserType == (int)UserTypeEnums.行员 || p.UserType == (int)UserTypeEnums.外协).ToList();
         }
     }
 }

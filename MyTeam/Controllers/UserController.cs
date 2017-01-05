@@ -11,15 +11,18 @@ namespace MyTeam.Controllers
     public class UserController : BaseController
     {
 
-        // 显示会员登陆页面
+        // 显示登录页面
         [AllowAnonymous]
         public ActionResult Login(string ReturnUrl)
-        {
+        {          
             ViewBag.ReturnUrl = ReturnUrl;
-            return View();
+
+            var userLogin = new UserLogin() { RememberMe = true };
+
+            return View(userLogin);
         }
 
-        // 会员登陆
+        // 登录
         [AllowAnonymous]
         [HttpPost]
         public ActionResult Login(UserLogin userLogin, string ReturnUrl)
@@ -30,21 +33,27 @@ namespace MyTeam.Controllers
             {
                 // Password要MD5加密
                 password = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "MD5");
-                // 检测登陆信息
+                // 检测登录信息
                 // 根据用户名、密码获取User信息
                 User user = this.GetUserList().Find(a => a.Username == username && a.Password == password);
                 if (user != null)
                 {
                     if(user.UserType == (int)UserTypeEnums.离职)
                     {
-                        throw new Exception("已经离职的员工不能登陆系统");
+                        throw new Exception("已经离职的员工不能登录系统");
                     }
                     // 先用Session记录UID
-                    this.SetSessionCurrentUser(user.UID);
+                    //this.SetSessionCurrentUser(user.UID);
+
+                    // 记录姓名，右上角显示
+                    Session["Realname"] = user.Realname;
+
                     // 控制部分菜单显示，session记录是否为管理员
                     Session["IsAdmin"] = user.IsAdmin;
-                    FormsAuthentication.RedirectFromLoginPage(user.Realname, false);
-                    // return RedirectToAction("Index", "Home");
+
+                    //FormsAuthentication.SetAuthCookie(username+"|"+password, true);
+
+                    FormsAuthentication.RedirectFromLoginPage(user.UID.ToString(), userLogin.RememberMe);
                 }
                 else
                 {
@@ -53,7 +62,7 @@ namespace MyTeam.Controllers
             }
             catch (Exception e1)
             {
-                ViewBag.ErrMsg = "登陆失败：" + e1.Message;
+                ViewBag.ErrMsg = "登录失败：" + e1.Message;
             }            
 
             return View();
@@ -114,6 +123,8 @@ namespace MyTeam.Controllers
         {
             // 根据UserTypeEnums生成下拉框
             ViewBag.UserTypeList = MyTools.GetSelectListByEnum(enumType: typeof(UserTypeEnums));
+            // 归属人员下拉
+            ViewBag.BelongToList = new SelectList(this.GetFormalUserList(), "UID", "Realname");
             return View();
         }
 
@@ -151,7 +162,7 @@ namespace MyTeam.Controllers
         {
             User user = this.GetSessionCurrentUser();
             
-            // 为避免直接访问/Edit或传入的id不正确，默认id为当前登陆用户
+            // 为避免直接访问/Edit或传入的id不正确，默认id为当前登录用户
             int uid;
             try
             {
@@ -179,6 +190,9 @@ namespace MyTeam.Controllers
 
             // 根据UserTypeEnums生成下拉框
             ViewBag.UserTypeList = MyTools.GetSelectListByEnum(enumType: typeof(UserTypeEnums), forEdit: true, toEditValue: user.UserType.ToString());
+
+            // 归属人员下拉
+            ViewBag.BelongToList = new SelectList(this.GetFormalUserList(), "UID", "Realname", user.BelongTo);
 
             return View(user);
         }

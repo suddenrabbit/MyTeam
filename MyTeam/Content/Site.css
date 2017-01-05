@@ -132,9 +132,9 @@ footer a, footer a:hover, footer a:active{
     padding-right:7px;
 }
 
-h1,h2,h3, .navbar-brand, .modal-title, .home-row > .col-md-2 > .card > p {
+/*h1,h2,h3, .navbar-brand, .modal-title, .home-row > .col-md-2 > .card > p {
     font-family:"Microsoft YaHei"!important;
-}
+}*/
 
 .navbar-default {
     background-color:#FFF;

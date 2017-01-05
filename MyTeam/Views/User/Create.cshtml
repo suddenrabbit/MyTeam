@@ -63,14 +63,14 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.UserType, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
-                    <!--
-                       <select class="form-control" name="UserType">
-                        <option value="0">系统用户</option>
-                        <option value="1" selected="selected">行员</option>
-                        <option value="2">外协</option>
-                        </select> 
-                    -->
-                    @Html.DropDownListFor(model => model.UserType, ViewBag.UserTypeList as SelectList, new { @class = "form-control" })
+                     @Html.DropDownListFor(model => model.UserType, ViewBag.UserTypeList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.BelongTo, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.BelongTo, ViewBag.BelongToList as SelectList, new { @class = "form-control" })
+                    <span class="text-info">（暂时只支持外协人员添加对口行员）</span>
                 </div>
             </div>
 

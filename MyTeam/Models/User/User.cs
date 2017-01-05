@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace MyTeam.Models
 {
@@ -38,7 +39,7 @@ namespace MyTeam.Models
         public bool IsAdmin { get; set; }
 
         [Display(Name = "用户类别")]
-        public int UserType { get; set; } //0-系统用户 1-行员 2-外协 3-离职
+        public int UserType { get; set; } //9-系统用户 1-行员 2-外协 3-离职 4-团队负责人
 
         [NotMapped]
         public string NamePhone { 
@@ -64,6 +65,26 @@ namespace MyTeam.Models
             { 
                 this.UserTypeName = value;
             } 
+        }
+
+        [Display(Name = "分管人")]
+        public int BelongTo { get; set; }
+
+        [NotMapped]
+        public string BelongToName
+        {
+            get
+            {
+                var r = (from a in Utils.Constants.UserList
+                         where a.UID == this.BelongTo
+                         select a.Realname).FirstOrDefault();
+
+                return r == null ? "未知" : r.ToString();
+            }
+            set
+            {
+                this.UserTypeName = value;
+            }
         }
 
     }
