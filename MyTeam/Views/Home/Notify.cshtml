@@ -13,8 +13,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>Notify</title>
 </head>
-<body>
-    <p>【超3个月未出池的需求】</p>
+<body style="font-size:10px;font-family:sans-serif">
+    <p style="font-weight:bold">【超3个月未出池的需求】</p>
     <table>
         @foreach (HomeReq r in Model.ReqDelayLS)
         {
@@ -30,7 +30,7 @@
         }
     </table>
 
-    <p>【超8天未入池的需求】</p>
+    <p style="font-weight:bold">【超8天未入池的需求】</p>
     <table>
         @foreach (HomeReq r in Model.ReqInpoolDelayLS)
         {
@@ -47,20 +47,19 @@
     </table>
 
 
-    <p>【延期项目】</p>
+    <p style="font-weight:bold">【延期项目】</p>
     @if (Model.ProjDetails.Count == 0)
     {
         <p>暂无</p>
     }
     else
     {
-        <table>
-            <tr><th>项目名称</th><th>延期阶段</th></tr>
+        <table>            
             @foreach (HomeProjDelay r in Model.ProjDetails)
             {
                 <tr>
                     <td>
-                        「@r.ProjName」：
+                        @r.ProjName：
                     </td>
                     <td>
                         @r.DelayDetail
@@ -72,7 +71,7 @@
 
     @if(Model.NoRlsNoLS.Count > 0)
     {
-        <p>【请补充以下系统版本的下发通知编号】</p>
+        <p style="font-weight:bold">【请补充以下系统版本的下发通知编号】</p>
         <table>
             @foreach (HomeNoRlsNo r in Model.NoRlsNoLS)
             {

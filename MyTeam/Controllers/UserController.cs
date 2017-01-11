@@ -17,9 +17,9 @@ namespace MyTeam.Controllers
         {          
             ViewBag.ReturnUrl = ReturnUrl;
 
-            var userLogin = new UserLogin() { RememberMe = true };
+            //var userLogin = new UserLogin() { RememberMe = true };
 
-            return View(userLogin);
+            return View();
         }
 
         // 登录
