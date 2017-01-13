@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using MyTeam.Models;
 using MyTeam.Enums;
+using MyTeam.Utils;
 
 namespace MyTeam.Controllers
 {
@@ -253,9 +254,38 @@ namespace MyTeam.Controllers
                 var user = this.GetSessionCurrentUser();
                 Session["Realname"] = user.Realname;
                 Session["IsAdmin"] = user.IsAdmin;
-            }
+            }           
 
             return PartialView();
+        }
+
+        /// <summary>
+        /// 获取主题
+        /// </summary>
+        /// <returns></returns>
+        public string GetTheme()
+        {
+            // 通过cookie判断主题
+            var theme = "navbar-inverse";
+            if (Request.Cookies["theme"] != null)
+            {
+                theme = "navbar-"+Request.Cookies["theme"].Value;
+            }
+
+            return theme;
+        }
+
+        /// <summary>
+        /// 记录主题
+        /// </summary>
+        /// <param name="theme"></param>
+        /// <returns></returns>
+        public string SetTheme(string theme)
+        {
+            Response.Cookies["theme"].Value = theme;
+            Response.Cookies["theme"].Expires = DateTime.MaxValue;
+
+            return Constants.AJAX_RESULT_SUCCESS;
         }
     }
 }

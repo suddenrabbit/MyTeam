@@ -18,14 +18,14 @@
     <link rel="shortcut icon" href="~/Content/favicon.ico" />
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar @Html.Action("GetTheme", "Home") navbar-fixed-top" id="navbar_div">
         <div class="container">
             <div class="navbar-header">
                 @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>*@
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>*@
                 <a class="navbar-brand" href="~/Home/Index" style="font-weight:bold">零售团队管理系统</a>
             </div>
             <div class="navbar-collapse collapse">
@@ -79,7 +79,7 @@
                             <li><a href="~/BusiReq">业务需求明细管理</a></li>
                         </ul>
                     </li>
-                   
+
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-target="#">
                             考核与考勤
@@ -91,7 +91,7 @@
                             <li><a href="~/AttendanceManage">外协人员考勤管理</a></li>
                         </ul>
                     </li>
-                    
+
                 </ul>
                 @Html.Action("LoginPartial", "Home")
             </div>
@@ -101,10 +101,15 @@
         <!--[if lt IE 10]> <p class='alert alert-danger text-center' style="margin:30px">本系统在旧版IE中可能会出现各种显示问题，建议使用Chrome或其他webkit内核浏览器！</p> <![endif]-->
         @RenderBody()
     </div>
-    <footer>
+    <footer class="container">
         <p class="text-center">
             &copy; 2015-@DateTime.Now.Year  兴业银行信息科技部需求中心零售团队<br />
-            <span style="font-size:0.8em;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span> | <a href="~/Home/About" title="版本更新记录">about</a></span>
+            <span style="font-size:0.8em;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span> | <a href="~/Home/About" title="版本更新记录" data-toggle="tooltip" data-placement="top">about</a> | 主题切换：</span> 
+       
+            <span style="font-size:1.2em;">
+                <a href="#" onclick="changeTheme('default')" title="切换主题（浅色）" style="color:#337ab7!important" data-toggle="tooltip" data-placement="top">□</a>
+                <a href="#" onclick="changeTheme('inverse')" title="切换主题（深色）" style="color:#337ab7!important;font-size:1.1em" data-toggle="tooltip" data-placement="top">■</a>
+            </span>
         </p>
     </footer>
     <!--2016年8月20日：下拉菜单无需点击-->
@@ -116,6 +121,28 @@
 
             $(this).dropdown("toggle");
         });
+    </script>
+
+    <script>
+        function changeTheme(theme) {
+            if (theme == "default") {
+                $("#navbar_div").removeClass("navbar-inverse").addClass("navbar-default");
+            } else {
+                $("#navbar_div").removeClass("navbar-default").addClass("navbar-inverse");
+            }
+            $.ajax({
+                type: 'GET',
+                url: '/Home/SetTheme?theme=' + theme,
+                success: function (msg) {
+                    //do nothing
+                },
+                error: function () {
+                    alert("未能记住主题，请联系管理员");
+                }
+
+            });
+        }
+
     </script>
 </body>
 </html>
