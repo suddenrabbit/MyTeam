@@ -118,7 +118,7 @@ if (pkName != null) {
         <td>
             @Html.ActionLink("编辑", "Edit", new { id=item.<#= pkName #> }) |
             @Html.ActionLink("详情", "Details", new { id=item.<#= pkName #> }) |
-			<a href="#" onclick="doDelete('@item.<#= pkName #>')">删除</a>
+			<a href="###" onclick="doDelete('@item.<#= pkName #>')">删除</a>
         </td>
 <#
 } else {
@@ -126,7 +126,7 @@ if (pkName != null) {
         <td>
             @Html.ActionLink("编辑", "Edit", new { /* id=item.PrimaryKey */ }) |
             @Html.ActionLink("详情", "Details", new { /* id=item.PrimaryKey */ }) |
-			<a href="#" onclick="doDelete('@item.PrimaryKey')">删除</a>
+			<a href="###" onclick="doDelete('@item.PrimaryKey')">删除</a>
         </td>
 <#
 }

@@ -107,20 +107,24 @@
             <span style="font-size:0.8em;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span> | <a href="~/Home/About" title="版本更新记录" data-toggle="tooltip" data-placement="top">about</a> | 主题切换：</span> 
        
             <span style="font-size:1.2em;">
-                <a href="#" onclick="changeTheme('default')" title="切换主题（浅色）" style="color:#337ab7!important" data-toggle="tooltip" data-placement="top">□</a>
-                <a href="#" onclick="changeTheme('inverse')" title="切换主题（深色）" style="color:#337ab7!important;font-size:1.1em" data-toggle="tooltip" data-placement="top">■</a>
+                <a href="###" onclick="changeTheme('default')" title="切换主题（浅色）" style="color:#337ab7!important" data-toggle="tooltip" data-placement="top">□</a>
+                <a href="###" onclick="changeTheme('inverse')" title="切换主题（深色）" style="color:#337ab7!important;font-size:1.1em" data-toggle="tooltip" data-placement="top">■</a>
             </span>
         </p>
     </footer>
     <!--2016年8月20日：下拉菜单无需点击-->
-    <script>
-        $('.dropdown-toggle').on("mouseover", function () {
-            if ($(this).parent().is(".open")) {
-                return
-            }
+    <!--2017年1月13日：增加tooltip效果-->
+    <script>      
+        $(function () {
+            $("[data-toggle='tooltip']").tooltip();
+            $('.dropdown-toggle').on("mouseover", function () {
+                if ($(this).parent().is(".open")) {
+                    return
+                }
 
-            $(this).dropdown("toggle");
-        });
+                $(this).dropdown("toggle");
+            });
+        }); 
     </script>
 
     <script>

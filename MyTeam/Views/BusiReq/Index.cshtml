@@ -94,7 +94,7 @@
                         <input type="submit" value="查询" class="btn btn-default" />
                         <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
                         @Html.ActionLink("批量导入", "Import", null, new { @class = "btn btn-default" })
-                        <a href="#" class="btn btn-primary" onclick="doExport()">导出需求变更跟踪表</a>
+                        <a href="###" class="btn btn-primary" onclick="doExport()">导出需求变更跟踪表</a>
                     </td>
                 </tr>
             </table>
@@ -142,8 +142,8 @@
                     {
                     <tr>
                         <td>
-                            <a href="#" onclick="doEdit('@item.BRID','@item.ProjName')">编辑</a>
-                            | <a href="#" onclick="doDelete('@item.BRID','@item.ProjName @item.BusiReqName')">删除</a>
+                            <a href="###" onclick="doEdit('@item.BRID','@item.ProjName')">编辑</a>
+                            | <a href="###" onclick="doDelete('@item.BRID','@item.ProjName @item.BusiReqName')">删除</a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ProjName)

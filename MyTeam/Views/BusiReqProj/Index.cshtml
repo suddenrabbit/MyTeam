@@ -93,9 +93,9 @@
         {
             <tr>
                 <td>
-                    <a href="#" onclick="doEdit('@item.BRProjID','@item.BRProjName')">编辑</a> |
+                    <a href="###" onclick="doEdit('@item.BRProjID','@item.BRProjName')">编辑</a> |
                     @Html.ActionLink("查看明细", "Details", new { id = item.BRProjID }) |
-                    <a href="#" onclick="doDelete('@item.BRProjID','@item.BRProjName')">删除</a>
+                    <a href="###" onclick="doDelete('@item.BRProjID','@item.BRProjName')">删除</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.BRProjName)
