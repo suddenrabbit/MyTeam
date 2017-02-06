@@ -11,10 +11,10 @@ namespace MyTeam.Models
         [Display(Name = "系统名称")]
         public string SysName { get; set; }
 
-        [Display(Name = "版本发布频率（月）")]
+        [Display(Name = "计划版本时间")]
         public int ReleaseFreq { get; set; }
 
-        [Display(Name = "发布时间（计划）")]
+        [Display(Name = "实际版本时间")]
         [DataType(DataType.Date)]
         public DateTime? PublishTime { get; set; }
 

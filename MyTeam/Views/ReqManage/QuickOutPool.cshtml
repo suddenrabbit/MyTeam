@@ -139,7 +139,8 @@
             url: '/ReqManage/QuickUpdateRlsNo',
             data: 'Reqs=' + reqs + "&RlsNo=" + rlsNo + "&SecondRlsNo=" + secondRlsNo,
             success: function (msg) {
-                $('#RlsNoResultDiv').html(msg);
+                $('#OutPoolResult').hide();
+                $('#RlsNoResultDiv').html(msg);                
             },
             error: function () {
                 alert("出错了，请联系管理员");

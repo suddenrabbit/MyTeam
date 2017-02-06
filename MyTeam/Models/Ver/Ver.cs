@@ -27,7 +27,7 @@ namespace MyTeam.Models
         public int ReleaseFreq { get; set; }
 
         [Required]
-        [Display(Name = "发布时间（计划）")]
+        [Display(Name = "计划版本日期")]
         [DataType(DataType.Date)]
         public DateTime? PublishTime { get; set; }
 
@@ -37,7 +37,7 @@ namespace MyTeam.Models
         public string VerNo { get; set; }
 
         
-        [Display(Name = "版本计划制定时间")]
+        [Display(Name = "实际版本日期")]
         [DataType(DataType.Date)]
         public DateTime? DraftTime { get; set; }
 

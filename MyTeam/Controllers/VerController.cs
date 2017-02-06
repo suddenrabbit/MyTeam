@@ -55,7 +55,7 @@ namespace MyTeam.Controllers
             }
 
             // 项目列表
-            List<RetailSystem> sysLs = dbContext.RetailSystems.ToList();
+            List<RetailSystem> sysLs = GetNormalSysList();
             sysLs.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
             ViewBag.sysList = new SelectList(sysLs, "SysID", "SysName");
 
@@ -69,7 +69,7 @@ namespace MyTeam.Controllers
         public ActionResult Create()
         {
 
-            List<RetailSystem> ls1 = this.GetSysList();
+            List<RetailSystem> ls1 = this.GetNormalSysList();
 
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
 
@@ -200,7 +200,7 @@ namespace MyTeam.Controllers
         {
             List<VerResult> rl = new List<VerResult>();
 
-            List<RetailSystem> rs = dbContext.RetailSystems.ToList();
+            List<RetailSystem> rs = GetNormalSysList();
             string sysNO = "";
 
             foreach (Ver s in list)
@@ -234,7 +234,7 @@ namespace MyTeam.Controllers
          */
         public ActionResult QuickVer()
         {
-            List<RetailSystem> ls1 = this.GetSysList();
+            List<RetailSystem> ls1 = GetNormalSysList();
 
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
 
