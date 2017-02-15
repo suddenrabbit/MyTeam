@@ -56,11 +56,13 @@ namespace MyTeam.Controllers
         /// <summary>
         /// 供定时任务调用的查询接口
         /// </summary>
+        /// <param name="id">NotesID</param>
         /// <returns></returns>
         [AllowAnonymous]
-        public ActionResult Notify()
-        {
-            return View(GetHomeResult(isNotify: true));
+        public ActionResult Notify(string id)
+        {            
+            User u = GetUserList().Find(p => p.Username == id);
+            return View(GetHomeResult(u, true));
         }
 
         protected HomeResult GetHomeResult(User user = null, bool isNotify = false)
@@ -172,7 +174,7 @@ namespace MyTeam.Controllers
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "需求大纲结束编写";
+                        projDelay.DelayDetail = "需求大纲编写结束";
                         delays.Add(projDelay);
                         continue;
                     }
@@ -180,7 +182,7 @@ namespace MyTeam.Controllers
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "业需开始评审";
+                        projDelay.DelayDetail = "业需评审开始";
                         delays.Add(projDelay);
                         continue;
                     }
@@ -188,7 +190,7 @@ namespace MyTeam.Controllers
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "业需结束评审";
+                        projDelay.DelayDetail = "业需评审结束";
                         delays.Add(projDelay);
                         continue;
                     }
