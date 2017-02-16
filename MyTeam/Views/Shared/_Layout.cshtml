@@ -16,16 +16,20 @@
     <script src="~/Scripts/select2.min.js"></script>
 
     <link rel="shortcut icon" href="~/Content/favicon.ico" />
+
+    <!--xp强制宋体-->
+    <script>        
+        var sUserAgent = navigator.userAgent;
+        if(sUserAgent.indexOf("Windows NT 5.1") > -1 || sUserAgent.indexOf("Windows XP") > -1) {
+            $("body").attr("style", "font-family:arial,simsun!important");
+        }        
+    </script>
+
 </head>
 <body>
     <div class="navbar @Html.Action("GetTheme", "Home") navbar-fixed-top" id="navbar_div">
         <div class="container">
             <div class="navbar-header">
-                @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>*@
                 <a class="navbar-brand" href="~/Home/Index" style="font-weight:bold">零售团队管理系统</a>
             </div>
             <div class="navbar-collapse collapse">

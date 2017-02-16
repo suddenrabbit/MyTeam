@@ -5,6 +5,8 @@ using System.Web.Mvc;
 using MyTeam.Models;
 using MyTeam.Enums;
 using MyTeam.Utils;
+using System.Web.Script.Serialization;
+using System.Text;
 
 namespace MyTeam.Controllers
 {
@@ -28,7 +30,7 @@ namespace MyTeam.Controllers
                 hr.NewsLog = l;
 
                 ViewBag.NewsID = un.NewsID;
-            }            
+            }
 
             return View(hr);
         }
@@ -54,15 +56,39 @@ namespace MyTeam.Controllers
         }
 
         /// <summary>
-        /// 供定时任务调用的查询接口
+        /// 接口：获取通知信息
         /// </summary>
         /// <param name="id">NotesID</param>
         /// <returns></returns>
         [AllowAnonymous]
         public ActionResult Notify(string id)
-        {            
+        {
             User u = GetUserList().Find(p => p.Username == id);
             return View(GetHomeResult(u, true));
+        }
+
+        /// <summary>
+        /// 接口：获取通知用户列表
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public string GetNotifyUsers(bool debug = false)
+        {
+            var userList = new List<string>();
+
+            if (!debug)
+            {
+                foreach (var u in GetFormalUserList())
+                {
+                    userList.Add(u.Username);                    
+                }
+
+                return string.Join(",", userList.ToArray());
+            }
+            else
+            {
+                return "014690";
+            }
         }
 
         protected HomeResult GetHomeResult(User user = null, bool isNotify = false)
@@ -256,7 +282,7 @@ namespace MyTeam.Controllers
                 var user = this.GetSessionCurrentUser();
                 Session["Realname"] = user.Realname;
                 Session["IsAdmin"] = user.IsAdmin;
-            }           
+            }
 
             return PartialView();
         }
@@ -271,7 +297,7 @@ namespace MyTeam.Controllers
             var theme = "navbar-inverse";
             if (Request.Cookies["theme"] != null)
             {
-                theme = "navbar-"+Request.Cookies["theme"].Value;
+                theme = "navbar-" + Request.Cookies["theme"].Value;
             }
 
             return theme;
@@ -290,4 +316,5 @@ namespace MyTeam.Controllers
             return Constants.AJAX_RESULT_SUCCESS;
         }
     }
+       
 }

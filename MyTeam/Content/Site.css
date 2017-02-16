@@ -60,9 +60,11 @@ textarea {
 .card {
     background-color: #FFF;
     margin-bottom: 20px;
-    padding: 20px;
+    padding: 20px;    
+    border-radius:4px;
     box-shadow: 2px 2px 5px #ddd;
 }
+
 
 footer {
     margin-top: 30px;

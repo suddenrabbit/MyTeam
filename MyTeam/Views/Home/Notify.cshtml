@@ -4,8 +4,6 @@
 @{
     Layout = null;
 }
-
-
 <!DOCTYPE html>
 
 <html>
@@ -14,39 +12,31 @@
     <title>Notify</title>
 </head>
 <body style="font-size:14px;font-family:sans-serif">
-    <p style="font-weight:bold">【超3个月未出池的需求】</p>
-    <table>
-        @foreach (HomeReq r in Model.ReqDelayLS)
-        {
-
-            <tr>
-                <td>
-                    @r.SysName
-                </td>
-                <td style="text-align:right; padding-left:20px;">
-                    @r.ReqNum
-                </td>
-            </tr>
-        }
-    </table>
-
+    <h3 style="font-weight:bold">/////本邮件根据各人负责的系统和项目筛选，只推送了与您相关的内容，敬请关注！/////</h3>
+    
     <p style="font-weight:bold">【超8天未入池的需求】</p>
-    <table>
-        @foreach (HomeReq r in Model.ReqInpoolDelayLS)
-        {
+    @if (Model.ReqInpoolDelayLS.Count == 0)
+    {
+        <p>暂无</p>
+    }
+    else
+    {
+        <table>
+            @foreach (HomeReq r in Model.ReqInpoolDelayLS)
+            {
 
-            <tr>
-                <td>
-                    @r.SysName
-                </td>
-                <td style="text-align:right; padding-left:20px;">
-                    @r.ReqNum
-                </td>
-            </tr>
-        }
-    </table>
-
-
+                <tr>
+                    <td>
+                        @r.SysName
+                    </td>
+                    <td style="text-align:right; padding-left:20px;">
+                        @r.ReqNum
+                    </td>
+                </tr>
+            }
+        </table>
+    }   
+    
     <p style="font-weight:bold">【延期项目】</p>
     @if (Model.ProjDetails.Count == 0)
     {
@@ -71,7 +61,7 @@
 
     @if(Model.NoRlsNoLS.Count > 0)
     {
-        <p style="font-weight:bold">【请补充以下系统版本的下发通知编号】</p>
+        <p style="font-weight:bold">/////为确保能够正确跟踪是否按时下发，请补充下发通知编号（本部分内容未根据个人单独筛选）/////</p>
         <table>
             @foreach (HomeNoRlsNo r in Model.NoRlsNoLS)
             {
@@ -80,7 +70,7 @@
                         @r.SysName
                     </td>
                     <td style="text-align:right; padding-left:20px;">
-                        @r.Version
+                        @r.Version 版本
                     </td>
                 </tr>
             }
