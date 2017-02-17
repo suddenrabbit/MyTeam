@@ -3,6 +3,15 @@
 @model MyTeam.Models.HomeResult
 @{
     Layout = null;
+
+    // 如果没有需要提醒的内容，则返回空白，邮件提醒发送程序则不会发送邮件
+    var reqInpoolDelayCount = Model.ReqInpoolDelayLS.Count;
+    var projDelayCount = Model.ProjDetails.Count;
+
+    if(reqInpoolDelayCount + projDelayCount == 0)
+    {
+        return;
+    }
 }
 <!DOCTYPE html>
 
@@ -13,14 +22,10 @@
 </head>
 <body style="font-size:14px;font-family:sans-serif">
     <h3 style="font-weight:bold">/////本邮件根据各人负责的系统和项目筛选，只推送了与您相关的内容，敬请关注！/////</h3>
-    
-    <p style="font-weight:bold">【超8天未入池的需求】</p>
-    @if (Model.ReqInpoolDelayLS.Count == 0)
-    {
-        <p>暂无</p>
-    }
-    else
-    {
+        
+    @if (reqInpoolDelayCount != 0)
+    {   
+        <p style="font-weight:bold">【超8天未入池的需求】</p>
         <table>
             @foreach (HomeReq r in Model.ReqInpoolDelayLS)
             {
@@ -36,14 +41,10 @@
             }
         </table>
     }   
-    
-    <p style="font-weight:bold">【延期项目】</p>
-    @if (Model.ProjDetails.Count == 0)
+        
+    @if (projDelayCount != 0)
     {
-        <p>暂无</p>
-    }
-    else
-    {
+        <p style="font-weight:bold">【延期项目】</p>
         <table>            
             @foreach (HomeProjDelay r in Model.ProjDetails)
             {
@@ -59,9 +60,9 @@
         </table>
     }
 
-    @if(Model.NoRlsNoLS.Count > 0)
+    @if(Model.NoRlsNoLS.Count != 0)
     {
-        <p style="font-weight:bold">/////为确保能够正确跟踪是否按时下发，请补充下发通知编号（本部分内容未根据个人单独筛选）/////</p>
+        <h3>/////为确保能够正确跟踪是否按时下发，请补充下发通知编号（本部分内容未根据个人单独筛选）/////</h3>
         <table>
             @foreach (HomeNoRlsNo r in Model.NoRlsNoLS)
             {
