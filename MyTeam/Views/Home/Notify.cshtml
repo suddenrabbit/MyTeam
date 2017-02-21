@@ -60,23 +60,5 @@
         </table>
     }
 
-    @if(Model.NoRlsNoLS.Count != 0)
-    {
-        <h3>/////为确保能够正确跟踪是否按时下发，请补充下发通知编号（本部分内容未根据个人单独筛选）/////</h3>
-        <table>
-            @foreach (HomeNoRlsNo r in Model.NoRlsNoLS)
-            {
-                <tr>
-                    <td>
-                        @r.SysName
-                    </td>
-                    <td style="text-align:right; padding-left:20px;">
-                        @r.Version 版本
-                    </td>
-                </tr>
-            }
-        </table>
-    }
-
 </body>
 </html>

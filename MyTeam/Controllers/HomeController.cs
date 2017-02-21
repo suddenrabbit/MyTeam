@@ -257,16 +257,7 @@ namespace MyTeam.Controllers
             {
                 sql += " and t.ReqAcptPerson = " + uid;
             }
-            hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeRlsDelay>(sql).ToList();
-
-            /////////////////////////////////////////////////////////////////////
-
-            // notify中增加忘记填写下发通知编号的提醒
-            if (isNotify)
-            {
-                sql = "select distinct t.SysId, t.Version from Reqs t where t.RlsNo is null and t.ReqStat=" + (int)ReqStatEnums.出池;
-                hr.NoRlsNoLS = dbContext.Database.SqlQuery<HomeNoRlsNo>(sql).ToList();
-            }
+            hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeRlsDelay>(sql).ToList();         
 
             return hr;
         }
@@ -314,6 +305,30 @@ namespace MyTeam.Controllers
             Response.Cookies["theme"].Expires = DateTime.MaxValue;
 
             return Constants.AJAX_RESULT_SUCCESS;
+        }
+
+        /// <summary>
+        /// 自留接口：查询一些信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string Check(int id)
+        {
+            switch (id)
+            {
+                case 1: // 查询忘了补充下发编号的数据
+                    var sql = "select distinct t.SysId, t.Version from Reqs t where t.RlsNo is null and t.ReqStat=" + (int)ReqStatEnums.出池;
+                    var ls = dbContext.Database.SqlQuery<HomeNoRlsNo>(sql).ToList();
+                    StringBuilder sb = new StringBuilder();
+                    foreach(var r in ls)
+                    {
+                        sb.Append(r.SysName + "  " + r.Version + "<br />");
+                    }
+
+                    return sb.ToString();
+                default:
+                    return "input the right id...";
+            }          
         }
     }
        
