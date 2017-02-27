@@ -56,6 +56,8 @@
         public DbSet<UpgradeLog> UpgradeLogs { get; set; }
 
         public DbSet<UserNews> UserNews { get; set; }
+
+        public DbSet<Param> Params { get; set; }
     }
    
 }

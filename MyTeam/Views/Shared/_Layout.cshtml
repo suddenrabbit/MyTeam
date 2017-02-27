@@ -27,7 +27,7 @@
 
 </head>
 <body>
-    <div class="navbar @Html.Action("GetTheme", "Home") navbar-fixed-top" id="navbar_div">
+    <div class="navbar navbar-inverse navbar-fixed-top" id="navbar_div">
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="~/Home/Index" style="font-weight:bold">零售团队管理系统</a>
@@ -108,12 +108,13 @@
     <footer class="container">
         <p class="text-center">
             &copy; 2015-@DateTime.Now.Year  兴业银行信息科技部需求中心零售团队<br />
-            <span style="font-size:0.8em;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span> | <a href="~/Home/About" title="版本更新记录" data-toggle="tooltip" data-placement="top">about</a> | 主题切换：</span> 
-       
+            <span style="font-size:0.8em;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span> | <a href="~/Home/About" title="版本更新记录" data-toggle="tooltip" data-placement="top">about</a></span> 
+            <!--
             <span style="font-size:1.2em;">
                 <a href="###" onclick="changeTheme('default')" title="切换主题（浅色）" style="color:#337ab7!important" data-toggle="tooltip" data-placement="top">□</a>
                 <a href="###" onclick="changeTheme('inverse')" title="切换主题（深色）" style="color:#337ab7!important;font-size:1.1em" data-toggle="tooltip" data-placement="top">■</a>
             </span>
+            --> 
         </p>
     </footer>
     <!--2016年8月20日：下拉菜单无需点击-->

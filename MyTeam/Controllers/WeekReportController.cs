@@ -34,8 +34,8 @@ namespace MyTeam.Controllers
                 }
                 ls = ls.Where(a => a.Person.Contains(user.Realname) || a.OutSource.Contains(user.Realname));
             }
-            // 按照『进度』升序、『计划完成日期』降序
-            ls = ls.OrderBy(a => a.Progress).OrderByDescending(a => a.PlanDeadLine);
+            // 按照『计划完成日期』降序
+            ls = ls.OrderByDescending(a => a.PlanDeadLine);
             return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }
 
@@ -48,9 +48,8 @@ namespace MyTeam.Controllers
                 return Content("登录信息失效或您在使用系统用户，不允许填写周报。请重新以普通用户身份登录！");
             }
 
-            // 工作类型下拉列表
-            SelectList sl = MyTools.GetSelectList(Constants.WorkTypeList);
-            ViewBag.WorkTypeList = sl;
+            // 工作类型下拉列表            
+            ViewBag.WorkTypeList = new SelectList(GetWorkTypeList(), "ParamValue", "ParamName");
 
             // 填报人下拉列表
             ViewBag.RptPersonIDList = new SelectList(GetStaffList(), "UID", "Realname");
@@ -91,8 +90,7 @@ namespace MyTeam.Controllers
             }
 
             // 工作类型下拉列表
-            SelectList sl = MyTools.GetSelectList(Constants.WorkTypeList, false, true, main.WorkType);
-            ViewBag.WorkTypeList = sl;
+            ViewBag.WorkTypeList = new SelectList(GetWorkTypeList(), "ParamValue", "ParamName", main.WorkType);
 
             // 填报人下拉列表
             ViewBag.RptPersonIDList = new SelectList(GetStaffList(), "UID", "Realname", main.RptPersonID);
@@ -199,8 +197,7 @@ namespace MyTeam.Controllers
 
 
             // 工作类型下拉列表
-            SelectList sl2 = MyTools.GetSelectList(Constants.WorkTypeList);
-            ViewBag.WorkTypeList = sl2;
+            ViewBag.WorkTypeList = new SelectList(GetWorkTypeList(), "ParamValue", "ParamName");
 
             WeekReportDetail detail = null;
 
@@ -264,8 +261,7 @@ namespace MyTeam.Controllers
             }
 
             // 工作类型下拉列表
-            SelectList sl = MyTools.GetSelectList(Constants.WorkTypeList, false, true, detail.WorkType);
-            ViewBag.WorkTypeList = sl;
+            ViewBag.WorkTypeList = new SelectList(GetWorkTypeList(), "ParamValue", "ParamName", detail.WorkType);
 
             // RptDate备选（取最近的5个）
             List<string> ls = this.GetRptDateList();
@@ -529,13 +525,18 @@ namespace MyTeam.Controllers
             // 游标下移3行，因为有1个空行2个标题行
             cursor += 3;
 
-            // 【2】重点工作（取所有不为100%的、以及WorkYear是本年的）
-            var mainList = (from a in dbContext.WeekReportMains
-                            where a.DoNotTrack != true
-                            orderby a.Person, a.OutSource
-                            select a).ToList();
+            // 【2】重点工作（取所有「不跟踪」为FALSE的）
+            // 2017年2月27日 新增：按照计划完成日期远近排序，已完成和未完成的分别排序
+            var mainListFull = from a in dbContext.WeekReportMains
+                               where a.DoNotTrack != true
+                               orderby a.PlanDeadLine
+                               select a;
+            var inProgressList = mainListFull.Where(p => p.Progress < 100).ToList();
+            var completeList = mainListFull.Where(p => p.Progress == 100).ToList();
 
-            size = mainList.Count();
+            var mainList = inProgressList.Concat(completeList).ToList();
+
+            size = mainList.Count;
             num = 1;
             // 在cursor+1位置插入size-1行
             sheet.InsertRow(cursor + 1, size - 1, cursor);
@@ -545,7 +546,7 @@ namespace MyTeam.Controllers
             {
                 // 第一列是序号
                 sheet.Cells[cursor, 1].Value = num;
-                sheet.Cells[cursor, 2].Value = s.WorkType;
+                sheet.Cells[cursor, 2].Value = s.WorkTypeName;
                 sheet.Cells[cursor, 3].Value = s.WorkName;
                 sheet.Cells[cursor, 4].Value = s.WorkMission;
                 sheet.Cells[cursor, 5].Value = s.WorkStage;
@@ -656,7 +657,7 @@ namespace MyTeam.Controllers
                 }
 
                 sheet.Cells[cursor, 1].Value = s.Priority;
-                sheet.Cells[cursor, 2].Value = s.WorkType;
+                sheet.Cells[cursor, 2].Value = s.WorkTypeName;
                 sheet.Cells[cursor, 3].Value = workName;
                 sheet.Cells[cursor, 4].Value = s.WorkMission;
                 sheet.Cells[cursor, 5].Value = s.WorkTarget;

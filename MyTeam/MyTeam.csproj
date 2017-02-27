@@ -185,6 +185,7 @@
     <Compile Include="Models\BusiReq\BusiReqProj.cs" />
     <Compile Include="Models\Home\HomeResult.cs" />
     <Compile Include="Models\Home\UpgradeLog.cs" />
+    <Compile Include="Models\Param\Param.cs" />
     <Compile Include="Models\Proj\ProjPlanQuery.cs" />
     <Compile Include="Models\Proj\ProjPlan.cs" />
     <Compile Include="Models\Proj\ProjSurvQuery.cs" />
@@ -270,10 +271,6 @@
     <Content Include="Content\templates\ReqTrackImportT.xlsx" />
     <Content Include="Content\templates\ProjPlanImportT.xlsx" />
     <Content Include="Content\templates\AttendanceReportT.xlsx" />
-    <Content Include="fonts\Roboto-Bold.ttf" />
-    <Content Include="fonts\Roboto-Regular.ttf" />
-    <Content Include="fonts\lato-bold.ttf" />
-    <Content Include="fonts\lato-regular.ttf" />
     <None Include="Properties\PublishProfiles\MZ.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

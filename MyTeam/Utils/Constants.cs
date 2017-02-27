@@ -90,6 +90,9 @@ namespace MyTeam.Utils
         /// </summary>
         public const int PAGE_SIZE = 20;
 
+        /// <summary>
+        /// 业需文档需求来源和状态
+        /// </summary>
         public static List<string> BusiReqStat = new List<string>() { "一期原始需求", "二期原始需求", "三期原始需求", "新增维护需求", "需求已作废", "文档更新增补" };
 
         /// <summary>
@@ -110,12 +113,21 @@ namespace MyTeam.Utils
         /// <summary>
         /// 工作类型下拉列表
         /// </summary>
-        public static List<string> WorkTypeList = new List<string>() { "创新项目", "科技引领", "专项工作", "解决方案", "维护需求", "创新研究", "培训学习", "规模度量", "制度建设", "原型工具应用", "人力资源管理", "物料资源管理", "信息资源管理", "单位内务", "其他", "流程银行" };
+        //public static List<string> WorkTypeList = new List<string>() { "创新项目", "科技引领", "专项工作", "解决方案", "维护需求", "创新研究", "培训学习", "规模度量", "制度建设", "原型工具应用", "人力资源管理", "物料资源管理", "信息资源管理", "单位内务", "其他", "流程银行" };
 
         /// <summary>
         /// 项目状态下拉列表
         /// </summary>
         public static List<string> ProjStatList = new List<string>() { "进行中", "完成", "暂停", "取消" };
+
+        /// <summary>
+        /// 内存中的参数表
+        /// </summary>
+        public static List<Param> ParamList;
+
+        public const string PARAM_TYPE_REQ_FROM_DEPT = "REQ_FROM_DEPT";
+
+        public const string PARAM_TYPE_WORK_TYPE = "WORK_TYPE";
 
     }
 }

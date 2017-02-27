@@ -55,27 +55,32 @@ namespace MyTeam.Controllers
         /// <summary>
         /// 更新内存
         /// </summary>
-        /// <param name="type">0-全部 1-用户 2-系统 3-项目</param>
+        /// <param name="type">0-全部 1-用户 2-系统 3-项目 4-参数</param>
         protected void Update(int type = 0)
         {
             switch (type)
             {
                 case 1:
-                    Constants.UserList = dbContext.Users.ToList<User>();
+                    Constants.UserList = dbContext.Users.ToList();
                     break;
                 case 2:
-                    Constants.SysList = dbContext.RetailSystems.ToList<RetailSystem>();
+                    Constants.SysList = dbContext.RetailSystems.ToList();
                     break;
                 case 3:
-                    Constants.ProjList = dbContext.Projs.ToList<Proj>();
+                    Constants.ProjList = dbContext.Projs.ToList();
+                    break;
+                case 4:
+                    Constants.ParamList = dbContext.Params.ToList();
                     break;
                 default:
-                    Constants.UserList = dbContext.Users.ToList<User>();
-                    Constants.SysList = dbContext.RetailSystems.ToList<RetailSystem>();
-                    Constants.ProjList = dbContext.Projs.ToList<Proj>();
+                    Constants.UserList = dbContext.Users.ToList();
+                    Constants.SysList = dbContext.RetailSystems.ToList();
+                    Constants.ProjList = dbContext.Projs.ToList();
+                    Constants.ParamList = dbContext.Params.ToList();
                     break;
             }
         }
+
         /// <summary>
         /// 获取内存中的用户列表
         /// </summary>
@@ -101,6 +106,7 @@ namespace MyTeam.Controllers
             }
             return new List<RetailSystem>(Constants.SysList.ToArray());
         }
+
         /// <summary>
         /// 获取内存中的项目列表
         /// </summary>
@@ -199,6 +205,39 @@ namespace MyTeam.Controllers
         protected List<User> GetStaffList()
         {
             return GetUserList().Where(p => p.UserType == (int)UserTypeEnums.行员 || p.UserType == (int)UserTypeEnums.外协).ToList();
+        }
+
+        /// 2017.2.27新增：获取参数列表
+
+        /// <summary>
+        /// 获取内存中的参数列表
+        /// </summary>
+        /// <returns></returns>
+        protected List<Param> GetParamList()
+        {
+            if (Constants.ParamList == null)
+            {
+                Constants.ParamList = dbContext.Params.ToList();
+            }
+            return new List<Param>(Constants.ParamList.ToArray());
+        }
+
+        /// <summary>
+        /// 获取需求发起部门参数列表
+        /// </summary>
+        /// <returns></returns>
+        protected List<Param> GetReqFromDeptList()
+        {            
+            return GetParamList().Where(p => p.ParamType == Constants.PARAM_TYPE_REQ_FROM_DEPT).ToList();
+        }
+
+        /// <summary>
+        /// 获取周报工作类型参数列表
+        /// </summary>
+        /// <returns></returns>
+        protected List<Param> GetWorkTypeList()
+        {
+            return GetParamList().Where(p => p.ParamType == Constants.PARAM_TYPE_WORK_TYPE).ToList();
         }
     }
 }

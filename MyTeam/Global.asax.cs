@@ -24,13 +24,15 @@ namespace MyTeam
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             //BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            // 系统启动时，将用户、系统列表、项目列表加载到内存中
+            // 系统启动时，将用户、系统列表、项目、参数列表加载到内存中
             
             using (var dbContext = new MyTeamContext())
             {
-                Constants.UserList = dbContext.Users.ToList<User>();
-                Constants.SysList = dbContext.RetailSystems.ToList<RetailSystem>();
-                Constants.ProjList = dbContext.Projs.ToList<Proj>();
+                Constants.UserList = dbContext.Users.ToList();
+                Constants.SysList = dbContext.RetailSystems.ToList();
+                Constants.ProjList = dbContext.Projs.ToList();
+
+                Constants.ParamList = dbContext.Params.ToList();
             }
             
         }

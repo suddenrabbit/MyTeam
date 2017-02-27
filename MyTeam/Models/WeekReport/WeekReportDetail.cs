@@ -88,5 +88,21 @@ namespace MyTeam.Models
                 this.RptPersonName = value;
             }
         }
+
+        [NotMapped]
+        public string WorkTypeName
+        {
+            get
+            {
+                var s = (from a in Constants.ParamList
+                         where a.ParamValue == this.WorkType && a.ParamType == Constants.PARAM_TYPE_WORK_TYPE
+                         select a.ParamName).FirstOrDefault();
+                return s == null ? "未知" : s.ToString();
+            }
+            set
+            {
+                this.WorkTypeName = value;
+            }
+        }
     }
 }

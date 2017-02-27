@@ -278,6 +278,9 @@ namespace MyTeam.Controllers
             return PartialView();
         }
 
+        /* 
+         * 2017年2月27日：去除主题相关功能
+         * 
         /// <summary>
         /// 获取主题
         /// </summary>
@@ -306,6 +309,7 @@ namespace MyTeam.Controllers
 
             return Constants.AJAX_RESULT_SUCCESS;
         }
+        */
 
         /// <summary>
         /// 自留接口：查询一些信息
