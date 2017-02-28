@@ -493,37 +493,38 @@ namespace MyTeam.Controllers
             // 游标：标记目前需要操作的行号
             int cursor = 4; //从第4行开始操作
 
+            // 2017.2.28：删除年度重点任务
             // 【1】重点任务 
-            var yearMissionList = dbContext.YearMissions.Where(p => p.DoNotTrack != true).ToList();
+            //var yearMissionList = dbContext.YearMissions.Where(p => p.DoNotTrack != true).ToList();
 
-            int size = yearMissionList.Count();
-            int num = 1;
-            // 在cursor+1位置插入size-1行
-            sheet.InsertRow(cursor + 1, size - 1, cursor);
+            //int size = yearMissionList.Count();
+            //int num = 1;
+            //// 在cursor+1位置插入size-1行
+            //sheet.InsertRow(cursor + 1, size - 1, cursor);
 
-            // 插入数据
-            foreach (var s in yearMissionList)
-            {
-                // 第一列是序号
-                sheet.Cells[cursor, 1].Value = num;
-                sheet.Cells[cursor, 2].Value = s.MissionDate;
-                sheet.Cells[cursor, 3].Value = s.MissionSource;
-                sheet.Cells[cursor, 4].Value = s.WorkMission;
-                sheet.Cells[cursor, 5].Value = s.WorkStage;
-                sheet.Cells[cursor, 6].Value = s.Person;
-                sheet.Cells[cursor, 7].Value = s.OutSource;
-                sheet.Cells[cursor, 8].Value = s.Progress;
-                sheet.Cells[cursor, 9].Value = s.PlanDeadLine;
-                sheet.Cells[cursor, 10].Value = s.Remark;
+            //// 插入数据
+            //foreach (var s in yearMissionList)
+            //{
+            //    // 第一列是序号
+            //    sheet.Cells[cursor, 1].Value = num;
+            //    sheet.Cells[cursor, 2].Value = s.MissionDate;
+            //    sheet.Cells[cursor, 3].Value = s.MissionSource;
+            //    sheet.Cells[cursor, 4].Value = s.WorkMission;
+            //    sheet.Cells[cursor, 5].Value = s.WorkStage;
+            //    sheet.Cells[cursor, 6].Value = s.Person;
+            //    sheet.Cells[cursor, 7].Value = s.OutSource;
+            //    sheet.Cells[cursor, 8].Value = s.Progress;
+            //    sheet.Cells[cursor, 9].Value = s.PlanDeadLine;
+            //    sheet.Cells[cursor, 10].Value = s.Remark;
 
-                // 下移一行
-                cursor++;
+            //    // 下移一行
+            //    cursor++;
 
-                num++;
-            }
+            //    num++;
+            //}
 
-            // 游标下移3行，因为有1个空行2个标题行
-            cursor += 3;
+            //// 游标下移3行，因为有1个空行2个标题行
+            //cursor += 3;
 
             // 【2】重点工作（取所有「不跟踪」为FALSE的）
             // 2017年2月27日 新增：按照计划完成日期远近排序，已完成和未完成的分别排序
@@ -536,8 +537,8 @@ namespace MyTeam.Controllers
 
             var mainList = inProgressList.Concat(completeList).ToList();
 
-            size = mainList.Count;
-            num = 1;
+            var size = mainList.Count;
+            var num = 1;
             // 在cursor+1位置插入size-1行
             sheet.InsertRow(cursor + 1, size - 1, cursor);
 
