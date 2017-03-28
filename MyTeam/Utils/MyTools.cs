@@ -80,5 +80,24 @@ namespace MyTeam.Utils
 
             return sl;
         }
+
+        /// <summary>
+        /// 通过简单枚举生成下拉列表
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        public static SelectList GetSelectListBySimpleEnum(Type enumType)
+        {
+            List<SelectListItem> ls = new List<SelectListItem>();
+            foreach (var e in Enum.GetValues(enumType))
+            {
+                ls.Add(new SelectListItem { Value = e.ToString(), Text = e.ToString() });
+
+            }
+              
+            SelectList sl = new SelectList(ls, "Value", "Text");           
+
+            return sl;
+        }
     }
 }

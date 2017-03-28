@@ -55,7 +55,7 @@ namespace MyTeam.Controllers
             ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
 
             // 3、需求发起单位 
-            ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
+            ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
 
             // 4、需求数量
             List<int> reqAmtLs = new List<int>();
@@ -519,7 +519,7 @@ namespace MyTeam.Controllers
             ViewBag.UserList = sl2;
 
             // 3、需求发起单位 
-            ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
+            ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
 
             // 4、需求类型下拉列表
             //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);
@@ -612,7 +612,7 @@ namespace MyTeam.Controllers
             ViewBag.UserList = sl2;
 
             // 4、需求发起单位 
-            ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList, false, true, req.ReqFromDept);
+            ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
 
             // 5、需求类型下拉列表
             //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);

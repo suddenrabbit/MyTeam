@@ -45,10 +45,15 @@
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.HostDept, new { @class = "col-md-4 control-label" })
-                    <div class="col-md-8">
-                        <!--主办部门下拉选择-->
-                        @Html.DropDownListFor(model => model.HostDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control" })
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.HostDept, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.HostDept, "", new { @class = "text-danger" })
+                        <span class="text-info">（请优先在右侧下拉框选择）</span>
                     </div>
+                    <div class="col-md-3">
+                        @Html.DropDownList("HostDeptList", ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control", @onchange = "changeHostDept()" })
+                    </div>
+                    <div class="col-md-1"></div>
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.ProjLevel, new { @class = "col-md-4 control-label" })
@@ -378,4 +383,8 @@
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script>
     $('#ProjType').val('@Model.ProjType');
+
+    function changeHostDept() {
+        $('#HostDept').val($('#HostDeptList').val());
+    }
 </script>

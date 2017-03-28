@@ -106,7 +106,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqAnalysisList = sl2;
 
             // 主办部门
-            ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
+            ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(Enums.ReqFromDeptEnums));
 
             // 项目状态
             ViewBag.ProjStatList = MyTools.GetSelectList(Constants.ProjStatList);
@@ -172,7 +172,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqAnalysisList = sl2;
 
             // 主办部门
-            ViewBag.ReqFromDeptList = MyTools.GetSelectList(Constants.ReqFromDeptList);
+            ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(Enums.ReqFromDeptEnums));
 
             // 项目状态
             ViewBag.ProjStatList = MyTools.GetSelectList(Constants.ProjStatList);

@@ -29,4 +29,9 @@ namespace MyTeam.Enums
         办结 = 7,
         取消 = 8
     }
+
+    public enum ReqFromDeptEnums
+    {
+        零售风险管理部, 零售业务管理部, 零售资产负债部, 银行卡与渠道部, 私人银行部, 信息科技部, 网络金融部, 运营管理部, 计划财务部, 审计部, 企业金融总部
+    }
 }

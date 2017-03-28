@@ -68,9 +68,15 @@
 			<!--需求发起单位下拉选择-->
             <div class="form-group">
                 @Html.LabelFor(model => model.ReqFromDept, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.ReqFromDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(model => model.ReqFromDept, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqFromDept, "", new { @class = "text-danger" })
+                    <span class="text-info">（请优先在右侧下拉框选择）</span>
                 </div>
+                <div class="col-md-3">
+                    @Html.DropDownList("ReqFromDeptList", ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control", @onchange = "changeReqFromDept()" })
+                </div>
+                <div class="col-md-1"></div>
             </div>
 
             <div class="form-group">
@@ -159,7 +165,8 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.ReqType, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    <input type="text" value="@Model.ReqTypeName" disabled="disabled" class="form-control"/>（需求类型将根据需求编号自动生成）
+                    <input type="text" value="@Model.ReqTypeName" disabled="disabled" class="form-control"/>
+                    <span class="text-info">（需求类型将根据需求编号自动生成）</span>
                 </div>
             </div>
 
@@ -317,5 +324,9 @@
                 return;
             }
         }
+    }
+
+    function changeReqFromDept() {
+        $('#ReqFromDept').val($('#ReqFromDeptList').val());
     }
 </script>
