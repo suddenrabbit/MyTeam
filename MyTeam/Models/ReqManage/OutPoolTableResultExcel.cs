@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyTeam.Models
 {
-    public class OutPoolResultExcel
+    public class OutPoolTableResultExcel
     {
         [Display(Name = "受理月份")]
         public string AcptMonth { get; set; }

@@ -16,13 +16,40 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-2 control-label" })
-
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
+            <label class="col-md-2 control-label">选择未入池的需求申请编号</label>
+            <div class="col-md-5">
+                <!--系统下拉选择-->
+                @Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqNos()" })
+                <br />
+                <select id="ReqNo" name="ReqNo" class="form-control" onchange="getReqReason()">
+                    <option value="">--请选择系统--</option>
+                </select>   
+            </div>
+            <div class="col-md-5">
+                <div id="ReqReasonDiv"></div>
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NewReqNo, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.NewReqNo, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.NewReqNo, "", new { @class = "text-danger" })
+                <span class="text-info">（留空不更新）</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NewAcptDate, new { @class = "col-md-2 control-label" })
+
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NewAcptDate, "DateTime")
+                @Html.ValidationMessageFor(model => model.NewAcptDate, "", new { @class = "text-danger" })
+                <span class="text-info">（留空不更新）</span>
+            </div>
+        </div>
+
             <div class="form-group">
                 @Html.LabelFor(model => model.ReqDevPerson, new { @class = "col-md-2 control-label" })
 
@@ -73,4 +100,42 @@
 
         return true;
     }
+
+    // 获取需求申请编号
+    function getReqNos() {
+        var sysID = $('#SysID').val();
+        $.ajax({
+            type: 'GET',
+            url: '/ReqManage/GetReqNosToInPool?sysID=' + sysID,
+            success: function (msg) {
+                $('#ReqNo').html(msg);
+                getReqReason();
+            },
+            error: function () {
+                alert("出错了，请联系管理员");
+            }
+
+        });
+    }
+
+    // 获取需求申请事由供参考
+    function getReqReason() {
+        var reqNo = $('#ReqNo').val();
+        if (reqNo == "") {
+            $('#ReqReasonDiv').html("");
+            return;
+        }
+        $.ajax({
+            type: 'GET',
+            url: '/ReqManage/GetReqReasonByReqNo?reqNo=' + reqNo,
+            success: function (msg) {
+                $('#ReqReasonDiv').html("<div class='well well- sm'><b>需求申请事由：</b>" + msg + "<div>");
+            },
+            error: function () {
+                alert("出错了，请联系管理员");
+            }
+
+        });
+    }
+
 </script>

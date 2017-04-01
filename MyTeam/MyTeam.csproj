@@ -203,9 +203,9 @@
     <Compile Include="Models\Proj\ReqTrack.cs" />
     <Compile Include="Models\ReqManage\InPoolReq.cs" />
     <Compile Include="Models\ReqManage\RegReq.cs" />
-    <Compile Include="Models\ReqManage\OutPoolQuery.cs" />
-    <Compile Include="Models\ReqManage\OutPoolResultExcel.cs" />
-    <Compile Include="Models\ReqManage\OutPoolResult.cs" />
+    <Compile Include="Models\ReqManage\OutPoolTableQuery.cs" />
+    <Compile Include="Models\ReqManage\OutPoolTableResultExcel.cs" />
+    <Compile Include="Models\ReqManage\OutPoolTableResult.cs" />
     <Compile Include="Enums\ReqEnums.cs" />
     <Compile Include="Models\ReqManage\ReqExcel.cs" />
     <Compile Include="Models\ReqManage\ReqQuery.cs" />
@@ -346,7 +346,7 @@
     <Content Include="Views\WeekReport\EditDetail.cshtml" />
     <Content Include="Views\Proj\Edit.cshtml" />
     <Content Include="Views\Proj\Details.cshtml" />
-    <Content Include="Views\ReqManage\OutPool.cshtml" />
+    <Content Include="Views\ReqManage\OutPoolTable.cshtml" />
     <Content Include="Views\ProjMeeting\Create.cshtml" />
     <Content Include="Views\ProjMeeting\Details.cshtml" />
     <Content Include="Views\ProjMeeting\Edit.cshtml" />
@@ -392,7 +392,7 @@
     <Content Include="Views\AttendanceManage\Create.cshtml" />
     <Content Include="Views\AttendanceManage\Edit.cshtml" />
     <Content Include="Views\AttendanceManage\Index.cshtml" />
-    <Content Include="Views\ReqManage\QuickOutPool.cshtml" />
+    <Content Include="Views\ReqManage\OutPool.cshtml" />
     <Content Include="Views\ReqManage\UpdateRlsDate.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\ReqManage\Reg.cshtml" />

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using PagedList;
+using System.Collections;
 
 namespace MyTeam.Controllers
 {
@@ -67,7 +68,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqAmtList = new SelectList(reqAmtLs);
 
             // 5、需求受理日期自动置为今天
-            regReq.AcptDate = DateTime.Now;
+            // regReq.AcptDate = DateTime.Now; //del:现在默认先不填受理日期了
 
             // 6、预先生成detail部分
             regReq.DetailRegReqs = new List<DetailRegReq>();
@@ -144,6 +145,13 @@ namespace MyTeam.Controllers
 
         public ActionResult InPool()
         {
+            // 提供系统列表
+            List<RetailSystem> ls1 = this.GetNormalSysList();
+            // 加上“请选择系统”
+            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "--请选择系统--" });
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
+            ViewBag.SysList = sl1;
+
             return View();
         }
 
@@ -161,8 +169,20 @@ namespace MyTeam.Controllers
                 req.DevAcptDate = inPoolReq.DevAcptDate;
                 req.DevEvalDate = inPoolReq.DevEvalDate;
                 req.ReqDevPerson = inPoolReq.ReqDevPerson;
+
+                // 判断是否更新需求申请编号与受理日期
+                if(!string.IsNullOrEmpty(inPoolReq.NewReqNo))
+                {
+                    req.ReqNo = inPoolReq.NewReqNo;
+                }
+
+                if (inPoolReq.NewAcptDate != null)
+                {
+                    req.AcptDate = inPoolReq.NewAcptDate;
+                }
+
                 reqList.Add(req);
-            }
+            }                     
 
             return View(reqList);
         }
@@ -207,8 +227,9 @@ namespace MyTeam.Controllers
                     req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
 
                     // 直接执行sql更新
-                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7, UpdateTime=@p8, ReqType=@p9 where RID=@p10";
-                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo, req.BusiReqNo, req.DevWorkload, (int)ReqStatEnums.入池, req.ReqDesc, req.UpdateTime, req.ReqType, req.RID);
+                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7, UpdateTime=@p8, ReqType=@p9, ReqNo=@p10, AcptDate=@p11 where RID=@p12";
+                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo, req.BusiReqNo, req.DevWorkload, (int)ReqStatEnums.入池, req.ReqDesc, req.UpdateTime, req.ReqType, req.ReqNo, req.AcptDate, req.RID);
+
                 }
 
                 if (fail == "")
@@ -695,7 +716,7 @@ namespace MyTeam.Controllers
         /*
          * 7、出池计划查询与导出
          */
-        public ActionResult OutPool(OutPoolQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
+        public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
         {
             if (isQuery)
             {
@@ -719,14 +740,14 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.MaintainYear);
                 }
 
-                // 将查询结果转换为OutPoolResult和OutPoolResultExcel（避免多出来的short字段影响）
-                List<OutPoolResult> resultList = new List<OutPoolResult>();
-                List<OutPoolResultExcel> resultExcelList = new List<OutPoolResultExcel>();
+                // 将查询结果转换为OutPoolTableResult和OutPoolTableResultExcel（避免多出来的short字段影响）
+                List<OutPoolTableResult> resultList = new List<OutPoolTableResult>();
+                List<OutPoolTableResultExcel> resultExcelList = new List<OutPoolTableResultExcel>();
                 foreach (Req req in ls)
                 {
-                    OutPoolResult res = new OutPoolResult()
+                    OutPoolTableResult res = new OutPoolTableResult()
                     {
-                        AcptMonth = req.AcptDate.Value.ToString("yyyy/M"),
+                        AcptMonth = req.AcptDate == null ? "" : req.AcptDate.Value.ToString("yyyy/M"),
                         SysName = req.SysName,
                         Version = req.Version,
                         ReqNo = req.ReqNo,
@@ -743,9 +764,9 @@ namespace MyTeam.Controllers
                     };
                     resultList.Add(res);
 
-                    OutPoolResultExcel resExcel = new OutPoolResultExcel()
+                    OutPoolTableResultExcel resExcel = new OutPoolTableResultExcel()
                     {
-                        AcptMonth = req.AcptDate.Value.ToString("yyyy/M"),
+                        AcptMonth = req.AcptDate == null ? "" : req.AcptDate.Value.ToString("yyyy/M"),
                         SysName = req.SysName,
                         Version = req.Version,
                         ReqNo = req.ReqNo,
@@ -773,7 +794,7 @@ namespace MyTeam.Controllers
                         targetFileName += "_" + query.Version;
                     if (!string.IsNullOrEmpty(query.MaintainYear))
                         targetFileName += "_" + query.MaintainYear;
-                    return this.MakeExcel<OutPoolResultExcel>("OutPoolReportT", targetFileName, resultExcelList);
+                    return this.MakeExcel<OutPoolTableResultExcel>("OutPoolReportT", targetFileName, resultExcelList);
                 }
                 else
                 {
@@ -783,7 +804,7 @@ namespace MyTeam.Controllers
             }
             else
             {
-                query = new OutPoolQuery();
+                query = new OutPoolTableQuery();
             }
 
             // 系统列表下拉
@@ -926,11 +947,11 @@ namespace MyTeam.Controllers
          * 出池与下发功能改进
          * */
 
-        public ActionResult QuickOutPool()
+        public ActionResult OutPool()
         {
             if (this.GetSessionCurrentUser() == null)
             {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage/QuickOutPool" });
+                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage/OutPool" });
             }
 
             // 提供系统列表
@@ -944,7 +965,7 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public string QuickOutPool(string Reqs, string Version, string OutDate, string PlanRlsDate, int SysID, bool IsPatch)
+        public string OutPool(string Reqs, string Version, string OutDate, string PlanRlsDate, int SysID, bool IsPatch)
         {
             // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理
             string realVersion = Version;
@@ -985,7 +1006,7 @@ namespace MyTeam.Controllers
                 int r = dbContext.Database.ExecuteSqlCommand(sql);
 
                 // 下载出池计划文档接口
-                string downfile = string.Format("/ReqManage/OutPool?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
+                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
 
                 return string.Format("<p class='alert alert-success'>" + r + "条需求成功出池！<a href='{0}'>点击</a>导出出池计划文档<p>", downfile);
             }
@@ -996,7 +1017,7 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public string QuickUpdateRlsNo(string Reqs, string RlsNo, string SecondRlsNo)
+        public string UpdateRlsNo(string Reqs, string RlsNo, string SecondRlsNo)
         {
             // 保证副下发为NULL
             if (!string.IsNullOrEmpty(SecondRlsNo))
@@ -1126,5 +1147,62 @@ namespace MyTeam.Controllers
                 return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
             }
         }
+
+        // 2017年4月1日 新增
+        /// <summary>
+        /// Ajax接口，根据SysID获取可以入池的需求申请编号列表
+        /// </summary>
+        /// <param name="sysID"></param>
+        /// <returns></returns>
+        public string GetReqNosToInPool(int sysID)
+        {
+            if (sysID == 0)
+            {
+                return "<option value=''>--请选择系统--</option>";
+            }
+
+
+            List<string> list = dbContext.Reqs.Where(p => p.SysID == sysID && p.ReqStat == (int)ReqStatEnums.待评估).Select(p => p.ReqNo).Distinct().ToList();
+
+            int size = list.Count;
+
+            if (size == 0)
+            {
+                return "<option value=''>--无待入池需求--</option>";
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var r in list)
+            {
+                sb.Append(string.Format("<option value='{0}'>{1}</option>", r, r));
+            }                      
+
+            return sb.ToString();
+
+        }
+        /// <summary>
+        /// Ajax接口，根据ReqNo获取申请事由
+        /// </summary>
+        /// <param name="reqNo"></param>
+        /// <returns></returns>
+        public string GetReqReasonByReqNo(string reqNo)
+        {
+            if (string.IsNullOrEmpty(reqNo))
+            {
+                return "未找到相关信息";
+            }
+
+            var req = dbContext.Reqs.Where(p => p.ReqNo == reqNo).FirstOrDefault();
+
+            if(req == null)
+            {
+                return "未找到相关信息";
+            }
+
+            return req.ReqReason;
+
+        }
+
     }
 }

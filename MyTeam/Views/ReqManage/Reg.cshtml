@@ -27,6 +27,7 @@
                 <td>
                     @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
+                    <input type="checkbox" onclick="noReqNo()" />暂无（将以当前时间戳代替）
                 </td>
                 <td>@Html.LabelFor(model => model.ReqReason, new { @class = "control-label" })</td>
 
@@ -166,6 +167,11 @@
             $('#ReqDesc' + j).removeAttr("required").removeAttr("name");
             $('#Remark' + j).removeAttr("name");
         }
+    }
+
+    // 没有申请编号时，以当前时间戳代替
+    function noReqNo() {
+        $('#ReqNo').val('@DateTime.Now.ToString("yyyyMMddHHmmss")')
     }
 
 </script>

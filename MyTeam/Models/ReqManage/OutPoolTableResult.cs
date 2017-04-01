@@ -1,6 +1,6 @@
 ﻿namespace MyTeam.Models
 {
-    public class OutPoolResult : OutPoolResultExcel
+    public class OutPoolTableResult : OutPoolTableResultExcel
     {
         // Excel里不能有short字段，其他保持一致，故继承子类   
 

@@ -1,173 +1,249 @@
-﻿@using PagedList
-@using PagedList.Mvc
-@model MyTeam.Models.OutPoolQuery
-@{
-    ViewBag.Title = "出池计划报表";
+﻿@{
+    ViewBag.Title = "需求出池";
 }
+
 <h2>@ViewBag.Title</h2>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#MaintainYear").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy' })", placeholder: "点击选择日期" });
-    });
+    function getReqs() {
+        var sysID = $('#SysID').val();
+        $.ajax({
+            type: 'GET',
+            url: '/ReqManage/GetReqsToOutPool?sysID=' + sysID,
+            success: function (msg) {
+                $('#ReqsDiv').html(msg);
+            },
+            error: function () {
+                alert("出错了，请联系管理员");
+            }
 
-    // 导出excel
-    function doExport() {
-        $('#isExcel').val(true);
-        $('#myForm').submit();
-        $('#isExcel').val(false);
+        });
     }
+    // 2016年8月10日新增：同时更新版本号下拉框
+    function getVers() {
+        var sysID = $('#SysID').val();
+        $.ajax({
+            type: 'GET',
+            url: '/ReqManage/GetVersToOutPool?sysID=' + sysID,
+            success: function (msg) {
+                $('#Ver1').html(msg);
+            },
+            error: function () {
+                alert("出错了，请联系管理员");
+            }
+
+        });
+    }
+
+    function quickOutPool() {
+        var sysID = $('#SysID').val();
+        var reqs = $('#Reqs').val();       
+        var outDate = $('#OutDate').val();
+        var planRlsDate = $('#PlanRlsDate').val();
+        var isPatch = $('#isPatch').prop('checked');
+
+        var version;
+        if (isPatch) {
+            version = $('#Ver2').val();
+        } else {
+            version = $('#Ver1').val();
+        }
+
+        if (sysID == 0) {
+            alert("请选择系统！");
+            return;
+        }
+        if (reqs == null || reqs.length < 1) {
+            alert("请选择要出池的需求！");
+            return;
+        }
+        if (version.length < 1) {
+            alert("版本号不能为空！");
+            $('#Version').focus();
+            return;
+        }
+        if (outDate.length < 1) {
+            alert("出池日期不能为空！");
+            $('#OutDate').focus();
+            return;
+        }
+        if (planRlsDate.length < 1) {
+            alert("计划下发日期不能为空！");
+            $('#PlanRlsDate').focus();
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/ReqManage/OutPool',
+            data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanRlsDate=" + planRlsDate + "&SysID=" + sysID + "&IsPatch=" + isPatch,
+            success: function (msg) {
+                $('#OutPoolResult').html(msg);
+                $('#RlsNoDiv').show();
+            },
+            error: function () {
+                alert("出错了，请联系管理员");
+                $('#RlsNoDiv').hide();
+            }
+
+        });
+
+    }
+
+    function updateRlsNo() {
+        var reqs = $('#Reqs').val();
+        var rlsNo = $('#RlsNo').val();
+        var secondRlsNo = $('#SecondRlsNo').val();
+
+        if (reqs == null || reqs.length < 1) {
+            alert("请选择要出池的需求！");
+            return;
+        }
+
+        // 下发通知编号格式控制
+        var rname = /[\u4E00-\u9FA5]/;
+        if (rlsNo.length > 0) {
+            if (rname.test(rlsNo)) {
+                alert("下发通知编号不能含有汉字");
+                $("#RlsNo").focus();
+                return;
+            }
+
+            if (rlsNo.length != 12) {
+                alert("下发通知编号必须是12位");
+                $("#RlsNo").focus();
+                return;
+            }
+        }
+
+        // 副下发通知编号格式控制
+        if (secondRlsNo.length > 0) {
+            if (rname.test(secondRlsNo)) {
+                alert("副下发通知编号不能含有汉字");
+                $("#SecondRlsNo").focus();
+                return;
+            }
+            if (secondRlsNo.length != 12) {
+                alert("下发通知编号必须是12位");
+                $("#SecondRlsNo").focus();
+                return;
+            }
+            if (rlsNo.length == 0) {
+                alert("不能只填副下发编号");
+                $("#RlsNo").focus();
+                return;
+            }
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/ReqManage/UpdateRlsNo',
+            data: 'Reqs=' + reqs + "&RlsNo=" + rlsNo + "&SecondRlsNo=" + secondRlsNo,
+            success: function (msg) {
+                $('#OutPoolResult').hide();
+                $('#RlsNoResultDiv').html(msg);                
+            },
+            error: function () {
+                alert("出错了，请联系管理员");
+            }
+
+        });
+    }
+
+    // 2016年8月10日新增：勾选补丁版本则变成输入框
+    function changeVerType() {
+        var d1 = $('#Ver1');
+        var d2 = $('#Ver2');
+        
+        if ($('#isPatch').prop('checked')) {
+            d1.hide();
+            d2.show();            
+        } else {
+            d1.show();
+            d2.hide();            
+        }
+    }
+
 </script>
 <div class="row card">
-    <div class="col-md-10">
-        @using (Html.BeginForm("OutPool", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                            new { @class = "form-horizontal", role = "form", id = "myForm" }))
-        {
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="col-md-10 form-horizontal">
+        <div class="form-group">
+            <label class="col-md-2 control-label">选择需求</label>
+            <div class="col-md-5">
+                <!--系统下拉选择-->
+                @Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqs();getVers()" })
+            </div>
+            <div class="col-md-5">
+                <div id="ReqsDiv">
+                    <select id="Reqs" name="Reqs" multiple="multiple" class="form-control" size="1">
+                        <option>--请选择系统--</option>
+                    </select>
+                </div>
 
-            <input type="hidden" name="isQuery" value="True" />
-            <input type="hidden" id="isExcel" name="isExcel" value="False" />
+                <span class="text-info">（按住Ctrl键多选）</span>
+            </div>
+        </div>
+
+        <!-- 版本号部分：选择系统后默认提供今年的版本号下拉框，如勾选「补丁版本」则变成输入框-->
+        <div class="form-group">
+            <label for="Version" class="col-md-2 control-label">版本号</label>
+            <div class="col-md-10">
+                <select id="Ver1" class="form-control">
+                    <option>--请选择系统--</option>
+                </select>
+                <input id="Ver2" type="text" class="form-control" style="display:none" />
+
+                <div style="margin-top:10px;margin-bottom:10px"><input type="checkbox" id="isPatch" onclick="changeVerType()"/>&nbsp;补丁版本</div>
+
+            </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.SysID, new { @class = "col-md-2 control-label" })
+                <label for="OutDate" class="col-md-2 control-label">出池日期</label>
                 <div class="col-md-10">
-                    <!--系统下拉选择-->
-                    @Html.DropDownListFor(model => model.SysID, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                    <input id="OutDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                 </div>
             </div>
             <div class="form-group">
-                @Html.LabelFor(model => model.Version, new { @class = "col-md-2 control-label" })
+                <label for="PlanRlsDate" class="col-md-2 control-label">计划下发日期</label>
                 <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
-                    <div class="text-info">（查询多个版本请用英文半角逗号隔开，留空表示查询所有版本）</div>
+                    <input id="PlanRlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                 </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.MaintainYear, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.MaintainYear)
-                    <div class="text-info">（留空表示不作为查询条件）</div>
-                </div>
-            </div>
+
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="查询" class="btn btn-default" />
-                    <input type="button" value="导出Excel" class="btn btn-primary" onclick="doExport()" />
+                    <input type="button" value="出池" class="btn btn-primary" onclick="quickOutPool()" />
                 </div>
             </div>
 
-        }
+            <div id="OutPoolResult"></div>
+
+
+            <!--默认隐藏：出池成功后显示，用以更新下发通知编号-->
+            <div id="RlsNoDiv" style="display:none">
+                <div class="form-group">
+                    <label for="RlsNo" class="col-md-2 control-label">主下发通知编号</label>
+                    <div class="col-md-10">
+                        <input id="RlsNo" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="SecondRlsNo" class="col-md-2 control-label">副下发通知编号</label>
+                    <div class="col-md-10">
+                        <input id="SecondRlsNo" type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateRlsNo()" />
+                    </div>
+                </div>
+
+                <div id="RlsNoResultDiv"></div>
+            </div>
+        </div>
     </div>
 </div>
-@if (Model.ResultList != null)
-{
-    <h3>查询结果</h3>
-    <div class="row card">
-        @if (Model.ResultList.Count < 1)
-        {
-            <p class="alert alert-warning">没有符合条件的结果！</p>
-        }
-        else
-        {
-            <table class="table table-condensed table-bordered" style="font-size:0.8em">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].AcptMonth)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].SysName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].Version)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                    </th>
-                </tr>
-                @foreach (var item in Model.ResultList)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AcptMonth)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SysName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Version)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqDetailNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ShortReqReason)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ShortReqDesc)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DevWorkload)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqDevPerson)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ReqType)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PlanRlsDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RlsDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Remark)
-                        </td>
-                    </tr>
-                }
-            </table>
-            var data = Model.ResultList as PagedList.IPagedList<MyTeam.Models.OutPoolResult>;
-            @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("OutPool", new { pageNum = Page }) + Model.ToQueryString())
-        }
-    </div>
-}
 
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $("#SysID").select2();
+    $("#RlsNo").val('YFZX'+'@DateTime.Now.Year');
+</script>

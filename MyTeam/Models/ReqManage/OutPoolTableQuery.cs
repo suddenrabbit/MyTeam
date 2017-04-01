@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyTeam.Models
 {
-    public class OutPoolQuery
+    public class OutPoolTableQuery
     {
         [Display(Name = "系统名称")]
         public int SysID { get; set; }
@@ -15,7 +15,7 @@ namespace MyTeam.Models
         [Display(Name = "维护年度")]
         public string MaintainYear { get; set; }
 
-        public IPagedList<OutPoolResult> ResultList { get; set; }
+        public IPagedList<OutPoolTableResult> ResultList { get; set; }
 
         public string ToQueryString()
         {
