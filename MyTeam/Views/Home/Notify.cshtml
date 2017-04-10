@@ -8,24 +8,16 @@
     var reqInpoolDelayCount = Model.ReqInpoolDelayLS.Count;
     var projDelayCount = Model.ProjDetails.Count;
 
-    if(reqInpoolDelayCount + projDelayCount == 0)
+    if (reqInpoolDelayCount + projDelayCount == 0)
     {
         return;
     }
 }
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Notify</title>
-</head>
-<body style="font-size:14px;font-family:sans-serif">
-    <h3 style="font-weight:bold">/////本邮件根据各人负责的系统和项目筛选，只推送了与您相关的内容，敬请关注！/////</h3>
-        
-    @if (reqInpoolDelayCount != 0)
-    {   
-        <p style="font-weight:bold">【超8天未入池的需求】</p>
+
+@if (reqInpoolDelayCount != 0)
+{
+    <p style="font-weight:bold">【超8天未入池的需求】</p>
         <table>
             @foreach (HomeReq r in Model.ReqInpoolDelayLS)
             {
@@ -40,12 +32,12 @@
                 </tr>
             }
         </table>
-    }   
-        
-    @if (projDelayCount != 0)
-    {
-        <p style="font-weight:bold">【延期项目】</p>
-        <table>            
+}
+
+@if (projDelayCount != 0 && DateTime.Now.DayOfWeek == DayOfWeek.Monday) //只有周一才提醒
+{
+    <p style="font-weight:bold">【延期项目】</p>
+        <table>
             @foreach (HomeProjDelay r in Model.ProjDetails)
             {
                 <tr>
@@ -58,7 +50,5 @@
                 </tr>
             }
         </table>
-    }
+}
 
-</body>
-</html>
