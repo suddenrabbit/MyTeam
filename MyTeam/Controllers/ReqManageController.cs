@@ -848,13 +848,13 @@ namespace MyTeam.Controllers
 
             foreach (string s in reqArr)
             {
-                if (s.Length == 15)
+                if (s.Length == 24) // 目前看维护需求编号长度固定，申请编号不固定
                 {
-                    reqNos.Append(string.Format("'{0}',", s));
+                    reqDetailNos.Append(string.Format("'{0}',", s));
                 }
                 else
                 {
-                    reqDetailNos.Append(string.Format("'{0}',", s));
+                    reqNos.Append(string.Format("'{0}',", s));
                 }
 
             }
