@@ -61,7 +61,7 @@ namespace MyTeam.Models
         public DateTime? DevEvalDate { get; set; }
 
         [Display(Name = "研发评估工作量")]
-        public int? DevWorkload { get; set; }
+        public double? DevWorkload { get; set; }
 
         [Display(Name = "需求状态")]
         public string ReqStat { get; set; }

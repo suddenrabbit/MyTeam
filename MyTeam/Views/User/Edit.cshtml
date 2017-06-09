@@ -53,7 +53,7 @@
                 </div>
 
                 <!--只有管理员可以控制用户是否为管理员、用户类型-->
-                if (Model.IsAdmin)
+                if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
                 {
                     <div class="form-group">
                         @Html.LabelFor(model => model.IsAdmin, new { @class = "col-md-2 control-label" })

@@ -27,7 +27,7 @@ namespace MyTeam.Models
         public string ReqDesc { get; set; }
 
         [Display(Name = "研发评估工作量（人天）")]
-        public int? DevWorkload { get; set; }
+        public double? DevWorkload { get; set; }
 
         [Display(Name = "研发联系人/联系电话")]
         public string ReqDevPerson { get; set; }
