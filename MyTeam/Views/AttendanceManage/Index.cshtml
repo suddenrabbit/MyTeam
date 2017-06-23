@@ -68,25 +68,39 @@
             }
         });
     }
+
+    // 查看合计
+    function doSumUp() {
+        var url = "/AttendanceManage/SumUp/";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#SumUpMain').html(msg);
+            },
+            error: function () {
+                $('#SumUpMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal5').modal({ backdrop: 'static' });
+            }
+        });
+    }
 </script>
 
 <div class="row card">
     <p>
-        @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
+        @if (ViewBag.CanEdit)
         {
-     <!--只有管理员可以添加-->
-
             <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加记录" />
         }
         <a href="/AttendanceManage/Export" class="btn btn-default">导出Excel</a>
+        <input type="button" onclick="doSumUp()" class="btn btn-success" value="查看今年请假统计" />
     </p>
 
     <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed">
         <tr>
-            @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
-            {
-                <th></th>
-            }
+            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.LeaveDate)
             </th>
@@ -100,18 +114,19 @@
         @foreach (var item in Model)
         {
             <tr>
-
-                @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
-                {
-                    <td>
-                        <!--只有管理员可以编辑删除-->
+                <td>
+                    @if (ViewBag.CanEdit)
+                    {
                         <span>
                             <a href="###" onclick="doEdit('@item.AID','@item.PersonName')">编辑</a>
                             | <a href="###" onclick="doDelete('@item.AID','@item.PersonName 在 @item.LeaveDate.ToShortDateString() 的请假记录')">删除</a>
                         </span>
-                    </td>
-                }
-
+                    }
+                    else
+                    {
+                        <span class="text-info">(您无权限编辑)</span>
+                    }
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.LeaveDate)
                 </td>
@@ -216,6 +231,26 @@
             </div>
             <div class="modal-body">
                 <div id="CreateMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 对话框5：请假统计 -->
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    @DateTime.Now.Year 年度请假统计
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="SumUpMain"></div>
             </div>
         </div>
     </div>

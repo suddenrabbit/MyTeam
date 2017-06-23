@@ -1,0 +1,173 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model MyTeam.Models.OutPoolTableQuery
+@{
+    ViewBag.Title = "出池计划报表";
+}
+<h2>@ViewBag.Title</h2>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    // 日期控件
+    $(document).ready(function () {
+        $("#MaintainYear").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy' })", placeholder: "点击选择日期" });
+    });
+
+    // 导出excel
+    function doExport() {
+        $('#isExcel').val(true);
+        $('#myForm').submit();
+        $('#isExcel').val(false);
+    }
+</script>
+<div class="row card">
+    <div class="col-md-10">
+        @using (Html.BeginForm("OutPoolTable", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                            new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <input type="hidden" name="isQuery" value="True" />
+            <input type="hidden" id="isExcel" name="isExcel" value="False" />
+            <div class="form-group">
+                @Html.LabelFor(model => model.SysID, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    <!--系统下拉选择-->
+                    @Html.DropDownListFor(model => model.SysID, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Version, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
+                    <div class="text-info">（查询多个版本请用英文半角逗号隔开，留空表示查询所有版本）</div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.MaintainYear, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.MaintainYear)
+                    <div class="text-info">（留空表示不作为查询条件）</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="查询" class="btn btn-default" />
+                    <input type="button" value="导出Excel" class="btn btn-primary" onclick="doExport()" />
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+@if (Model.ResultList != null)
+{
+    <h3>查询结果</h3>
+    <div class="row card">
+        @if (Model.ResultList.Count < 1)
+        {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].AcptMonth)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].SysName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].Version)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].DevWorkload)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDevPerson)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqBusiTestPerson)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqType)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].PlanRlsDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].RlsDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                    </th>
+                </tr>
+                @foreach (var item in Model.ResultList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AcptMonth)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SysName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Version)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqDetailNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShortReqReason)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShortReqDesc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DevWorkload)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqDevPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqBusiTestPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PlanRlsDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RlsDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remark)
+                        </td>
+                    </tr>
+                }
+            </table>
+            var data = Model.ResultList as PagedList.IPagedList<MyTeam.Models.OutPoolTableResult>;
+            @Html.PagedListPager(list: data, generatePageUrl: Page => Url.Action("OutPoolTable", new { pageNum = Page }) + Model.ToQueryString())
+        }
+    </div>
+}
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

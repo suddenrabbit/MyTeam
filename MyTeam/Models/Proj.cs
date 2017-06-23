@@ -30,7 +30,7 @@ namespace MyTeam.Models
         public String ProjLevel { get; set; }
 
         [Display(Name = "需求分析师")]
-        public int? ReqAnalysisID { get; set; }
+        public int ReqAnalysisID { get; set; }
 
         [Display(Name = "业务人员")]
         public String BusiPerson { get; set; }
@@ -174,11 +174,7 @@ namespace MyTeam.Models
         {
             get
             {
-                var r = (from a in Constants.UserList
-                         where a.UID == this.ReqAnalysisID
-                         select a.Realname).FirstOrDefault();
-
-                return r == null ? "未知" : r.ToString();
+                return Utils.MyTools.GetUserName(ReqAnalysisID);
             }
             set { this.ReqAnalysisName = value; }
         }

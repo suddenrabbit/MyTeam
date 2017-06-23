@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MyTeam.Utils;
 
 namespace MyTeam.Models
 {
@@ -29,10 +27,7 @@ namespace MyTeam.Models
         {
             get
             {
-                var s = (from a in Constants.UserList
-                         where a.UID == this.PersonID
-                         select a.Realname).FirstOrDefault();
-                return s == null ? "未知" : s.ToString();
+                return Utils.MyTools.GetUserName(PersonID);
             }
             set
             {

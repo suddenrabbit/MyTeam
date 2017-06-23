@@ -65,10 +65,7 @@ namespace MyTeam.Models
                 {
                     return "暂无";
                 }
-                var s = (from a in Constants.UserList
-                         where a.UID == this.ReqPersonID
-                         select a.Realname).FirstOrDefault();
-                return s == null ? "未知" : s.ToString();
+                return MyTools.GetUserName(ReqPersonID);
             }
             set
             {

@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "需求入池";
+}
+<h2>@ViewBag.Title</h2>
+
+    <div class="row card">
+        @Html.AntiForgeryToken()
+
+        <table class="table table-condensed query-table">
+            <tr>
+                <td><label class="control-label">选择要入池的需求</label></td>
+                <td>@Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqNos()" })</td>
+                <td></td>
+                <td>
+                    <select id="ReqNo" name="ReqNo" class="form-control" onchange="getInPoolDetail()">
+                        <option value="">--请选择系统--</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+<div id="inPoolDetailDiv"></div>
+
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    // 获取需求申请编号
+    function getReqNos() {
+        var sysID = $('#SysID').val();
+        $.ajax({
+            type: 'GET',
+            url: '/ReqManage2/GetReqNosToInPool?sysID=' + sysID,
+            success: function (msg) {
+                $('#ReqNo').html(msg);
+                getReqReason();
+            },
+            error: function () {
+                alert("出错了，请联系管理员");
+            }
+
+        });
+    }
+    // 根据申请编号获取入池的页面
+    function getInPoolDetail() {
+        $('#inPoolDetailDiv').html("获取信息中...");
+        var reqNo = $('#ReqNo').val();
+        if (reqNo == "") {
+            $('#ReqReasonDiv').html("");
+            return;
+        }
+        $.ajax({
+            type: 'GET',
+            url: '/ReqManage2/InPoolDetail?reqNo=' + reqNo,
+            success: function (msg) {
+                $('#inPoolDetailDiv').html(msg);
+            },
+            error: function () {
+                alert("出错了，请联系管理员");
+            }
+
+        });
+    }
+</script>

@@ -58,6 +58,10 @@
         public DbSet<UserNews> UserNews { get; set; }
 
         public DbSet<Param> Params { get; set; }
+
+        public DbSet<ReqMain> ReqMains { get; set; }
+        public DbSet<ReqDetail> ReqDetails { get; set; }
+        public DbSet<ReqRelease> ReqReleases { get; set; }
     }
    
 }

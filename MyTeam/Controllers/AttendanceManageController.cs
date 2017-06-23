@@ -5,11 +5,12 @@ using System.Web.Mvc;
 using MyTeam.Utils;
 using MyTeam.Models;
 using PagedList;
+using MyTeam.Enums;
 
 namespace MyTeam.Controllers
 {
     /// <summary>
-    /// 系统管理Controller
+    /// 外协人员请假管理Controller
     /// </summary>
     public class AttendanceManageController : BaseController
     {
@@ -20,6 +21,11 @@ namespace MyTeam.Controllers
         {           
             // 分页
             var ls = dbContext.Attendances.OrderByDescending(a => a.AID).ToPagedList(pageNum, Constants.PAGE_SIZE);
+
+            // 权限控制：外协人员不可以编辑
+            var user = GetSessionCurrentUser();
+            ViewBag.CanEdit = user.UserType != (int)UserTypeEnums.外协;
+
             return View(ls);
         }
 
@@ -28,7 +34,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Create()
         {
-            SelectList sl = new SelectList(this.GetUserList().Where(a => a.UserType == 2), "UID", "Realname");
+            SelectList sl = new SelectList(this.GetUserList().Where(a => a.UserType == (int)UserTypeEnums.外协), "UID", "Realname");
 
             ViewBag.PersonList = sl;
 
@@ -69,7 +75,7 @@ namespace MyTeam.Controllers
             }
 
             // 用户列表
-            SelectList sl = new SelectList(this.GetUserList().Where(a => a.UserType == 2), "UID", "Realname", attendance.PersonID); // 选中当前值
+            SelectList sl = new SelectList(this.GetUserList().Where(a => a.UserType == (int)UserTypeEnums.外协), "UID", "Realname", attendance.PersonID); // 选中当前值
 
             ViewBag.PersonList = sl;
 
@@ -126,6 +132,15 @@ namespace MyTeam.Controllers
             }
             return this.MakeExcel<AttendanceResult>("AttendanceReportT", "外协人员考勤统计表＿" + DateTime.Now.ToString("yyyyMMddhhmmss"),
                 r);
+        }
+
+        // 统计年度请假情况
+        [HttpGet]
+        public ActionResult SumUp()
+        {
+            var ls = dbContext.Database.SqlQuery<AttendanceSumUp>("SELECT PersonID, sum(LeaveDays) as LeaveDays FROM Attendances WHERE year(LeaveDate) = @p0  GROUP BY PersonID", DateTime.Now.Year).ToList();
+
+            return View(ls);
         }
     }
 

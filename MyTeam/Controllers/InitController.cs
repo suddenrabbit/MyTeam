@@ -1,4 +1,5 @@
 ﻿using MyTeam.Models;
+using System.Collections;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -25,6 +26,8 @@ namespace MyTeam.Controllers
                 Username = "Admin",
                 Password = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("123456", "MD5"),
                 UserType = 9,
+                Realname = "管理员",
+                Phone = "000000",
                 IsAdmin = true
             };
             dbContext.Users.Add(u);
@@ -35,37 +38,70 @@ namespace MyTeam.Controllers
             return "Init Completed. User 'Admin/123456' has been created.";
         }
 
+        /*
         [AllowAnonymous]
-        public string Upgarde(string version)
+        public string InitReqs()
         {
-            if (version != "1223")
-                return "not this version";
-
-            // 12.23 升级：Reqs表ReqType字段值域化
-            var ls = dbContext.Reqs.ToList();
-            var i = 0;
-            var s = "";
-            foreach(var req in ls)
+            //Req拆表初始化
+            if(dbContext.ReqMains.Count() < 1)
             {
-                if(string.IsNullOrEmpty(req.ReqDetailNo))
-                {
-                    continue;
-                }
-                try
-                {
-                    var reqTypeNum = req.ReqDetailNo.Split('-')[2];
-                    var sql = "update Reqs set ReqType = '" + reqTypeNum + "' where RID=" + req.RID;
-                    dbContext.Database.ExecuteSqlCommand(sql);
-                    i++;
-                }
-                catch
-                {
-                    s += req.RID + ", ";
-                }
-                
+                return "ReqMains is not empty! ";
             }
+            var ls = from a in dbContext.Reqs
+                     select a;
 
-            return "updated: " + i + " records. failed records: " + s;
-        }        
+            // init ReqMains
+            foreach (var r in ls)
+            {
+                var exist = (from a in dbContext.ReqMains where a.ReqNo == r.ReqNo select a).FirstOrDefault();
+                if(exist == null)
+                {
+                    var reqMain = new ReqMain
+                    {
+                        SysID = r.SysID,
+                        ReqNo = r.ReqNo,
+                        AcptDate = r.AcptDate,
+                        ReqReason = r.ReqReason,
+                        ReqFromDept = r.ReqFromDept,
+                        ReqFromPerson = r.ReqFromPerson,
+                        ReqAcptPerson = r.ReqAcptPerson,
+                        ReqDevPerson = r.ReqDevPerson,
+                        ReqBusiTestPerson = r.ReqBusiTestPerson,
+                        DevAcptDate = r.DevAcptDate,
+                        DevEvalDate = r.DevEvalDate
+                    };
+                    dbContext.ReqMains.Add(reqMain);
+                }             
+
+            }
+            dbContext.SaveChanges();
+
+            // init ReqRlses
+            foreach (var r in ls)
+            {
+                var exist = (from a in dbContext.ReqRlses where a.RlsNo == r.RlsNo || a.RlsNo == r.SecondRlsNo select a).FirstOrDefault();
+                if (exist == null)
+                {
+                    var reqMain = new ReqMain
+                    {
+                        SysID = r.SysID,
+                        ReqNo = r.ReqNo,
+                        AcptDate = r.AcptDate,
+                        ReqReason = r.ReqReason,
+                        ReqFromDept = r.ReqFromDept,
+                        ReqFromPerson = r.ReqFromPerson,
+                        ReqAcptPerson = r.ReqAcptPerson,
+                        ReqDevPerson = r.ReqDevPerson,
+                        ReqBusiTestPerson = r.ReqBusiTestPerson,
+                        DevAcptDate = r.DevAcptDate,
+                        DevEvalDate = r.DevEvalDate
+                    };
+                    dbContext.ReqMains.Add(reqMain);
+                }
+
+            }
+            dbContext.SaveChanges();
+        }    
+        */
     }
 }

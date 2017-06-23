@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace MyTeam.Utils
@@ -98,6 +99,21 @@ namespace MyTeam.Utils
             SelectList sl = new SelectList(ls, "Value", "Text");           
 
             return sl;
+        }
+
+        /// <summary>
+        /// 通过ID获取姓名
+        /// </summary>
+        /// <param name="personID"></param>
+        /// <returns></returns>
+        internal static string GetUserName(int personID)
+        {
+            var s = (from a in Constants.UserList
+                     where a.UID == personID
+                     select a).FirstOrDefault();
+            if (s == null) return "未知";
+            if (s.UserType == (int)Enums.UserTypeEnums.离职) return s.Realname + "（离职）";
+            return s.Realname;
         }
     }
 }

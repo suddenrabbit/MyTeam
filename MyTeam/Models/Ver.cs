@@ -72,11 +72,7 @@ namespace MyTeam.Models
         {
             get
             {
-                var r = (from a in Constants.UserList
-                         where a.UID == this.DraftPersonID
-                         select a.Realname).FirstOrDefault();
-
-                return r == null ? "未知" : r.ToString();
+                return Utils.MyTools.GetUserName(DraftPersonID);
             }
             set { this.DraftPersonName = value; }
         }

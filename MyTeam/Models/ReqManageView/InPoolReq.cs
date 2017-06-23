@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyTeam.Models
@@ -32,5 +33,8 @@ namespace MyTeam.Models
         [StringLength(32, ErrorMessage = "申请编号不能超过32位")]
         public string NewReqNo { get; set; }
 
+        public ReqMain ReqMain { get; set; }
+
+        public List<ReqDetail> ReqDetails { get; set; }
     }
 }

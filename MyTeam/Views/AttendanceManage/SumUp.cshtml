@@ -1,0 +1,33 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<MyTeam.Models.AttendanceSumUp>
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">无记录</div>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        关闭
+    </button>
+    return;
+}
+
+
+<div class="row" style="padding:30px">
+    <table class="table text-center">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.PersonID)</th>
+            <th>@Html.DisplayNameFor(model => model.LeaveDays)</th>
+        </tr>
+        @foreach(var r in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(model => r.PersonName)</td>            
+                <td>@Html.DisplayFor(model => r.LeaveDays)</td>
+            </tr>
+        }
+    </table>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        关闭
+    </button>
+</div>

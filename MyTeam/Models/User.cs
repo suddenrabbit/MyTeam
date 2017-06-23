@@ -39,7 +39,7 @@ namespace MyTeam.Models
         public bool IsAdmin { get; set; }
 
         [Display(Name = "用户类别")]
-        public int UserType { get; set; } //9-系统用户 1-行员 2-外协 3-离职 4-团队负责人
+        public int UserType { get; set; } 
 
         [NotMapped]
         public string NamePhone { 

@@ -1,0 +1,103 @@
+﻿@model MyTeam.Models.InPoolReq
+@{
+    Layout = null;
+}
+
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+
+@using (Html.BeginForm("InPoolResult", "ReqManage2", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                                                                           new { @class = "form-horizontal", role = "form", onsubmit = "return checkName()" }))
+{
+    <div class="row card">
+        @Html.AntiForgeryToken()        
+        <table class="table table-condensed query-table">
+            <tr>
+                <td>@Html.LabelFor(model => model.ReqMain.ReqReason, new { @class = "control-label" })</td>
+                <td colspan="3">
+                    @Html.DisplayFor(model => model.ReqMain.ReqReason, new { @class = "form-control-static" })
+                </td>
+            </tr>
+
+            <tr>
+                <td>@Html.LabelFor(model => model.NewAcptDate, new { @class = "control-label" })</td>
+                <td>
+                    @Html.TextBoxFor(model => model.NewAcptDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NewAcptDate, "", new { @class = "text-danger" })
+                    <span class="text-info">（留空不更新）</span>
+                </td>
+
+                <td>@Html.LabelFor(model => model.NewReqNo, new { @class = "control-label" })</td>
+                <td>
+                    @Html.TextBoxFor(model => model.NewReqNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NewReqNo, "", new { @class = "text-danger" })
+                    <span class="text-info">（留空不更新）</span>
+                </td>
+
+            </tr>
+
+            <tr>                
+
+                <td>@Html.LabelFor(model => model.ReqMain.DevAcptDate, new { @class = "control-label" })</td>
+                <td>
+                    @Html.EditorFor(model => model.ReqMain.DevAcptDate, "DateTime")
+                    @Html.ValidationMessageFor(model => model.ReqMain.DevAcptDate, "", new { @class = "text-danger" })
+                </td>
+            
+                <td>@Html.LabelFor(model => model.ReqMain.DevEvalDate, new { @class = "control-label" })</td>
+                <td>
+                    @Html.EditorFor(model => model.ReqMain.DevEvalDate, "DateTime")
+                    @Html.ValidationMessageFor(model => model.ReqMain.DevEvalDate, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+
+
+        </table>
+        <hr />
+        <!-- detail part -->
+        <table class="table table-condensed query-table">
+            <tr>
+                <th width="20%">
+                    @Html.DisplayNameFor(model => model.ReqDetails[0].ReqDetailNo)
+                </th>
+
+                <th width="50%">
+                    @Html.DisplayNameFor(model => model.ReqDetails[0].ReqDesc)
+                </th>
+
+                <th width="10%">
+                    @Html.DisplayNameFor(model => model.ReqDetails[0].DevWorkload)
+                </th>
+                <th width="20%">
+                    @Html.DisplayNameFor(model => model.ReqDetails[0].ReqStat)
+                </th>
+            </tr>
+
+
+            @for (int i = 0; i < Model.ReqDetails.Count(); i++)
+                {
+                <tr>
+                    <td>
+                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDetailNo, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDesc, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.ReqDetails[i].DevWorkload, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(model => model.ReqDetails[i].ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
+                    </td>
+                </tr>
+            }
+
+
+        </table>
+
+        <input type="submit" value="提交" class="btn btn-primary" />
+    </div>
+}
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
