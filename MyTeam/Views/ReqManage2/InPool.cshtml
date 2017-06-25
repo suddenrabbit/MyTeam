@@ -3,22 +3,19 @@
 }
 <h2>@ViewBag.Title</h2>
 
-    <div class="row card">
-        @Html.AntiForgeryToken()
+<div class="row card">
+    <div class="form-inline">
+        <label class="control-label">选择要入池的需求</label>
+        @Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqNos()" })
 
-        <table class="table table-condensed query-table">
-            <tr>
-                <td><label class="control-label">选择要入池的需求</label></td>
-                <td>@Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqNos()" })</td>
-                <td></td>
-                <td>
-                    <select id="ReqNo" name="ReqNo" class="form-control" onchange="getInPoolDetail()">
-                        <option value="">--请选择系统--</option>
-                    </select>
-                </td>
-            </tr>
-        </table>
+        <select id="ReqNo" name="ReqNo" class="form-control">
+            <option value="">--请选择系统--</option>
+        </select>
+
+        <button onclick="getInPoolDetail()" class="btn btn-primary">获取需求</button>
     </div>
+
+</div>
 
 <div id="inPoolDetailDiv"></div>
 
@@ -45,12 +42,12 @@
     }
     // 根据申请编号获取入池的页面
     function getInPoolDetail() {
-        $('#inPoolDetailDiv').html("获取信息中...");
         var reqNo = $('#ReqNo').val();
         if (reqNo == "") {
-            $('#ReqReasonDiv').html("");
+            alert("需求编号不能为空！");
             return;
         }
+        $('#inPoolDetailDiv').html("获取信息中...");
         $.ajax({
             type: 'GET',
             url: '/ReqManage2/InPoolDetail?reqNo=' + reqNo,

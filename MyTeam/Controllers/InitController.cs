@@ -38,17 +38,18 @@ namespace MyTeam.Controllers
             return "Init Completed. User 'Admin/123456' has been created.";
         }
 
-        /*
+        
         [AllowAnonymous]
         public string InitReqs()
         {
             //Req拆表初始化
-            if(dbContext.ReqMains.Count() < 1)
+            if(dbContext.ReqMains.Count() > 0)
             {
                 return "ReqMains is not empty! ";
             }
-            var ls = from a in dbContext.Reqs
-                     select a;
+            var ls = dbContext.Reqs.Where(p=>p.RID > 1341).ToList();                    
+
+            int num = 0;
 
             // init ReqMains
             foreach (var r in ls)
@@ -71,11 +72,14 @@ namespace MyTeam.Controllers
                         DevEvalDate = r.DevEvalDate
                     };
                     dbContext.ReqMains.Add(reqMain);
+                    dbContext.SaveChanges();
+                    num++;
                 }             
 
-            }
-            dbContext.SaveChanges();
+            }            
 
+            return "Init " + num + "ReqMains!";
+            /*
             // init ReqRlses
             foreach (var r in ls)
             {
@@ -100,8 +104,8 @@ namespace MyTeam.Controllers
                 }
 
             }
-            dbContext.SaveChanges();
+            dbContext.SaveChanges(); */
         }    
-        */
+       
     }
 }

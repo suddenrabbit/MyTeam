@@ -9,14 +9,9 @@
                                                                            new { @class = "form-horizontal", role = "form", onsubmit = "return checkName()" }))
 {
     <div class="row card">
-        @Html.AntiForgeryToken()        
-        <table class="table table-condensed query-table">
-            <tr>
-                <td>@Html.LabelFor(model => model.ReqMain.ReqReason, new { @class = "control-label" })</td>
-                <td colspan="3">
-                    @Html.DisplayFor(model => model.ReqMain.ReqReason, new { @class = "form-control-static" })
-                </td>
-            </tr>
+        @Html.AntiForgeryToken() 
+        <div class="well well-sm"><b>需求申请事由：</b>@Html.DisplayFor(model => model.ReqMain.ReqReason)</div>
+        <table class="table table-condensed query-table">           
 
             <tr>
                 <td>@Html.LabelFor(model => model.NewAcptDate, new { @class = "control-label" })</td>
