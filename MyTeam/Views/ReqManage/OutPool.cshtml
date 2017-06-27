@@ -39,7 +39,7 @@
         var sysID = $('#SysID').val();
         var reqs = $('#Reqs').val();       
         var outDate = $('#OutDate').val();
-        var planRlsDate = $('#PlanRlsDate').val();
+        var planReleaseDate = $('#PlanReleaseDate').val();
         var isPatch = $('#isPatch').prop('checked');
 
         var version;
@@ -67,32 +67,34 @@
             $('#OutDate').focus();
             return;
         }
-        if (planRlsDate.length < 1) {
+        if (planReleaseDate.length < 1) {
             alert("计划下发日期不能为空！");
-            $('#PlanRlsDate').focus();
+            $('#PlanReleaseDate').focus();
             return;
         }
         $.ajax({
             type: 'POST',
             url: '/ReqManage/OutPool',
-            data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanRlsDate=" + planRlsDate + "&SysID=" + sysID + "&IsPatch=" + isPatch,
+            data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanReleaseDate=" + planReleaseDate + "&SysID=" + sysID + "&IsPatch=" + isPatch,
             success: function (msg) {
                 $('#OutPoolResult').html(msg);
-                $('#RlsNoDiv').show();
+                $('#ReleaseNoDiv').show();
+                $('#OutPoolBtn').hide();
             },
             error: function () {
                 alert("出错了，请联系管理员");
-                $('#RlsNoDiv').hide();
+                $('#ReleaseNoDiv').hide();
             }
 
         });
 
     }
 
-    function updateRlsNo() {
+    function updateReleaseNo() {
         var reqs = $('#Reqs').val();
-        var rlsNo = $('#RlsNo').val();
-        var secondRlsNo = $('#SecondRlsNo').val();
+        var releaseNo = $('#ReleaseNo').val();
+        var sideReleaseNo = $('#SideReleaseNo').val();
+        var planReleaseDate = $('#PlanReleaseDate').val();
 
         if (reqs == null || reqs.length < 1) {
             alert("请选择要出池的需求！");
@@ -101,46 +103,46 @@
 
         // 下发通知编号格式控制
         var rname = /[\u4E00-\u9FA5]/;
-        if (rlsNo.length > 0) {
-            if (rname.test(rlsNo)) {
+        if (releaseNo.length > 0) {
+            if (rname.test(releaseNo)) {
                 alert("下发通知编号不能含有汉字");
-                $("#RlsNo").focus();
+                $("#ReleaseNo").focus();
                 return;
             }
 
-            if (rlsNo.length != 12) {
+            if (releaseNo.length != 12) {
                 alert("下发通知编号必须是12位");
-                $("#RlsNo").focus();
+                $("#ReleaseNo").focus();
                 return;
             }
         }
 
         // 副下发通知编号格式控制
-        if (secondRlsNo.length > 0) {
-            if (rname.test(secondRlsNo)) {
+        if (sideReleaseNo.length > 0) {
+            if (rname.test(sideReleaseNo)) {
                 alert("副下发通知编号不能含有汉字");
-                $("#SecondRlsNo").focus();
+                $("#SideReleaseNo").focus();
                 return;
             }
-            if (secondRlsNo.length != 12) {
+            if (sideReleaseNo.length != 12) {
                 alert("下发通知编号必须是12位");
-                $("#SecondRlsNo").focus();
+                $("#SideReleaseNo").focus();
                 return;
             }
-            if (rlsNo.length == 0) {
+            if (releaseNo.length == 0) {
                 alert("不能只填副下发编号");
-                $("#RlsNo").focus();
+                $("#ReleaseNo").focus();
                 return;
             }
         }
 
         $.ajax({
             type: 'POST',
-            url: '/ReqManage/UpdateRlsNo',
-            data: 'Reqs=' + reqs + "&RlsNo=" + rlsNo + "&SecondRlsNo=" + secondRlsNo,
+            url: '/ReqManage/UpdateReleaseNo',
+            data: 'Reqs=' + reqs + "&ReleaseNo=" + releaseNo + "&SideReleaseNo=" + sideReleaseNo + "&PlanReleaseDate=" + planReleaseDate,
             success: function (msg) {
                 $('#OutPoolResult').hide();
-                $('#RlsNoResultDiv').html(msg);                
+                $('#ReleaseNoResultDiv').html(msg);                
             },
             error: function () {
                 alert("出错了，请联系管理员");
@@ -202,15 +204,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="PlanRlsDate" class="col-md-2 control-label">计划下发日期</label>
+                <label for="PlanReleaseDate" class="col-md-2 control-label">计划下发日期</label>
                 <div class="col-md-10">
-                    <input id="PlanRlsDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
+                    <input id="PlanReleaseDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="button" value="出池" class="btn btn-primary" onclick="quickOutPool()" />
+                    <input type="button" value="出池" class="btn btn-primary" onclick="quickOutPool()" id="OutPoolBtn"/>
                 </div>
             </div>
 
@@ -218,26 +220,26 @@
 
 
             <!--默认隐藏：出池成功后显示，用以更新下发通知编号-->
-            <div id="RlsNoDiv" style="display:none">
+            <div id="ReleaseNoDiv" style="display:none">
                 <div class="form-group">
-                    <label for="RlsNo" class="col-md-2 control-label">主下发通知编号</label>
+                    <label for="ReleaseNo" class="col-md-2 control-label">主下发通知编号</label>
                     <div class="col-md-10">
-                        <input id="RlsNo" type="text" class="form-control" />
+                        <input id="ReleaseNo" type="text" class="form-control" maxlength="12" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="SecondRlsNo" class="col-md-2 control-label">副下发通知编号</label>
+                    <label for="SideReleaseNo" class="col-md-2 control-label">副下发通知编号</label>
                     <div class="col-md-10">
-                        <input id="SecondRlsNo" type="text" class="form-control" />
+                        <input id="SideReleaseNo" type="text" class="form-control" maxlength="12" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateRlsNo()" />
+                        <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateReleaseNo()" />
                     </div>
                 </div>
 
-                <div id="RlsNoResultDiv"></div>
+                <div id="ReleaseNoResultDiv"></div>
             </div>
         </div>
     </div>
@@ -245,5 +247,5 @@
 
 <script>
     $("#SysID").select2();
-    $("#RlsNo").val('YFZX'+'@DateTime.Now.Year');
+    $("#ReleaseNo").val('YFZX'+'@DateTime.Now.Year');
 </script>

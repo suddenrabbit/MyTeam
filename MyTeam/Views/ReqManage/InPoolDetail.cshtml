@@ -5,18 +5,18 @@
 
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 
-@using (Html.BeginForm("InPoolResult", "ReqManage2", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-                                                                           new { @class = "form-horizontal", role = "form", onsubmit = "return checkName()" }))
+@using (Html.BeginForm("InPoolResult", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
+                                                                                       new { @class = "form-horizontal", role = "form" }))
 {
     <div class="row card">
-        @Html.AntiForgeryToken() 
+        @Html.AntiForgeryToken()
         <div class="well well-sm"><b>需求申请事由：</b>@Html.DisplayFor(model => model.ReqMain.ReqReason)</div>
-        <table class="table table-condensed query-table">           
+        <table class="table table-condensed query-table">
 
             <tr>
                 <td>@Html.LabelFor(model => model.NewAcptDate, new { @class = "control-label" })</td>
                 <td>
-                    @Html.TextBoxFor(model => model.NewAcptDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.NewAcptDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.NewAcptDate, "", new { @class = "text-danger" })
                     <span class="text-info">（留空不更新）</span>
                 </td>
@@ -30,14 +30,14 @@
 
             </tr>
 
-            <tr>                
+            <tr>
 
                 <td>@Html.LabelFor(model => model.ReqMain.DevAcptDate, new { @class = "control-label" })</td>
                 <td>
                     @Html.EditorFor(model => model.ReqMain.DevAcptDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ReqMain.DevAcptDate, "", new { @class = "text-danger" })
                 </td>
-            
+
                 <td>@Html.LabelFor(model => model.ReqMain.DevEvalDate, new { @class = "control-label" })</td>
                 <td>
                     @Html.EditorFor(model => model.ReqMain.DevEvalDate, "DateTime")
@@ -45,8 +45,17 @@
                 </td>
             </tr>
 
+            <tr>
+                <td>@Html.LabelFor(model => model.ReqMain.ReqDevPerson, new { @class = "control-label" })</td>
+                <td>
+                    @Html.TextBoxFor(model => model.ReqMain.ReqDevPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqMain.ReqDevPerson, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+
 
         </table>
+        @Html.HiddenFor(model=>model.ReqMain.ReqMainID)
         <hr />
         <!-- detail part -->
         <table class="table table-condensed query-table">
@@ -72,10 +81,11 @@
                 {
                 <tr>
                     <td>
-                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDetailNo, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })
+                        @Html.HiddenFor(model => model.ReqDetails[i].ReqDetailID)
+                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDetailNo, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important", @required= "required" })
                     </td>
                     <td>
-                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDesc, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })
+                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDesc, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important", @readonly="readonly" })
                     </td>
                     <td>
                         @Html.TextBoxFor(model => model.ReqDetails[i].DevWorkload, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })

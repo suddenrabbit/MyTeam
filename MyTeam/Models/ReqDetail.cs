@@ -40,9 +40,8 @@ namespace MyTeam.Models
         [DataType(DataType.Date)]
         public DateTime? OutDate { get; set; }
 
-        [Display(Name = "下发通知编号")]
-        [StringLength(32, ErrorMessage = "不能超过32位")]
-        public string RlsNo { get; set; }
+        [Display(Name = "下发通知")]
+        public int ReqReleaseID { get; set; }
 
         [Display(Name = "是否有关联系统")]
         [System.ComponentModel.DefaultValue(false)]
@@ -55,7 +54,7 @@ namespace MyTeam.Models
         public string AssoReqNo { get; set; }
 
         [Display(Name = "关联系统下发要求")]
-        public string AssoRlsDesc { get; set; }
+        public string AssoReleaseDesc { get; set; }
 
         [Display(Name = "备注")]
         public string Remark { get; set; }

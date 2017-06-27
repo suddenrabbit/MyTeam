@@ -26,7 +26,7 @@ namespace MyTeam.Models
         public string ReqDetailNo { get; set; }
 
         [Display(Name = "下发通知编号")]
-        public string AnyRlsNo { get; set; }
+        public string AnyReleaseNo { get; set; }
 
         [Display(Name = "需求状态")]
         public string ReqStat { get; set; }
@@ -50,7 +50,7 @@ namespace MyTeam.Models
                 .Append("&AcptMonth=").Append(this.AcptMonth)
                 .Append("&ReqNo=").Append(this.ReqNo)
                 .Append("&ReqDetailNo=").Append(this.ReqDetailNo)
-                .Append("&AnyRlsNo=").Append(this.AnyRlsNo)
+                .Append("&AnyReleaseNo=").Append(this.AnyReleaseNo)
                 .Append("&ReqStat=").Append(this.ReqStat)
                 .Append("&ReqAcptPerson=").Append(this.ReqAcptPerson)
                 .Append("&NotEqual=").Append(this.NotEqual)

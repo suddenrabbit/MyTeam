@@ -12,26 +12,29 @@ using System.Collections;
 namespace MyTeam.Controllers
 {
     /// <summary>
-    /// 维护需求管理Controller
+    /// 20170622新维护需求管理
     /// </summary>
-    /* 包括如下功能：
-     * 1、批量登记
-     * 2、需求入池
-     * 3、查询
-     * 4、批处理：批量出池、更新下发通知编号、下发日期、批量删除
-     * 5、单笔新增
-     * 6、单笔修改
-     * 7、单笔删除
-     * 8、出池计划导出
-     * 9、按照查询条件导出
-     */
+    /**
+     * 1、第一步：需求登记
+     * 2、第二步：需求入池
+     * 3、第三步：需求出池
+     * 4、第四步：需求下发
+     * 5、第五步：更新下发日期
+     * 
+     * 6、需求管理
+     * 7、下发管理
+     * 8、导出下发报表
+     **/
     public class ReqManageController : BaseController
     {
-        /*
-         * 【1】批量登记
-         */
+        /**
+         * 1、需求登记
+         **/
+        #region 需求登记
 
-        // 登记受理        
+        // GET: /ReqManage/Reg
+        //
+        [HttpGet]
         public ActionResult Reg()
         {
             RegReq regReq = new RegReq();
@@ -84,15 +87,20 @@ namespace MyTeam.Controllers
         [HttpPost]
         public ActionResult RegResult(RegReq regReq)
         {
-            List<Req> reqList = new List<Req>();
-            for (int i = 0; i < regReq.ReqAmt; i++)
+            string r = ""; //记录处理结果
+            try
             {
-                if (string.IsNullOrEmpty(regReq.DetailRegReqs[i].ReqDesc))
+                //判断ReqNo是否重复
+                var checkMain = dbContext.ReqMains.Where(p => p.ReqNo == regReq.ReqNo).FirstOrDefault();
+                if (checkMain != null)
                 {
-                    continue;
+                    throw new Exception(string.Format("需求申请编号{0}已经存在！", regReq.ReqNo));
                 }
 
-                Req newReq = new Req()
+                // 分别登记ReqMain和ReqDetail                
+
+                //登记Main
+                ReqMain reqMain = new ReqMain
                 {
                     SysID = regReq.SysID,
                     AcptDate = regReq.AcptDate,
@@ -101,48 +109,56 @@ namespace MyTeam.Controllers
                     ReqFromDept = regReq.ReqFromDept,
                     ReqFromPerson = regReq.ReqFromPerson,
                     ReqAcptPerson = regReq.ReqAcptPerson,
-                    ReqBusiTestPerson = regReq.ReqBusiTestPerson,
-                    DevWorkload = 0,
-
-                    ReqDesc = regReq.DetailRegReqs[i].ReqDesc,
-                    Remark = regReq.DetailRegReqs[i].Remark,
+                    ReqBusiTestPerson = regReq.ReqBusiTestPerson
                 };
-                reqList.Add(newReq);
-            }
+                dbContext.ReqMains.Add(reqMain);
 
-            string r = "";
-
-            try
-            {
-                // 登记
-                foreach (Req req in reqList)
+                // 登记Detail
+                List<ReqDetail> reqList = new List<ReqDetail>();
+                for (int i = 0; i < regReq.ReqAmt; i++)
                 {
-                    // 状态默认「待评估」
-                    req.ReqStat = (int)ReqStatEnums.待评估;
-                    dbContext.Reqs.Add(req);
+                    ReqDetail newReq = new ReqDetail()
+                    {
+                        DevWorkload = 0,
+                        ReqDesc = regReq.DetailRegReqs[i].ReqDesc,
+                        Remark = regReq.DetailRegReqs[i].Remark,
+                        // 状态默认「待评估」
+                        ReqStat = (int)ReqStatEnums.待评估,
+                        CreateTime = DateTime.Now,
+                        UpdateTime = DateTime.Now,
+                        ReqMain = reqMain
+                    };
 
-                    // 加入创建时间和更新时间
-                    req.CreateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-                    req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    dbContext.ReqDetails.Add(newReq);
                 }
+
                 dbContext.SaveChanges();
 
-                r = "<p class='alert alert-success'>登记入库成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/Reg'>继续登记</a></li></ul></p>";
+                r = string.Format("<p class='alert alert-success'>共{0}条需求登记入库成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/Reg'>继续登记</a></li></ul></p>", regReq.ReqAmt);
             }
             catch (Exception e1)
             {
-                r = "<p class='alert alert-danger'>登记入库失败！" + e1.Message + "</p>";
+                r = string.Format("<p class='alert alert-danger'>登记入库失败！错误信息：{0}</p>", e1.Message);
             }
 
             ViewBag.Msg = r;
             return View();
         }
 
-        /*
-         * 入池：【第一步】申请编号，研发联系人，研发受理日期，完成评估日期，【第二步】维护需求编号，关联业需编号，研发评估工作量
-         * 
-         * */
+        #endregion
 
+
+        /**
+         * 2、需求入池
+         * 补充如下信息：
+         * 申请编号，研发联系人，研发受理日期，完成评估日期，  
+         * 维护需求编号，关联业需编号，研发评估工作量（多条）
+         * （页面选择系统与未入池的需求申请，载入详情，补充信息）
+         * */
+        #region 需求入池
+        // GET: /ReqManage/InPool
+        //
+        [HttpGet]
         public ActionResult InPool()
         {
             // 提供系统列表
@@ -155,105 +171,422 @@ namespace MyTeam.Controllers
             return View();
         }
 
-        // 第二步
-        [HttpPost]
-        public ActionResult InPoolStep2(InPoolReq inPoolReq)
+        [HttpGet]
+        public ActionResult InPoolDetail(string reqNo)
         {
-            // 根据申请编号，找到相应的记录
-            var rs = dbContext.Reqs.Where(a => a.ReqNo == inPoolReq.ReqNo);
-
-            // 通用字段赋值，生成list
-            List<Req> reqList = new List<Req>();
-            foreach (Req req in rs)
+            var main = dbContext.ReqMains.Where(a => a.ReqNo == reqNo).FirstOrDefault();
+            if (main == null)
             {
-                req.DevAcptDate = inPoolReq.DevAcptDate;
-                req.DevEvalDate = inPoolReq.DevEvalDate;
-                req.ReqDevPerson = inPoolReq.ReqDevPerson;
+                ViewBag.ErrMsg = "找不到对应的需求申请记录，申请编号：" + reqNo;
+            }
+
+            InPoolReq model = new InPoolReq { ReqMain = main, ReqDetails = main.ReqDetails.ToList() };
+
+            ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), false, true, "2");
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult InPoolResult(InPoolReq inPoolReq)
+        {
+            string msg = "";
+            string fail = "";
+            string repeat = "";
+
+            try
+            {
+                var main = dbContext.ReqMains.Find(inPoolReq.ReqMain.ReqMainID);
 
                 // 判断是否更新需求申请编号与受理日期
-                if(!string.IsNullOrEmpty(inPoolReq.NewReqNo))
+                if (!string.IsNullOrEmpty(inPoolReq.NewReqNo))
                 {
-                    req.ReqNo = inPoolReq.NewReqNo;
+                    //判断ReqNo是否重复
+                    var checkMain = dbContext.ReqMains.Where(p => p.ReqNo == inPoolReq.NewReqNo).FirstOrDefault();
+                    if (checkMain != null)
+                    {
+                        throw new Exception(string.Format("需求申请编号{0}已经存在！", inPoolReq.NewReqNo));
+                    }
+                    main.ReqNo = inPoolReq.NewReqNo;
                 }
 
                 if (inPoolReq.NewAcptDate != null)
                 {
-                    req.AcptDate = inPoolReq.NewAcptDate;
+                    main.AcptDate = inPoolReq.NewAcptDate;
                 }
 
-                reqList.Add(req);
-            }                     
+                main.ReqDevPerson = inPoolReq.ReqMain.ReqDevPerson;
+                main.DevAcptDate = inPoolReq.ReqMain.DevAcptDate;
+                main.DevEvalDate = inPoolReq.ReqMain.DevEvalDate;
 
-            return View(reqList);
-        }
+                dbContext.Entry(main).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
 
-        [HttpPost]
-        public ActionResult InPoolResult(List<Req> reqList)
-        {
-            string r = "";
+                var reqList = inPoolReq.ReqDetails;
 
-            string fail = ""; // 记录因需求编号重复入池失败的信息
-
-            try
-            {
-                // 入库
-                foreach (Req req in reqList)
+                foreach (var detail in reqList)
                 {
-                    req.ReqDetailNo = req.ReqDetailNo.Trim();// 去空格
+                    var model = dbContext.ReqDetails.Find(detail.ReqDetailID);
+                    var detailNo = detail.ReqDetailNo.Trim();// 去空格
+
+                    var checkReq = dbContext.ReqDetails.Where(p => p.ReqDetailNo == detailNo).FirstOrDefault();
 
                     // 判断需求编号是否已存在
-                    var checkReq = dbContext.Reqs.Where(p => p.ReqDetailNo == req.ReqDetailNo).Count();
-                    if (checkReq > 0)
+                    if (checkReq != null)
                     {
-                        fail += req.ReqDetailNo + " ";
+                        repeat += detailNo + " ";
                         continue;
                     }
 
+                    model.ReqDetailNo = detailNo;
+
                     // 根据需求编号确定需求类型
-                    req.ReqType = 0;
+                    // model.ReqType = 0;
                     try
                     {
-                        req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+                        model.ReqType = int.Parse(model.ReqDetailNo.Split('-')[2]);
                     }
                     catch
                     {
-                        // do nothing
+                        fail += model.ReqDetailNo + " ";
+                        continue;
                     }
 
+                    model.ReqStat = detail.ReqStat;
+                    model.DevWorkload = detail.DevWorkload;
 
-                    // 状态默认为「入池」
-                    req.ReqStat = (int)ReqStatEnums.入池;
+
                     // 更新时间
-                    req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    model.UpdateTime = DateTime.Now;
 
-                    // 直接执行sql更新
-                    string sql = "update Reqs set ReqDevPerson = @p0, DevAcptDate=@p1, DevEvalDate=@p2, ReqDetailNo=@p3, BusiReqNo=@p4, DevWorkload=@p5, ReqStat=@p6, ReqDesc=@p7, UpdateTime=@p8, ReqType=@p9, ReqNo=@p10, AcptDate=@p11 where RID=@p12";
-                    dbContext.Database.ExecuteSqlCommand(sql, req.ReqDevPerson, req.DevAcptDate, req.DevEvalDate, req.ReqDetailNo, req.BusiReqNo, req.DevWorkload, (int)ReqStatEnums.入池, req.ReqDesc, req.UpdateTime, req.ReqType, req.ReqNo, req.AcptDate, req.RID);
+                    dbContext.Entry(model).State = System.Data.Entity.EntityState.Modified;
 
+                    dbContext.SaveChanges();
                 }
 
-                if (fail == "")
+
+                if (fail + repeat == "")
                 {
-                    r = "<p class='alert alert-success'>入池成功！</p>";
+                    msg = "<p class='alert alert-success'>入池成功！</p>";
                 }
                 else
                 {
-                    r = "<p class='alert alert-warning'>未能全部入池成功，" + fail + "需求编号重复，未入池。</p>";
+                    msg = string.Format("<p class='alert alert-warning'>未能全部入池成功：<br /> 需求编号重复：{0}<br />需求编号格式错误：{1}</p>", repeat, fail);
                 }
-                r += "<p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
+                msg += "<p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
+
             }
             catch (Exception e1)
             {
-                r = "<p class='alert alert-danger'>入池失败！" + e1.Message + "</p>";
+                msg = string.Format("<p class='alert alert-danger'>需求入池失败！错误信息：{0}</p>", e1.Message);
             }
 
-            ViewBag.Msg = r;
+            ViewBag.Msg = msg;
+
             return View();
         }
 
+        /// <summary>
+        /// Ajax接口，根据SysID获取可以入池的需求申请编号列表
+        /// </summary>
+        /// <param name="sysID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetReqNosToInPool(int sysID)
+        {
+            if (sysID == 0)
+            {
+                return "<option value=''>--请选择系统--</option>";
+            }
+
+
+            List<string> list = dbContext.ReqMains.Where(p => p.SysID == sysID && p.DevEvalDate == null).Select(p => p.ReqNo).ToList();
+
+            int size = list.Count;
+
+            if (size == 0)
+            {
+                return "<option value=''>--无待入池需求--</option>";
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var r in list)
+            {
+                sb.Append(string.Format("<option value='{0}'>{1}</option>", r, r));
+            }
+
+            return sb.ToString();
+
+        }
+
+        #endregion
+
+        /**
+         * 3、需求出池
+         * */
+
+        #region 需求出池
+        // GET: /ReqManage/OutPool
+        //
+        [HttpGet]
+        public ActionResult OutPool()
+        {
+            // 提供系统列表
+            List<RetailSystem> ls1 = this.GetNormalSysList();
+            // 加上“请选择系统”
+            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "--请选择系统--" });
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
+            ViewBag.SysList = sl1;
+
+            return View();
+        }
+
+        [HttpPost]
+        public string OutPool(string Reqs, string Version, string OutDate, string PlanReleaseDate, int SysID, bool IsPatch)
+        {
+            try
+            {
+                // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理
+                string realVersion = Version;
+                if (!IsPatch) // 常规版本
+                {
+                    Ver v = dbContext.Vers.Where(p => p.VerID.ToString() == Version).FirstOrDefault();
+                    realVersion = v.VerNo;
+                    // 更新版本计划信息
+                    v.DraftTime = DateTime.Parse(PlanReleaseDate); // 制定时间改为计划下发日期
+                    v.DraftPersonID = this.GetSessionCurrentUser().UID;
+                    dbContext.Entry(v).State = System.Data.Entity.EntityState.Modified;
+                    dbContext.SaveChanges();
+                }
+                else // 补丁版本
+                {
+
+                    // 新增一条记录
+                    DateTime newTime = DateTime.Parse(PlanReleaseDate);
+                    Ver v = new Ver()
+                    {
+                        SysID = SysID,
+                        VerNo = realVersion,
+                        VerYear = DateTime.Now.Year.ToString(),
+                        ReleaseFreq = 0, // 补丁版本的频率记为0
+                        DraftTime = newTime,
+                        PublishTime = newTime,// 发布时间、制定时间均为计划下发日期
+                        DraftPersonID = this.GetSessionCurrentUser() == null ? 0 : this.GetSessionCurrentUser().UID,
+                        VerType = "补丁版本"
+                    };
+                    dbContext.Vers.Add(v);
+                    dbContext.SaveChanges();
+                }
+
+                string sql = string.Format("Update ReqDetails set Version='{0}', OutDate='{1}', ReqStat='{2}', UpdateTime='{3}' where ReqDetailID in ({4})",
+                    realVersion, OutDate, (int)ReqStatEnums.出池, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"), Reqs);
+                /*foreach (var id in Reqs)
+                {
+                    var detail = dbContext.ReqDetails.Find(id);
+                    detail.Version = realVersion;
+                    detail.OutDate = DateTime.Parse(OutDate);
+                    detail.ReqStat = (int)ReqStatEnums.出池;
+                    detail.UpdateTime = DateTime.Now;
+
+                    dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
+                }*/
+
+                int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
+
+                // 下载出池计划文档接口
+                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
+
+                return string.Format("<p class='alert alert-success'>{0}条需求成功出池！<a href='{1}'>点击</a>导出出池计划文档</p>", updatedNum, downfile);
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
+            }
+        }
+
+        /// <summary>
+        /// Ajax接口，根据SysID获取可以出池的需求列表
+        /// </summary>
+        /// <param name="sysID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetReqsToOutPool(int sysID)
+        {
+            if (sysID == 0)
+            {
+                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--请选择系统--</option></select>";
+            }
+
+            var list = (from detail in dbContext.ReqDetails
+                        join main in dbContext.ReqMains on detail.ReqMainID equals main.ReqMainID
+                        where main.SysID == sysID && detail.ReqStat == (int)ReqStatEnums.入池
+                        select detail).ToList();
+
+            int size = list.Count;
+
+            if (size == 0)
+            {
+                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--无可出池需求--</option></select>";
+            }
+
+            if (size > 10)
+            {
+                size = 10;
+            }
+
+            StringBuilder sb = new StringBuilder("<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"" + size + "\">");
+
+            foreach (ReqDetail r in list)
+            {
+                sb.Append(string.Format("<option value='{0}'>{1}</option>", r.ReqDetailID, r.ReqDetailNo));
+            }
+
+            sb.Append("</select>");
+
+            return sb.ToString();
+
+        }
+
+        // 2016年8月10日 新增
+
+        /// <summary>
+        /// Ajax接口，根据SysID获取可以出池的版本
+        /// </summary>
+        /// <param name="sysID"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetVersToOutPool(int sysID)
+        {
+            if (sysID == 0)
+            {
+                return "<option>--请选择系统--</option>";
+            }
+
+            List<Ver> list = dbContext.Vers.Where(p => p.SysID == sysID && p.VerYear == DateTime.Now.Year.ToString() && p.VerType == "计划版本").ToList();
+
+
+            int size = list.Count;
+
+            if (size == 0)
+            {
+                return "<option value=0>--未找到版本计划--</option>";
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Ver r in list)
+            {
+                sb.Append(string.Format("<option value='{0}'>{1}</option>", r.VerID, r.VerNo));
+            }
+
+            sb.Append("</select>");
+
+            return sb.ToString();
+
+        }
+
+        /// <summary>
+        /// 更新下发编号
+        /// </summary>
+        /// <param name="Reqs"></param>
+        /// <param name="ReleaseNo"></param>
+        /// <param name="SideReleaseNo"></param>
+        /// <param name="PlanReleaseDate"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public string UpdateReleaseNo(string Reqs, string ReleaseNo, string SideReleaseNo, string PlanReleaseDate)
+        {
+            string msg = "";
+            try
+            {
+                // 首先生成主下发的release记录，得到release ID
+                int reqReleaseID;
+
+                var checkRelease = dbContext.ReqReleases.Where(p => p.ReleaseNo == ReleaseNo).FirstOrDefault();
+                if (checkRelease != null)
+                {
+                    // 已存在则更新
+                    checkRelease.PlanReleaseDate = DateTime.Parse(PlanReleaseDate);
+                    checkRelease.ReleaseNo = ReleaseNo;
+                    dbContext.Entry(checkRelease).State = System.Data.Entity.EntityState.Modified;
+                    dbContext.SaveChanges();
+
+                    reqReleaseID = checkRelease.ReqReleaseID;
+
+                    msg = "<p class='alert alert-warning'>下发编号" + ReleaseNo + "已存在，对现有记录进行了更新！</p>";
+                }
+                else
+                {
+                    // 不存在则新增
+                    var release = new ReqRelease
+                    {
+                        PlanReleaseDate = DateTime.Parse(PlanReleaseDate),
+                        ReleaseNo = ReleaseNo
+                    };
+                    dbContext.ReqReleases.Add(release);
+                    dbContext.SaveChanges();
+
+                    reqReleaseID = release.ReqReleaseID;
+
+                    msg = "<p class='alert alert-success'>添加下发记录" + ReleaseNo + "成功</p>";
+                }
+
+                // 若存在副下发，则继续添加副下发的release记录
+                if (!string.IsNullOrEmpty(SideReleaseNo))
+                {
+                    checkRelease = dbContext.ReqReleases.Where(p => p.ReleaseNo == SideReleaseNo).FirstOrDefault();
+                    if (checkRelease != null)
+                    {
+                        // 已存在则更新
+                        checkRelease.PlanReleaseDate = DateTime.Parse(PlanReleaseDate);
+                        checkRelease.ReleaseNo = SideReleaseNo;
+                        checkRelease.IsSideRelease = true;
+                        checkRelease.RelatedMainReleaseNo = ReleaseNo;
+                        dbContext.Entry(checkRelease).State = System.Data.Entity.EntityState.Modified;
+                        dbContext.SaveChanges();
+
+                        msg += "<p class='alert alert-warning'>下发编号" + SideReleaseNo + "已存在，对现有记录进行了更新！</p>";
+                    }
+                    else
+                    {
+                        // 不存在则新增
+                        var release = new ReqRelease
+                        {
+                            PlanReleaseDate = DateTime.Parse(PlanReleaseDate),
+                            ReleaseNo = SideReleaseNo,
+                            IsSideRelease = true,
+                            RelatedMainReleaseNo = ReleaseNo
+                        };
+                        dbContext.ReqReleases.Add(release);
+                        dbContext.SaveChanges();
+
+                        msg += "<p class='alert alert-success'>添加副下发记录" + SideReleaseNo + "成功</p>";
+                    }
+                }
+
+                // 将主下发的ID更新到req中
+                string sql = string.Format("update ReqDetails set ReqReleaseID = '{0}', UpdateTime='{1}' where ReqDetailID in ({2})", reqReleaseID, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"), Reqs);
+
+                int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
+
+                msg += "<p class='alert alert-success'>" + updatedNum + "条需求更新成功！</p>";
+
+            }
+            catch (Exception e1)
+            {
+                msg += "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
+            }
+
+            return msg;
+        }
+
+        #endregion
+
+
         /*
          * 【2】查询
-         */
+         
 
         // 默认页为查询页
         // 按照查询条件查询结果：为使用分页功能，GET模式查询        
@@ -283,9 +616,9 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ReqDetailNo == query.ReqDetailNo.Trim());
                 }
-                if (!string.IsNullOrEmpty(query.AnyRlsNo))
+                if (!string.IsNullOrEmpty(query.AnyReleaseNo))
                 {
-                    ls = ls.Where(p => p.RlsNo == query.AnyRlsNo || p.SecondRlsNo == query.AnyRlsNo);
+                    ls = ls.Where(p => p.ReleaseNo == query.AnyReleaseNo || p.SideReleaseNo == query.AnyReleaseNo);
                 }
 
                 if (!string.IsNullOrEmpty(query.ReqStat))
@@ -374,7 +707,7 @@ namespace MyTeam.Controllers
 
         /*
          * 【3】批处理
-         */
+         
 
         // 批处理统一入口
         public ActionResult Bat()
@@ -387,13 +720,13 @@ namespace MyTeam.Controllers
         // 2016年8月16日：批量功能统一为「批量更新」
         // Ajax调用，批量更新       
         [HttpPost]
-        public string BatProc(string reqs, string version, string outDate, string planRlsDate, string rlsNo, string secondRlsNo, string rlsDate, string secondRlsDate,
+        public string BatProc(string reqs, string version, string outDate, string planReleaseDate, string ReleaseNo, string SideReleaseNo, string ReleaseDate, string secondReleaseDate,
             string remark, string reqStat, string acptDate, bool clearAcptDate)
         {
             // 若填写了下发日期，则下发状态应该为「办结」
-            if ((!string.IsNullOrEmpty(rlsDate) || !string.IsNullOrEmpty(secondRlsDate)) && reqStat != ReqStatEnums.办结.ToString())
+            if ((!string.IsNullOrEmpty(ReleaseDate) || !string.IsNullOrEmpty(secondReleaseDate)) && reqStat != ReqStatEnums.办结.ToString())
             {
-                return "<p class='alert alert-danger'>出错了：填写了下发日期的情况下，需求状态必须为「办结」</p>"; 
+                return "<p class='alert alert-danger'>出错了：填写了下发日期的情况下，需求状态必须为「办结」</p>";
             }
 
             // 拼出sql中的in条件
@@ -427,33 +760,33 @@ namespace MyTeam.Controllers
                 updateFiledNum++;
             }
 
-            if (!string.IsNullOrEmpty(planRlsDate))
+            if (!string.IsNullOrEmpty(planReleaseDate))
             {
-                sb.Append(", PlanRlsDate='" + planRlsDate + "'");
+                sb.Append(", PlanReleaseDate='" + planReleaseDate + "'");
                 updateFiledNum++;
             }
 
-            if (!string.IsNullOrEmpty(rlsNo))
+            if (!string.IsNullOrEmpty(ReleaseNo))
             {
-                sb.Append(", RlsNo='" + rlsNo + "'");
+                sb.Append(", ReleaseNo='" + ReleaseNo + "'");
                 updateFiledNum++;
             }
 
-            if (!string.IsNullOrEmpty(secondRlsNo))
+            if (!string.IsNullOrEmpty(SideReleaseNo))
             {
-                sb.Append(", SecondRlsNo='" + secondRlsNo + "'");
+                sb.Append(", SideReleaseNo='" + SideReleaseNo + "'");
                 updateFiledNum++;
             }
 
-            if (!string.IsNullOrEmpty(rlsDate))
+            if (!string.IsNullOrEmpty(ReleaseDate))
             {
-                sb.Append(", RlsDate='" + rlsDate + "'");
+                sb.Append(", ReleaseDate='" + ReleaseDate + "'");
                 updateFiledNum++;
             }
 
-            if (!string.IsNullOrEmpty(secondRlsDate))
+            if (!string.IsNullOrEmpty(secondReleaseDate))
             {
-                sb.Append(", SecondRlsDate='" + secondRlsDate + "'");
+                sb.Append(", SecondReleaseDate='" + secondReleaseDate + "'");
                 updateFiledNum++;
             }
 
@@ -514,7 +847,7 @@ namespace MyTeam.Controllers
 
         /*
          * 【4】单笔新增
-         */
+         
         public ActionResult Create(int id = 0)
         {
             // 1、生成系统列表
@@ -558,7 +891,7 @@ namespace MyTeam.Controllers
             try
             {
                 // 若填写了下发日期，则下发状态应该为「办结」
-                if ((req.RlsDate != null || req.SecondRlsDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
+                if ((req.ReleaseDate != null || req.SecondReleaseDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
                 {
                     throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
                 }
@@ -608,7 +941,7 @@ namespace MyTeam.Controllers
 
         /*
          * 【5】单笔修改
-         */
+         
         public ActionResult Edit(int id)
         {
             Req req = dbContext.Reqs.ToList().Find(a => a.RID == id);
@@ -651,7 +984,7 @@ namespace MyTeam.Controllers
             try
             {
                 // 若填写了下发日期，则下发状态应该为「办结」
-                if ((req.RlsDate != null || req.SecondRlsDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
+                if ((req.ReleaseDate != null || req.SecondReleaseDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
                 {
                     throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
                 }
@@ -694,7 +1027,7 @@ namespace MyTeam.Controllers
 
         /*
          * 6、单笔删除
-         */
+         
         // ajax调用
         [HttpPost]
         public string Delete(int id)
@@ -715,7 +1048,7 @@ namespace MyTeam.Controllers
 
         /*
          * 7、出池计划查询与导出
-         */
+         
         public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
         {
             if (isQuery)
@@ -758,8 +1091,8 @@ namespace MyTeam.Controllers
                         ReqDevPerson = req.ReqDevPerson,
                         ReqBusiTestPerson = req.ReqBusiTestPerson,
                         ReqType = req.ReqTypeName,
-                        PlanRlsDate = req.PlanRlsDate,
-                        RlsDate = req.RlsDate,
+                        PlanReleaseDate = req.PlanReleaseDate,
+                        ReleaseDate = req.ReleaseDate,
                         Remark = req.Remark
                     };
                     resultList.Add(res);
@@ -777,8 +1110,8 @@ namespace MyTeam.Controllers
                         ReqDevPerson = req.ReqDevPerson,
                         ReqBusiTestPerson = req.ReqBusiTestPerson,
                         ReqType = req.ReqTypeName,
-                        PlanRlsDate = req.PlanRlsDate,
-                        RlsDate = req.RlsDate,
+                        PlanReleaseDate = req.PlanReleaseDate,
+                        ReleaseDate = req.ReleaseDate,
                         Remark = req.Remark
                     };
 
@@ -816,74 +1149,7 @@ namespace MyTeam.Controllers
 
             return View(query);
         }
-
-
-        // 自动生成维护需求编号
-        private string GetReqNum(string[] firstReqNum, int changeNum)
-        {
-            if (firstReqNum == null)
-                return "";
-            firstReqNum[1] = changeNum.ToString().PadLeft(4, '0');
-            StringBuilder sb = new StringBuilder(firstReqNum[0]);
-            for (int i = 1; i < firstReqNum.Length; i++)
-            {
-                sb.Append("-").Append(firstReqNum[i]);
-            }
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 根据数组自动生成where in的条件
-        /// </summary>
-        /// <param name="reqs"></param>
-        /// <returns></returns>
-        private string GetWhereIn(string reqs)
-        {
-            // 拆分reqs
-            string[] reqArr = reqs.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-            // 分别判断是申请编号还是维护需求编号
-            StringBuilder reqNos = new StringBuilder();
-            StringBuilder reqDetailNos = new StringBuilder();
-
-            foreach (string s in reqArr)
-            {
-                if (s.Length == 24) // 目前看维护需求编号长度固定，申请编号不固定
-                {
-                    reqDetailNos.Append(string.Format("'{0}',", s));
-                }
-                else
-                {
-                    reqNos.Append(string.Format("'{0}',", s));
-                }
-
-            }
-
-            // 三种情况：1、只有申请编号；2、只有需求编号；3、两者皆有 （两者皆无会直接拦截）
-            string sql = " where ";
-            if (reqNos.Length > 0 && reqDetailNos.Length == 0)
-            {
-                string reqNosResult = reqNos.ToString();
-                sql += string.Format("ReqNo in ({0})", reqNosResult.Substring(0, reqNosResult.Length - 1));
-            }
-
-            else if (reqNos.Length == 0 && reqDetailNos.Length > 0)
-            {
-                string reqDetailNosResult = reqDetailNos.ToString();
-                sql += string.Format("ReqDetailNo in ({0})", reqDetailNosResult.Substring(0, reqDetailNosResult.Length - 1));
-            }
-
-            else
-            {
-                string reqNosResult = reqNos.ToString();
-                string reqDetailNosResult = reqDetailNos.ToString();
-
-                sql += string.Format("ReqNo in ({0}) or ReqDetailNo in ({1})", reqNosResult.Substring(0, reqNosResult.Length - 1),
-                    reqDetailNosResult.Substring(0, reqDetailNosResult.Length - 1));
-            }
-
-            return sql;
-        }
+                      
 
         /// <summary>
         /// 生成用于Excel输出的list
@@ -916,13 +1182,13 @@ namespace MyTeam.Controllers
                     DevWorkload = s.DevWorkload,
                     ReqStat = s.ReqStatName,
                     OutDate = s.OutDate,
-                    PlanRlsDate = s.PlanRlsDate,
-                    RlsDate = s.RlsDate,
-                    RlsNo = s.RlsNo,
+                    PlanReleaseDate = s.PlanReleaseDate,
+                    ReleaseDate = s.ReleaseDate,
+                    ReleaseNo = s.ReleaseNo,
                     IsSysAsso = s.IsSysAsso ? "是" : "",
                     AssoSysName = s.AssoSysName,
                     AssoReqNo = s.AssoReqNo,
-                    AssoRlsDesc = s.AssoRlsDesc,
+                    AssoReleaseDesc = s.AssoReleaseDesc,
                     Remark = s.Remark
                 };
                 rl.Add(reqExcel);
@@ -943,197 +1209,36 @@ namespace MyTeam.Controllers
             return View(req);
         }
 
-        /*
-         * 出池与下发功能改进
-         * */
-
-        public ActionResult OutPool()
-        {
-            if (this.GetSessionCurrentUser() == null)
-            {
-                return RedirectToAction("Login", "User", new { ReturnUrl = "/ReqManage/OutPool" });
-            }
-
-            // 提供系统列表
-            List<RetailSystem> ls1 = this.GetNormalSysList();
-            // 加上“请选择系统”
-            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "--请选择系统--" });
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
-            ViewBag.SysList = sl1;
-
-            return View();
-        }
-
-        [HttpPost]
-        public string OutPool(string Reqs, string Version, string OutDate, string PlanRlsDate, int SysID, bool IsPatch)
-        {
-            // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理
-            string realVersion = Version;
-            if (!IsPatch) // 常规版本
-            {
-                Ver v = dbContext.Vers.Where(p => p.VerID.ToString() == Version).FirstOrDefault();
-                realVersion = v.VerNo;
-                // 更新版本计划信息
-                v.DraftTime = DateTime.Parse(PlanRlsDate); // 制定时间改为计划下发日期
-                v.DraftPersonID = this.GetSessionCurrentUser().UID;
-                dbContext.Entry(v).State = System.Data.Entity.EntityState.Modified;
-                dbContext.SaveChanges();
-            }
-            else // 补丁版本
-            {
-
-                // 新增一条记录
-                DateTime newTime = DateTime.Parse(PlanRlsDate);
-                Ver v = new Ver()
-                {
-                    SysID = SysID,
-                    VerNo = realVersion,
-                    VerYear = DateTime.Now.Year.ToString(),
-                    ReleaseFreq = 0, // 补丁版本的频率记为0
-                    DraftTime = newTime,
-                    PublishTime = newTime,// 发布时间、制定时间均为计划下发日期
-                    DraftPersonID = this.GetSessionCurrentUser() == null ? 0 : this.GetSessionCurrentUser().UID,
-                    VerType = "补丁版本"
-                };
-                dbContext.Vers.Add(v);
-                dbContext.SaveChanges();
-            }
-
-            string sql = string.Format("update Reqs set Version='{0}', OutDate='{1}', PlanRlsDate='{2}', ReqStat={3}, UpdateTime='{4}' where RID in ({5})", realVersion, OutDate, PlanRlsDate, (int)ReqStatEnums.出池, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
-            try
-            {
-                // 批量更新，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sql);
-
-                // 下载出池计划文档接口
-                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
-
-                return string.Format("<p class='alert alert-success'>" + r + "条需求成功出池！<a href='{0}'>点击</a>导出出池计划文档<p>", downfile);
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
-            }
-        }
-
-        [HttpPost]
-        public string UpdateRlsNo(string Reqs, string RlsNo, string SecondRlsNo)
-        {
-            // 保证副下发为NULL
-            if (!string.IsNullOrEmpty(SecondRlsNo))
-            {
-                SecondRlsNo = "SecondRlsNo='" + SecondRlsNo + "', ";
-            }
-
-            string sql = string.Format("update Reqs set RlsNo='{0}', {1} UpdateTime='{2}' where RID in ({3})", RlsNo, SecondRlsNo, DateTime.Now.ToString("yyyyMMddHHmmss"), Reqs);
-            try
-            {
-                // 批量更新，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sql);
-
-                return "<p class='alert alert-success'>" + r + "条记录更新成功！";
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger>出错了：" + e1.Message + "</p>";
-            }
-        }
-
-        /// <summary>
-        /// Ajax接口，根据SysID获取可以出池的需求列表
-        /// </summary>
-        /// <param name="sysID"></param>
-        /// <returns></returns>
-        public string GetReqsToOutPool(int sysID)
-        {
-            if (sysID == 0)
-            {
-                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--请选择系统--</option></select>";
-            }
-
-            List<Req> list = dbContext.Reqs.Where(p => p.SysID == sysID && p.ReqStat == (int)ReqStatEnums.入池).ToList();
 
 
-            int size = list.Count;
+        
 
-            if (size == 0)
-            {
-                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--无可出池需求--</option></select>";
-            }
-
-            StringBuilder sb = new StringBuilder("<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"5\">");
-
-            foreach (Req r in list)
-            {
-                sb.Append(string.Format("<option value='{0}'>{1}</option>", r.RID, r.ReqDetailNo));
-            }
-
-            sb.Append("</select>");
-
-            return sb.ToString();
-
-        }
-
-        // 2016年8月10日 新增
-
-        /// <summary>
-        /// Ajax接口，根据SysID获取可以出池的版本
-        /// </summary>
-        /// <param name="sysID"></param>
-        /// <returns></returns>
-        public string GetVersToOutPool(int sysID)
-        {
-            if (sysID == 0)
-            {
-                return "<option>--请选择系统--</option>";
-            }
-
-            List<Ver> list = dbContext.Vers.Where(p => p.SysID == sysID && p.VerYear == DateTime.Now.Year.ToString() && p.VerType == "计划版本").ToList();
-
-
-            int size = list.Count;
-
-            if (size == 0)
-            {
-                return "<option value=0>--未找到版本计划--</option>";
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Ver r in list)
-            {
-                sb.Append(string.Format("<option value='{0}'>{1}</option>", r.VerID, r.VerNo));
-            }
-
-            sb.Append("</select>");
-
-            return sb.ToString();
-
-        }
+        
+       
 
         // 2016年8月16日 新增：更新实际下发日期重做
-        public ActionResult UpdateRlsDate()
+        public ActionResult UpdateReleaseDate()
         {
             return View();
         }
 
         [HttpPost]
-        public string UpdateRlsDate(string rlsNo, string rlsDate, string secondRlsDate)
+        public string UpdateReleaseDate(string ReleaseNo, string ReleaseDate, string secondReleaseDate)
         {
 
             StringBuilder sb = new StringBuilder("update Reqs set SysID=SysID");
 
-            if (!string.IsNullOrEmpty(rlsDate))
+            if (!string.IsNullOrEmpty(ReleaseDate))
             {
-                sb.Append(", RlsDate='" + rlsDate + "'");
+                sb.Append(", ReleaseDate='" + ReleaseDate + "'");
             }
 
-            if (!string.IsNullOrEmpty(secondRlsDate))
+            if (!string.IsNullOrEmpty(secondReleaseDate))
             {
-                sb.Append(", SecondRlsDate='" + secondRlsDate + "'");
+                sb.Append(", SecondReleaseDate='" + secondReleaseDate + "'");
             }
 
-            sb.Append(string.Format(", ReqStat = {3}, UpdateTime='{0}' where RlsNo = '{1}' or SecondRlsNo='{2}'", DateTime.Now.ToString("yyyyMMddHHmmss"), rlsNo, rlsNo, (int)ReqStatEnums.办结));
+            sb.Append(string.Format(", ReqStat = {3}, UpdateTime='{0}' where ReleaseNo = '{1}' or SideReleaseNo='{2}'", DateTime.Now.ToString("yyyyMMddHHmmss"), ReleaseNo, ReleaseNo, (int)ReqStatEnums.办结));
 
             try
             {
@@ -1147,62 +1252,7 @@ namespace MyTeam.Controllers
                 return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
             }
         }
-
-        // 2017年4月1日 新增
-        /// <summary>
-        /// Ajax接口，根据SysID获取可以入池的需求申请编号列表
-        /// </summary>
-        /// <param name="sysID"></param>
-        /// <returns></returns>
-        public string GetReqNosToInPool(int sysID)
-        {
-            if (sysID == 0)
-            {
-                return "<option value=''>--请选择系统--</option>";
-            }
-
-
-            List<string> list = dbContext.Reqs.Where(p => p.SysID == sysID && p.ReqStat == (int)ReqStatEnums.待评估).Select(p => p.ReqNo).Distinct().ToList();
-
-            int size = list.Count;
-
-            if (size == 0)
-            {
-                return "<option value=''>--无待入池需求--</option>";
-            }
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (var r in list)
-            {
-                sb.Append(string.Format("<option value='{0}'>{1}</option>", r, r));
-            }                      
-
-            return sb.ToString();
-
-        }
-        /// <summary>
-        /// Ajax接口，根据ReqNo获取申请事由
-        /// </summary>
-        /// <param name="reqNo"></param>
-        /// <returns></returns>
-        public string GetReqReasonByReqNo(string reqNo)
-        {
-            if (string.IsNullOrEmpty(reqNo))
-            {
-                return "未找到相关信息";
-            }
-
-            var req = dbContext.Reqs.Where(p => p.ReqNo == reqNo).FirstOrDefault();
-
-            if(req == null)
-            {
-                return "未找到相关信息";
-            }
-
-            return req.ReqReason;
-
-        }
-
+       
+    */
     }
 }

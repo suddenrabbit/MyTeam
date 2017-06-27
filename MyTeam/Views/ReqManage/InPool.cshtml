@@ -1,106 +1,29 @@
-﻿@model MyTeam.Models.InPoolReq
-
-@{
-    ViewBag.Title = "需求入池-第一步";
+﻿@{
+    ViewBag.Title = "需求入池";
 }
-
 <h2>@ViewBag.Title</h2>
-<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 
 <div class="row card">
-    @using (Html.BeginForm("InPoolStep2", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
-                        new { @class = "form-horizontal", role = "form", id = "MyForm", onsubmit="return checkName()" }))
-    {
+    <div class="form-inline">
+        <label class="control-label">选择要入池的需求</label>
+        @Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqNos()" })
 
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <select id="ReqNo" name="ReqNo" class="form-control">
+            <option value="">--请选择系统--</option>
+        </select>
 
-        <div class="form-group">
-            <label class="col-md-2 control-label">选择未入池的需求申请编号</label>
-            <div class="col-md-5">
-                <!--系统下拉选择-->
-                @Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqNos()" })
-                <br />
-                <select id="ReqNo" name="ReqNo" class="form-control" onchange="getReqReason()">
-                    <option value="">--请选择系统--</option>
-                </select>   
-            </div>
-            <div class="col-md-5">
-                <div id="ReqReasonDiv"></div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.NewReqNo, new { @class = "col-md-2 control-label" })
-
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.NewReqNo, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.NewReqNo, "", new { @class = "text-danger" })
-                <span class="text-info">（留空不更新）</span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.NewAcptDate, new { @class = "col-md-2 control-label" })
-
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.NewAcptDate, "DateTime")
-                @Html.ValidationMessageFor(model => model.NewAcptDate, "", new { @class = "text-danger" })
-                <span class="text-info">（留空不更新）</span>
-            </div>
-        </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ReqDevPerson, new { @class = "col-md-2 control-label" })
-
-                <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.ReqDevPerson, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ReqDevPerson, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.DevAcptDate, new { @class = "col-md-2 control-label" })
-
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.DevAcptDate, "DateTime")
-                    @Html.ValidationMessageFor(model => model.DevAcptDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.DevEvalDate, new { @class = "col-md-2 control-label" })
-
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.DevEvalDate, "DateTime")
-                    @Html.ValidationMessageFor(model => model.DevEvalDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="下一步" class="btn btn-primary" />
-                </div>
-            </div>
-
-    }
+        <button onclick="getInPoolDetail()" class="btn btn-primary">获取需求</button>
+    </div>
 
 </div>
+
+<div id="inPoolDetailDiv"></div>
+
 
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-
 <script>
-    // 研发人员的格式
-    function checkName() {
-        var ts = /^[\u4e00-\u9fa5]{2,3}\/\d{6}$/;
-        if (!ts.test($('#ReqDevPerson').val())) {
-            alert("研发联系人请按照「姓名（2或3个汉字）/电话（6位数字）」格式填写");
-            $('#ReqDevPerson').focus();
-            return false;
-        }             
-
-        return true;
-    }
-
     // 获取需求申请编号
     function getReqNos() {
         var sysID = $('#SysID').val();
@@ -117,19 +40,19 @@
 
         });
     }
-
-    // 获取需求申请事由供参考
-    function getReqReason() {
+    // 根据申请编号获取入池的页面
+    function getInPoolDetail() {
         var reqNo = $('#ReqNo').val();
         if (reqNo == "") {
-            $('#ReqReasonDiv').html("");
+            alert("需求编号不能为空！");
             return;
         }
+        $('#inPoolDetailDiv').html("获取信息中...");
         $.ajax({
             type: 'GET',
-            url: '/ReqManage/GetReqReasonByReqNo?reqNo=' + reqNo,
+            url: '/ReqManage/InPoolDetail?reqNo=' + reqNo,
             success: function (msg) {
-                $('#ReqReasonDiv').html("<div class='well well- sm'><b>需求申请事由：</b>" + msg + "<div>");
+                $('#inPoolDetailDiv').html(msg);
             },
             error: function () {
                 alert("出错了，请联系管理员");
@@ -137,5 +60,4 @@
 
         });
     }
-
 </script>

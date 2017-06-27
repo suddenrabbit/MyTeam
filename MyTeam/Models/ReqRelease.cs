@@ -21,14 +21,15 @@ namespace MyTeam.Models
 
         [Display(Name = "实际下发日期")]
         [DataType(DataType.Date)]
-        public DateTime? ReleaseDate { get; set; }
-
+        public DateTime? ReleaseDate { get; set; } 
+        
         [Display(Name = "是否副下发")]
         [System.ComponentModel.DefaultValue(false)]
         public bool IsSideRelease { get; set; }
 
-        [Display(Name = "关联主下发")]
-        public string RelatedReleaseNo { get; set; }
+        [Display(Name = "对应主下发编号")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
+        public string RelatedMainReleaseNo { get; set; }
 
     }
 }
