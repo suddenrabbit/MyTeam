@@ -17,13 +17,12 @@ namespace MyTeam.Controllers
     /**
      * 1、第一步：需求登记
      * 2、第二步：需求入池
-     * 3、第三步：需求出池
-     * 4、第四步：需求下发
-     * 5、第五步：更新下发日期
+     * 3、第三步：需求出池与下发
+     * 4、第四步：更新下发日期
      * 
-     * 6、需求管理
-     * 7、下发管理
-     * 8、导出下发报表
+     * 5、需求管理
+     * 6、下发管理
+     * 7、导出下发报表
      **/
     public class ReqManageController : BaseController
     {
@@ -583,43 +582,110 @@ namespace MyTeam.Controllers
 
         #endregion
 
+        /**
+         * 4、更新下发日期
+         * */
+        #region 更新下发日期
+        [HttpGet]
+        public ActionResult UpdateReleaseDate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public string UpdateReleaseDate(string ReleaseNo, string ReleaseDate)
+        {
+
+            try
+            {
+                var r = dbContext.ReqReleases.Where(p => p.ReleaseNo == ReleaseNo).FirstOrDefault();
+                if (r == null)
+                {
+                    throw new Exception("没有" + ReleaseNo + "相关下发记录");
+                }
+
+                r.ReleaseDate = DateTime.Parse(ReleaseDate);
+
+                dbContext.Entry(r).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+
+                string msg = "已更新" + ReleaseNo + "的下发日期";
+
+                // 如果是主下发，则查找是否有相应的副下发没有填写实际下发日期
+                if (!r.IsSideRelease)
+                {
+                    var ls = dbContext.ReqReleases.Where(p => p.IsSideRelease == true && p.RelatedMainReleaseNo == ReleaseNo && p.ReleaseDate == null).ToList();
+                    if (ls.Count > 0)
+                    {
+                        msg += "；此下发还有以下对应的副下发编号未填写实际下发日期，请关注：";
+                        foreach (var m in ls)
+                        {
+                            msg += m.ReleaseNo + " ";
+                        }
+                    }
+                }
+                else // 如果是副下发，则查找是否有相应的主下发没有填写实际下发日期
+                {
+                    var m = dbContext.ReqReleases.Where(p => p.ReleaseNo == ReleaseNo && p.ReleaseDate == null).FirstOrDefault();
+                    if (m != null)
+                    {
+                        msg += "；此下发还有对应的主下发编号未填写实际下发日期，请关注：" + r.RelatedMainReleaseNo;
+                    }
+                }
+
+                return "<p class='alert alert-success'>" + msg + "</p>";
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
+            }
+        }
+
+        #endregion
+
+        #region 维护需求管理
+
+
+        #endregion
+
 
         /*
          * 【2】查询
-         
+         */
 
         // 默认页为查询页
-        // 按照查询条件查询结果：为使用分页功能，GET模式查询        
+        // 按照查询条件查询结果：为使用分页功能，GET模式查询 
+        [HttpGet]
         public ActionResult Index(ReqQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
             if (isQuery)
             {
-                var ls = from a in dbContext.Reqs
+                var ls = from a in dbContext.ReqDetails
                          select a;
                 if (query.SysID != 0)
                 {
-                    ls = ls.Where(p => p.SysID == query.SysID);
+                    ls = ls.Where(p => p.ReqMain.SysID == query.SysID);
                 }
                 if (!string.IsNullOrEmpty(query.AcptYear))
                 {
-                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.AcptYear);
+                    ls = ls.Where(p => p.ReqMain.AcptDate.Value.Year.ToString() == query.AcptYear);
                 }
                 if (!string.IsNullOrEmpty(query.AcptMonth))
                 {
-                    ls = ls.Where(p => p.AcptDate.Value.Month.ToString() == query.AcptMonth);
+                    ls = ls.Where(p => p.ReqMain.AcptDate.Value.Month.ToString() == query.AcptMonth);
                 }
                 if (!string.IsNullOrEmpty(query.ReqNo))
                 {
-                    ls = ls.Where(p => p.ReqNo == query.ReqNo.Trim());
+                    ls = ls.Where(p => p.ReqMain.ReqNo.Contains(query.ReqNo.Trim()));
                 }
                 if (!string.IsNullOrEmpty(query.ReqDetailNo))
                 {
-                    ls = ls.Where(p => p.ReqDetailNo == query.ReqDetailNo.Trim());
+                    ls = ls.Where(p => p.ReqDetailNo.Contains(query.ReqDetailNo.Trim()));
                 }
-                if (!string.IsNullOrEmpty(query.AnyReleaseNo))
+                /*if (!string.IsNullOrEmpty(query.AnyReleaseNo))
                 {
                     ls = ls.Where(p => p.ReleaseNo == query.AnyReleaseNo || p.SideReleaseNo == query.AnyReleaseNo);
-                }
+                }*/
 
                 if (!string.IsNullOrEmpty(query.ReqStat))
                 {
@@ -635,11 +701,11 @@ namespace MyTeam.Controllers
                 }
                 if (query.ReqAcptPerson != 0)
                 {
-                    ls = ls.Where(p => p.ReqAcptPerson == query.ReqAcptPerson);
+                    ls = ls.Where(p => p.ReqMain.ReqAcptPerson == query.ReqAcptPerson);
                 }
 
                 // 特殊查询：0-无 1-超过3个月未出池 2-超过8天未入池
-                if (query.SpecialQuery == 1)
+                /*if (query.SpecialQuery == 1)
                 {
                     DateTime time = DateTime.Now.AddMonths(-3);
                     ls = ls.Where(p => p.AcptDate.Value.CompareTo(time) <= 0);
@@ -649,15 +715,15 @@ namespace MyTeam.Controllers
                 {
                     DateTime time = DateTime.Now.AddDays(-8);
                     ls = ls.Where(p => p.AcptDate.Value.CompareTo(time) <= 0);
-                }
+                }*/
 
-                // 统一按照受理日期倒序
-                ls = ls.OrderByDescending(p => p.AcptDate);
+                // 统一按照创建日期倒序
+                ls = ls.OrderByDescending(p => p.CreateTime);
 
                 // 若isExcel为true，导出Excel
                 if (isExcel)
                 {
-                    RetailSystem s = new RetailSystem();
+                    /*RetailSystem s = new RetailSystem();
                     string targetFileName = "";
 
                     if (query.SysID != 0)
@@ -671,7 +737,7 @@ namespace MyTeam.Controllers
                     }
                     // 需要对list修改以适应Excel模板
                     List<ReqExcel> excelList = this.GetExcelList(ls);
-                    return this.MakeExcel<ReqExcel>("ReqReportT", targetFileName, excelList);
+                    return this.MakeExcel<ReqExcel>("ReqReportT", targetFileName, excelList);*/
                 }
                 else
                 {
@@ -1217,41 +1283,7 @@ namespace MyTeam.Controllers
        
 
         // 2016年8月16日 新增：更新实际下发日期重做
-        public ActionResult UpdateReleaseDate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public string UpdateReleaseDate(string ReleaseNo, string ReleaseDate, string secondReleaseDate)
-        {
-
-            StringBuilder sb = new StringBuilder("update Reqs set SysID=SysID");
-
-            if (!string.IsNullOrEmpty(ReleaseDate))
-            {
-                sb.Append(", ReleaseDate='" + ReleaseDate + "'");
-            }
-
-            if (!string.IsNullOrEmpty(secondReleaseDate))
-            {
-                sb.Append(", SecondReleaseDate='" + secondReleaseDate + "'");
-            }
-
-            sb.Append(string.Format(", ReqStat = {3}, UpdateTime='{0}' where ReleaseNo = '{1}' or SideReleaseNo='{2}'", DateTime.Now.ToString("yyyyMMddHHmmss"), ReleaseNo, ReleaseNo, (int)ReqStatEnums.办结));
-
-            try
-            {
-                // 批量更新，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sb.ToString());
-
-                return "<p class='alert alert-success'>已更新" + r + "条记录！</p>";
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
-            }
-        }
+        
        
     */
     }

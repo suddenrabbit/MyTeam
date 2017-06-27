@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "更新实际下发日期";
+}
+
+<h2>@ViewBag.Title</h2>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    function doProc()
+    {
+        $("#info").html("");
+
+        var releaseNo = $('#releaseNo').val();
+        if (releaseNo.length == 0)
+        {
+            alert("下发通知编号不能为空！");
+            $('#releaseNo').focus();
+            return;
+        }
+
+        var releaseDate = $('#releaseDate').val();
+        if (releaseDate.length == 0)
+        {
+            alert("实际下发日期不能为空！");
+            $('#releaseDate').focus();
+            return;
+        }
+
+        if (confirm("确定要更新实际下发日期吗？")) {
+            var url = "/ReqManage/UpdateReleaseDate";
+            var data = "ReleaseNo=" + releaseNo + "&ReleaseDate=" + releaseDate;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                success: function (msg) {
+                    $("#info").html(msg);
+                },
+                error: function () {
+                    $("#info").html("<p class='alert alert-danger'>出错了，请联系管理员</p>");
+                }
+            });
+
+        }
+    }
+
+</script>
+<div class="row card">
+    <div class="col-md-10 form-horizontal">
+        <div id="info"></div>
+        <div class="form-group">
+            <label for="releaseNo" class="col-md-2 control-label">下发通知编号</label>
+            <div class="col-md-10">
+                <input id="releaseNo" type="text" class="form-control" />
+            </div>
+        </div>
+       
+        <div class="form-group">
+            <label for="releaseDate" class="col-md-2 control-label">实际下发日期</label>
+            <div class="col-md-10">
+                <input id="releaseDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="更新" onclick="doProc()" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</div>

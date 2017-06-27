@@ -133,10 +133,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>@Html.LabelFor(model => model.AnyRlsNo, new { @class = "control-label" })</td>
+                    <td>@Html.LabelFor(model => model.AnyReleaseNo, new { @class = "control-label" })</td>
                     <td>
-                        @Html.TextBoxFor(model => model.AnyRlsNo, new { @class = "form-control", @placeholder = "主副下发编号均可，只能填一个" })
-                        @Html.ValidationMessageFor(model => model.AnyRlsNo, "", new { @class = "text-danger" })
+                        @Html.TextBoxFor(model => model.AnyReleaseNo, new { @class = "form-control", @placeholder = "主副下发编号均可，只能填一个" })
+                        @Html.ValidationMessageFor(model => model.AnyReleaseNo, "", new { @class = "text-danger" })
                     </td>
                     <td>@Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })</td>
                     <td class="form-inline">
@@ -187,22 +187,22 @@
                     <tr>
                         <th width="2"></th>
                         <th width="13">
-                            @Html.DisplayNameFor(model => model.ResultList[0].SysID)
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.SysID)
                         </th>
                         <th width="3">
-                            @Html.DisplayNameFor(model => model.ResultList[0].AcptDate)
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.AcptDate)
                         </th>
                         <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqNo)
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqNo)
                         </th>
                         <th width="5">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
                         </th>
                         <th width="12">
-                            @Html.DisplayNameFor(model => model.ResultList[0].AnyRlsNo)
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqReleaseID)
                         </th>
                         <th width="18">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqReason)
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqReason)
                         </th>
                         <th width="23">
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
@@ -211,7 +211,7 @@
                             @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
                         </th>
                         <th width="8">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqAcptPerson)
+                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqAcptPerson)
                         </th>
                         <th width="10">
                             @Html.DisplayNameFor(model => model.ResultList[0].Remark)
@@ -219,30 +219,30 @@
                     </tr>
                     @foreach (var item in Model.ResultList)
                     {
-                        var trid = "resultTR" + item.RID;
+                        var trid = "resultTR" + item.ReqDetailID;
                         <tr id="@trid">
                             <td>
-                                <a href="###" onclick="showDetail('@item.RID','@item.SysName 的维护需求')">详情</a>|
-                                <a href="###" onclick="doEdit('@item.RID', '@item.SysName')">编辑</a>|
-                                <a href="###" onclick="doDelete('@item.RID','@item.SysName 的维护需求')">删除</a>                                
+                                <a href="###" onclick="showDetail('@item.ReqDetailID','@item.ReqMain.SysName 的维护需求')">详情</a>|
+                                <a href="###" onclick="doEdit('@item.ReqDetailID', '@item.ReqMain.SysName')">编辑</a>|
+                                <a href="###" onclick="doDelete('@item.ReqDetailID','@item.ReqMain.SysName 的维护需求')">删除</a>                                
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.SysName)
+                                @Html.DisplayFor(modelItem => item.ReqMain.SysName)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.AcptDate)
+                                @Html.DisplayFor(modelItem => item.ReqMain.AcptDate)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ReqNo)
+                                @Html.DisplayFor(modelItem => item.ReqMain.ReqNo)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReqDetailNo)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.AnyRlsNo)
+                                @Html.DisplayFor(modelItem => item.ReqReleaseID)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ShortReqReason)
+                                @Html.DisplayFor(modelItem => item.ReqMain.ShortReqReason)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ShortReqDesc)
@@ -251,7 +251,7 @@
                                 @Html.DisplayFor(modelItem => item.ReqStatName)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ReqAcptPersonNamePhone)
+                                @Html.DisplayFor(modelItem => item.ReqMain.ReqAcptPersonNamePhone)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Remark)
@@ -259,7 +259,7 @@
                         </tr>
                     }
                 </table>
-                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.Req>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ReqDetail>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
             }
         </div>
 }

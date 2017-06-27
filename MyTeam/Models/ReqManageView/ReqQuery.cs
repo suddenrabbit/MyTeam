@@ -41,7 +41,7 @@ namespace MyTeam.Models
         [Display(Name="特殊查询")]
         public int SpecialQuery { get; set; }
 
-        public IPagedList<Req> ResultList { get; set; }
+        public IPagedList<ReqDetail> ResultList { get; set; }
 
         public string ToQueryString()
         {
