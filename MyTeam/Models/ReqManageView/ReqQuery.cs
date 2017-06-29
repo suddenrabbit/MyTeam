@@ -13,11 +13,11 @@ namespace MyTeam.Models
         [Display(Name = "系统名称")]
         public int SysID { get; set; }
 
-        [Display(Name = "受理年度")]
-        public string AcptYear { get; set; }
+        [Display(Name = "受理时间起始")]
+        public string AcptDateSatrt { get; set; }
 
-        [Display(Name = "受理月份")]
-        public string AcptMonth { get; set; }
+        [Display(Name = "受理时间结束")]
+        public string AcptDateEnd { get; set; }
 
         [Display(Name = "申请编号")]
         public string ReqNo { get; set; }
@@ -46,8 +46,8 @@ namespace MyTeam.Models
         public string ToQueryString()
         {
             return new StringBuilder("&SysID=").Append(this.SysID)
-                .Append("&AcptYear=").Append(this.AcptYear)
-                .Append("&AcptMonth=").Append(this.AcptMonth)
+                .Append("&AcptDateStart=").Append(this.AcptDateSatrt)
+                .Append("&AcptDateEnd=").Append(this.AcptDateEnd)
                 .Append("&ReqNo=").Append(this.ReqNo)
                 .Append("&ReqDetailNo=").Append(this.ReqDetailNo)
                 .Append("&AnyReleaseNo=").Append(this.AnyReleaseNo)

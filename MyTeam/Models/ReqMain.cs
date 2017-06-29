@@ -105,6 +105,9 @@ namespace MyTeam.Models
             {
                 this.ShortReqReason = value;
             }
-        }           
+        }
+        
+        [NotMapped]
+        public string OldReqNo { get; set; }
     }
 }

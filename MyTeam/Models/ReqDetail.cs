@@ -113,5 +113,9 @@ namespace MyTeam.Models
                 this.ReqStatName = value;
             }
         }
+
+        [NotMapped]
+        public string ReqReleaseNo { get; set; } //下发通知编号
+        
     }
 }

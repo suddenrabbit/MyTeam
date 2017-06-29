@@ -43,6 +43,8 @@
     // 在modal中显示详情
     function showDetail(id, name) {
         $('#detailName').html(name);
+        $('#detailMain').html("获取数据中...");
+
         var url = "/ReqManage/Details/" + id;
         $.ajax({
             type: 'GET',
@@ -60,17 +62,20 @@
     }
 
     // 在modal中编辑
-    function doEdit(id, name) {
-        $('#editName').html(name);
-        var url = "/ReqManage/Edit/" + id;
+    function doEdit(id, title, type) {
+        $('#modalTitle').html(title);
+        if(type == 1)
+            var url = "/ReqManage/EditMain/" + id;
+        else
+            var url = "/ReqManage/EditDetail/" + id;
         $.ajax({
             type: 'GET',
             url: url,
             success: function (msg) {
-                $('#EditMain').html(msg);
+                $('#modalBody').html(msg);
             },
             error: function () {
-                $('#EditMain').html("处理失败，请联系管理员");
+                $('#modalBody').html("处理失败，请联系管理员");
             },
             complete: function () {
                 $('#myModal4').modal({ backdrop: 'static' });
@@ -79,7 +84,7 @@
     }
 
     // 在modal中新增
-    function doCreate() {
+    /*function doCreate() {
         // 记录下当前页面中选中的系统
         var sysID = $("#SysID").val();
         var url = "/ReqManage/Create/" + sysID;
@@ -96,172 +101,169 @@
                 $('#myModal5').modal({ backdrop: 'static' });
             }
         });
-    }
+    }*/
 </script>
 <div class="row card">
     @using (Html.BeginForm("Index", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
     {
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <input type="hidden" name="isQuery" value="True" />
-            <input type="hidden" id="isExcel" name="isExcel" value="False" />
+        <input type="hidden" id="isExcel" name="isExcel" value="False" />
 
-            <table class="table table-condensed query-table">
-                <tr>
-                    <td>@Html.LabelFor(model => model.SysID, new { @class = "control-label" })</td>
-                    <td>
-                        <!--系统下拉选择-->
-                        @Html.DropDownListFor(model => model.SysID, ViewBag.SysList as SelectList, new { @class = "form-control" })
-                    </td>
-                    <td><label class="control-label">受理年度/月份</label></td>
-                    <td class="form-inline">
-                        <input id="AcptYear" name="AcptYear" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy' })" value="@Model.AcptYear" placeholder="点击选择日期" />
-                        <input id="AcptMonth" name="AcptMonth" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'M' })" value="@Model.AcptMonth" placeholder="点击选择日期" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.LabelFor(model => model.ReqNo, new { @class = "control-label" })</td>
-                    <td>
-                        @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
-                    </td>
-                    <td>@Html.LabelFor(model => model.ReqDetailNo, new { @class = "control-label" })</td>
-                    <td>
-                        @Html.TextBoxFor(model => model.ReqDetailNo, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.ReqDetailNo, "", new { @class = "text-danger" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.LabelFor(model => model.AnyReleaseNo, new { @class = "control-label" })</td>
-                    <td>
-                        @Html.TextBoxFor(model => model.AnyReleaseNo, new { @class = "form-control", @placeholder = "主副下发编号均可，只能填一个" })
-                        @Html.ValidationMessageFor(model => model.AnyReleaseNo, "", new { @class = "text-danger" })
-                    </td>
-                    <td>@Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })</td>
-                    <td class="form-inline">
-                        <!--需求状态下拉选择-->
-                        @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
-                        <!-- 勾选不等于 -->
-                        @Html.CheckBoxFor(model => model.NotEqual, new { @class = "checkbox" })
-                        @Html.LabelFor(model => model.NotEqual)
-                    </td>
-                </tr>
-                <tr>
-                    <td>@Html.LabelFor(model => model.ReqAcptPerson, new { @class = "control-label" })</td>
-                    <td>
-                        <!--需求受理人下拉选择-->
-                        @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.ReqAcptPersonList as SelectList, new { @class = "form-control" })
-                    </td>
-                    <td>@Html.LabelFor(model => model.SpecialQuery, new { @class = "control-label" })</td>
-                    <td>
-                        <select id="SpecialQuery" name="SpecialQuery" class="form-control" onchange="changeReqStat()">
-                            <option value="0">无</option>
-                            <option value="1">超过3个月未出池</option>
-                            <option value="2">超过8天未入池</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <input type="submit" value="查询" class="btn btn-primary" />
-                        <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
-                        <input type="button" value="新增一条" class="btn btn-default" onclick="doCreate()" />
-                    </td>
-                </tr>
-            </table>
+        <table class="table table-condensed query-table">
+            <tr>
+                <td>@Html.LabelFor(model => model.SysID, new { @class = "control-label" })</td>
+                <td>
+                    <!--系统下拉选择-->
+                    @Html.DropDownListFor(model => model.SysID, ViewBag.SysList as SelectList, new { @class = "form-control" })
+                </td>
+                <td><label class="control-label">受理时间(起止)</label></td>
+                <td class="form-inline">
+                    @Html.TextBoxFor(model => model.AcptDateSatrt, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择起始日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
+                    -
+                    @Html.TextBoxFor(model => model.AcptDateEnd, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择起始日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
+
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.ReqNo, new { @class = "control-label" })</td>
+                <td>
+                    @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control", @placeholder = "支持模糊查询" })
+                    @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
+                </td>
+                <td>@Html.LabelFor(model => model.ReqAcptPerson, new { @class = "control-label" })</td>
+                <td>
+                    <!--需求受理人下拉选择-->
+                    @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.ReqAcptPersonList as SelectList, new { @class = "form-control" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.ReqDetailNo, new { @class = "control-label" })</td>
+                <td>
+                    @Html.TextBoxFor(model => model.ReqDetailNo, new { @class = "form-control", @placeholder = "支持模糊查询" })
+                    @Html.ValidationMessageFor(model => model.ReqDetailNo, "", new { @class = "text-danger" })
+                </td>
+                <td>@Html.LabelFor(model => model.ReqStat, new { @class = "control-label" })</td>
+                <td>
+                    <!--需求状态下拉选择-->
+                    @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
+                </td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.AnyReleaseNo, new { @class = "control-label" })</td>
+                <td>
+                    @Html.TextBoxFor(model => model.AnyReleaseNo, new { @class = "form-control", @placeholder = "主副下发编号均可，只能填一个" })
+                    @Html.ValidationMessageFor(model => model.AnyReleaseNo, "", new { @class = "text-danger" })
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <input type="submit" value="查询" class="btn btn-primary" />
+                    <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
+                    <!--<input type="button" value="新增一条" class="btn btn-default" onclick="doCreate()" />-->
+                </td>
+            </tr>
+        </table>
     }
 </div>
 @if (Model.ResultList != null)
 {
     <h3>查询结果</h3>
-        <div class="row card">
+    <div class="row card">
 
-            @if (Model.ResultList.Count < 1)
-            {
-                <p class="alert alert-warning">没有符合条件的结果！</p>
-            }
-            else
-            {
-                <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
-                    <tr>
-                        <th width="2"></th>
-                        <th width="13">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.SysID)
-                        </th>
-                        <th width="3">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.AcptDate)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqNo)
-                        </th>
-                        <th width="5">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
-                        </th>
-                        <th width="12">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqReleaseID)
-                        </th>
-                        <th width="18">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqReason)
-                        </th>
-                        <th width="23">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
-                        </th>
-                        <th width="1">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
-                        </th>
-                        <th width="8">
-                            @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqAcptPerson)
-                        </th>
-                        <th width="10">
-                            @Html.DisplayNameFor(model => model.ResultList[0].Remark)
-                        </th>
+        @if (Model.ResultList.Count < 1)
+        {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+                <tr>
+                    <th width="2"></th>
+                    <th width="13">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.SysID)
+                    </th>
+                    <th width="3">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.AcptDate)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqNo)
+                    </th>
+                    <th width="18">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqReason)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqAcptPerson)
+                    </th>
+                    <th width="5">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
+                    </th>
+                    <th width="23">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
+                    </th>
+                    <th width="1">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
+                    </th>
+                    <th width="10">
+                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                    </th>
+                    <th width="12">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqReleaseID)
+                    </th>
+                </tr>
+                @for (int i = 0; i < Model.ResultList.Count; i++)
+                {
+                    var item = Model.ResultList[i];
+                    var trid = "resultTR" + item.ReqDetailID;
+                    <tr id="@trid">
+                        <td>
+                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')">详情</a> |                            
+                            <a href="###" onclick="doDelete('@item.ReqDetailID','删除维护需求')">删除</a> 
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqMain.SysName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqMain.AcptDate)
+                        </td>
+                        <td>
+                            <a href="###" onclick="doEdit('@item.ReqMainID', '编辑维护需求申请信息', 1)">@Html.DisplayFor(modelItem => item.ReqMain.ReqNo)</a>                            
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqMain.ShortReqReason)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqMain.ReqAcptPersonNamePhone)
+                        </td>
+
+
+                        <td>
+                            <a href="###" onclick="doEdit('@item.ReqDetailID', '编辑维护需求信息', 2)">@Html.DisplayFor(modelItem => item.ReqDetailNo)</a>
+                            
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShortReqDesc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqStatName)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Remark)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReqReleaseNo)
+                        </td>
                     </tr>
-                    @foreach (var item in Model.ResultList)
-                    {
-                        var trid = "resultTR" + item.ReqDetailID;
-                        <tr id="@trid">
-                            <td>
-                                <a href="###" onclick="showDetail('@item.ReqDetailID','@item.ReqMain.SysName 的维护需求')">详情</a>|
-                                <a href="###" onclick="doEdit('@item.ReqDetailID', '@item.ReqMain.SysName')">编辑</a>|
-                                <a href="###" onclick="doDelete('@item.ReqDetailID','@item.ReqMain.SysName 的维护需求')">删除</a>                                
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqMain.SysName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqMain.AcptDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqMain.ReqNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqDetailNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqReleaseID)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqMain.ShortReqReason)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ShortReqDesc)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqStatName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReqMain.ReqAcptPersonNamePhone)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Remark)
-                            </td>
-                        </tr>
-                    }
-                </table>
-                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ReqDetail>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
-            }
-        </div>
+                }
+            </table>
+            @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ReqDetail>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+        }
+        <p class="well well-sm"><b>提示：</b>点击相应的维护需求编号进行编辑或删除操作</p>
+    </div>
 }
 
 
@@ -329,7 +331,7 @@
                     &times;
                 </button>
                 <h4 class="modal-title" id="myModalLabel">
-                    【<span id="detailName"></span>】详情
+                    <span id="detailName"></span>
                 </h4>
             </div>
             <div class="modal-body">
@@ -344,7 +346,7 @@
     </div>
 </div>
 
-<!-- 对话框4：编辑页面 -->
+<!-- 对话框4：新增/编辑页面 -->
 <div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -355,52 +357,18 @@
                     &times;
                 </button>
                 <h4 class="modal-title" id="myModalLabel">
-                    【<span id="editName"></span>】维护需求管理编辑
+                    <span id="modalTitle"></span>
                 </h4>
             </div>
             <div class="modal-body">
-                <div id="EditMain"></div>
+                <div id="modalBody"></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 对话框5：新增页面 -->
-<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close"
-                        data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title" id="myModalLabel">
-                    新增
-                </h4>
-            </div>
-            <div class="modal-body">
-                <div id="CreateMain"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 选中特殊查询 -->
 <script>
     $(function () {
-        $("#SpecialQuery").val('@Model.SpecialQuery');
-
         $("#SysID").select2();
-    });
-
-    function changeReqStat() {
-        var s = $("#SpecialQuery").val();
-        if (s == 1) {
-            $("#ReqStat").val("入池");
-        }
-        else if (s == 2) {
-            $("#ReqStat").val("待评估");
-        }
-    }
+    });    
 </script>

@@ -185,6 +185,7 @@
     <Compile Include="Models\AttendanceView\AttendaceResult.cs" />
     <Compile Include="Models\BusiReqView\BusiReqProj.cs" />
     <Compile Include="Models\HomeView\HomeResult.cs" />
+    <Compile Include="Models\ReqManageView\FullReq.cs" />
     <Compile Include="Models\UpgradeLog.cs" />
     <Compile Include="Models\Param.cs" />
     <Compile Include="Models\ProjView\ProjPlanQuery.cs" />
@@ -403,6 +404,7 @@
     <Content Include="Views\ReqManage\RegResult.cshtml" />
     <Content Include="Views\ReqManage\UpdateReleaseDate.cshtml" />
     <Content Include="Views\ReqManage\InPoolDetail.cshtml" />
+    <Content Include="Views\ReqManage\EditMain.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

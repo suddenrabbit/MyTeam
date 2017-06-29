@@ -29,7 +29,7 @@ namespace MyTeam.Models
 
         [Display(Name = "对应主下发编号")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
-        public string RelatedMainReleaseNo { get; set; }
+        public string RelatedMainReleaseNo { get; set; }      
 
     }
 }

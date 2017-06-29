@@ -2,9 +2,9 @@
     Layout = null;
 }
 
-@model MyTeam.Models.Req
+@model MyTeam.Models.FullReq
 
-@if (Model == null)
+@if (Model == null || Model.reqDetail==null)
 {
     <div class="alert alert-warning">无此记录</div>
     @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
@@ -13,225 +13,225 @@
 
 <div class="row">
     <div class="col-md-12 form-horizontal">
-        <div class="form-group">
-            @Html.LabelFor(model => model.SysID, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.SysName)
+        <fieldset>
+            <legend>需求申请信息</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.SysID, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.SysName)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.AcptDate, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.AcptDate)
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.AcptDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.AcptDate)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqNo, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqNo)
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.ReqNo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.ReqNo)
+                </div>
             </div>
-        </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.ReqReason, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.ReqReason)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.ReqFromDept, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.ReqFromDept)
+                </div>
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqDetailNo, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqDetailNo)
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.ReqFromPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.ReqFromPerson)
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Version, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.Version)
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.ReqBusiTestPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.ReqBusiTestPerson)
+                </div>
             </div>
-        </div>
 
-        <!--
-           <div class="form-group">
-            @Html.LabelFor(model => model.BusiReqNo, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.BusiReqNo)
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.ReqAcptPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.ReqAcptPersonNamePhone)
+                </div>
             </div>
-            </div> 
-        -->
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.ReqDevPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.ReqDevPerson)
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.DevAcptDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.DevAcptDate)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqMain.DevEvalDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqMain.DevEvalDate)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>需求明细信息</legend>
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.ReqDetailNo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.ReqDetailNo)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.ReqDesc, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.ReqDesc)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.ReqType, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.ReqTypeName)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.DevWorkload, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.DevWorkload)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.ReqStat, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.ReqStatName)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.IsSysAsso, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.IsSysAsso)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.AssoSysName, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.AssoSysName)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.AssoReqNo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.AssoReqNo)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.AssoReleaseDesc, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.AssoReleaseDesc)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.Remark, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.Remark)
+                </div>
+            </div>           
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.Version, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.Version)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.OutDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.OutDate)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.CreateTime, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.CreateTime)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.reqDetail.UpdateTime, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9 form-control-static">
+                    @Html.DisplayFor(model => model.reqDetail.UpdateTime)
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>需求下发信息</legend>
+            @if(Model.reqReleases == null || Model.reqReleases.Count < 1)
+            {
+                <p class="text text-warning">暂无下发信息</p>
+            }
+            else
+            {
+                <table class="table table-table-condensed">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.reqReleases[0].ReleaseNo)</th>
+                        <th>@Html.DisplayNameFor(model => model.reqReleases[0].PlanReleaseDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.reqReleases[0].ReleaseDate)</th>                        
+                    </tr>
+                    @foreach (var item in Model.reqReleases)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReleaseNo)
+                                @if(item.IsSideRelease)
+                                {
+                                    <span>（副下发）</span>
+                                }
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.PlanReleaseDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ReleaseDate)</td>
+                            
+                        </tr>
+                    }
+                    
+
+                </table>
+            }
+            
+        </fieldset>
+
+
+
         
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqReason, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqReason)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqDesc, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqDesc)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqFromDept, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqFromDept)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqFromPerson, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqFromPerson)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqAcptPerson, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqAcptPersonNamePhone)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqDevPerson, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqDevPerson)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqBusiTestPerson, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqBusiTestPerson)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqType, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqTypeName)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DevAcptDate, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.DevAcptDate)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DevEvalDate, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.DevEvalDate)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DevWorkload, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.DevWorkload)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReqStat, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.ReqStatName)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.OutDate, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.OutDate)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PlanRlsDate, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.PlanRlsDate)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RlsNo, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.RlsNo)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RlsDate, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.RlsDate)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SecondRlsNo, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.SecondRlsNo)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.SecondRlsDate, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.SecondRlsDate)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsSysAsso, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.IsSysAsso)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AssoSysName, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.AssoSysName)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AssoReqNo, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.AssoReqNo)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AssoRlsDesc, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.AssoRlsDesc)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.Remark)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreateTime, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.CreateTime)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UpdateTime, new { @class = "col-md-3 control-label" })
-            <div class="col-md-9 form-control-static">
-                @Html.DisplayFor(model => model.UpdateTime)
-            </div>
-        </div>
     </div>
 </div>
 

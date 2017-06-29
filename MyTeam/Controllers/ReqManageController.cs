@@ -379,17 +379,7 @@ namespace MyTeam.Controllers
                 }
 
                 string sql = string.Format("Update ReqDetails set Version='{0}', OutDate='{1}', ReqStat='{2}', UpdateTime='{3}' where ReqDetailID in ({4})",
-                    realVersion, OutDate, (int)ReqStatEnums.出池, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"), Reqs);
-                /*foreach (var id in Reqs)
-                {
-                    var detail = dbContext.ReqDetails.Find(id);
-                    detail.Version = realVersion;
-                    detail.OutDate = DateTime.Parse(OutDate);
-                    detail.ReqStat = (int)ReqStatEnums.出池;
-                    detail.UpdateTime = DateTime.Now;
-
-                    dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
-                }*/
+                    realVersion, OutDate, (int)ReqStatEnums.出池, DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), Reqs);
 
                 int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
 
@@ -565,7 +555,7 @@ namespace MyTeam.Controllers
                 }
 
                 // 将主下发的ID更新到req中
-                string sql = string.Format("update ReqDetails set ReqReleaseID = '{0}', UpdateTime='{1}' where ReqDetailID in ({2})", reqReleaseID, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"), Reqs);
+                string sql = string.Format("update ReqDetails set ReqReleaseID = '{0}', UpdateTime='{1}' where ReqDetailID in ({2})", reqReleaseID, DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), Reqs);
 
                 int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
 
@@ -643,21 +633,18 @@ namespace MyTeam.Controllers
 
         #endregion
 
+        /**
+         * 5、维护需求管理
+         * 增删改查，Main与Detail联立管理
+         * */
         #region 维护需求管理
-
-
-        #endregion
-
-
-        /*
-         * 【2】查询
-         */
 
         // 默认页为查询页
         // 按照查询条件查询结果：为使用分页功能，GET模式查询 
         [HttpGet]
         public ActionResult Index(ReqQuery query, int pageNum = 1, bool isQuery = false, bool isExcel = false)
         {
+            var releaseList = dbContext.ReqReleases.ToList(); // 下发记录，备用
             if (isQuery)
             {
                 var ls = from a in dbContext.ReqDetails
@@ -666,61 +653,70 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ReqMain.SysID == query.SysID);
                 }
-                if (!string.IsNullOrEmpty(query.AcptYear))
+                if (!string.IsNullOrEmpty(query.AcptDateSatrt))
                 {
-                    ls = ls.Where(p => p.ReqMain.AcptDate.Value.Year.ToString() == query.AcptYear);
+                    var acptDateStart = DateTime.Parse(query.AcptDateSatrt);
+                    ls = ls.Where(p => p.ReqMain.AcptDate.Value >= acptDateStart);
                 }
-                if (!string.IsNullOrEmpty(query.AcptMonth))
+                if (!string.IsNullOrEmpty(query.AcptDateEnd))
                 {
-                    ls = ls.Where(p => p.ReqMain.AcptDate.Value.Month.ToString() == query.AcptMonth);
+                    var acptDateEnd = DateTime.Parse(query.AcptDateEnd);
+                    ls = ls.Where(p => p.ReqMain.AcptDate.Value <= acptDateEnd);
                 }
                 if (!string.IsNullOrEmpty(query.ReqNo))
                 {
                     ls = ls.Where(p => p.ReqMain.ReqNo.Contains(query.ReqNo.Trim()));
                 }
-                if (!string.IsNullOrEmpty(query.ReqDetailNo))
-                {
-                    ls = ls.Where(p => p.ReqDetailNo.Contains(query.ReqDetailNo.Trim()));
-                }
-                /*if (!string.IsNullOrEmpty(query.AnyReleaseNo))
-                {
-                    ls = ls.Where(p => p.ReleaseNo == query.AnyReleaseNo || p.SideReleaseNo == query.AnyReleaseNo);
-                }*/
 
                 if (!string.IsNullOrEmpty(query.ReqStat))
                 {
-                    // 分『等于』和『不等于』2种情况
-                    if (query.NotEqual)
-                    {
-                        ls = ls.Where(p => p.ReqStat.ToString() != query.ReqStat);
-                    }
-                    else
-                    {
-                        ls = ls.Where(p => p.ReqStat.ToString() == query.ReqStat);
-                    }
+                    ls = ls.Where(p => p.ReqStat.ToString() == query.ReqStat);
                 }
                 if (query.ReqAcptPerson != 0)
                 {
                     ls = ls.Where(p => p.ReqMain.ReqAcptPerson == query.ReqAcptPerson);
                 }
 
-                // 特殊查询：0-无 1-超过3个月未出池 2-超过8天未入池
-                /*if (query.SpecialQuery == 1)
+                if (!string.IsNullOrEmpty(query.ReqDetailNo))
                 {
-                    DateTime time = DateTime.Now.AddMonths(-3);
-                    ls = ls.Where(p => p.AcptDate.Value.CompareTo(time) <= 0);
+                    ls = ls.Where(p => p.ReqDetailNo.Contains(query.ReqDetailNo.Trim()));
                 }
 
-                else if (query.SpecialQuery == 2)
+                if (!string.IsNullOrEmpty(query.AnyReleaseNo))
                 {
-                    DateTime time = DateTime.Now.AddDays(-8);
-                    ls = ls.Where(p => p.AcptDate.Value.CompareTo(time) <= 0);
-                }*/
+                    var rls = releaseList.Find(p => p.ReleaseNo == query.AnyReleaseNo || p.RelatedMainReleaseNo == query.AnyReleaseNo);
+                    ls = ls.Where(p => p.ReqReleaseID == (rls == null ? -1 : rls.ReqReleaseID));
+                }
 
                 // 统一按照创建日期倒序
                 ls = ls.OrderByDescending(p => p.CreateTime);
 
-                // 若isExcel为true，导出Excel
+                var list = ls.ToList();
+
+                // 补充下发通知编号
+
+                foreach (var req in list)
+                {
+
+                    var rls = releaseList.Find(p => p.ReqReleaseID == req.ReqReleaseID);
+                    if (rls == null)
+                    {
+                        req.ReqReleaseNo = "";
+                    }
+                    else
+                    {
+                        req.ReqReleaseNo = rls.ReleaseNo;
+                        // 找相关的副下发
+                        var sideRls = releaseList.Find(p => p.RelatedMainReleaseNo == rls.ReleaseNo);
+                        if (sideRls != null)
+                        {
+                            req.ReqReleaseNo += "（主）" + sideRls.ReleaseNo + "（副）";
+                        }
+                    }
+
+                }
+
+                // TODO: 若isExcel为true，导出Excel
                 if (isExcel)
                 {
                     /*RetailSystem s = new RetailSystem();
@@ -741,7 +737,7 @@ namespace MyTeam.Controllers
                 }
                 else
                 {
-                    var list = ls.ToList();
+
                     // 分页
                     query.ResultList = list.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
                 }
@@ -771,246 +767,41 @@ namespace MyTeam.Controllers
             return View(query);
         }
 
-        /*
-         * 【3】批处理
-         
-
-        // 批处理统一入口
-        public ActionResult Bat()
+        // GET: /ReqManage/Details
+        // 详情查询
+        [HttpGet]
+        public ActionResult Details(int id)
         {
-            // 需求状态下拉
-            ViewBag.ReqStatList = MyTools.GetSelectListByEnum(enumType: typeof(ReqStatEnums), forQuery: true, emptyText: "不更新");
-            return View();
+            FullReq fullReq = new FullReq();
+            var req = dbContext.ReqDetails.Find(id);
+            ReqRelease rls = null;
+            if (req != null)
+            {
+                fullReq.reqDetail = req;
+                fullReq.reqMain = req.ReqMain;
+                rls = dbContext.ReqReleases.Find(req.ReqReleaseID);
+            }
+
+            if (rls != null)
+            {
+                List<ReqRelease> rlsList = new List<ReqRelease>();
+                rlsList.Add(rls);
+                List<ReqRelease> ls = dbContext.ReqReleases.Where(p => p.IsSideRelease == true && p.RelatedMainReleaseNo == rls.ReleaseNo).ToList();
+
+                rlsList.AddRange(ls);
+
+                fullReq.reqReleases = rlsList;
+            }
+
+            return View(fullReq);
         }
 
-        // 2016年8月16日：批量功能统一为「批量更新」
-        // Ajax调用，批量更新       
-        [HttpPost]
-        public string BatProc(string reqs, string version, string outDate, string planReleaseDate, string ReleaseNo, string SideReleaseNo, string ReleaseDate, string secondReleaseDate,
-            string remark, string reqStat, string acptDate, bool clearAcptDate)
+        // GET:/ReqManage/EditMain
+        // 编辑需求申请部分
+        [HttpGet]
+        public ActionResult EditMain(int id)
         {
-            // 若填写了下发日期，则下发状态应该为「办结」
-            if ((!string.IsNullOrEmpty(ReleaseDate) || !string.IsNullOrEmpty(secondReleaseDate)) && reqStat != ReqStatEnums.办结.ToString())
-            {
-                return "<p class='alert alert-danger'>出错了：填写了下发日期的情况下，需求状态必须为「办结」</p>";
-            }
-
-            // 拼出sql中的in条件
-            string whereIn = this.GetWhereIn(reqs);
-
-            // 仅更新不为空的
-            int updateFiledNum = 0;
-
-            StringBuilder sb = new StringBuilder("update Reqs set SysID=SysID");
-
-            if (clearAcptDate)
-            {
-                sb.Append(", AcptDate=NULL");
-                updateFiledNum++;
-            }
-            else if (!string.IsNullOrEmpty(acptDate))
-            {
-                sb.Append(", AcptDate='" + acptDate + "'");
-                updateFiledNum++;
-            }
-
-            if (!string.IsNullOrEmpty(version))
-            {
-                sb.Append(", Version='" + version + "'");
-                updateFiledNum++;
-            }
-
-            if (!string.IsNullOrEmpty(outDate))
-            {
-                sb.Append(", OutDate='" + outDate + "'");
-                updateFiledNum++;
-            }
-
-            if (!string.IsNullOrEmpty(planReleaseDate))
-            {
-                sb.Append(", PlanReleaseDate='" + planReleaseDate + "'");
-                updateFiledNum++;
-            }
-
-            if (!string.IsNullOrEmpty(ReleaseNo))
-            {
-                sb.Append(", ReleaseNo='" + ReleaseNo + "'");
-                updateFiledNum++;
-            }
-
-            if (!string.IsNullOrEmpty(SideReleaseNo))
-            {
-                sb.Append(", SideReleaseNo='" + SideReleaseNo + "'");
-                updateFiledNum++;
-            }
-
-            if (!string.IsNullOrEmpty(ReleaseDate))
-            {
-                sb.Append(", ReleaseDate='" + ReleaseDate + "'");
-                updateFiledNum++;
-            }
-
-            if (!string.IsNullOrEmpty(secondReleaseDate))
-            {
-                sb.Append(", SecondReleaseDate='" + secondReleaseDate + "'");
-                updateFiledNum++;
-            }
-
-            if (!string.IsNullOrEmpty(remark))
-            {
-                sb.Append(", Remark=N'" + remark + "'");
-                updateFiledNum++;
-            }
-
-            if (reqStat != "不更新")
-            {
-                sb.Append(", ReqStat=N'" + reqStat + "'");
-                updateFiledNum++;
-            }
-
-            if (updateFiledNum == 0)
-            {
-                return "<p class='alert alert-info'>因所有输入框为空，未更新任何信息！</p>";
-            }
-
-            sb.Append(string.Format(", UpdateTime='{0}' {1}", DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn));
-
-            try
-            {
-                // 批量更新，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sb.ToString());
-
-                return "<p class='alert alert-success'>已更新" + r + "条记录！</p>";
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
-            }
-        }
-
-        // Ajax调用，批量删除       
-        [HttpPost]
-        public string BatDel(string reqs)
-        {
-
-            // 拼出sql中的in条件
-            string whereIn = this.GetWhereIn(reqs);
-
-            string sql = string.Format("delete from Reqs {0}", whereIn);
-
-            try
-            {
-                // 批量删除，直接执行SQL
-                int r = dbContext.Database.ExecuteSqlCommand(sql);
-
-                return "<p class='alert alert-success'>已删除" + r + "条记录!<p>";
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
-            }
-        }
-
-        /*
-         * 【4】单笔新增
-         
-        public ActionResult Create(int id = 0)
-        {
-            // 1、生成系统列表
-            List<RetailSystem> ls1 = this.GetNormalSysList();
-
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", id); // 选中传进来的值
-
-            ViewBag.SysList = sl1;
-
-            // 2、生成需求受理人列表，默认当前用户为需求受理人 
-            SelectList sl2 = null;
-
-            User user = this.GetSessionCurrentUser();
-            if (user != null)
-            {
-                sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", user.UID);
-            }
-            else
-            {
-                sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
-            }
-
-            ViewBag.UserList = sl2;
-
-            // 3、需求发起单位 
-            ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
-
-            // 4、需求类型下拉列表
-            //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);
-
-            // 5、需求状态下拉列表
-            ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums));
-
-            return View();
-        }
-
-        // ajax调用
-        [HttpPost]
-        public string Create(Req req)
-        {
-            try
-            {
-                // 若填写了下发日期，则下发状态应该为「办结」
-                if ((req.ReleaseDate != null || req.SecondReleaseDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
-                {
-                    throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
-                }
-
-                // 判断是否有重复的维护需求编号，如有重复不允许新增
-                if (!string.IsNullOrEmpty(req.ReqDetailNo))
-                {
-                    Req r = dbContext.Reqs.ToList().Find(a => a.ReqDetailNo == req.ReqDetailNo);
-                    if (r != null)
-                    {
-                        throw new Exception("维护需求编号" + req.ReqDetailNo + "已存在，不允许重复添加！");
-                    }
-                }
-
-                // 去除空格：
-                string reqNo = req.ReqNo;
-                string reqDetailNo = req.ReqDetailNo;
-
-                req.ReqNo = reqNo.Trim();
-                req.ReqDetailNo = string.IsNullOrEmpty(reqDetailNo) ? "" : reqDetailNo.Trim();
-
-                // 根据需求编号确定需求类型
-                req.ReqType = 0;
-                try
-                {
-                    req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
-                }
-                catch
-                {
-                    // do nothing
-                }
-
-                // 加入创建时间和更新时间
-                req.CreateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-                req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-
-                dbContext.Reqs.Add(req);
-                dbContext.SaveChanges();
-
-                return Constants.AJAX_CREATE_SUCCESS_RETURN;
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
-            }
-        }
-
-        /*
-         * 【5】单笔修改
-         
-        public ActionResult Edit(int id)
-        {
-            Req req = dbContext.Reqs.ToList().Find(a => a.RID == id);
+            var req = dbContext.ReqMains.Find(id);
             if (req == null)
             {
                 return View();
@@ -1034,52 +825,26 @@ namespace MyTeam.Controllers
             // 4、需求发起单位 
             ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
 
-            // 5、需求类型下拉列表
-            //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);
+            // 记录原始reqno
+            req.OldReqNo = req.ReqNo;
 
-            // 6、需求状态下拉列表
-            ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), false, true, req.ReqStat.ToString());
-
-            req.OldReqDetailNo = req.ReqDetailNo;
             return View(req);
         }
 
         [HttpPost]
-        public string Edit(Req req)
+        public string EditMain(ReqMain req)
         {
+            if (req.ReqNo != req.OldReqNo)
+            {
+                var main = dbContext.ReqMains.Where(p => p.ReqNo == req.ReqNo).FirstOrDefault();
+                if (main != null)
+                {
+                    return "<p class='alert alert-warning'>需求申请编号" + req.ReqNo + "已存在，无法修改！</p>";
+                }
+            }
+
             try
             {
-                // 若填写了下发日期，则下发状态应该为「办结」
-                if ((req.ReleaseDate != null || req.SecondReleaseDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
-                {
-                    throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
-                }
-
-                // 判断有无重复需求编号
-                if (!string.IsNullOrEmpty(req.ReqDetailNo) && req.ReqDetailNo != req.OldReqDetailNo)
-                {
-                    Req r = dbContext.Reqs.Where(a => a.ReqDetailNo == req.ReqDetailNo).FirstOrDefault();
-                    if (r != null)
-                    {
-                        throw new Exception("维护需求编号" + r.ReqDetailNo + "已存在，不允许更新！");
-                    }
-                }
-
-
-                // 根据需求编号确定需求类型
-                req.ReqType = 0;
-                try
-                {
-                    req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
-                }
-                catch
-                {
-                    // do nothing
-                }
-
-                // 更新时间
-                req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-
                 dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
@@ -1090,201 +855,514 @@ namespace MyTeam.Controllers
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
+    
 
-        /*
-         * 6、单笔删除
-         
-        // ajax调用
-        [HttpPost]
-        public string Delete(int id)
+
+    #endregion
+
+    /*
+     * 【3】批处理
+
+
+    // 批处理统一入口
+    public ActionResult Bat()
+    {
+        // 需求状态下拉
+        ViewBag.ReqStatList = MyTools.GetSelectListByEnum(enumType: typeof(ReqStatEnums), forQuery: true, emptyText: "不更新");
+        return View();
+    }
+
+    // 2016年8月16日：批量功能统一为「批量更新」
+    // Ajax调用，批量更新       
+    [HttpPost]
+    public string BatProc(string reqs, string version, string outDate, string planReleaseDate, string ReleaseNo, string SideReleaseNo, string ReleaseDate, string secondReleaseDate,
+        string remark, string reqStat, string acptDate, bool clearAcptDate)
+    {
+        // 若填写了下发日期，则下发状态应该为「办结」
+        if ((!string.IsNullOrEmpty(ReleaseDate) || !string.IsNullOrEmpty(secondReleaseDate)) && reqStat != ReqStatEnums.办结.ToString())
         {
-            try
-            {
-                Req r = dbContext.Reqs.Where(a => a.RID == id).FirstOrDefault<Req>();
-                dbContext.Entry(r).State = System.Data.Entity.EntityState.Deleted;
-                dbContext.SaveChanges();
-
-                return "删除成功";
-            }
-            catch (Exception e1)
-            {
-                return "出错了: " + e1.Message;
-            }
+            return "<p class='alert alert-danger'>出错了：填写了下发日期的情况下，需求状态必须为「办结」</p>";
         }
 
-        /*
-         * 7、出池计划查询与导出
-         
-        public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
+        // 拼出sql中的in条件
+        string whereIn = this.GetWhereIn(reqs);
+
+        // 仅更新不为空的
+        int updateFiledNum = 0;
+
+        StringBuilder sb = new StringBuilder("update Reqs set SysID=SysID");
+
+        if (clearAcptDate)
         {
-            if (isQuery)
+            sb.Append(", AcptDate=NULL");
+            updateFiledNum++;
+        }
+        else if (!string.IsNullOrEmpty(acptDate))
+        {
+            sb.Append(", AcptDate='" + acptDate + "'");
+            updateFiledNum++;
+        }
+
+        if (!string.IsNullOrEmpty(version))
+        {
+            sb.Append(", Version='" + version + "'");
+            updateFiledNum++;
+        }
+
+        if (!string.IsNullOrEmpty(outDate))
+        {
+            sb.Append(", OutDate='" + outDate + "'");
+            updateFiledNum++;
+        }
+
+        if (!string.IsNullOrEmpty(planReleaseDate))
+        {
+            sb.Append(", PlanReleaseDate='" + planReleaseDate + "'");
+            updateFiledNum++;
+        }
+
+        if (!string.IsNullOrEmpty(ReleaseNo))
+        {
+            sb.Append(", ReleaseNo='" + ReleaseNo + "'");
+            updateFiledNum++;
+        }
+
+        if (!string.IsNullOrEmpty(SideReleaseNo))
+        {
+            sb.Append(", SideReleaseNo='" + SideReleaseNo + "'");
+            updateFiledNum++;
+        }
+
+        if (!string.IsNullOrEmpty(ReleaseDate))
+        {
+            sb.Append(", ReleaseDate='" + ReleaseDate + "'");
+            updateFiledNum++;
+        }
+
+        if (!string.IsNullOrEmpty(secondReleaseDate))
+        {
+            sb.Append(", SecondReleaseDate='" + secondReleaseDate + "'");
+            updateFiledNum++;
+        }
+
+        if (!string.IsNullOrEmpty(remark))
+        {
+            sb.Append(", Remark=N'" + remark + "'");
+            updateFiledNum++;
+        }
+
+        if (reqStat != "不更新")
+        {
+            sb.Append(", ReqStat=N'" + reqStat + "'");
+            updateFiledNum++;
+        }
+
+        if (updateFiledNum == 0)
+        {
+            return "<p class='alert alert-info'>因所有输入框为空，未更新任何信息！</p>";
+        }
+
+        sb.Append(string.Format(", UpdateTime='{0}' {1}", DateTime.Now.ToString("yyyyMMddHHmmss"), whereIn));
+
+        try
+        {
+            // 批量更新，直接执行SQL
+            int r = dbContext.Database.ExecuteSqlCommand(sb.ToString());
+
+            return "<p class='alert alert-success'>已更新" + r + "条记录！</p>";
+        }
+        catch (Exception e1)
+        {
+            return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
+        }
+    }
+
+    // Ajax调用，批量删除       
+    [HttpPost]
+    public string BatDel(string reqs)
+    {
+
+        // 拼出sql中的in条件
+        string whereIn = this.GetWhereIn(reqs);
+
+        string sql = string.Format("delete from Reqs {0}", whereIn);
+
+        try
+        {
+            // 批量删除，直接执行SQL
+            int r = dbContext.Database.ExecuteSqlCommand(sql);
+
+            return "<p class='alert alert-success'>已删除" + r + "条记录!<p>";
+        }
+        catch (Exception e1)
+        {
+            return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
+        }
+    }
+
+    /*
+     * 【4】单笔新增
+
+    public ActionResult Create(int id = 0)
+    {
+        // 1、生成系统列表
+        List<RetailSystem> ls1 = this.GetNormalSysList();
+
+        SelectList sl1 = new SelectList(ls1, "SysID", "SysName", id); // 选中传进来的值
+
+        ViewBag.SysList = sl1;
+
+        // 2、生成需求受理人列表，默认当前用户为需求受理人 
+        SelectList sl2 = null;
+
+        User user = this.GetSessionCurrentUser();
+        if (user != null)
+        {
+            sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", user.UID);
+        }
+        else
+        {
+            sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
+        }
+
+        ViewBag.UserList = sl2;
+
+        // 3、需求发起单位 
+        ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
+
+        // 4、需求类型下拉列表
+        //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);
+
+        // 5、需求状态下拉列表
+        ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums));
+
+        return View();
+    }
+
+    // ajax调用
+    [HttpPost]
+    public string Create(Req req)
+    {
+        try
+        {
+            // 若填写了下发日期，则下发状态应该为「办结」
+            if ((req.ReleaseDate != null || req.SecondReleaseDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
             {
-                // 根据query条件查询结果
-                var ls = from a in dbContext.Reqs
-                         select a;
+                throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
+            }
+
+            // 判断是否有重复的维护需求编号，如有重复不允许新增
+            if (!string.IsNullOrEmpty(req.ReqDetailNo))
+            {
+                Req r = dbContext.Reqs.ToList().Find(a => a.ReqDetailNo == req.ReqDetailNo);
+                if (r != null)
+                {
+                    throw new Exception("维护需求编号" + req.ReqDetailNo + "已存在，不允许重复添加！");
+                }
+            }
+
+            // 去除空格：
+            string reqNo = req.ReqNo;
+            string reqDetailNo = req.ReqDetailNo;
+
+            req.ReqNo = reqNo.Trim();
+            req.ReqDetailNo = string.IsNullOrEmpty(reqDetailNo) ? "" : reqDetailNo.Trim();
+
+            // 根据需求编号确定需求类型
+            req.ReqType = 0;
+            try
+            {
+                req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+            }
+            catch
+            {
+                // do nothing
+            }
+
+            // 加入创建时间和更新时间
+            req.CreateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+            req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+            dbContext.Reqs.Add(req);
+            dbContext.SaveChanges();
+
+            return Constants.AJAX_CREATE_SUCCESS_RETURN;
+        }
+        catch (Exception e1)
+        {
+            return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+        }
+    }
+
+    /*
+     * 【5】单笔修改
+
+    public ActionResult Edit(int id)
+    {
+        Req req = dbContext.Reqs.ToList().Find(a => a.RID == id);
+        if (req == null)
+        {
+            return View();
+        }
+
+        // 下拉框预处理
+        // 1、生成系统列表
+        List<RetailSystem> ls1 = this.GetNormalSysList();
+
+        SelectList sl1 = new SelectList(ls1, "SysID", "SysName", req.SysID);
+
+        ViewBag.SysList = sl1;
+
+        // 2、生成需求受理人列表
+        SelectList sl2 = null;
+
+        sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", req.ReqAcptPerson);
+
+        ViewBag.UserList = sl2;
+
+        // 4、需求发起单位 
+        ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
+
+        // 5、需求类型下拉列表
+        //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);
+
+        // 6、需求状态下拉列表
+        ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), false, true, req.ReqStat.ToString());
+
+        req.OldReqDetailNo = req.ReqDetailNo;
+        return View(req);
+    }
+
+    [HttpPost]
+    public string Edit(Req req)
+    {
+        try
+        {
+            // 若填写了下发日期，则下发状态应该为「办结」
+            if ((req.ReleaseDate != null || req.SecondReleaseDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
+            {
+                throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
+            }
+
+            // 判断有无重复需求编号
+            if (!string.IsNullOrEmpty(req.ReqDetailNo) && req.ReqDetailNo != req.OldReqDetailNo)
+            {
+                Req r = dbContext.Reqs.Where(a => a.ReqDetailNo == req.ReqDetailNo).FirstOrDefault();
+                if (r != null)
+                {
+                    throw new Exception("维护需求编号" + r.ReqDetailNo + "已存在，不允许更新！");
+                }
+            }
+
+
+            // 根据需求编号确定需求类型
+            req.ReqType = 0;
+            try
+            {
+                req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+            }
+            catch
+            {
+                // do nothing
+            }
+
+            // 更新时间
+            req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+            dbContext.Entry(req).State = System.Data.Entity.EntityState.Modified;
+            dbContext.SaveChanges();
+
+            return Constants.AJAX_EDIT_SUCCESS_RETURN;
+        }
+        catch (Exception e1)
+        {
+            return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+        }
+    }
+
+    /*
+     * 6、单笔删除
+
+    // ajax调用
+    [HttpPost]
+    public string Delete(int id)
+    {
+        try
+        {
+            Req r = dbContext.Reqs.Where(a => a.RID == id).FirstOrDefault<Req>();
+            dbContext.Entry(r).State = System.Data.Entity.EntityState.Deleted;
+            dbContext.SaveChanges();
+
+            return "删除成功";
+        }
+        catch (Exception e1)
+        {
+            return "出错了: " + e1.Message;
+        }
+    }
+
+    /*
+     * 7、出池计划查询与导出
+
+    public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
+    {
+        if (isQuery)
+        {
+            // 根据query条件查询结果
+            var ls = from a in dbContext.Reqs
+                     select a;
+            if (query.SysID != 0)
+            {
+                ls = ls.Where(p => p.SysID == query.SysID);
+            }
+            if (!string.IsNullOrEmpty(query.Version))
+            {
+                // 版本号
+                string[] vers = query.Version.Split(',');
+                ls = from b in ls
+                     where vers.Contains(b.Version)
+                     select b;
+            }
+            if (!string.IsNullOrEmpty(query.MaintainYear))
+            {
+                ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.MaintainYear);
+            }
+
+            // 将查询结果转换为OutPoolTableResult和OutPoolTableResultExcel（避免多出来的short字段影响）
+            List<OutPoolTableResult> resultList = new List<OutPoolTableResult>();
+            List<OutPoolTableResultExcel> resultExcelList = new List<OutPoolTableResultExcel>();
+            foreach (Req req in ls)
+            {
+                OutPoolTableResult res = new OutPoolTableResult()
+                {
+                    AcptMonth = req.AcptDate == null ? "" : req.AcptDate.Value.ToString("yyyy/M"),
+                    SysName = req.SysName,
+                    Version = req.Version,
+                    ReqNo = req.ReqNo,
+                    ReqDetailNo = req.ReqDetailNo,
+                    ReqReason = req.ReqReason,
+                    ReqDesc = req.ReqDesc,
+                    DevWorkload = req.DevWorkload,
+                    ReqDevPerson = req.ReqDevPerson,
+                    ReqBusiTestPerson = req.ReqBusiTestPerson,
+                    ReqType = req.ReqTypeName,
+                    PlanReleaseDate = req.PlanReleaseDate,
+                    ReleaseDate = req.ReleaseDate,
+                    Remark = req.Remark
+                };
+                resultList.Add(res);
+
+                OutPoolTableResultExcel resExcel = new OutPoolTableResultExcel()
+                {
+                    AcptMonth = req.AcptDate == null ? "" : req.AcptDate.Value.ToString("yyyy/M"),
+                    SysName = req.SysName,
+                    Version = req.Version,
+                    ReqNo = req.ReqNo,
+                    ReqDetailNo = req.ReqDetailNo,
+                    ReqReason = req.ReqReason,
+                    ReqDesc = req.ReqDesc,
+                    DevWorkload = req.DevWorkload,
+                    ReqDevPerson = req.ReqDevPerson,
+                    ReqBusiTestPerson = req.ReqBusiTestPerson,
+                    ReqType = req.ReqTypeName,
+                    PlanReleaseDate = req.PlanReleaseDate,
+                    ReleaseDate = req.ReleaseDate,
+                    Remark = req.Remark
+                };
+
+                resultExcelList.Add(resExcel);
+            }
+            // 若isExcel为true，导出Excel
+            if (isExcel)
+            {
+                string targetFileName = "零售条线出池计划";
                 if (query.SysID != 0)
-                {
-                    ls = ls.Where(p => p.SysID == query.SysID);
-                }
+                    targetFileName += "_" + resultExcelList[0].SysName;
                 if (!string.IsNullOrEmpty(query.Version))
-                {
-                    // 版本号
-                    string[] vers = query.Version.Split(',');
-                    ls = from b in ls
-                         where vers.Contains(b.Version)
-                         select b;
-                }
+                    targetFileName += "_" + query.Version;
                 if (!string.IsNullOrEmpty(query.MaintainYear))
-                {
-                    ls = ls.Where(p => p.AcptDate.Value.Year.ToString() == query.MaintainYear);
-                }
-
-                // 将查询结果转换为OutPoolTableResult和OutPoolTableResultExcel（避免多出来的short字段影响）
-                List<OutPoolTableResult> resultList = new List<OutPoolTableResult>();
-                List<OutPoolTableResultExcel> resultExcelList = new List<OutPoolTableResultExcel>();
-                foreach (Req req in ls)
-                {
-                    OutPoolTableResult res = new OutPoolTableResult()
-                    {
-                        AcptMonth = req.AcptDate == null ? "" : req.AcptDate.Value.ToString("yyyy/M"),
-                        SysName = req.SysName,
-                        Version = req.Version,
-                        ReqNo = req.ReqNo,
-                        ReqDetailNo = req.ReqDetailNo,
-                        ReqReason = req.ReqReason,
-                        ReqDesc = req.ReqDesc,
-                        DevWorkload = req.DevWorkload,
-                        ReqDevPerson = req.ReqDevPerson,
-                        ReqBusiTestPerson = req.ReqBusiTestPerson,
-                        ReqType = req.ReqTypeName,
-                        PlanReleaseDate = req.PlanReleaseDate,
-                        ReleaseDate = req.ReleaseDate,
-                        Remark = req.Remark
-                    };
-                    resultList.Add(res);
-
-                    OutPoolTableResultExcel resExcel = new OutPoolTableResultExcel()
-                    {
-                        AcptMonth = req.AcptDate == null ? "" : req.AcptDate.Value.ToString("yyyy/M"),
-                        SysName = req.SysName,
-                        Version = req.Version,
-                        ReqNo = req.ReqNo,
-                        ReqDetailNo = req.ReqDetailNo,
-                        ReqReason = req.ReqReason,
-                        ReqDesc = req.ReqDesc,
-                        DevWorkload = req.DevWorkload,
-                        ReqDevPerson = req.ReqDevPerson,
-                        ReqBusiTestPerson = req.ReqBusiTestPerson,
-                        ReqType = req.ReqTypeName,
-                        PlanReleaseDate = req.PlanReleaseDate,
-                        ReleaseDate = req.ReleaseDate,
-                        Remark = req.Remark
-                    };
-
-                    resultExcelList.Add(resExcel);
-                }
-                // 若isExcel为true，导出Excel
-                if (isExcel)
-                {
-                    string targetFileName = "零售条线出池计划";
-                    if (query.SysID != 0)
-                        targetFileName += "_" + resultExcelList[0].SysName;
-                    if (!string.IsNullOrEmpty(query.Version))
-                        targetFileName += "_" + query.Version;
-                    if (!string.IsNullOrEmpty(query.MaintainYear))
-                        targetFileName += "_" + query.MaintainYear;
-                    return this.MakeExcel<OutPoolTableResultExcel>("OutPoolReportT", targetFileName, resultExcelList);
-                }
-                else
-                {
-                    // 分页
-                    query.ResultList = resultList.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
-                }
+                    targetFileName += "_" + query.MaintainYear;
+                return this.MakeExcel<OutPoolTableResultExcel>("OutPoolReportT", targetFileName, resultExcelList);
             }
             else
             {
-                query = new OutPoolTableQuery();
+                // 分页
+                query.ResultList = resultList.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
             }
-
-            // 系统列表下拉
-            List<RetailSystem> ls1 = this.GetNormalSysList();
-            // 加上“全部”
-            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysID);
-            ViewBag.SysList = sl1;
-
-            return View(query);
         }
-                      
-
-        /// <summary>
-        /// 生成用于Excel输出的list
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        private List<ReqExcel> GetExcelList(IQueryable<Req> list)
+        else
         {
-            List<ReqExcel> rl = new List<ReqExcel>();
-            foreach (Req s in list)
-            {
-                ReqExcel reqExcel = new ReqExcel()
-                {
-                    SysName = s.SysName,
-                    AcptDate = s.AcptDate,
-                    ReqNo = s.ReqNo,
-                    ReqReason = s.ReqReason,
-                    ReqFromDept = s.ReqFromDept,
-                    ReqFromPerson = s.ReqFromPerson,
-                    ReqAcptPerson = s.ReqAcptPersonNamePhone,
-                    ReqDevPerson = s.ReqDevPerson,
-                    ReqBusiTestPerson = s.ReqBusiTestPerson,
-                    DevAcptDate = s.DevAcptDate,
-                    DevEvalDate = s.DevEvalDate,
-                    ReqDetailNo = s.ReqDetailNo,
-                    Version = s.Version,
-                    BusiReqNo = s.BusiReqNo,
-                    ReqDesc = s.ReqDesc,
-                    ReqType = s.ReqTypeName,
-                    DevWorkload = s.DevWorkload,
-                    ReqStat = s.ReqStatName,
-                    OutDate = s.OutDate,
-                    PlanReleaseDate = s.PlanReleaseDate,
-                    ReleaseDate = s.ReleaseDate,
-                    ReleaseNo = s.ReleaseNo,
-                    IsSysAsso = s.IsSysAsso ? "是" : "",
-                    AssoSysName = s.AssoSysName,
-                    AssoReqNo = s.AssoReqNo,
-                    AssoReleaseDesc = s.AssoReleaseDesc,
-                    Remark = s.Remark
-                };
-                rl.Add(reqExcel);
-            }
-            return rl;
+            query = new OutPoolTableQuery();
         }
 
-        public ActionResult Details(int id)
-        {
-            List<Req> ls = dbContext.Reqs.ToList();
-            Req req = ls.Find(a => a.RID == id);
+        // 系统列表下拉
+        List<RetailSystem> ls1 = this.GetNormalSysList();
+        // 加上“全部”
+        ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
+        SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysID);
+        ViewBag.SysList = sl1;
 
-            if (req == null)
-            {
-                return View();
-            }
-
-            return View(req);
-        }
-
-
-
-        
-
-        
-       
-
-        // 2016年8月16日 新增：更新实际下发日期重做
-        
-       
-    */
+        return View(query);
     }
+
+
+    /// <summary>
+    /// 生成用于Excel输出的list
+    /// </summary>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    private List<ReqExcel> GetExcelList(IQueryable<Req> list)
+    {
+        List<ReqExcel> rl = new List<ReqExcel>();
+        foreach (Req s in list)
+        {
+            ReqExcel reqExcel = new ReqExcel()
+            {
+                SysName = s.SysName,
+                AcptDate = s.AcptDate,
+                ReqNo = s.ReqNo,
+                ReqReason = s.ReqReason,
+                ReqFromDept = s.ReqFromDept,
+                ReqFromPerson = s.ReqFromPerson,
+                ReqAcptPerson = s.ReqAcptPersonNamePhone,
+                ReqDevPerson = s.ReqDevPerson,
+                ReqBusiTestPerson = s.ReqBusiTestPerson,
+                DevAcptDate = s.DevAcptDate,
+                DevEvalDate = s.DevEvalDate,
+                ReqDetailNo = s.ReqDetailNo,
+                Version = s.Version,
+                BusiReqNo = s.BusiReqNo,
+                ReqDesc = s.ReqDesc,
+                ReqType = s.ReqTypeName,
+                DevWorkload = s.DevWorkload,
+                ReqStat = s.ReqStatName,
+                OutDate = s.OutDate,
+                PlanReleaseDate = s.PlanReleaseDate,
+                ReleaseDate = s.ReleaseDate,
+                ReleaseNo = s.ReleaseNo,
+                IsSysAsso = s.IsSysAsso ? "是" : "",
+                AssoSysName = s.AssoSysName,
+                AssoReqNo = s.AssoReqNo,
+                AssoReleaseDesc = s.AssoReleaseDesc,
+                Remark = s.Remark
+            };
+            rl.Add(reqExcel);
+        }
+        return rl;
+    }
+
+
+
+
+
+
+
+
+
+
+    // 2016年8月16日 新增：更新实际下发日期重做
+
+
+*/
+}
 }
