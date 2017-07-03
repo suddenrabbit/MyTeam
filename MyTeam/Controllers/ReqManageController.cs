@@ -715,7 +715,7 @@ namespace MyTeam.Controllers
                             }
                         }
                     }
-                    
+
                     // 维护需求编号
                     if (string.IsNullOrEmpty(req.ReqDetailNo))
                         req.ReqDetailNo = "暂无";
@@ -741,13 +741,13 @@ namespace MyTeam.Controllers
                     // Excel使用FullReq
                     List<FullReq> fullList = new List<FullReq>();
                     foreach (var d in list)
-                    {                        
+                    {
                         var fullReq = new FullReq
                         {
                             reqMain = d.ReqMain,
                             reqDetail = d,
                             reqRelease = releaseList.Find(p => p.ReqReleaseID == d.ReqReleaseID)
-                    };
+                        };
                         fullList.Add(fullReq);
                     }
                     // 需要对list修改以适应Excel模板
@@ -1032,6 +1032,8 @@ namespace MyTeam.Controllers
         [HttpGet]
         public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
         {
+            string errMsg = "";
+
             if (isQuery)
             {
                 // 根据query条件查询结果
@@ -1059,49 +1061,56 @@ namespace MyTeam.Controllers
                 List<OutPoolTableResultExcel> resultExcelList = new List<OutPoolTableResultExcel>();
                 foreach (var req in ls.ToList())
                 {
-                    var rls = dbContext.ReqReleases.Find(req.ReqReleaseID);
-
-                    /*OutPoolTableResult res = new OutPoolTableResult()
+                    try
                     {
-                        AcptMonth = req.ReqMain.AcptDate == null ? "" : req.ReqMain.AcptDate.Value.ToString("yyyy/M"),
-                        SysName = req.ReqMain.SysName,
-                        Version = req.Version,
-                        ReqNo = req.ReqMain.ReqNo,
-                        ReqDetailNo = req.ReqDetailNo,
-                        ReqReason = req.ReqMain.ReqReason,
-                        ReqDesc = req.ReqDesc,
-                        DevWorkload = req.DevWorkload,
-                        ReqDevPerson = req.ReqMain.ReqDevPerson,
-                        ReqBusiTestPerson = req.ReqMain.ReqBusiTestPerson,
-                        ReqType = req.ReqTypeName,
-                        PlanReleaseDate = rls == null ? "" : rls.PlanReleaseDate.ToShortDateString(),
-                        ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),
-                        Remark = req.Remark
-                    };
-                    resultList.Add(res);*/
+                        var rls = dbContext.ReqReleases.Find(req.ReqReleaseID);
 
-                    OutPoolTableResultExcel resExcel = new OutPoolTableResultExcel
+                        OutPoolTableResult res = new OutPoolTableResult()
+                        {
+                            AcptMonth = req.ReqMain.AcptDate == null ? "" : req.ReqMain.AcptDate.Value.ToString("yyyy/M"),
+                            SysName = req.ReqMain.SysName,
+                            Version = req.Version,
+                            ReqNo = req.ReqMain.ReqNo,
+                            ReqDetailNo = req.ReqDetailNo,
+                            ReqReason = req.ReqMain.ReqReason,
+                            ReqDesc = req.ReqDesc,
+                            DevWorkload = req.DevWorkload,
+                            ReqDevPerson = req.ReqMain.ReqDevPerson,
+                            ReqBusiTestPerson = req.ReqMain.ReqBusiTestPerson,
+                            ReqType = req.ReqTypeName,
+                            PlanReleaseDate = rls == null ? "" : rls.PlanReleaseDate.ToShortDateString(),
+                            ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),
+                            Remark = req.Remark
+                        };
+                        resultList.Add(res);
+
+                        OutPoolTableResultExcel resExcel = new OutPoolTableResultExcel
+                        {
+                            AcptMonth = req.ReqMain.AcptDate == null ? "" : req.ReqMain.AcptDate.Value.ToString("yyyy/M"),
+                            SysName = req.ReqMain.SysName,
+                            Version = req.Version,
+                            ReqNo = req.ReqMain.ReqNo,
+                            ReqDetailNo = req.ReqDetailNo,
+                            ReqReason = req.ReqMain.ReqReason,
+                            ReqDesc = req.ReqDesc,
+                            DevWorkload = req.DevWorkload,
+                            ReqDevPerson = req.ReqMain.ReqDevPerson,
+                            ReqBusiTestPerson = req.ReqMain.ReqBusiTestPerson,
+                            ReqType = req.ReqTypeName,
+                            PlanReleaseDate = rls == null ? "" : rls.PlanReleaseDate.ToShortDateString(),
+                            ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),
+                            Remark = req.Remark
+                        };
+
+                        resultExcelList.Add(resExcel);
+                        
+                    }
+
+
+                    catch (Exception e1)
                     {
-                        AcptMonth = req.ReqMain.AcptDate == null ? "" : req.ReqMain.AcptDate.Value.ToString("yyyy/M"),
-                        SysName = req.ReqMain.SysName,
-                        Version = req.Version,
-                        ReqNo = req.ReqMain.ReqNo,
-                        ReqDetailNo = req.ReqDetailNo,
-                        ReqReason = req.ReqMain.ReqReason,
-                        ReqDesc = req.ReqDesc,
-                        DevWorkload = req.DevWorkload,
-                        ReqDevPerson = req.ReqMain.ReqDevPerson,
-                        ReqBusiTestPerson = req.ReqMain.ReqBusiTestPerson,
-                        ReqType = req.ReqTypeName,
-                        PlanReleaseDate = rls == null ? "" : rls.PlanReleaseDate.ToShortDateString(),
-                        ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),
-                        Remark = req.Remark
-                    };
-
-                    resultExcelList.Add(resExcel);
-
-                    OutPoolTableResult r = (OutPoolTableResult)resExcel;
-                    resultList.Add(r);
+                        errMsg += "出错了:" + e1.Message + "; ReqDetailID=" + req.ReqDetailID;
+                    }
                 }
                 // 若isExcel为true，导出Excel
                 if (isExcel)
@@ -1132,6 +1141,8 @@ namespace MyTeam.Controllers
             ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "全部" });
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName", query.SysID);
             ViewBag.SysList = sl1;
+
+            ViewBag.ErrMsg = errMsg;
 
             return View(query);
         }

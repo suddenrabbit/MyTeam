@@ -171,3 +171,8 @@
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+@if(!string.IsNullOrEmpty(ViewBag.ErrMsg))
+{
+    <p class="alert alert-danger">@ViewBag.ErrMsg</p>
+}
