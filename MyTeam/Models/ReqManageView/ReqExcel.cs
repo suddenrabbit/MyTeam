@@ -21,8 +21,8 @@ namespace MyTeam.Models
         [Display(Name = "下发版本号")]
         public string Version { get; set; }
 
-        [Display(Name = "关联业需编号")]
-        public string BusiReqNo { get; set; }
+        /*[Display(Name = "关联业需编号")]
+        public string BusiReqNo { get; set; }*/
 
         
         [Display(Name = "需求申请事由")]
@@ -70,13 +70,13 @@ namespace MyTeam.Models
         public DateTime? OutDate { get; set; }
 
         [Display(Name = "计划下发日期")]
-        public DateTime? PlanRlsDate { get; set; }
+        public string PlanReleaseDate { get; set; }
 
         [Display(Name = "实际下发日期")]
-        public DateTime? RlsDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         [Display(Name = "下发通知编号")]
-        public string RlsNo { get; set; }
+        public string ReleaseNo { get; set; }
 
         [Display(Name = "是否有关联系统")]
         public string IsSysAsso { get; set; }
@@ -88,7 +88,7 @@ namespace MyTeam.Models
         public string AssoReqNo { get; set; }
 
         [Display(Name = "关联系统下发要求")]
-        public string AssoRlsDesc { get; set; }
+        public string AssoReleaseDesc { get; set; }
 
         [Display(Name = "备注")]
         public string Remark { get; set; }  

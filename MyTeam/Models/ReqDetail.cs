@@ -43,6 +43,9 @@ namespace MyTeam.Models
         [Display(Name = "下发通知")]
         public int ReqReleaseID { get; set; }
 
+        [Display(Name = "副下发通知")]
+        public int SecondReqReleaseID { get; set; }
+
         [Display(Name = "是否有关联系统")]
         [System.ComponentModel.DefaultValue(false)]
         public bool IsSysAsso { get; set; }

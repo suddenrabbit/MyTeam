@@ -6,6 +6,7 @@ namespace MyTeam.Models
     {
         public ReqMain reqMain { get; set; }
         public ReqDetail reqDetail { get; set; }
+        public ReqRelease reqRelease { get; set; }
         public List<ReqRelease> reqReleases { get; set; }
     }
 }

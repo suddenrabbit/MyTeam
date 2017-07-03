@@ -39,12 +39,10 @@ namespace MyTeam.Models
         public string ReqType { get; set; }
 
         [Display(Name = "计划下发日期")]
-        [DataType(DataType.Date)]
-        public DateTime? PlanRlsDate { get; set; }
+        public string PlanReleaseDate { get; set; }
 
         [Display(Name = "实际下发日期")]
-        [DataType(DataType.Date)]
-        public DateTime? RlsDate { get; set; }
+        public string ReleaseDate { get; set; }
 
         [Display(Name = "备注")]
         public string Remark { get; set; }        

@@ -131,7 +131,6 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         关闭
                     </button>
-                    <button type="button" class="btn btn-danger" onclick="delReqMain()">删除该需求申请记录</button>
                 </div>
             </div>
         }
@@ -140,30 +139,3 @@
 </div>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-
-<script>   
-    function changeReqFromDept() {
-        $('#ReqFromDept').val($('#ReqFromDeptList').val());
-    }
-
-    function delReqMain() {
-        if (confirm("删除本记录将同时删除所有相关的维护需求，您确定要删除吗？"))
-        {
-            var id = $('#ReqMainID').val();
-            var url = "/ReqManage/DeleteMain/" + id;
-            $.ajax({
-                type: 'POST',
-                url: url,
-                success: function (msg) {
-                    $('#info').html(msg);
-
-                },
-                error: function () {
-                    $('#info').html("处理失败，请联系管理员");
-                },
-                complete: hideForm()
-                
-            });
-        }
-    }
-</script>

@@ -394,7 +394,7 @@
     <Content Include="Views\ReqManage\Bat.cshtml" />
     <Content Include="Views\ReqManage\Create.cshtml" />
     <Content Include="Views\ReqManage\Details.cshtml" />
-    <Content Include="Views\ReqManage\Edit.cshtml" />
+    <Content Include="Views\ReqManage\EditDetail.cshtml" />
     <Content Include="Views\ReqManage\Index.cshtml" />
     <Content Include="Views\ReqManage\InPool.cshtml" />
     <Content Include="Views\ReqManage\InPoolResult.cshtml" />
@@ -405,6 +405,7 @@
     <Content Include="Views\ReqManage\UpdateReleaseDate.cshtml" />
     <Content Include="Views\ReqManage\InPoolDetail.cshtml" />
     <Content Include="Views\ReqManage\EditMain.cshtml" />
+    <Content Include="Views\ReqManage\CreateDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
