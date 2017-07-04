@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTeam.Models
 {
@@ -29,7 +30,10 @@ namespace MyTeam.Models
 
         /*[Display(Name = "对应主下发编号")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
-        public string RelatedMainReleaseNo { get; set; }*/      
+        public string RelatedMainReleaseNo { get; set; }*/  
+        
+        [NotMapped]
+        public string OldReleaseNo { get; set; }
 
     }
 }

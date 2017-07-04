@@ -1,0 +1,70 @@
+﻿@{Layout = null;}
+@model MyTeam.Models.ReqRelease
+
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    // 日期控件
+    $(document).ready(function () {
+        $("#PlanReleaseDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
+        $("#ReleaseDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
+    });
+</script>
+
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Create", "ReleaseManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                        new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReleaseNo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ReleaseNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReleaseNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PlanReleaseDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.PlanReleaseDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PlanReleaseDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReleaseDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ReleaseDate, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsSideRelease, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.CheckBoxFor(model => model.IsSideRelease, new { @class = "checkbox" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="新增" class="btn btn-primary" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
+                </div>
+            </div>}
+    </div>
+</div>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

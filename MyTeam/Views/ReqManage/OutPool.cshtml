@@ -102,33 +102,22 @@
         }
 
         // 下发通知编号格式控制
-        var rname = /[\u4E00-\u9FA5]/;
-        if (releaseNo.length > 0) {
-            if (rname.test(releaseNo)) {
-                alert("下发通知编号不能含有汉字");
+        var rname = /(YFZX){1}[0-9]{8}/;
+        if (releaseNo.length > 0 && !rname.test(releaseNo)) {
+                alert("下发通知编号格式必须是YFZX+8位数字");
                 $("#ReleaseNo").focus();
                 return;
-            }
-
-            if (releaseNo.length != 12) {
-                alert("下发通知编号必须是12位");
-                $("#ReleaseNo").focus();
-                return;
-            }
+                      
         }
 
         // 副下发通知编号格式控制
         if (sideReleaseNo.length > 0) {
-            if (rname.test(sideReleaseNo)) {
-                alert("副下发通知编号不能含有汉字");
+            if (!rname.test(sideReleaseNo)) {
+                alert("副下发通知编号格式必须是YFZX+8位数字");
                 $("#SideReleaseNo").focus();
                 return;
             }
-            if (sideReleaseNo.length != 12) {
-                alert("下发通知编号必须是12位");
-                $("#SideReleaseNo").focus();
-                return;
-            }
+           
             if (releaseNo.length == 0) {
                 alert("不能只填副下发编号");
                 $("#ReleaseNo").focus();

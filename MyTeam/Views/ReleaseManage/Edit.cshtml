@@ -1,0 +1,74 @@
+﻿@{
+    Layout = null;
+}
+
+@model MyTeam.Models.ReqRelease
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>    
+    return;
+}
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('form').hide()
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Edit", "ReleaseManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                        new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.HiddenFor(model => model.ReqReleaseID);
+            @Html.HiddenFor(model => model.OldReleaseNo);
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReleaseNo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ReleaseNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReleaseNo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PlanReleaseDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.PlanReleaseDate, "DateTime")
+                    @Html.ValidationMessageFor(model => model.PlanReleaseDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReleaseDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.ReleaseDate, "DateTime")
+                    @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsSideRelease, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.CheckBoxFor(model => model.IsSideRelease, new { @class = "checkbox" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
+                </div>
+            </div>}
+    </div>
+</div>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

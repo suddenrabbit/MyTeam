@@ -165,6 +165,7 @@
     <Compile Include="Controllers\ProjMeetingController.cs" />
     <Compile Include="Controllers\ProjPlanController.cs" />
     <Compile Include="Controllers\ProjSurvController.cs" />
+    <Compile Include="Controllers\ReleaseManageController.cs" />
     <Compile Include="Controllers\ReqManageController.cs" />
     <Compile Include="Controllers\ReqTrackController.cs" />
     <Compile Include="Controllers\AttendanceManageController.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="Models\AttendanceView\AttendaceResult.cs" />
     <Compile Include="Models\BusiReqView\BusiReqProj.cs" />
     <Compile Include="Models\HomeView\HomeResult.cs" />
+    <Compile Include="Models\ReleaseManageView\ReleaseQuery.cs" />
     <Compile Include="Models\ReqManageView\FullReq.cs" />
     <Compile Include="Models\UpgradeLog.cs" />
     <Compile Include="Models\Param.cs" />
@@ -407,6 +409,9 @@
     <Content Include="Views\ReqManage\InPoolDetail.cshtml" />
     <Content Include="Views\ReqManage\EditMain.cshtml" />
     <Content Include="Views\ReqManage\CreateDetail.cshtml" />
+    <Content Include="Views\ReleaseManage\Create.cshtml" />
+    <Content Include="Views\ReleaseManage\Edit.cshtml" />
+    <Content Include="Views\ReleaseManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

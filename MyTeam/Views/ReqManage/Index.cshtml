@@ -129,9 +129,9 @@
                 </td>
                 <td><label class="control-label">受理时间(起止)</label></td>
                 <td class="form-inline">
-                    @Html.TextBoxFor(model => model.AcptDateSatrt, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择起始日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
+                    @Html.TextBoxFor(model => model.AcptDateStart, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择起始日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
                     -
-                    @Html.TextBoxFor(model => model.AcptDateEnd, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择起始日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
+                    @Html.TextBoxFor(model => model.AcptDateEnd, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择结束日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
 
                 </td>
             </tr>

@@ -648,9 +648,9 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ReqMain.SysID == query.SysID);
                 }
-                if (!string.IsNullOrEmpty(query.AcptDateSatrt))
+                if (!string.IsNullOrEmpty(query.AcptDateStart))
                 {
-                    var acptDateStart = DateTime.Parse(query.AcptDateSatrt);
+                    var acptDateStart = DateTime.Parse(query.AcptDateStart);
                     ls = ls.Where(p => p.ReqMain.AcptDate.Value >= acptDateStart);
                 }
                 if (!string.IsNullOrEmpty(query.AcptDateEnd))
@@ -757,7 +757,7 @@ namespace MyTeam.Controllers
                 else
                 {
                     // 分页
-                    query.ResultList = list.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
+                    query.ResultList = list.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
                 }
             }
             else
@@ -1286,109 +1286,7 @@ namespace MyTeam.Controllers
             {
                 return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
             }
-        }
-
-        /*
-         * 【4】单笔新增
-
-        public ActionResult Create(int id = 0)
-        {
-            // 1、生成系统列表
-            List<RetailSystem> ls1 = this.GetNormalSysList();
-
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", id); // 选中传进来的值
-
-            ViewBag.SysList = sl1;
-
-            // 2、生成需求受理人列表，默认当前用户为需求受理人 
-            SelectList sl2 = null;
-
-            User user = this.GetSessionCurrentUser();
-            if (user != null)
-            {
-                sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", user.UID);
-            }
-            else
-            {
-                sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
-            }
-
-            ViewBag.UserList = sl2;
-
-            // 3、需求发起单位 
-            ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
-
-            // 4、需求类型下拉列表
-            //ViewBag.ReqTypeList = MyTools.GetSelectListByEnum(typeof(ReqTypeEnum), false, true);
-
-            // 5、需求状态下拉列表
-            ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums));
-
-            return View();
-        }
-
-        // ajax调用
-        [HttpPost]
-        public string Create(Req req)
-        {
-            try
-            {
-                // 若填写了下发日期，则下发状态应该为「办结」
-                if ((req.ReleaseDate != null || req.SecondReleaseDate != null) && req.ReqStat != (int)ReqStatEnums.办结)
-                {
-                    throw new Exception("填写了下发日期的情况下，需求状态必须为「办结」");
-                }
-
-                // 判断是否有重复的维护需求编号，如有重复不允许新增
-                if (!string.IsNullOrEmpty(req.ReqDetailNo))
-                {
-                    Req r = dbContext.Reqs.ToList().Find(a => a.ReqDetailNo == req.ReqDetailNo);
-                    if (r != null)
-                    {
-                        throw new Exception("维护需求编号" + req.ReqDetailNo + "已存在，不允许重复添加！");
-                    }
-                }
-
-                // 去除空格：
-                string reqNo = req.ReqNo;
-                string reqDetailNo = req.ReqDetailNo;
-
-                req.ReqNo = reqNo.Trim();
-                req.ReqDetailNo = string.IsNullOrEmpty(reqDetailNo) ? "" : reqDetailNo.Trim();
-
-                // 根据需求编号确定需求类型
-                req.ReqType = 0;
-                try
-                {
-                    req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
-                }
-                catch
-                {
-                    // do nothing
-                }
-
-                // 加入创建时间和更新时间
-                req.CreateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-                req.UpdateTime = DateTime.Now.ToString("yyyyMMddHHmmss");
-
-                dbContext.Reqs.Add(req);
-                dbContext.SaveChanges();
-
-                return Constants.AJAX_CREATE_SUCCESS_RETURN;
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
-            }
-        }
-
-
-
-        /*
-         * 
-
-
-        
+        }       
 
     */
 

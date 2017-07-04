@@ -1,0 +1,236 @@
+﻿@using PagedList.Mvc
+@model MyTeam.Models.ReleaseQuery
+@{
+    ViewBag.Title = "下发通知管理";
+}
+<h3>@ViewBag.Title</h3>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+    function doDelete(id, type) {
+        $('#toDelId').val(id);
+
+        $('#myModal').modal({ backdrop: 'static' });
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/ReleaseManage/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal({ backdrop: 'static' });
+            }
+        });
+
+    }
+
+    // 在modal中编辑
+    function doEdit(id, title) {
+        $('#modalTitle').html(title);
+        if (id == 0)
+            var url = "/ReleaseManage/Create";
+        else
+            var url = "/ReleaseManage/Edit/" + id;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#modalBody').html(msg);
+            },
+            error: function () {
+                $('#modalBody').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal({ backdrop: 'static' });
+            }
+        });
+    }
+
+
+</script>
+<div class="row card">
+    @using (Html.BeginForm("Index", "ReleaseManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                                                                                                new { @class = "form-horizontal", role = "form", id = "myForm" }))
+    {
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <input type="hidden" name="isQuery" value="true" />
+
+        <table class="table table-condensed query-table">
+            <tr>
+                <td>@Html.LabelFor(model => model.ReleaseNo, new { @class = "control-label" })</td>
+                <td>
+                    @Html.TextBoxFor(model => model.ReleaseNo, new { @class = "form-control", @placeholder = "支持模糊查询" })
+                </td>
+                <td><label class="control-label">计划下发时间(起止)</label></td>
+                <td class="form-inline">
+                    @Html.TextBoxFor(model => model.PlanReleaseDateStart, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择起始日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
+                    -
+                    @Html.TextBoxFor(model => model.PlanReleaseDateEnd, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择结束日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
+
+                </td>
+            </tr>
+            <tr>
+                <td><label class="control-label">实际下发时间(起止)</label></td>
+                <td class="form-inline">
+                    @Html.TextBoxFor(model => model.ReleaseDateStart, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择起始日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
+                    -
+                    @Html.TextBoxFor(model => model.ReleaseDateEnd, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择结束日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
+
+                </td>
+                <td>
+                    <input type="submit" value="查询" class="btn btn-primary" />
+                    <input type="button" value="新增一条" class="btn btn-default" onclick="doEdit(0, '新增下发信息')" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+@if (Model.ResultList != null)
+{
+
+    <h3>查询结果</h3>
+    <div class="row card">
+
+
+        @if (Model.ResultList.Count < 1)
+        {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReleaseNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].PlanReleaseDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReleaseDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].IsSideRelease)
+                    </th>
+                </tr>
+                @for (int i = 0; i < Model.ResultList.Count; i++)
+                    {
+                        var item = Model.ResultList[i];
+                        var trid = "resultTR" + item.ReqReleaseID;
+                    <tr id="@trid">
+                        <td>
+                            <a href="###" onclick="doEdit('@item.ReqReleaseID','编辑下发信息')">编辑</a> |
+                            <a href="###" onclick="doDelete('@item.ReqReleaseID')">删除</a>
+
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReleaseNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PlanReleaseDate)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReleaseDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsSideRelease)
+                        </td>
+                    </tr>
+                }
+            </table>
+            @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ReqRelease>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+
+        }
+    </div>
+
+}
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除下发记录吗？
+                <div id="warningText">删除下发记录的同时将清楚相关维护需求中的对应下发信息！</div>
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：新增/编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <span id="modalTitle"></span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="modalBody"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
