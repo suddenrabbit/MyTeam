@@ -124,6 +124,9 @@
                     <th>
                         @Html.DisplayNameFor(model => model.ResultList[0].IsSideRelease)
                     </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ResultList[0].DraftPersonID)
+                    </th>
                 </tr>
                 @for (int i = 0; i < Model.ResultList.Count; i++)
                     {
@@ -148,6 +151,9 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.IsSideRelease)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DraftPersonName)
                         </td>
                     </tr>
                 }
@@ -174,7 +180,7 @@
             </div>
             <div class="modal-body">
                 确定要删除下发记录吗？
-                <div id="warningText">删除下发记录的同时将清楚相关维护需求中的对应下发信息！</div>
+                <div class="text-danger"><b>Warning: </b>删除下发记录的同时将清除相关维护需求中的对应下发信息！</div>
                 <input type="hidden" id="toDelId" />
             </div>
             <div class="modal-footer">

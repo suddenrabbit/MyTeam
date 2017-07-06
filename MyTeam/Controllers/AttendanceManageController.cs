@@ -49,7 +49,30 @@ namespace MyTeam.Controllers
         {
             try
             {
-                dbContext.Attendances.Add(attendance);
+                // 若请假天数大于1，则批量处理
+                var days = attendance.LeaveDays;
+                if(days > 1)
+                {
+                    int multiDays = (int)days;
+                    var leaveDate = attendance.LeaveDate;
+                    for(var i = 0; i<multiDays; i++)
+                    {
+                        var eachAttendance = new Attendance
+                        {
+                            LeaveDate = leaveDate,
+                            PersonID = attendance.PersonID,
+                            LeaveDays = 1                            
+                        };
+                        dbContext.Attendances.Add(eachAttendance);
+                        // 日期加一天
+                        leaveDate = leaveDate.AddDays(1);
+                    }
+                }
+                else
+                {
+                    dbContext.Attendances.Add(attendance);                    
+                }
+
                 dbContext.SaveChanges();
 
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;

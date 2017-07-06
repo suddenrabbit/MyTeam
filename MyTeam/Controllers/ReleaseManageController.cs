@@ -3,6 +3,7 @@ using MyTeam.Utils;
 using PagedList;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
 namespace MyTeam.Controllers
@@ -61,6 +62,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Create()
         {
+            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "Realname", GetSessionCurrentUser().UID);
             return View();
         }
 
@@ -96,6 +98,9 @@ namespace MyTeam.Controllers
         {
             var rls = dbContext.ReqReleases.Find(id);
             rls.OldReleaseNo = rls.ReleaseNo;
+
+            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "Realname", rls.DraftPersonID);
+
             return View(rls);
         }
 
@@ -141,7 +146,7 @@ namespace MyTeam.Controllers
                 string sql = string.Format("update ReqDetails set ReqReleaseID=0, UpdateTime='{0}' where ReqReleaseID = {1}", DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), id);
                 int num = dbContext.Database.ExecuteSqlCommand(sql);
 
-                return "删除下发通知成功！同时已将" + num + "条维护需求中的相关下发信息清空！";
+                return "删除下发通知成功！同时已将" + num + "条维护需求中的相关下发信息清空";
             }
             catch (Exception e1)
             {
@@ -157,7 +162,21 @@ namespace MyTeam.Controllers
         private string checkReleaseNo(string releaseNo, string oldReleaseNo = "")
         {
             // 检查下发通知编号格式
-            //string pattern = "(YFZX){1}[0-9]{8}";
+            string pattern = "(YFZX){1}[0-9]{8}";
+            Regex regex = new Regex(pattern);
+            if(!regex.IsMatch(releaseNo))
+            {
+                return "下发通知编号" + releaseNo + "格式不正确，必须是YFZX+8位数字";
+            }
+
+            if(releaseNo != oldReleaseNo)
+            {
+                var rls = dbContext.ReqReleases.Where(p => p.ReleaseNo == releaseNo).FirstOrDefault();
+                if(rls != null)
+                {
+                    return "下发通知编号" + releaseNo + "已经存在！";
+                }
+            }
 
             return "";
         }

@@ -395,7 +395,6 @@
     <Content Include="Views\Home\LoginPartial.cshtml" />
     <Content Include="Views\AttendanceManage\SumUp.cshtml" />
     <Content Include="Views\ReqManage\Bat.cshtml" />
-    <Content Include="Views\ReqManage\Create.cshtml" />
     <Content Include="Views\ReqManage\Details.cshtml" />
     <Content Include="Views\ReqManage\EditDetail.cshtml" />
     <Content Include="Views\ReqManage\Index.cshtml" />

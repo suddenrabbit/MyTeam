@@ -38,9 +38,7 @@ namespace MyTeam.Controllers
         {
             RegReq regReq = new RegReq();
             // 1、生成系统列表
-            SelectList sl1 = new SelectList(this.GetNormalSysList(), "SysID", "SysName");
-
-            ViewBag.SysList = sl1;
+            ViewBag.SysList = new SelectList(this.GetNormalSysList(), "SysID", "SysName");
 
             // 2、生成需求受理人列表，默认当前用户为需求受理人 
             User user = this.GetSessionCurrentUser();
@@ -501,6 +499,7 @@ namespace MyTeam.Controllers
                     // 已存在则更新
                     checkRelease.PlanReleaseDate = DateTime.Parse(PlanReleaseDate);
                     checkRelease.ReleaseNo = ReleaseNo;
+                    checkRelease.DraftPersonID = GetSessionCurrentUser().UID;//默认记录当前人员
                     dbContext.Entry(checkRelease).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
 
@@ -514,7 +513,8 @@ namespace MyTeam.Controllers
                     var release = new ReqRelease
                     {
                         PlanReleaseDate = DateTime.Parse(PlanReleaseDate),
-                        ReleaseNo = ReleaseNo
+                        ReleaseNo = ReleaseNo,
+                        DraftPersonID = GetSessionCurrentUser().UID//默认记录当前人员
                     };
                     dbContext.ReqReleases.Add(release);
                     dbContext.SaveChanges();
@@ -535,6 +535,7 @@ namespace MyTeam.Controllers
                         checkRelease.PlanReleaseDate = DateTime.Parse(PlanReleaseDate);
                         checkRelease.ReleaseNo = SideReleaseNo;
                         checkRelease.IsSideRelease = true;
+                        checkRelease.DraftPersonID = GetSessionCurrentUser().UID;//默认记录当前人员
                         dbContext.Entry(checkRelease).State = System.Data.Entity.EntityState.Modified;
                         dbContext.SaveChanges();
 
@@ -550,6 +551,7 @@ namespace MyTeam.Controllers
                             PlanReleaseDate = DateTime.Parse(PlanReleaseDate),
                             ReleaseNo = SideReleaseNo,
                             IsSideRelease = true,
+                            DraftPersonID = GetSessionCurrentUser().UID//默认记录当前人员
                         };
                         dbContext.ReqReleases.Add(release);
                         dbContext.SaveChanges();
@@ -817,18 +819,10 @@ namespace MyTeam.Controllers
 
             // 下拉框预处理
             // 1、生成系统列表
-            List<RetailSystem> ls1 = this.GetNormalSysList();
-
-            SelectList sl1 = new SelectList(ls1, "SysID", "SysName", req.SysID);
-
-            ViewBag.SysList = sl1;
+            ViewBag.SysList = new SelectList(this.GetNormalSysList(), "SysID", "SysName", req.SysID);
 
             // 2、生成需求受理人列表
-            SelectList sl2 = null;
-
-            sl2 = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", req.ReqAcptPerson);
-
-            ViewBag.UserList = sl2;
+            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", req.ReqAcptPerson);
 
             // 4、需求发起单位 
             ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));

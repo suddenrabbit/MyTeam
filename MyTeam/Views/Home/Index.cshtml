@@ -13,7 +13,7 @@
         </div>
 
         <div class="list-group infolist">
-            @foreach (HomeReq r in Model.ReqLs)
+            @foreach (HomeReq r in Model.ReqLS)
             {
                 string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池 + "&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
@@ -32,7 +32,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqDelayLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池 + "&SpecialQuery=1&SysID=" + r.SysID;
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池 + "&AcptDateEnd=" + DateTime.Now.AddMonths(-3).ToShortDateString() + "&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -66,7 +66,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolDelayLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.待评估 + "&SpecialQuery=2&SysID=" + r.SysID;
+                string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.待评估 + "&AcptDateEnd=" + DateTime.Now.AddDays(-8).ToShortDateString() + "&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -109,20 +109,20 @@
                     <th>下发通知编号</th>
                     <th>计划下发日期</th>
                 </tr>
-                @foreach (HomeRlsDelay r in Model.RlsDelayLS)
+                @foreach (HomeReleaseDelay r in Model.RlsDelayLS)
                 {
-                    string s = "/ReqManage/Index?IsQuery=True&SysID=0&ReqStat=" + (int)ReqStatEnums.出池 + "&AnyRlsNo=" + r.RlsNo;
+                    string s = "/ReleaseManage/Index?IsQuery=True&ReleaseNo=" + r.ReleaseNo;
 
-                    string rlsNo = r.RlsNo;
+                    string rlsNo = r.ReleaseNo;
 
-                    if (!string.IsNullOrEmpty(r.SecondRlsNo))
+                    if(r.IsSideRelease)
                     {
-                        rlsNo += "<br/>" + r.SecondRlsNo;
+                        rlsNo += "(副)";
                     }
 
                     <tr>
-                        <td class="text-center"><a href=@s>@Html.Raw(rlsNo)</a></td>
-                        <td class="text-center">@r.PlanRlsDate.Value.ToString("yyyy/M/d")  </td>
+                        <td class="text-center"><a href=@s>@rlsNo</a></td>
+                        <td class="text-center">@r.PlanReleaseDate.ToShortDateString()  </td>
                     </tr>
                 }
             </table>

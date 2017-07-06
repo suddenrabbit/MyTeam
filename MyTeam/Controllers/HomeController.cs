@@ -91,15 +91,21 @@ namespace MyTeam.Controllers
             }
         }
 
+        /// <summary>
+        /// 公共方法：获取提醒结果
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="isNotify"></param>
+        /// <returns></returns>
         protected HomeResult GetHomeResult(User user = null, bool isNotify = false)
         {
             var isAdmin = true;
 
             var uid = 0;
 
-            if (user != null)
+            if (user != null && !user.IsAdmin)
             {
-                isAdmin = user.IsAdmin;
+                isAdmin = false;
                 // 2017年1月5日新增：外协根据BelongTo可以看到相应的内容
                 uid = user.UID;
                 if (user.UserType == (int)UserTypeEnums.外协)
@@ -110,34 +116,37 @@ namespace MyTeam.Controllers
             }
 
             // 管理员可以查看所有，否则只能看到自己负责的系统或项目
-
-
             HomeResult hr = new HomeResult();
 
-            if (isAdmin)
+            string sql = "SELECT main.SysID, count(1) as ReqNum, {0} as ReqAcptPerson FROM ReqMains main LEFT JOIN ReqDetails detail ON main.ReqMainID = detail.ReqMainID WHERE detail.ReqStat = {1}" ; //组织SQL语句
+
+            if (!isAdmin)
             {
-                if (!isNotify)
-                {
-                    hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " group by t.SysID").ToList();
-                    hr.ReqInpoolLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " group by t.SysID").ToList();
-                }
-                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " and t.AcptDate <= DATEADD(month,-3,GETDATE()) group by t.SysID").ToList();
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, 0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " and t.AcptDate <= DATEADD(day,-8,GETDATE()) group by t.SysID").ToList();
+                // 非Admin则SQL增加用户信息
+                sql += " and main.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = {0}) ";
+            }
+
+            sql += " {2} GROUP BY main.SysID";
+
+            if (isNotify)
+            {
+                hr.ReqLS = null;
+                hr.ReqInpoolLS = null;
             }
             else
             {
-                hr.ReqLs = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
-                hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.入池 + " and t.AcptDate <= DATEADD(month,-3,GETDATE()) and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
-                hr.ReqInpoolLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
-                hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>("select t.SysID, count(1) as ReqNum, @p0 as ReqAcptPerson from Reqs t where t.ReqStat = " + (int)ReqStatEnums.待评估 + " and t.AcptDate <= DATEADD(day,-8,GETDATE()) and t.SysID in (select rs.SysID from RetailSystems rs where rs.ReqPersonID = @p0) group by t.SysID", uid).ToList();
-
+                hr.ReqLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.入池, "")).ToList();
+                hr.ReqInpoolLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.待评估, "")).ToList();
             }
+
+            hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.入池, "and main.AcptDate <= DATEADD(month,-3,GETDATE())")).ToList();
+            hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.待评估, "and main.AcptDate <= DATEADD(day,-8,GETDATE())")).ToList();
 
             if (!isNotify) //notify时不需要计算
             {
                 // 统计计算3个月未出池的需求总数
                 int reqLsSum = 0;
-                foreach (HomeReq q in hr.ReqLs)
+                foreach (HomeReq q in hr.ReqLS)
                 {
                     reqLsSum += q.ReqNum;
                 }
@@ -251,13 +260,16 @@ namespace MyTeam.Controllers
             //////////////////////////////////////////////////////////////////////
 
             // 列出超过计划下发日期仍未下发的
-            string sql = "select distinct t.RlsNo, t.SecondRlsNo, t.PlanRlsDate from Reqs t where t.PlanRlsDate < getdate()-1 and t.ReqStat=" + (int)ReqStatEnums.出池;
+            string sql2 = "select t.ReleaseNo, t.PlanReleaseDate, t.IsSideRelease from ReqReleases t where t.PlanReleaseDate < getdate()-1 and t.ReleaseDate is NULL";
 
             if (!isAdmin)
             {
-                sql += " and t.ReqAcptPerson = " + uid;
+                sql2 += " and t.DraftPersonID = " + uid;
             }
-            hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeRlsDelay>(sql).ToList();         
+
+            sql2 += " order by t.PlanReleaseDate";
+
+            hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeReleaseDelay>(sql2).ToList();         
 
             return hr;
         }

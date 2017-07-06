@@ -1,6 +1,8 @@
-﻿using System;
+﻿using MyTeam.Utils;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace MyTeam.Models
 {
@@ -28,12 +30,29 @@ namespace MyTeam.Models
         [System.ComponentModel.DefaultValue(false)]
         public bool IsSideRelease { get; set; }
 
+        [Display(Name ="起草人")]
+        public int DraftPersonID { get; set; }
+
         /*[Display(Name = "对应主下发编号")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string RelatedMainReleaseNo { get; set; }*/  
         
         [NotMapped]
         public string OldReleaseNo { get; set; }
+
+        [NotMapped]
+        public string DraftPersonName
+        {
+            get
+            {
+                var r = (from a in Constants.UserList
+                         where a.UID == this.DraftPersonID
+                         select a.Realname).FirstOrDefault();
+
+                return r == null ? "未知" : r.ToString();
+            }
+            set { this.DraftPersonName = value; }
+        }
 
     }
 }

@@ -8,7 +8,7 @@ namespace MyTeam.Models
     public class HomeResult
     {
 
-        public List<HomeReq> ReqLs { get; set; }
+        public List<HomeReq> ReqLS { get; set; }
 
         public List<HomeReq> ReqDelayLS { get; set; }
 
@@ -17,7 +17,7 @@ namespace MyTeam.Models
 
         public List<HomeProjDelay> ProjDetails { get; set; }
 
-        public List<HomeRlsDelay> RlsDelayLS { get; set; }
+        public List<HomeReleaseDelay> RlsDelayLS { get; set; }
 
         public List<HomeReq> ReqInpoolLS { get; set; }
 
@@ -74,11 +74,11 @@ namespace MyTeam.Models
     }
 
 
-    public class HomeRlsDelay
+    public class HomeReleaseDelay
     {
-        public string RlsNo { get; set; }
-        public string SecondRlsNo { get; set; }
-        public DateTime? PlanRlsDate { get; set; }
+        public string ReleaseNo { get; set; }
+        public DateTime PlanReleaseDate { get; set; }
+        public bool IsSideRelease { get; set; }
     }
 
     public class HomeNoRlsNo
