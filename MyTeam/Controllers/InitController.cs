@@ -51,13 +51,13 @@ namespace MyTeam.Controllers
                 return "ReqMains is not empty! ";
             }
 
-            var reqList = dbContext.Reqs.Where(p=>p.AcptDate.Value.Year > 2014).ToList();
+            var reqList = dbContext.Reqs.Where(p => p.AcptDate.Value.Year > 2014).ToList();
 
             List<string> reqNoList = dbContext.Database.SqlQuery<string>("select distinct ReqNo from Reqs where ReqNo <> '暂无' and AcptDate BETWEEN '2014/12/31 23:59:59' AND '2017/12/31 23:59:59'").ToList();
 
             List<string> errList = new List<string>();
 
-            foreach(var reqNo in reqNoList)
+            foreach (var reqNo in reqNoList)
             {
                 try
                 {
@@ -94,7 +94,7 @@ namespace MyTeam.Controllers
                             createTime = d.AcptDate.Value;
                             updateTime = d.AcptDate.Value;
                         }
-                            var detail = new ReqDetail
+                        var detail = new ReqDetail
                         {
                             ReqDetailNo = d.ReqDetailNo,
                             Version = d.Version,
@@ -116,7 +116,7 @@ namespace MyTeam.Controllers
                         dbContext.ReqDetails.Add(detail);
                     }
                 }
-                catch(Exception ee)
+                catch (Exception ee)
                 {
                     errList.Add(reqNo + " " + ee.Message + "<br />");
                 }
@@ -126,40 +126,51 @@ namespace MyTeam.Controllers
 
             StringBuilder errMsg = new StringBuilder();
 
-            for(int i=0; i< errList.Count; i++)
+            for (int i = 0; i < errList.Count; i++)
             {
                 errMsg.Append(errList[i]);
             }
 
             return "done<br />" + errMsg.ToString();
-            /*
-            // init ReqRlses
+        }
+
+        /*
+        * 初始化下发通知信息先使用以下SQL：
+        *   TRUNCATE TABLE ReqReleases;
+
+            INSERT INTO ReqReleases
+            SELECT DISTINCT t.RlsNo AS ReleaseNo, t.PlanRlsDate AS PlanReleaseDate, t.RlsDate AS ReleaseDate, 0 AS IsSideRelease, 1 AS DraftPersonID 
+            FROM Reqs t WHERE t.PlanRlsDate IS NOT NULL AND t.RlsNo IS NOT NULL;
+
+            INSERT INTO ReqReleases
+            SELECT DISTINCT t.SecondRlsNo AS ReleaseNo, t.PlanRlsDate AS PlanReleaseDate, t.SecondRlsDate AS ReleaseDate, 1 AS IsSideRelease, 1 AS DraftPersonID 
+            FROM Reqs t WHERE t.PlanRlsDate IS NOT NULL AND t.SecondRlsNo IS NOT NULL;
+
+        **/
+
+        [AllowAnonymous]
+        public string InitRls()
+        {
+            var ls = dbContext.ReqReleases.ToList();
+
             foreach (var r in ls)
             {
-                var exist = (from a in dbContext.ReqRlses where a.RlsNo == r.RlsNo || a.RlsNo == r.SecondRlsNo select a).FirstOrDefault();
-                if (exist == null)
+
+                if (!r.IsSideRelease)
                 {
-                    var reqMain = new ReqMain
-                    {
-                        SysID = r.SysID,
-                        ReqNo = r.ReqNo,
-                        AcptDate = r.AcptDate,
-                        ReqReason = r.ReqReason,
-                        ReqFromDept = r.ReqFromDept,
-                        ReqFromPerson = r.ReqFromPerson,
-                        ReqAcptPerson = r.ReqAcptPerson,
-                        ReqDevPerson = r.ReqDevPerson,
-                        ReqBusiTestPerson = r.ReqBusiTestPerson,
-                        DevAcptDate = r.DevAcptDate,
-                        DevEvalDate = r.DevEvalDate
-                    };
-                    dbContext.ReqMains.Add(reqMain);
+                    var reqs = dbContext.Database.SqlQuery<string>("select ReqDetailNo from Reqs where RlsNo = @p0", r.ReleaseNo).ToList();
+
+                    dbContext.Database.ExecuteSqlCommand(string.Format("update ReqDetails set ReqReleaseID = {0} where ReqDetailNo in ('{1}')", r.ReqReleaseID, string.Join("','", reqs.ToArray())));
                 }
+                else
+                {
+                    var reqs = dbContext.Database.SqlQuery<string>("select ReqDetailNo from Reqs where SecondRlsNo = @p0", r.ReleaseNo).ToList();
 
+                    dbContext.Database.ExecuteSqlCommand(string.Format("update ReqDetails set SecondReqReleaseID = {0} where ReqDetailNo in ('{1}')", r.ReqReleaseID, string.Join("','", reqs.ToArray())));
+                }
             }
-            dbContext.SaveChanges(); */
 
-
+            return "done";
         }
 
     }

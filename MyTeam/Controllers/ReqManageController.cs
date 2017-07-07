@@ -587,46 +587,7 @@ namespace MyTeam.Controllers
          * 4、更新下发日期
          * */
         #region 更新下发日期
-        [HttpGet]
-        public ActionResult UpdateReleaseDate()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public string UpdateReleaseDate(string ReleaseNo, string ReleaseDate)
-        {
-
-            try
-            {
-                var r = dbContext.ReqReleases.Where(p => p.ReleaseNo == ReleaseNo).FirstOrDefault();
-                if (r == null)
-                {
-                    throw new Exception("没有" + ReleaseNo + "相关下发记录");
-                }
-
-                r.ReleaseDate = DateTime.Parse(ReleaseDate);
-
-                dbContext.Entry(r).State = System.Data.Entity.EntityState.Modified;
-                dbContext.SaveChanges();
-
-                string msg = "已更新" + ReleaseNo + "的下发日期";
-
-                // 如果更新了主下发的实际下发日期，则将需求置为已办结
-                if (!r.IsSideRelease)
-                {
-                    var sql = string.Format("Update ReqDetails set ReqStat = '{0}' where ReqReleaseID = {1}", ReqStatEnums.办结, r.ReqReleaseID);
-                    dbContext.Database.ExecuteSqlCommand(sql);
-                    msg += "；同时已更新相关维护需求的状态为【办结】";
-                }
-
-                return "<p class='alert alert-success'>" + msg + "</p>";
-            }
-            catch (Exception e1)
-            {
-                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
-            }
-        }
+        // 此部分转移到 ReleaseManage
 
         #endregion
 

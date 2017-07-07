@@ -26,7 +26,7 @@
         }
 
         if (confirm("确定要更新实际下发日期吗？")) {
-            var url = "/ReqManage/UpdateReleaseDate";
+            var url = "/ReleaseManage/UpdateReleaseDate";
             var data = "ReleaseNo=" + releaseNo + "&ReleaseDate=" + releaseDate;
             $.ajax({
                 type: 'POST',

@@ -404,7 +404,7 @@
     <Content Include="Views\ReqManage\OutPoolTable.cshtml" />
     <Content Include="Views\ReqManage\Reg.cshtml" />
     <Content Include="Views\ReqManage\RegResult.cshtml" />
-    <Content Include="Views\ReqManage\UpdateReleaseDate.cshtml" />
+    <Content Include="Views\ReleaseManage\UpdateReleaseDate.cshtml" />
     <Content Include="Views\ReqManage\InPoolDetail.cshtml" />
     <Content Include="Views\ReqManage\EditMain.cshtml" />
     <Content Include="Views\ReqManage\CreateDetail.cshtml" />

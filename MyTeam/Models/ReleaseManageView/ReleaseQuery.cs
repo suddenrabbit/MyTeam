@@ -27,7 +27,7 @@ namespace MyTeam.Models
 
         public string ToQueryString()
         {
-            return new StringBuilder("&ReleaseNo=").Append(this.ReleaseNo)
+            return new StringBuilder("&isQuery=True&ReleaseNo=").Append(this.ReleaseNo)
                 .Append("&PlanReleaseDateStart=").Append(this.PlanReleaseDateStart)
                 .Append("&PlanReleaseDateEnd=").Append(this.PlanReleaseDateEnd)
                 .Append("&ReleaseDateStart=").Append(this.ReleaseDateStart)

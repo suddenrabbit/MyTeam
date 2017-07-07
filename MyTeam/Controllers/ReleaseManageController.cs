@@ -1,4 +1,5 @@
-﻿using MyTeam.Models;
+﻿using MyTeam.Enums;
+using MyTeam.Models;
 using MyTeam.Utils;
 using PagedList;
 using System;
@@ -46,7 +47,7 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.ReleaseDate <= ReleaseDateEnd);
                 }
 
-                ls = ls.OrderByDescending(p => p.ReqReleaseID);
+                ls = ls.OrderByDescending(p => p.PlanReleaseDate);
 
                 query.ResultList = ls.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
             }
@@ -121,7 +122,19 @@ namespace MyTeam.Controllers
                 dbContext.Entry(reqRelease).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                return Constants.AJAX_EDIT_SUCCESS_RETURN;
+                var msg = Constants.AJAX_EDIT_SUCCESS_RETURN;
+
+                // 如果实际下发日期变成空，则要将相关需求的状态修改为【出池】；如果实际下发日期变成非空，则要将相关需求的状态修改为【办结】
+                int reqStat = (int)ReqStatEnums.办结;
+                if (reqRelease.ReleaseDate == null)
+                {
+                    reqStat = (int)ReqStatEnums.出池;
+                }
+                var sql = string.Format("Update ReqDetails set ReqStat = {0} where ReqReleaseID = {1}", reqStat, reqRelease.ReqReleaseID);
+                int num = dbContext.Database.ExecuteSqlCommand(sql);
+                msg += "<p class='alert alert-info'>同时已更新" + num + "条相关维护需求的状态为【" + Enum.GetName(typeof(ReqStatEnums), reqStat) + "】</p>";
+
+                return msg;
             }
             catch (Exception e1)
             {
@@ -147,6 +160,48 @@ namespace MyTeam.Controllers
                 int num = dbContext.Database.ExecuteSqlCommand(sql);
 
                 return "删除下发通知成功！同时已将" + num + "条维护需求中的相关下发信息清空";
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
+            }
+        }
+
+        // 更新实际下发日期
+        [HttpGet]
+        public ActionResult UpdateReleaseDate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public string UpdateReleaseDate(string ReleaseNo, string ReleaseDate)
+        {
+
+            try
+            {
+                var r = dbContext.ReqReleases.Where(p => p.ReleaseNo == ReleaseNo).FirstOrDefault();
+                if (r == null)
+                {
+                    throw new Exception("没有" + ReleaseNo + "相关下发记录");
+                }
+
+                r.ReleaseDate = DateTime.Parse(ReleaseDate);
+
+                dbContext.Entry(r).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+
+                string msg = "已更新" + ReleaseNo + "的下发日期";
+
+                // 如果更新了主下发的实际下发日期，则将需求置为已办结
+                if (!r.IsSideRelease)
+                {
+                    var sql = string.Format("Update ReqDetails set ReqStat = {0} where ReqReleaseID = {1}", (int)ReqStatEnums.办结, r.ReqReleaseID);
+                    int num = dbContext.Database.ExecuteSqlCommand(sql);
+                    msg += "；同时已更新" + num + "条相关维护需求的状态为【办结】";
+                }
+
+                return "<p class='alert alert-success'>" + msg + "</p>";
             }
             catch (Exception e1)
             {
