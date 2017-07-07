@@ -87,7 +87,7 @@ footer {
     text-align: right;
 }
 
-/*
+
 @font-face {
     font-family: 'Roboto';
     src: url('../fonts/Roboto-Regular.ttf');
@@ -98,7 +98,7 @@ footer {
     src: url('../fonts/Roboto-Bold.ttf');
     font-weight: bold;
 }
-*/
+
 
 footer a, footer a:hover, footer a:active{
     color:darkgray;

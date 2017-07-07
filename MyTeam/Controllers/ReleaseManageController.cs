@@ -125,14 +125,17 @@ namespace MyTeam.Controllers
                 var msg = Constants.AJAX_EDIT_SUCCESS_RETURN;
 
                 // 如果实际下发日期变成空，则要将相关需求的状态修改为【出池】；如果实际下发日期变成非空，则要将相关需求的状态修改为【办结】
-                int reqStat = (int)ReqStatEnums.办结;
-                if (reqRelease.ReleaseDate == null)
+                if(!reqRelease.IsSideRelease)
                 {
-                    reqStat = (int)ReqStatEnums.出池;
+                    int reqStat = (int)ReqStatEnums.办结;
+                    if (reqRelease.ReleaseDate == null)
+                    {
+                        reqStat = (int)ReqStatEnums.出池;
+                    }
+                    var sql = string.Format("Update ReqDetails set ReqStat = {0} where ReqReleaseID = {1}", reqStat, reqRelease.ReqReleaseID);
+                    int num = dbContext.Database.ExecuteSqlCommand(sql);
+                    msg += "<p class='alert alert-info'>同时已更新" + num + "条相关维护需求的状态为【" + Enum.GetName(typeof(ReqStatEnums), reqStat) + "】</p>";
                 }
-                var sql = string.Format("Update ReqDetails set ReqStat = {0} where ReqReleaseID = {1}", reqStat, reqRelease.ReqReleaseID);
-                int num = dbContext.Database.ExecuteSqlCommand(sql);
-                msg += "<p class='alert alert-info'>同时已更新" + num + "条相关维护需求的状态为【" + Enum.GetName(typeof(ReqStatEnums), reqStat) + "】</p>";
 
                 return msg;
             }
