@@ -77,5 +77,25 @@ namespace MyTeam.Models
             set { this.DraftPersonName = value; }
         }
 
+        [NotMapped]
+        public string VerNoWithMark
+        {
+            get
+            {
+                if(DraftTime != null)
+                {
+                    return VerNo + " √";
+                }
+                else
+                {
+                    return VerNo;
+                }
+            }
+            set
+            {
+                VerNoWithMark = value;
+            }
+        }
+
     }
 }

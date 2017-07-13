@@ -7,7 +7,8 @@
 
 <div class="row home-row">
     <div class="col-md-2">
-        <div class="card" style="border-top:rgb(255,132,132) 3px solid">
+        @{string s1 = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池;}
+        <div class="card clickable-card" style="border-top:rgb(255,132,132) 3px solid" onclick="window.location.href='@s1'">
             <p>全部未出池的需求</p>
             <div class="homeNum">@Model.ReqLsSum</div>
         </div>
@@ -15,7 +16,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池 + "&SysID=" + r.SysID;
+                string s = s1 + "&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -24,7 +25,8 @@
         </div>
     </div>
     <div class="col-md-2">
-        <div class="card" style="border-top:rgb(255,172,132) 3px solid">
+        @{string s2 = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池 + "&AcptDateEnd=" + DateTime.Now.AddMonths(-3).ToShortDateString();}
+        <div class="card clickable-card" style="border-top:rgb(255,172,132) 3px solid" onclick="window.location.href='@s2'">
             <p>超3个月未出池的需求</p>
             <div class="homeNum">@Model.ReqDelayLsSum</div>
         </div>
@@ -32,7 +34,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqDelayLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池 + "&AcptDateEnd=" + DateTime.Now.AddMonths(-3).ToShortDateString() + "&SysID=" + r.SysID;
+                string s = s2 + "&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -41,7 +43,8 @@
         </div>
     </div>
     <div class="col-md-2">
-        <div class="card" style="border-top:rgb(255,255,148) 3px solid">
+        @{string s3 = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.待评估;}
+        <div class="card clickable-card" style="border-top:rgb(255,255,148) 3px solid" onclick="window.location.href='@s3'">
             <p>全部未入池的需求</p>
             <div class="homeNum">@Model.ReqInpoolLsSum</div>
         </div>
@@ -49,7 +52,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.待评估 + "&SysID=" + r.SysID;
+                string s =s3 + "&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -58,7 +61,8 @@
         </div>
     </div>
     <div class="col-md-2">
-        <div class="card" style="border-top:rgb(128,255,128) 3px solid">
+        @{string s4 = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.待评估 + "&AcptDateEnd=" + DateTime.Now.AddDays(-8).ToShortDateString();}
+        <div class="card clickable-card" style="border-top:rgb(128,255,128) 3px solid" onclick="window.location.href='@s4'">
             <p>超8天未入池的需求</p>
             <div class="homeNum">@Model.ReqInpoolDelayLsSum</div>
         </div>
@@ -66,7 +70,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolDelayLS)
             {
-                string s = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.待评估 + "&AcptDateEnd=" + DateTime.Now.AddDays(-8).ToShortDateString() + "&SysID=" + r.SysID;
+                string s = s4 + "&SysID=" + r.SysID;
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName

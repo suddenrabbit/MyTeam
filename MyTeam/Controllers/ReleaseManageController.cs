@@ -212,6 +212,14 @@ namespace MyTeam.Controllers
             }
         }
 
+        // 查看下发通知相关需求
+        [HttpGet]
+        public ActionResult ShowReqs(int id, bool isSideRelease)
+        {
+            var ls = dbContext.ReqDetails.Where(p => isSideRelease ? p.SecondReqReleaseID == id : p.ReqReleaseID == id).ToList();
+            return View(ls);
+        }
+
         /// <summary>
         /// 检查下发通知编号
         /// </summary>

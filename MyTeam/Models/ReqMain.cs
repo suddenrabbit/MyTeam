@@ -78,6 +78,20 @@ namespace MyTeam.Models
         }
 
         [NotMapped]
+        public string ReqAcptPersonName
+        {
+            get
+            {
+                var r = (from a in Constants.UserList
+                         where a.UID == this.ReqAcptPerson
+                         select a.Realname).FirstOrDefault();
+
+                return r == null ? "未知" : r.ToString();
+            }
+            set { this.ReqAcptPersonName = value; }
+        }
+
+        [NotMapped]
         public string ReqAcptPersonNamePhone
         {
             get
@@ -89,7 +103,7 @@ namespace MyTeam.Models
                 return r == null ? "未知" : r.ToString();
             }
             set { this.ReqAcptPersonNamePhone = value; }
-        }        
+        }
 
         [NotMapped]
         public string ShortReqReason //需求申请事由，只显示25个字

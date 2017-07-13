@@ -1,0 +1,27 @@
+﻿@model List<MyTeam.Models.ReqDetail>
+
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped" style="font-size:0.8em">
+            <tr>
+                <th>系统名称</th>
+                <th>维护需求编号</th>
+                <th>维护需求说明</th>
+            </tr>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.ReqMain.SysName</td>
+                    <td>@item.ReqDetailNo</td>
+                    <td>@item.ShortReqDesc</td>
+                </tr>
+            }
+        </table>
+
+        <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
+    </div>
+</div>

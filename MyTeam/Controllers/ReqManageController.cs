@@ -464,7 +464,7 @@ namespace MyTeam.Controllers
 
             foreach (Ver r in list)
             {
-                sb.Append(string.Format("<option value='{0}'>{1}</option>", r.VerID, r.VerNo));
+                sb.Append(string.Format("<option value='{0}'>{1}</option>", r.VerID, r.VerNoWithMark));
             }
 
             sb.Append("</select>");
@@ -626,9 +626,9 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.ReqMain.ReqNo.Contains(query.ReqNo.Trim()));
                 }
 
-                if (!string.IsNullOrEmpty(query.ReqStat))
+                if (query.ReqStat != 0)
                 {
-                    ls = ls.Where(p => p.ReqStat.ToString() == query.ReqStat);
+                    ls = ls.Where(p => p.ReqStat == query.ReqStat);
                 }
                 if (query.ReqAcptPerson != 0)
                 {
@@ -649,6 +649,12 @@ namespace MyTeam.Controllers
 
                 // 统一按照创建日期倒序
                 ls = ls.OrderByDescending(p => p.CreateTime);
+
+                // 若系统不为「全部」且需求状态为「办结」，增加按照版本号倒序
+                if (query.SysID != 0 && query.ReqStat == (int)ReqStatEnums.办结)
+                {
+                    ls = ls.OrderByDescending(p => p.Version);
+                }
 
                 var list = ls.ToList();
 
@@ -743,7 +749,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqAcptPerson = new SelectList(userList, "UID", "Realname", query.ReqAcptPerson);
 
             // 需求状态下拉
-            ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), true, true, query.ReqStat);
+            ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), true, true, query.ReqStat.ToString());
 
             return View(query);
         }
@@ -1001,10 +1007,7 @@ namespace MyTeam.Controllers
                 if (!string.IsNullOrEmpty(query.Version))
                 {
                     // 版本号
-                    string[] vers = query.Version.Split(',');
-                    ls = from b in ls
-                         where vers.Contains(b.Version)
-                         select b;
+                    ls = ls.Where(p => p.Version == query.Version);
                 }
                 if (!string.IsNullOrEmpty(query.MaintainYear))
                 {
@@ -1058,13 +1061,12 @@ namespace MyTeam.Controllers
                         };
 
                         resultExcelList.Add(resExcel);
-                        
-                    }
 
+                    }
 
                     catch (Exception e1)
                     {
-                        errMsg += "出错了:" + e1.Message + "; ReqDetailID=" + req.ReqDetailID;
+                        errMsg += "出错了:" + e1.Message + "; ReqDetailID=" + req.ReqDetailID + "<br />";
                     }
                 }
                 // 若isExcel为true，导出Excel

@@ -142,7 +142,7 @@
 
     // 2016年8月10日新增：勾选补丁版本则变成输入框
     function changeVerType() {
-        var d1 = $('#Ver1');
+        var d1 = $('#Ver1Div');
         var d2 = $('#Ver2');
         
         if ($('#isPatch').prop('checked')) {
@@ -178,13 +178,17 @@
         <div class="form-group">
             <label for="Version" class="col-md-2 control-label">版本号</label>
             <div class="col-md-10">
-                <select id="Ver1" class="form-control">
-                    <option>--请选择系统--</option>
-                </select>
+                <div id="Ver1Div">
+                    <select id="Ver1" class="form-control">
+                        <option>--请选择系统--</option>
+                    </select>
+                    <span class="text-info">（版本号后方「√」表示该版本已使用过[实际版本日期不为空]）</span>
+                </div>
+                
                 <input id="Ver2" type="text" class="form-control" style="display:none" />
 
                 <div style="margin-top:10px;margin-bottom:10px"><input type="checkbox" id="isPatch" onclick="changeVerType()"/>&nbsp;补丁版本</div>
-
+                
             </div>
             <div class="form-group">
                 <label for="OutDate" class="col-md-2 control-label">出池日期</label>

@@ -18,11 +18,26 @@
         $('#myForm').submit();
         $('#isExcel').val(false);
     }
+
+    function check() {
+        if ($("#Version").val().length == 0 && $("#MaintainYear").val().length == 0)
+        {
+            alert("版本号、维护年度至少输入一个！");
+            return false;
+        }
+
+        if ($("#Version").val().length > 0 && $("#SysID").val() == 0) {
+            alert("按照版本号查询时必须指定系统！");
+            return false;
+        }
+
+        return true;
+    }
 </script>
 <div class="row card">
     <div class="col-md-10">
         @using (Html.BeginForm("OutPoolTable", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                            new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                            new { @class = "form-horizontal", role = "form", id = "myForm" , @onsubmit="return check()"}))
         {
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -39,7 +54,7 @@
                 @Html.LabelFor(model => model.Version, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
-                    <div class="text-info">（查询多个版本请用英文半角逗号隔开，留空表示查询所有版本）</div>
+                    <div class="text-info">（只能输入一个版本号）</div>
                 </div>
             </div>
             <div class="form-group">

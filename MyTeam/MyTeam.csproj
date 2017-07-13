@@ -413,6 +413,7 @@
     <Content Include="Views\ReleaseManage\Create.cshtml" />
     <Content Include="Views\ReleaseManage\Edit.cshtml" />
     <Content Include="Views\ReleaseManage\Index.cshtml" />
+    <Content Include="Views\ReleaseManage\ShowReqs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

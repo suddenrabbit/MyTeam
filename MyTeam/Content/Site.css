@@ -146,3 +146,8 @@ footer a, footer a:hover, footer a:active{
 h2 {
     font-weight: bold !important
 }
+
+.clickable-card:hover {
+    box-shadow:none;
+    cursor:pointer;
+}

@@ -29,7 +29,7 @@ namespace MyTeam.Models
         public string AnyReleaseNo { get; set; }
 
         [Display(Name = "需求状态")]
-        public string ReqStat { get; set; }
+        public int ReqStat { get; set; }
 
         [Display(Name = "需求受理人")]
         public int ReqAcptPerson { get; set; }

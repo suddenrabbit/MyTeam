@@ -56,6 +56,26 @@
         });
     }
 
+    // 在modal中查看相关需求
+    function doShowReqs(id, reqNo, isSide) {
+        $('#modalTitle').html("查看" + reqNo + "的相关需求");
+
+        var url = "/ReleaseManage/ShowReqs/" + id + "?isSideRelease=" + isSide;        
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#modalBody').html(msg);
+            },
+            error: function () {
+                $('#modalBody').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal({ backdrop: 'static' });
+            }
+        });
+    }
 
 </script>
 <div class="row card">
@@ -129,13 +149,14 @@
                     </th>
                 </tr>
                 @for (int i = 0; i < Model.ResultList.Count; i++)
-                    {
-                        var item = Model.ResultList[i];
-                        var trid = "resultTR" + item.ReqReleaseID;
+                {
+                    var item = Model.ResultList[i];
+                    var trid = "resultTR" + item.ReqReleaseID;
                     <tr id="@trid">
                         <td>
                             <a href="###" onclick="doEdit('@item.ReqReleaseID','编辑下发信息')">编辑</a> |
-                            <a href="###" onclick="doDelete('@item.ReqReleaseID')">删除</a>
+                            <a href="###" onclick="doDelete('@item.ReqReleaseID')">删除</a> | 
+                            <a href="###" onclick="doShowReqs('@item.ReqReleaseID', '@item.ReleaseNo', '@item.IsSideRelease.ToString()')">查看相关需求</a>
 
                         </td>
 
