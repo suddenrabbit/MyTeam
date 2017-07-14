@@ -12,7 +12,7 @@
         var releaseNo = $('#releaseNo').val();
         if (releaseNo.length == 0)
         {
-            alert("下发通知编号不能为空！");
+            showAlertWithDefaultTitle("下发通知编号不能为空！");
             $('#releaseNo').focus();
             return;
         }
@@ -20,7 +20,7 @@
         var releaseDate = $('#releaseDate').val();
         if (releaseDate.length == 0)
         {
-            alert("实际下发日期不能为空！");
+            showAlertWithDefaultTitle("实际下发日期不能为空！");
             $('#releaseDate').focus();
             return;
         }

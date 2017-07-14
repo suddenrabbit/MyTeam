@@ -3,6 +3,7 @@ using MyTeam.Models;
 using MyTeam.Utils;
 using PagedList;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
@@ -210,13 +211,19 @@ namespace MyTeam.Controllers
             {
                 return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
             }
-        }
+        }        
 
-        // 查看下发通知相关需求
+        // 需求管理页面查看下发详情
         [HttpGet]
-        public ActionResult ShowReqs(int id, bool isSideRelease)
+        public ActionResult GetDetailsForReqManage(int id, int secondId = 0)
         {
-            var ls = dbContext.ReqDetails.Where(p => isSideRelease ? p.SecondReqReleaseID == id : p.ReqReleaseID == id).ToList();
+            var ls = new List<ReqRelease>();
+            var r = dbContext.ReqReleases.Find(id);
+            ls.Add(r);
+            if(secondId != 0)
+            {
+                ls.Add(dbContext.ReqReleases.Find(secondId));
+            }
             return View(ls);
         }
 

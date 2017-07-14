@@ -1,0 +1,28 @@
+﻿@model List<MyTeam.Models.ReqRelease>
+
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped text-center" style="font-size:0.8em">
+            <tr>
+                <th>下发通知编号</th>
+                <th>计划下发时间</th>
+                <th>实际下发时间</th>
+            </tr>
+            @foreach(var item in Model)
+            {
+                var rlsNo = item.IsSideRelease ? item.ReleaseNo + "(副)" : item.ReleaseNo;
+                var rlsDate = item.ReleaseDate == null ? "" : item.ReleaseDate.Value.ToShortDateString();
+                <tr>
+                    <td>@rlsNo</td>
+                    <td>@item.PlanReleaseDate.ToShortDateString()</td>
+                    <td>@rlsDate</td>
+                </tr>
+            }
+        </table>
+
+    </div>
+</div>

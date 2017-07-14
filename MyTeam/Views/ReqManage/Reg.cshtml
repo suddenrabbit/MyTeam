@@ -138,13 +138,13 @@
     function checkName() {
         var ts = /^[\u4e00-\u9fa5]{2,3}\/\d{6}$/;
         if (!ts.test($('#ReqFromPerson').val())) {
-            alert("需求发起人请按照「姓名（2或3个汉字）/电话（6位数字）」格式填写");
+            showAlertWithDefaultTitle("需求发起人请按照「姓名（2或3个汉字）/电话（6位数字）」格式填写");
             $('#ReqFromPerson').focus();
             return false;
         }
 
         if (!ts.test($('#ReqBusiTestPerson').val())) {
-            alert("业务测试人请按照「姓名（2或3个汉字）/电话（6位数字）」格式填写");
+            showAlertWithDefaultTitle("业务测试人请按照「姓名（2或3个汉字）/电话（6位数字）」格式填写");
             $('#ReqBusiTestPerson').focus();
             return false;
         }

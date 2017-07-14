@@ -14,7 +14,7 @@
                 $('#ReqsDiv').html(msg);
             },
             error: function () {
-                alert("出错了，请联系管理员");
+                showAlertWithDefaultTitle("出错了，请联系管理员");
             }
 
         });
@@ -29,7 +29,7 @@
                 $('#Ver1').html(msg);
             },
             error: function () {
-                alert("出错了，请联系管理员");
+                showAlertWithDefaultTitle("出错了，请联系管理员");
             }
 
         });
@@ -50,25 +50,25 @@
         }
 
         if (sysID == 0) {
-            alert("请选择系统！");
+            showAlertWithDefaultTitle("请选择系统！");
             return;
         }
         if (reqs == null || reqs.length < 1) {
-            alert("请选择要出池的需求！");
+            showAlertWithDefaultTitle("请选择要出池的需求！");
             return;
         }
         if (version.length < 1) {
-            alert("版本号不能为空！");
+            showAlertWithDefaultTitle("版本号不能为空！");
             $('#Version').focus();
             return;
         }
         if (outDate.length < 1) {
-            alert("出池日期不能为空！");
+            showAlertWithDefaultTitle("出池日期不能为空！");
             $('#OutDate').focus();
             return;
         }
         if (planReleaseDate.length < 1) {
-            alert("计划下发日期不能为空！");
+            showAlertWithDefaultTitle("计划下发日期不能为空！");
             $('#PlanReleaseDate').focus();
             return;
         }
@@ -82,7 +82,7 @@
                 $('#OutPoolBtn').hide();
             },
             error: function () {
-                alert("出错了，请联系管理员");
+                showAlertWithDefaultTitle("出错了，请联系管理员");
                 $('#ReleaseNoDiv').hide();
             }
 
@@ -97,14 +97,14 @@
         var planReleaseDate = $('#PlanReleaseDate').val();
 
         if (reqs == null || reqs.length < 1) {
-            alert("请选择要出池的需求！");
+            showAlertWithDefaultTitle("请选择要出池的需求！");
             return;
         }
 
         // 下发通知编号格式控制
         var rname = /(YFZX){1}[0-9]{8}/;
         if (releaseNo.length > 0 && !rname.test(releaseNo)) {
-                alert("下发通知编号格式必须是YFZX+8位数字");
+                showAlertWithDefaultTitle("下发通知编号格式必须是YFZX+8位数字");
                 $("#ReleaseNo").focus();
                 return;
                       
@@ -113,13 +113,13 @@
         // 副下发通知编号格式控制
         if (sideReleaseNo.length > 0) {
             if (!rname.test(sideReleaseNo)) {
-                alert("副下发通知编号格式必须是YFZX+8位数字");
+                showAlertWithDefaultTitle("副下发通知编号格式必须是YFZX+8位数字");
                 $("#SideReleaseNo").focus();
                 return;
             }
            
             if (releaseNo.length == 0) {
-                alert("不能只填副下发编号");
+                showAlertWithDefaultTitle("不能只填副下发编号");
                 $("#ReleaseNo").focus();
                 return;
             }
@@ -134,7 +134,7 @@
                 $('#ReleaseNoResultDiv').html(msg);                
             },
             error: function () {
-                alert("出错了，请联系管理员");
+                showAlertWithDefaultTitle("出错了，请联系管理员");
             }
 
         });

@@ -9,7 +9,7 @@
         var reqs = $("#Reqs").val();
         // 需求编号不能为空
         if (reqs.length < 1) {
-            alert("需求编号不能为空！");
+            showAlertWithDefaultTitle("需求编号不能为空！");
             $("#Reqs").focus();
             return false;
         } 
@@ -22,13 +22,13 @@
 
         if (rlsNo.length > 0) {
             if (rname.test(rlsNo)) {
-                alert("下发通知编号不能含有汉字");
+                showAlertWithDefaultTitle("下发通知编号不能含有汉字");
                 $("#RlsNo").focus();
                 return false;
             }
 
             if (rlsNo.length != 12) {
-                alert("下发通知编号必须是形如YFZX20160101");
+                showAlertWithDefaultTitle("下发通知编号必须是形如YFZX20160101");
                 $("#RlsNo").focus();
                 return false;
             }
@@ -39,12 +39,12 @@
 
         if (secondRlsNo.length > 0) {
             if (rname.test(secondRlsNo)) {
-                alert("副下发通知编号不能含有汉字");
+                showAlertWithDefaultTitle("副下发通知编号不能含有汉字");
                 $("#SecondRlsNo").focus();
                 return false;
             }
             if (secondRlsNo.length != 12) {
-                alert("下发通知编号必须是形如YFZX20160101");
+                showAlertWithDefaultTitle("下发通知编号必须是形如YFZX20160101");
                 $("#SecondRlsNo").focus();
                 return false;
             }

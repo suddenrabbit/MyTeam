@@ -12,7 +12,7 @@
         var a2 = document.getElementById('MeetingDateEnd').value;
 
         if ((a1 != '' && a2 == '') || (a1 == '' && a2 != '')) {
-            alert("会议日期必须提供时间区间！");
+            showAlertWithDefaultTitle("会议日期必须提供时间区间！");
         } else {
             $('#myForm').submit();
         }

@@ -1,12 +1,10 @@
-﻿using System;
+﻿using MyTeam.Enums;
+using MyTeam.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
-using MyTeam.Models;
-using MyTeam.Enums;
-using MyTeam.Utils;
-using System.Web.Script.Serialization;
 using System.Text;
+using System.Web.Mvc;
 
 namespace MyTeam.Controllers
 {
@@ -30,7 +28,7 @@ namespace MyTeam.Controllers
                 hr.NewsLog = l;
 
                 ViewBag.NewsID = un.NewsID;
-            }
+            }           
 
             return View(hr);
         }
@@ -117,6 +115,8 @@ namespace MyTeam.Controllers
 
             // 管理员可以查看所有，否则只能看到自己负责的系统或项目
             HomeResult hr = new HomeResult();
+
+            hr.UID = uid;
 
             string sql = "SELECT main.SysID, count(1) as ReqNum, {0} as ReqAcptPerson FROM ReqMains main LEFT JOIN ReqDetails detail ON main.ReqMainID = detail.ReqMainID WHERE detail.ReqStat = {1}" ; //组织SQL语句
 
@@ -322,30 +322,7 @@ namespace MyTeam.Controllers
             return Constants.AJAX_RESULT_SUCCESS;
         }
         */
-
-        /// <summary>
-        /// 自留接口：查询一些信息
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public string Check(int id)
-        {
-            switch (id)
-            {
-                case 1: // 查询忘了补充下发编号的数据
-                    var sql = "select distinct t.SysId, t.Version from Reqs t where t.RlsNo is null and t.ReqStat=" + (int)ReqStatEnums.出池;
-                    var ls = dbContext.Database.SqlQuery<HomeNoRlsNo>(sql).ToList();
-                    StringBuilder sb = new StringBuilder();
-                    foreach(var r in ls)
-                    {
-                        sb.Append(r.SysName + "  " + r.Version + "<br />");
-                    }
-
-                    return sb.ToString();
-                default:
-                    return "input the right id...";
-            }          
-        }
+ 
     }
        
 }

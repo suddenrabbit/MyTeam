@@ -22,12 +22,12 @@
     function check() {
         if ($("#Version").val().length == 0 && $("#MaintainYear").val().length == 0)
         {
-            alert("版本号、维护年度至少输入一个！");
+            showAlertWithDefaultTitle("版本号、维护年度至少输入一个！");
             return false;
         }
 
         if ($("#Version").val().length > 0 && $("#SysID").val() == 0) {
-            alert("按照版本号查询时必须指定系统！");
+            showAlertWithDefaultTitle("按照版本号查询时必须指定系统！");
             return false;
         }
 

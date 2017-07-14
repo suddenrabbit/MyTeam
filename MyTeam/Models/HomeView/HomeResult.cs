@@ -29,6 +29,8 @@ namespace MyTeam.Models
         public List<HomeNoRlsNo> NoRlsNoLS { get; internal set; }
 
         public UpgradeLog NewsLog { get; internal set; }
+
+        public int UID { get; set; }
     }
 
     public class HomeReq

@@ -58,21 +58,21 @@
 
     // 在modal中查看相关需求
     function doShowReqs(id, reqNo, isSide) {
-        $('#modalTitle').html("查看" + reqNo + "的相关需求");
+        $('#detailName').html("查看" + reqNo + "的相关需求");
 
-        var url = "/ReleaseManage/ShowReqs/" + id + "?isSideRelease=" + isSide;        
+        var url = "/ReqManage/ShowReqs/" + id + "?isSideRelease=" + isSide;        
 
         $.ajax({
             type: 'GET',
             url: url,
             success: function (msg) {
-                $('#modalBody').html(msg);
+                $('#detailMain').html(msg);
             },
             error: function () {
-                $('#modalBody').html("处理失败，请联系管理员");
+                $('#detailMain').html("处理失败，请联系管理员");
             },
             complete: function () {
-                $('#myModal3').modal({ backdrop: 'static' });
+                $('#myModal4').modal({ backdrop: 'static' });
             }
         });
     }
@@ -239,7 +239,7 @@
     </div>
 </div>
 
-<!-- 对话框4：新增/编辑页面 -->
+<!-- 对话框3：新增/编辑页面 -->
 <div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -260,4 +260,28 @@
     </div>
 </div>
 
-
+<!-- 对话框4：展示详情 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <span id="detailName"></span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="detailMain"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

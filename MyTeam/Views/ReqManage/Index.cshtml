@@ -14,6 +14,10 @@
         if (type == '1') {
             $('#warningText').html("<p class='text-danger'><b>Warning: </b>删除维护需求申请，将连带删除该申请下的所有维护需求！</p>");
         }
+        else
+        {
+            $('#warningText').html('');
+        }
 
         $('#myModal').modal({ backdrop: 'static' });
     }
@@ -91,25 +95,58 @@
         });
     }
 
-    // 在modal中新增
-    /*function doCreate() {
-        // 记录下当前页面中选中的系统
-        var sysID = $("#SysID").val();
-        var url = "/ReqManage/Create/" + sysID;
+    // 在modal中显示下发详情
+    function showRelease(id, secondId) {
+        $('#detailName').html("查看下发情况");
+        $('#detailMain').html("获取数据中...");
+
+        var url = "/ReleaseManage/GetDetailsForReqManage/" + id;
+
+        if (secondId.length > 0)
+        {
+            url += "?secondId=" + secondId;
+        }
+
         $.ajax({
             type: 'GET',
             url: url,
             success: function (msg) {
-                $('#CreateMain').html(msg);
+                $('#detailMain').html(msg);
             },
             error: function () {
-                $('#CreateMain').html("处理失败，请联系管理员");
+                $('#detailMain').html("处理失败，请联系管理员");
             },
             complete: function () {
-                $('#myModal5').modal({ backdrop: 'static' });
+                $('#myModal3').modal({ backdrop: 'static' });
             }
         });
-    }*/
+    }
+
+    // 更新备注
+    function doUpdateRemark(id) {
+        var defaultValue = $('#remark' + id).html();
+        var str = prompt("更新备注（留空会更新为空）", defaultValue);
+        if (str == null)
+        {
+            return;
+        }
+        var url = "/ReqManage/UpdateRemark/" + id + "?remark=" + str;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                if (msg == "success") {
+                    $('#remark' + id).html(str);
+                } else {
+                    alert(msg);
+                }
+            },
+            error: function () {
+               alert("处理失败，请联系管理员");
+            }            
+        });
+    }
+    
 </script>
 <div class="row card">
     @using (Html.BeginForm("Index", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
@@ -157,8 +194,8 @@
                 <td class="form-inline">
                     <!--需求状态下拉选择-->
                     @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
-                    @{ string info = "出池 - 完成出池操作，已有「计划下发日期」\\n办结 - 更新「实际下发日期」后需求变为办结状态\\n\\n【提示】当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列";}
-                    <a class="text-info" href="###" onclick="alert('@info')">（点击查看需求状态说明）</a>
+                    @{ string info = "<b>出池</b> - 完成出池操作，已有「计划下发日期」<br /><b>办结</b> - 更新「实际下发日期」后需求变为办结状态<br /><br /><p class=\"text-info\">【提示】当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列</p>";}
+                    <a class="text-info" href="###" onclick="showAlert('@info', '需求状态说明')">（点击查看需求状态说明）</a>
                 </td>
             </tr>
             <tr>
@@ -206,7 +243,7 @@
                     <th width="18">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqReason)
                     </th>
-                    <th width="2">
+                    <th width="1">
                         受理人
                     </th>
                     <th width="5">
@@ -215,13 +252,13 @@
                     <th width="23">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
                     </th>
-                    <th width="4">
+                    <th width="3">
                         @Html.DisplayNameFor(model => model.ResultList[0].Version)
                     </th>
                     <th width="1">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
                     </th>
-                    <th width="10">
+                    <th width="12">
                         @Html.DisplayNameFor(model => model.ResultList[0].Remark)
                     </th>
                     <th width="14">
@@ -231,12 +268,10 @@
                 @for (int i = 0; i < Model.ResultList.Count; i++)
                     {
                         var item = Model.ResultList[i];
-                        var trid = "resultTR" + item.ReqDetailID;
-                    <tr id="@trid">
+                        var remarkId = "remark" + item.ReqDetailID;
+                    <tr>
                         <td>
-                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')">详情</a> |
-                            <a href="###" onclick="doDelete('@item.ReqMainID','1')">删除申请</a> |
-                            <a href="###" onclick="doDelete('@item.ReqDetailID','2')">删除需求</a> |
+                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')">详情</a> |                            
                             <a href="###" onclick="doEdit('@item.ReqMainID','新增一条维护需求信息', 3)">新增一条</a>
                         </td>
 
@@ -248,6 +283,7 @@
                         </td>
                         <td>
                             <a href="###" onclick="doEdit('@item.ReqMainID', '编辑维护需求申请信息', 1)">@Html.DisplayFor(modelItem => item.ReqMain.ReqNo)</a>
+                            <a href="###" onclick="doDelete('@item.ReqMainID','1')" style="color:#f47983"><span class="glyphicon glyphicon-remove"></span></a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqMain.ShortReqReason)
@@ -259,6 +295,7 @@
 
                         <td>
                             <a href="###" onclick="doEdit('@item.ReqDetailID', '编辑维护需求信息', 2)">@Html.DisplayFor(modelItem => item.ReqDetailNo)</a>
+                            <a href="###" onclick="doDelete('@item.ReqDetailID','2')" style="color:#f47983"><span class="glyphicon glyphicon-remove"></span></a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ShortReqDesc)
@@ -270,11 +307,12 @@
                             @Html.DisplayFor(modelItem => item.ReqStatName)
                         </td>
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Remark)
+                        <td>                            
+                            @{ var remark = string.IsNullOrEmpty(item.Remark) ? "（新增备注）" : item.Remark;}
+                            <a href="###" onclick="doUpdateRemark('@item.ReqDetailID')"><span id='@remarkId'>@remark</span></a>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ReqReleaseNo)
+                            <a href="###" onclick="showRelease('@item.ReqReleaseID', '@item.SecondReqReleaseID')">@Html.DisplayFor(modelItem => item.ReqReleaseNo)</a> 
                         </td>
                     </tr>
                                 }
@@ -288,11 +326,11 @@
             <div class="panel panel-default">
                 <div class="panel-heading">TIPS</div>
                 <div class="panel-body">
-                    1、「删除申请」将删除维护需求申请单中的所有需求；<br />
-                    2、「删除需求」只会删除单条维护需求；<br />
-                    3、「新增一条」只能在现有维护需求申请中新增一条需求，若需要新增需求申请，请使用需求登记功能；<br />
-                    4、点击维护需求申请编号或维护需求编号，可以编辑需求申请信息或需求详细信息；<br />
-                    5、当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列。
+                    1、红色X表示删除，需求申请编号后的删除会同时删除该申请下的所有需求，维护需求编号后的删除只会删除单条维护需求；<br />
+                    2、「新增一条」只能在现有维护需求申请中新增一条需求，若需要新增需求申请，请使用需求登记功能；<br />
+                    3、点击维护需求申请编号或维护需求编号，可以编辑需求申请信息或需求详细信息；<br />
+                    4、当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列；<br />
+                    5、点击备注可以直接更新备注信息
                 </div>
             </div>
         </div>

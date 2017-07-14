@@ -69,7 +69,7 @@
     function doExport() {
         var brProjId = $('#BRProjID').val();
         if (brProjId.length == 0 || brProjId == 0) {
-            alert("导出需求变更跟踪表时必须选择具体的某个项目！");
+            showAlertWithDefaultTitle("导出需求变更跟踪表时必须选择具体的某个项目！");
             return;
         }
         $('#myForm').attr("action", "/BusiReq/Export").submit();

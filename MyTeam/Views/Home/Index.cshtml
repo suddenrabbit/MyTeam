@@ -3,11 +3,14 @@
 @model MyTeam.Models.HomeResult
 @{
     ViewBag.Title = "欢迎";
+
+    // 生成基础链接
+    var baseUrl = "/ReqManage/Index?IsQuery=True&ReqStat={0}&ReqAcptPerson={1}&SysID={2}&AcptDateEnd={3}";
 }
 
 <div class="row home-row">
     <div class="col-md-2">
-        @{string s1 = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池;}
+        @{string s1 = string.Format(baseUrl, (int)ReqStatEnums.入池, Model.UID, 0, "");}
         <div class="card clickable-card" style="border-top:rgb(255,132,132) 3px solid" onclick="window.location.href='@s1'">
             <p>全部未出池的需求</p>
             <div class="homeNum">@Model.ReqLsSum</div>
@@ -16,7 +19,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqLS)
             {
-                string s = s1 + "&SysID=" + r.SysID;
+                string s = string.Format(baseUrl, (int)ReqStatEnums.入池, Model.UID, r.SysID, "");
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -25,7 +28,7 @@
         </div>
     </div>
     <div class="col-md-2">
-        @{string s2 = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.入池 + "&AcptDateEnd=" + DateTime.Now.AddMonths(-3).ToShortDateString();}
+        @{string s2 = string.Format(baseUrl, (int)ReqStatEnums.入池, Model.UID, 0, DateTime.Now.AddMonths(-3).ToShortDateString());}
         <div class="card clickable-card" style="border-top:rgb(255,172,132) 3px solid" onclick="window.location.href='@s2'">
             <p>超3个月未出池的需求</p>
             <div class="homeNum">@Model.ReqDelayLsSum</div>
@@ -34,7 +37,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqDelayLS)
             {
-                string s = s2 + "&SysID=" + r.SysID;
+                string s = string.Format(baseUrl, (int)ReqStatEnums.入池, Model.UID, r.SysID, DateTime.Now.AddMonths(-3).ToShortDateString());
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -43,7 +46,7 @@
         </div>
     </div>
     <div class="col-md-2">
-        @{string s3 = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.待评估;}
+        @{string s3 = string.Format(baseUrl, (int)ReqStatEnums.待评估, Model.UID, 0, "");}
         <div class="card clickable-card" style="border-top:rgb(255,255,148) 3px solid" onclick="window.location.href='@s3'">
             <p>全部未入池的需求</p>
             <div class="homeNum">@Model.ReqInpoolLsSum</div>
@@ -52,7 +55,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolLS)
             {
-                string s =s3 + "&SysID=" + r.SysID;
+                string s = string.Format(baseUrl, (int)ReqStatEnums.待评估, Model.UID, r.SysID, "");
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -61,7 +64,7 @@
         </div>
     </div>
     <div class="col-md-2">
-        @{string s4 = "/ReqManage/Index?IsQuery=True&ReqStat=" + (int)ReqStatEnums.待评估 + "&AcptDateEnd=" + DateTime.Now.AddDays(-8).ToShortDateString();}
+        @{string s4 = string.Format(baseUrl, (int)ReqStatEnums.待评估, Model.UID, 0, DateTime.Now.AddDays(-8).ToShortDateString());}
         <div class="card clickable-card" style="border-top:rgb(128,255,128) 3px solid" onclick="window.location.href='@s4'">
             <p>超8天未入池的需求</p>
             <div class="homeNum">@Model.ReqInpoolDelayLsSum</div>
@@ -70,7 +73,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolDelayLS)
             {
-                string s = s4 + "&SysID=" + r.SysID;
+                string s = string.Format(baseUrl, (int)ReqStatEnums.待评估, Model.UID, r.SysID, DateTime.Now.AddDays(-8).ToShortDateString());
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -171,7 +174,7 @@
                     //do nothing
                 },
                 error: function () {
-                    alert("未能成功将此新闻置为已读状态，请联系管理员");
+                    showAlertWithDefaultTitle("未能成功将此新闻置为已读状态，请联系管理员");
                 }
 
             });

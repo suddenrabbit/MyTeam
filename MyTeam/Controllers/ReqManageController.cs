@@ -237,16 +237,19 @@ namespace MyTeam.Controllers
 
                     model.ReqDetailNo = detailNo;
 
-                    // 根据需求编号确定需求类型
+                    // 当需求状态为「入池」时，根据需求编号确定需求类型
                     // model.ReqType = 0;
-                    try
+                    if (detail.ReqStat == (int)ReqStatEnums.入池)
                     {
-                        model.ReqType = int.Parse(model.ReqDetailNo.Split('-')[2]);
-                    }
-                    catch
-                    {
-                        fail += model.ReqDetailNo + " ";
-                        continue;
+                        try
+                        {
+                            model.ReqType = int.Parse(model.ReqDetailNo.Split('-')[2]);
+                        }
+                        catch
+                        {
+                            fail += model.ReqDetailNo + " ";
+                            continue;
+                        }
                     }
 
                     model.ReqStat = detail.ReqStat;
@@ -664,7 +667,7 @@ namespace MyTeam.Controllers
                     // 下发通知编号
                     if (req.ReqReleaseID == 0)
                     {
-                        req.ReqReleaseNo = "暂无";
+                        req.ReqReleaseNo = "";
                     }
                     else
                     {
@@ -842,11 +845,11 @@ namespace MyTeam.Controllers
             ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), false, true, req.ReqStat.ToString());
 
             // 下发通知编号下拉列表
-            var ls = dbContext.ReqReleases.ToList();
+            /*var ls = dbContext.ReqReleases.ToList();
             ls.Insert(0, new ReqRelease { ReqReleaseID = 0, ReleaseNo = "无" }); //在最开始插入『无』选项
             ViewBag.ReqReleaseList = new SelectList(ls.Where(p => p.IsSideRelease != true), "ReqReleaseID", "ReleaseNo", req.ReqReleaseID);
             ViewBag.SecondReqReleaseList = new SelectList(ls.Where(p => p.IsSideRelease == true || p.ReqReleaseID == 0), "ReqReleaseID", "ReleaseNo", req.SecondReqReleaseID);
-
+            */
             req.OldReqDetailNo = req.ReqDetailNo;
             return View(req);
         }
@@ -856,6 +859,11 @@ namespace MyTeam.Controllers
         {
             try
             {
+                // 若需求状态为「入池」，需求编号必填
+                if (req.ReqStat == (int)ReqStatEnums.入池 && string.IsNullOrEmpty(req.ReqDetailNo))
+                {
+                    throw new Exception("需求状态为「入池」时，需求编号不能为空！");
+                }
 
                 // 判断有无重复需求编号
                 if (!string.IsNullOrEmpty(req.ReqDetailNo) && req.ReqDetailNo != req.OldReqDetailNo)
@@ -867,16 +875,18 @@ namespace MyTeam.Controllers
                     }
                 }
 
-
-                // 根据需求编号确定需求类型
+                // 当需求编号不为空，则根据需求编号确定需求类型
                 req.ReqType = 0;
-                try
+                if (!string.IsNullOrEmpty(req.ReqDetailNo))
                 {
-                    req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
-                }
-                catch (Exception e1)
-                {
-                    throw new Exception("维护需求编号" + req.ReqDetailNo + "格式错误！（错误信息：" + e1.Message + "）");
+                    try
+                    {
+                        req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+                    }
+                    catch (Exception e1)
+                    {
+                        throw new Exception("维护需求编号" + req.ReqDetailNo + "格式错误！（错误信息：" + e1.Message + "）");
+                    }
                 }
 
                 // 更新时间
@@ -906,11 +916,11 @@ namespace MyTeam.Controllers
             ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), false, true, req.ReqStat.ToString());
 
             // 下发通知编号下拉列表
-            var ls = dbContext.ReqReleases.ToList();
+            /*var ls = dbContext.ReqReleases.ToList();
             ls.Insert(0, new ReqRelease { ReqReleaseID = 0, ReleaseNo = "无" }); //在最开始插入『无』选项
             ViewBag.ReqReleaseList = new SelectList(ls.Where(p => p.IsSideRelease != true), "ReqReleaseID", "ReleaseNo", 0);
             ViewBag.SecondReqReleaseList = new SelectList(ls.Where(p => p.IsSideRelease == true || p.ReqReleaseID == 0), "ReqReleaseID", "ReleaseNo", 0);
-
+            */
             ViewBag.ReqNo = dbContext.ReqMains.Find(id).ReqNo;
 
             return View(req);
@@ -921,23 +931,34 @@ namespace MyTeam.Controllers
         {
             try
             {
+                // 若需求状态为「入池」，需求编号必填
+                if (req.ReqStat == (int)ReqStatEnums.入池 && string.IsNullOrEmpty(req.ReqDetailNo))
+                {
+                    throw new Exception("需求状态为「入池」时，需求编号不能为空！");
+                }
 
                 // 判断有无重复需求编号
-                var r = dbContext.ReqDetails.Where(a => a.ReqDetailNo == req.ReqDetailNo).FirstOrDefault();
-                if (r != null)
+                if (!string.IsNullOrEmpty(req.ReqDetailNo))
                 {
-                    throw new Exception("维护需求编号" + r.ReqDetailNo + "已存在，不允许新增！");
+                    var r = dbContext.ReqDetails.Where(a => a.ReqDetailNo == req.ReqDetailNo).FirstOrDefault();
+                    if (r != null)
+                    {
+                        throw new Exception("维护需求编号" + r.ReqDetailNo + "已存在，不允许新增！");
+                    }
                 }
 
-                // 根据需求编号确定需求类型
+                // 当需求编号不为空，则根据需求编号确定需求类型
                 req.ReqType = 0;
-                try
+                if (!string.IsNullOrEmpty(req.ReqDetailNo))
                 {
-                    req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
-                }
-                catch (Exception e1)
-                {
-                    throw new Exception("维护需求编号" + req.ReqDetailNo + "格式错误！（错误信息：" + e1.Message + "）");
+                    try
+                    {
+                        req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+                    }
+                    catch (Exception e1)
+                    {
+                        throw new Exception("维护需求编号" + req.ReqDetailNo + "格式错误！（错误信息：" + e1.Message + "）");
+                    }
                 }
 
                 // 更新时间
@@ -1246,6 +1267,33 @@ namespace MyTeam.Controllers
         }       
 
     */
+
+        // 查看下发通知相关需求
+        [HttpGet]
+        public ActionResult ShowReqs(int id, bool isSideRelease)
+        {
+            var ls = dbContext.ReqDetails.Where(p => isSideRelease ? p.SecondReqReleaseID == id : p.ReqReleaseID == id).ToList();
+            return View(ls);
+        }
+
+        // 更新备注
+        [HttpPost]
+        public string UpdateRemark(int id, string remark)
+        {
+            try
+            {
+                int num = dbContext.Database.ExecuteSqlCommand("update ReqDetails set Remark=@p0 where ReqDetailID=@p1", remark, id);
+                if(num == 0)
+                {
+                    return "更新失败！";
+                }
+            }
+            catch(Exception e1)
+            {
+                return e1.ToString();
+            }
+            return "success";
+        }
 
         #region Helper
         /// <summary>
