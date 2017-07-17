@@ -136,6 +136,7 @@
             url: url,
             success: function (msg) {
                 if (msg == "success") {
+                    alert("修改成功！");
                     $('#remark' + id).html(str);
                 } else {
                     alert(msg);
@@ -217,8 +218,8 @@
 </div>
 @if (Model.ResultList != null)
 {
-
-    <h3>查询结果</h3>
+    var tipinfo = "1、点击<span class=\"glyphicon glyphicon-edit\"></span>编辑；<br /> 2、点击<span class=\"glyphicon glyphicon-remove\"></span>删除。需求申请编号后的删除会同时删除该申请下的所有需求，维护需求编号后的删除只会删除单条维护需求；<br /> 3、「新增一条」只能在现有维护需求申请中新增一条需求，若需要新增需求申请，请使用需求登记功能；<br />4、当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列；<br />5、点击下发通知编号可以查看下发时间信息";
+    <h3>查询结果<a style="font-size:0.4em; font-weight:normal" id="goToTips" href="###" onclick="showAlert('@tipinfo', 'TIPS')">（点击查看TIPS）</a></h3>
     <div class="row card">
 
 
@@ -282,7 +283,8 @@
                             @Html.DisplayFor(modelItem => item.ReqMain.AcptDate)
                         </td>
                         <td>
-                            <a href="###" onclick="doEdit('@item.ReqMainID', '编辑维护需求申请信息', 1)">@Html.DisplayFor(modelItem => item.ReqMain.ReqNo)</a>
+                            @Html.DisplayFor(modelItem => item.ReqMain.ReqNo)
+                            <a href="###" onclick="doEdit('@item.ReqMainID', '编辑维护需求申请信息', 1)"><span class="glyphicon glyphicon-edit"></span></a>
                             <a href="###" onclick="doDelete('@item.ReqMainID','1')" style="color:#f47983"><span class="glyphicon glyphicon-remove"></span></a>
                         </td>
                         <td>
@@ -294,7 +296,8 @@
 
 
                         <td>
-                            <a href="###" onclick="doEdit('@item.ReqDetailID', '编辑维护需求信息', 2)">@Html.DisplayFor(modelItem => item.ReqDetailNo)</a>
+                            @Html.DisplayFor(modelItem => item.ReqDetailNo)
+                            <a href="###" onclick="doEdit('@item.ReqDetailID', '编辑维护需求信息', 2)"><span class="glyphicon glyphicon-edit"></span></a>
                             <a href="###" onclick="doDelete('@item.ReqDetailID','2')" style="color:#f47983"><span class="glyphicon glyphicon-remove"></span></a>
                         </td>
                         <td>
@@ -308,8 +311,8 @@
                         </td>
 
                         <td>                            
-                            @{ var remark = string.IsNullOrEmpty(item.Remark) ? "（新增备注）" : item.Remark;}
-                            <a href="###" onclick="doUpdateRemark('@item.ReqDetailID')"><span id='@remarkId'>@remark</span></a>
+                            <span id='@remarkId'>@Html.DisplayFor(modelItem => item.Remark)</span>
+                            <a href="###" onclick="doUpdateRemark('@item.ReqDetailID')"><span class="glyphicon glyphicon-edit"></span></a>
                         </td>
                         <td>
                             <a href="###" onclick="showRelease('@item.ReqReleaseID', '@item.SecondReqReleaseID')">@Html.DisplayFor(modelItem => item.ReqReleaseNo)</a> 
@@ -322,18 +325,6 @@
                                 }
     </div>
 
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">TIPS</div>
-                <div class="panel-body">
-                    1、红色X表示删除，需求申请编号后的删除会同时删除该申请下的所有需求，维护需求编号后的删除只会删除单条维护需求；<br />
-                    2、「新增一条」只能在现有维护需求申请中新增一条需求，若需要新增需求申请，请使用需求登记功能；<br />
-                    3、点击维护需求申请编号或维护需求编号，可以编辑需求申请信息或需求详细信息；<br />
-                    4、当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列；<br />
-                    5、点击备注可以直接更新备注信息
-                </div>
-            </div>
-        </div>
                                 }
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
@@ -439,6 +430,6 @@
 <script>
     $(function () {
         $("#SysID").select2();
-    });
+    });    
 </script>
 
