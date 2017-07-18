@@ -1077,12 +1077,12 @@ th {
           box-sizing: border-box;
 }
 html {
-  font-size: 10px;
+  font-size: 100%;
 
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
-  font-size: 1.4em;
+  font-size: 14px;
   line-height: 1.5;
   color: #333;
 }

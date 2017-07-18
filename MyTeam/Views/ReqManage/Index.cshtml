@@ -14,8 +14,7 @@
         if (type == '1') {
             $('#warningText').html("<p class='text-danger'><b>Warning: </b>删除维护需求申请，将连带删除该申请下的所有维护需求！</p>");
         }
-        else
-        {
+        else {
             $('#warningText').html('');
         }
 
@@ -76,7 +75,7 @@
         $('#modalTitle').html(title);
         if (type == 1)
             var url = "/ReqManage/EditMain/" + id;
-        else if(type == 2)
+        else if (type == 2)
             var url = "/ReqManage/EditDetail/" + id;
         else
             var url = "/ReqManage/CreateDetail/" + id;
@@ -102,8 +101,7 @@
 
         var url = "/ReleaseManage/GetDetailsForReqManage/" + id;
 
-        if (secondId.length > 0)
-        {
+        if (secondId.length > 0) {
             url += "?secondId=" + secondId;
         }
 
@@ -124,34 +122,40 @@
 
     // 更新备注
     function doUpdateRemark(id) {
+        var pageContent = " <div class='form-group form-inline'><input type='hidden' id='toEditRemarkId' /><input type='text' id='newRemark' class='form-control' style='max-width:100%;width:80%' />&nbsp;<input type='button' class='btn btn-primary' value='更新' onclick='realUpdateRemark()' /></div><p class='text-info'>（如果留空也会将备注更新为空）</p>";
+        $('#updateRemarkBody').html(pageContent);
         var defaultValue = $('#remark' + id).html();
-        var str = prompt("更新备注（留空会更新为空）", defaultValue);
-        if (str == null)
-        {
-            return;
-        }
+        $('#newRemark').val(defaultValue);
+        $('#toEditRemarkId').val(id);
+        $('#myModal5').modal({ backdrop: 'static' });
+    }
+
+    function realUpdateRemark() {
+        var id = $('#toEditRemarkId').val();
+        var str = $('#newRemark').val();
         var url = "/ReqManage/UpdateRemark/" + id + "?remark=" + str;
+        var updateRemarkBody = $('#updateRemarkBody');
         $.ajax({
             type: 'POST',
             url: url,
             success: function (msg) {
                 if (msg == "success") {
-                    alert("修改成功！");
+                    updateRemarkBody.html('<p class="alert alert-success">更新成功！</p>');
                     $('#remark' + id).html(str);
                 } else {
-                    alert(msg);
+                    updateRemarkBody.html('<p class="alert alert-danger">'+msg+'</p>');
                 }
             },
             error: function () {
-               alert("处理失败，请联系管理员");
-            }            
+                updateRemarkBody.html('<p class="alert alert-danger">处理失败，请联系管理员！</p>');
+            }
         });
     }
-    
+
 </script>
 <div class="row card">
     @using (Html.BeginForm("Index", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
-                                                                                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
+                                                                                                new { @class = "form-horizontal", role = "form", id = "myForm" }))
     {
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -214,12 +218,12 @@
                 </td>
             </tr>
         </table>
-    }
+                        }
 </div>
 @if (Model.ResultList != null)
 {
     var tipinfo = "1、点击<span class=\"glyphicon glyphicon-edit\"></span>编辑；<br /> 2、点击<span class=\"glyphicon glyphicon-remove\"></span>删除。需求申请编号后的删除会同时删除该申请下的所有需求，维护需求编号后的删除只会删除单条维护需求；<br /> 3、「新增一条」只能在现有维护需求申请中新增一条需求，若需要新增需求申请，请使用需求登记功能；<br />4、当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列；<br />5、点击下发通知编号可以查看下发时间信息";
-    <h3>查询结果<a style="font-size:0.4em; font-weight:normal" id="goToTips" href="###" onclick="showAlert('@tipinfo', 'TIPS')">（点击查看TIPS）</a></h3>
+    <h3>查询结果<a style="font-size:12px; font-weight:normal" id="goToTips" href="###" onclick="showAlert('@tipinfo', 'TIPS')">（点击查看TIPS）</a></h3>
     <div class="row card">
 
 
@@ -229,7 +233,7 @@
         }
         else
         {
-            <table class="table table-condensed table-bordered" style="font-size:0.8em;table-layout:fixed" width="100">
+            <table class="table table-condensed table-bordered" style="font-size:12px;table-layout:fixed" width="100">
                 <tr>
                     <th width="2"></th>
                     <th width="13">
@@ -272,7 +276,7 @@
                         var remarkId = "remark" + item.ReqDetailID;
                     <tr>
                         <td>
-                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')">详情</a> |                            
+                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')">详情</a> |
                             <a href="###" onclick="doEdit('@item.ReqMainID','新增一条维护需求信息', 3)">新增一条</a>
                         </td>
 
@@ -310,22 +314,22 @@
                             @Html.DisplayFor(modelItem => item.ReqStatName)
                         </td>
 
-                        <td>                            
+                        <td>
                             <span id='@remarkId'>@Html.DisplayFor(modelItem => item.Remark)</span>
                             <a href="###" onclick="doUpdateRemark('@item.ReqDetailID')"><span class="glyphicon glyphicon-edit"></span></a>
                         </td>
                         <td>
-                            <a href="###" onclick="showRelease('@item.ReqReleaseID', '@item.SecondReqReleaseID')">@Html.DisplayFor(modelItem => item.ReqReleaseNo)</a> 
+                            <a href="###" onclick="showRelease('@item.ReqReleaseID', '@item.SecondReqReleaseID')">@Html.DisplayFor(modelItem => item.ReqReleaseNo)</a>
                         </td>
                     </tr>
-                                }
+                }
             </table>
-                @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ReqDetail>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+            @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.ReqDetail>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
 
-                                }
+        }
     </div>
 
-                                }
+}
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
@@ -427,9 +431,38 @@
     </div>
 </div>
 
+<!-- 对话框5：编辑备注页面 -->
+<div class="modal fade" id="myModal5" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    编辑备注
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12" id="updateRemarkBody">                       
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(function () {
         $("#SysID").select2();
-    });    
+    });
 </script>
 
