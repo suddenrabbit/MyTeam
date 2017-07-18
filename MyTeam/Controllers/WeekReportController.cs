@@ -219,7 +219,7 @@ namespace MyTeam.Controllers
             }
 
             // 重点项目下拉
-            var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack != true);
+            var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack == false);
             SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
             ViewBag.WorkNameList = sl3;
 
@@ -270,7 +270,7 @@ namespace MyTeam.Controllers
             ViewBag.RptDateList = sl2;
 
             // 重点项目下拉
-            var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack != true);
+            var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack == false);
             SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
             ViewBag.WorkNameList = sl3;
 
@@ -495,7 +495,7 @@ namespace MyTeam.Controllers
 
             // 2017.2.28：删除年度重点任务
             // 【1】重点任务 
-            //var yearMissionList = dbContext.YearMissions.Where(p => p.DoNotTrack != true).ToList();
+            //var yearMissionList = dbContext.YearMissions.Where(p => p.DoNotTrack == false).ToList();
 
             //int size = yearMissionList.Count();
             //int num = 1;
@@ -529,7 +529,7 @@ namespace MyTeam.Controllers
             // 【2】重点工作（取所有「不跟踪」为FALSE的）
             // 2017年2月27日 新增：按照计划完成日期远近排序，已完成和未完成的分别排序
             var mainListFull = from a in dbContext.WeekReportMains
-                               where a.DoNotTrack != true
+                               where a.DoNotTrack == false
                                orderby a.PlanDeadLine
                                select a;
             var inProgressList = mainListFull.Where(p => p.Progress < 100).ToList();

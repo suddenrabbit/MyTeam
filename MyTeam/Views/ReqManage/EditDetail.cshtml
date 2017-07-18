@@ -23,7 +23,7 @@
     <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("EditDetail", "ReqManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                    new { @class = "form-horizontal", role = "form" }))
+                        new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -134,42 +134,44 @@
                 </div>
             </fieldset>
 
-            <fieldset>
-                <legend>需求下发信息</legend>
-                <p class="text-center text-info">本部分功能尚在优化中</p>
-                @Html.HiddenFor(model => model.ReqReleaseID)
-                @Html.HiddenFor(model => model.SecondReqReleaseID)
-                @*
-    <div class="form-group">
-        @Html.LabelFor(model => model.ReqReleaseID, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.TextBoxFor(model => model.ReqReleaseID, new { @class = "form-control", @readonly = "readonly" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.SecondReqReleaseID, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.TextBoxFor(model => model.SecondReqReleaseID, new { @class = "form-control", @readonly = "readonly" })
-        </div>
-    </div>
+
+            @Html.HiddenFor(model => model.ReqReleaseID)
+            @Html.HiddenFor(model => model.SecondReqReleaseID)
+            @*
+                           <fieldset>
+                            <legend>需求下发信息</legend>
+                            <p class="text-center text-info">本部分功能尚在优化中</p>
+                                    <div class="form-group">
+                    @Html.LabelFor(model => model.ReqReleaseID, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.ReqReleaseID, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SecondReqReleaseID, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.SecondReqReleaseID, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
 
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.ReqReleaseID, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.DropDownListFor(model => model.ReqReleaseID, ViewBag.ReqReleaseList as SelectList, new { @class = "form-control" })
-        </div>
-    </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReqReleaseID, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.ReqReleaseID, ViewBag.ReqReleaseList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.SecondReqReleaseID, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.DropDownListFor(model => model.SecondReqReleaseID, ViewBag.SecondReqReleaseList as SelectList, new { @class = "form-control" })
-        </div>
-    </div>
-                *@
-            </fieldset>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SecondReqReleaseID, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.SecondReqReleaseID, ViewBag.SecondReqReleaseList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
 
+                    </fieldset>
+
+            *@
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                     <input type="submit" value="保存" class="btn btn-primary" />
