@@ -59,23 +59,24 @@ namespace MyTeam.Controllers
             ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
 
             // 4、需求数量
-            List<int> reqAmtLs = new List<int>();
+            //regReq.ReqAmt = 1; //初始置为1
+            /*List<int> reqAmtLs = new List<int>();
             for (int i = 1; i <= 10; i++)
             {
                 reqAmtLs.Add(i);
             }
 
-            ViewBag.ReqAmtList = new SelectList(reqAmtLs);
+            ViewBag.ReqAmtList = new SelectList(reqAmtLs);*/
 
             // 5、需求受理日期自动置为今天
             // regReq.AcptDate = DateTime.Now; //del:现在默认先不填受理日期了
 
             // 6、预先生成detail部分
-            regReq.DetailRegReqs = new List<DetailRegReq>();
+            /*regReq.DetailRegReqs = new List<DetailRegReq>();
             for (int i = 0; i < 10; i++)
             {
                 regReq.DetailRegReqs.Add(new DetailRegReq());
-            }
+            }*/
 
             return View(regReq);
         }
@@ -87,14 +88,32 @@ namespace MyTeam.Controllers
             string r = ""; //记录处理结果
             try
             {
+                // 把需求概述为空的剔除
+                List<string> reqDescList = new List<string>(); ;
+                var reqAmt = 0;
+                foreach (var s in regReq.ReqDescs)
+                {
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        reqDescList.Add(s);
+                        reqAmt++;
+                    }
+                }
+                 
+                // 需求申请数量不能为0
+                if (reqAmt < 1)
+                {
+                    throw new Exception(string.Format("需求数量不能小于1！"));
+                }
+
+                var reqDescs = reqDescList.ToArray();
+
                 //判断ReqNo是否重复
                 var checkMain = dbContext.ReqMains.Where(p => p.ReqNo == regReq.ReqNo).FirstOrDefault();
                 if (checkMain != null)
                 {
                     throw new Exception(string.Format("需求申请编号{0}已经存在！", regReq.ReqNo));
                 }
-
-                // 分别登记ReqMain和ReqDetail                
 
                 //登记Main
                 ReqMain reqMain = new ReqMain
@@ -110,15 +129,17 @@ namespace MyTeam.Controllers
                 };
                 dbContext.ReqMains.Add(reqMain);
 
+                // 分别登记ReqMain和ReqDetail 
+
                 // 登记Detail
                 List<ReqDetail> reqList = new List<ReqDetail>();
-                for (int i = 0; i < regReq.ReqAmt; i++)
+                for (int i = 0; i < reqAmt; i++)
                 {
                     ReqDetail newReq = new ReqDetail()
                     {
                         DevWorkload = 0,
-                        ReqDesc = regReq.DetailRegReqs[i].ReqDesc,
-                        Remark = regReq.DetailRegReqs[i].Remark,
+                        ReqDesc = reqDescs[i],
+                        //Remark = regReq.DetailRegReqs[i].Remark,
                         // 状态默认「待评估」
                         ReqStat = (int)ReqStatEnums.待评估,
                         CreateTime = DateTime.Now,
@@ -131,7 +152,7 @@ namespace MyTeam.Controllers
 
                 dbContext.SaveChanges();
 
-                r = string.Format("<p class='alert alert-success'>共{0}条需求登记入库成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/Reg'>继续登记</a></li></ul></p>", regReq.ReqAmt);
+                r = string.Format("<p class='alert alert-success'>共{0}条需求登记入库成功！</p><p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/Reg'>继续登记</a></li></ul></p>", reqAmt);
             }
             catch (Exception e1)
             {
@@ -1283,12 +1304,12 @@ namespace MyTeam.Controllers
             try
             {
                 int num = dbContext.Database.ExecuteSqlCommand("update ReqDetails set Remark=@p0 where ReqDetailID=@p1", remark, id);
-                if(num == 0)
+                if (num == 0)
                 {
                     return "更新失败！";
                 }
             }
-            catch(Exception e1)
+            catch (Exception e1)
             {
                 return e1.ToString();
             }

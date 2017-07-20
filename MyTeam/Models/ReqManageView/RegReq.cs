@@ -38,19 +38,19 @@ namespace MyTeam.Models
         public string ReqBusiTestPerson { get; set; }         
 
         [Required]
-        [Range(1,10, ErrorMessage="需求数量必须是1-10之间的数字")]
+        [Range(1,50, ErrorMessage="需求数量必须是1-50之间的数字")]
         [Display(Name = "需求数量")]
         public int ReqAmt { get; set; }
 
-        public System.Collections.Generic.List<DetailRegReq> DetailRegReqs { get; set; } 
+        public string[] ReqDescs { get; set; } 
     }
 
-    public class DetailRegReq
+    /*public class DetailRegReq
     {
         [Display(Name = "需求或问题概述")]
         public string ReqDesc { get; set; }
 
         [Display(Name = "备注")]
         public string Remark { get; set; }
-    }
+    }*/
 }
