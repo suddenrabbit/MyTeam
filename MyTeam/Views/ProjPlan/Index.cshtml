@@ -56,7 +56,9 @@
 
     // 在modal中新增
     function doCreate() {
-        var url = "/ProjPlan/Create";
+        var id = $('#ProjID').val();
+
+        var url = "/ProjPlan/Create/" + id;
         $.ajax({
             type: 'GET',
             url: url,
@@ -393,3 +395,6 @@
     </div>
 </div>
 
+<script>
+    $('#ProjID').select2();
+</script>

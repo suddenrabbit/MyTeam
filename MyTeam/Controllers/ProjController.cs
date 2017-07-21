@@ -49,6 +49,14 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.RulesPublishDate <= endDate);
                 }
 
+                if (query.ReqAnalysisID != 0)
+                {
+                    ls = ls.Where(p => p.ReqAnalysisID == query.ReqAnalysisID);
+                }
+
+                // 排序
+                ls = ls.OrderByDescending(p => p.ProAcptDate);
+
                 var result = ls.ToList();
                 // 若isExcel为true，导出Excel
                 if (isExcel)
@@ -69,6 +77,12 @@ namespace MyTeam.Controllers
             {
                 query = new ProjQuery();
             }
+
+            // 需求分析师下拉
+            List<User> userList = this.GetFormalUserList();
+            // 加上“全部”
+            userList.Insert(0, new User() { UID = 0, Realname = "全部" });
+            ViewBag.ReqAnalysisList = new SelectList(userList, "UID", "Realname", query.ReqAnalysisID);
 
             return View(query);
         }
@@ -96,11 +110,11 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "Realname", user.UID);
+                sl2 = new SelectList(this.GetFormalUserList(), "UID", "Realname", user.UID);
             }
             else
             {
-                sl2 = new SelectList(this.GetUserList(), "UID", "Realname");
+                sl2 = new SelectList(this.GetFormalUserList(), "UID", "Realname");
             }
 
             ViewBag.ReqAnalysisList = sl2;
@@ -124,7 +138,7 @@ namespace MyTeam.Controllers
             Proj p = this.GetProjList().Find(a => a.ProjName == proj.ProjName);
             if (p != null)
             {
-                return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目跟踪状态已存在，不允许重复添加！" + "</p>";
+                return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目信息已存在，不允许重复添加！" + "</p>";
             }
 
             try
@@ -202,8 +216,9 @@ namespace MyTeam.Controllers
                 dbContext.Entry(proj).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
-                // 更新内存
-                this.Update(3);
+                // 项目名称变了才更新内存
+                if (proj.ProjName != proj.OldProjName)
+                    this.Update(3);
 
                 return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }

@@ -96,7 +96,7 @@
     }
 </script>
 <div class="row card">
-    <div class="col-md-8">
+    <div class="col-md-12">
         @using (Html.BeginForm("Index", "Proj", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
                     new { @class = "form-horizontal", role = "form", id = "myForm" }))
         {
@@ -108,21 +108,24 @@
             <table class="table table-condensed query-table">
                 <tr>
                     <td><label class="control-label">项目名称</label></td>
-                    <td class="form-inline">
-                        <input id="ProjName" name="ProjName" class="form-control" />
-                        <span class="text-info">（支持模糊查询）</span>
+                    <td>
+                        <input id="ProjName" name="ProjName" class="form-control" placeholder="支持模糊查询" />
+                    </td>
+                    <td><label class="control-label">需求分析师</label></td>
+                    <td>
+                        <!--需求分析师下拉选择-->
+                        @Html.DropDownListFor(model => model.ReqAnalysisID, ViewBag.ReqAnalysisList as SelectList, new { @class = "form-control" })
                     </td>
                 </tr>
 
                 <tr>
-                    <td><label class="control-label">项目调研受理日期</label></td>
+                    <td><label class="control-label">受理日期</label></td>
                     <td class="form-inline">
                         <input id="ProAcptDateStart" name="ProAcptDateStart" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.ProAcptDateStart" placeholder="点击选择日期" /> -
                         <input id="ProAcptDateEnd" name="ProAcptDateEnd" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.ProAcptDateEnd" placeholder="点击选择日期" />
                     </td>
-                </tr>
-                <tr>
-                    <td><label class="control-label">项目章程发布日期</label></td>
+                
+                    <td><label class="control-label">章程发布日期</label></td>
                     <td class="form-inline">
                         <input id="RulesPublishDateStart" name="RulesPublishDateStart" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.RulesPublishDateStart" placeholder="点击选择日期" /> -
                         <input id="RulesPublishDateEnd" name="RulesPublishDateEnd" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" value="@Model.RulesPublishDateEnd" placeholder="点击选择日期" />
@@ -163,9 +166,15 @@
                         @Html.DisplayNameFor(model => model.ResultList[0].HostDept)
                     </th>
                     <th width="8">
-                        @Html.DisplayNameFor(model => model.ResultList[0].ProjLevel)
+                        @Html.DisplayNameFor(model => model.ResultList[0].HostBusiPerson)
                     </th>
-                    <th width="12">
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].ProAcptDate)
+                    </th>
+                    <th width="8">
+                        @Html.DisplayNameFor(model => model.ResultList[0].RulesPublishDate)
+                    </th>
+                    <th width="8">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqAnalysisID)
                     </th>
                     <th width="6">
@@ -195,7 +204,13 @@
                             @Html.DisplayFor(modelItem => item.HostDept)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ProjLevel)
+                            @Html.DisplayFor(modelItem => item.HostBusiPerson)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProAcptDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RulesPublishDate)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqAnalysisName)

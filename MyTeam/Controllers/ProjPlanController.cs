@@ -71,12 +71,20 @@ namespace MyTeam.Controllers
         //
         // GET: /ProjPlan/Create
 
-        public ActionResult Create()
+        public ActionResult Create(int id = 0)
         {
             //项目列表
             List<Proj> ls = dbContext.Projs.ToList();
             SelectList sl = null;
-            sl = new SelectList(ls, "ProjID", "ProjName");
+
+            if(id == 0)
+            {
+                sl = new SelectList(ls, "ProjID", "ProjName");
+            }
+            else
+            {
+                sl = new SelectList(ls, "ProjID", "ProjName", id);
+            }
 
             ViewBag.ProjList = sl;
 

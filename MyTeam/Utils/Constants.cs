@@ -118,7 +118,7 @@ namespace MyTeam.Utils
         /// <summary>
         /// 项目状态下拉列表
         /// </summary>
-        public static List<string> ProjStatList = new List<string>() { "进行中", "完成", "暂停", "取消" };
+        public static List<string> ProjStatList = new List<string>() { "进行中", "已完成", "暂停", "取消" };
 
         /// <summary>
         /// 内存中的参数表

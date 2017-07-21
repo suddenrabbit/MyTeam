@@ -18,7 +18,7 @@ namespace MyTeam.Models
         public string ProjName { get; set; }
 
         [Display(Name = "项目编号")]
-        [StringLength(16, ErrorMessage = "不能超过16位")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public String ProjNo { get; set; }
 
         [Display(Name = "主办部门")]
@@ -32,10 +32,15 @@ namespace MyTeam.Models
         [Display(Name = "需求分析师")]
         public int ReqAnalysisID { get; set; }
 
+        [Display(Name = "主办业务人员")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
+        public String HostBusiPerson { get; set; }
+
         [Display(Name = "业务人员")]
         public String BusiPerson { get; set; }
 
         [Display(Name = "项目经理")]
+        [StringLength(32, ErrorMessage = "不能超过32位")]
         public String ProjManager { get; set; }
 
         [Display(Name = "架构师")]
@@ -186,7 +191,7 @@ namespace MyTeam.Models
         [StringLength(10)]
         public string ProjStat { get; set; }
 
-        [Display(Name = "项目类型")] // 0-项目 1-专项工作
+        [Display(Name = "项目类型")] // 0-创新项目 1-专项工作
         public int ProjType { get; set; }
 
         [NotMapped]
@@ -194,7 +199,7 @@ namespace MyTeam.Models
             get
             {
                
-                return this.ProjType == 1 ? "专项工作" : "项目";
+                return this.ProjType == 1 ? "专项工作" : "创新项目";
             }
             set { this.ProjTypeName = value; }
         }
