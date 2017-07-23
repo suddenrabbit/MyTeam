@@ -1303,7 +1303,7 @@ namespace MyTeam.Controllers
         {
             try
             {
-                int num = dbContext.Database.ExecuteSqlCommand("update ReqDetails set Remark=@p0 where ReqDetailID=@p1", remark, id);
+                int num = dbContext.Database.ExecuteSqlCommand("update ReqDetails set Remark=@p0, UpdateTime=@p1 where ReqDetailID=@p2", remark, DateTime.Now, id);
                 if (num == 0)
                 {
                     return "更新失败！";

@@ -56,9 +56,9 @@
         });
     }
 
-    // 在modal中查看相关需求
+    // 在modal中管理下发需求
     function doShowReqs(id, reqNo, isSide) {
-        $('#detailName').html("查看" + reqNo + "的相关需求");
+        $('#detailName').html("管理" + reqNo + "的下发需求");
 
         var url = "/ReqManage/ShowReqs/" + id + "?isSideRelease=" + isSide;        
 
@@ -156,7 +156,7 @@
                         <td>
                             <a href="###" onclick="doEdit('@item.ReqReleaseID','编辑下发信息')">编辑</a> |
                             <a href="###" onclick="doDelete('@item.ReqReleaseID')">删除</a> | 
-                            <a href="###" onclick="doShowReqs('@item.ReqReleaseID', '@item.ReleaseNo', '@item.IsSideRelease.ToString()')">查看相关需求</a>
+                            <a href="###" onclick="doShowReqs('@item.ReqReleaseID', '@item.ReleaseNo', '@item.IsSideRelease.ToString()')">管理下发需求</a>
 
                         </td>
 
@@ -278,8 +278,8 @@
                 <div id="detailMain"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">
-                    确定
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    关闭
                 </button>
             </div>
         </div>

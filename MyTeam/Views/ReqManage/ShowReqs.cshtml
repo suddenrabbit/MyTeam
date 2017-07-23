@@ -4,22 +4,41 @@
     Layout = null;
 }
 
+<script>
+    function doDelete(id) {
+        $('#tr' + id).remove();
+    }
+
+    function doAdd() {
+        var reqDetailNo = $('#newReq').val();
+    }
+
+</script>
+
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-striped" style="font-size:12px">
+        <table class="table table-striped" style="font-size:12px" id="detailTable">
             <tr>
-                <th>系统名称</th>
-                <th>维护需求编号</th>
-                <th>维护需求说明</th>
+                <th width="5"></th>
+                <th width="30">系统名称</th>
+                <th width="30">维护需求编号</th>
+                <th width="35">需求概述</th>
             </tr>
             @foreach(var item in Model)
             {
-                <tr>
+                var trid = "tr" + item.ReqDetailID;
+                <tr id="@trid">
+                    <td><a href="###" onclick="doDelete('@item.ReqDetailID')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a></td>
                     <td>@item.ReqMain.SysName</td>
                     <td>@item.ReqDetailNo</td>
                     <td>@item.ShortReqDesc</td>
                 </tr>
             }
-        </table>        
+        </table>   
+        <div class="form-inline">
+            <input id="newReq" name="newReq" class="form-control" placeholder="输入维护需求编号，只能输入一个" style="max-width:50%;width:50%"/>&nbsp;&nbsp;
+            <button class="btn btn-primary" onclick="doAdd()">增加</button>&nbsp;&nbsp;
+            <span class="text-danger" id="info"></span>
+        </div>
     </div>
 </div>

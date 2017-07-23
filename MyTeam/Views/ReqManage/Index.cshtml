@@ -289,7 +289,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqMain.ReqNo)
                             <a href="###" onclick="doEdit('@item.ReqMainID', '编辑维护需求申请信息', 1)"><span class="glyphicon glyphicon-edit"></span></a>
-                            <a href="###" onclick="doDelete('@item.ReqMainID','1')" style="color:#f47983"><span class="glyphicon glyphicon-remove"></span></a>
+                            <a href="###" onclick="doDelete('@item.ReqMainID','1')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqMain.ShortReqReason)
@@ -302,7 +302,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqDetailNo)
                             <a href="###" onclick="doEdit('@item.ReqDetailID', '编辑维护需求信息', 2)"><span class="glyphicon glyphicon-edit"></span></a>
-                            <a href="###" onclick="doDelete('@item.ReqDetailID','2')" style="color:#f47983"><span class="glyphicon glyphicon-remove"></span></a>
+                            <a href="###" onclick="doDelete('@item.ReqDetailID','2')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ShortReqDesc)
