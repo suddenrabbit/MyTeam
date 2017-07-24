@@ -204,6 +204,11 @@
                 </td>
             </tr>
             <tr>
+                <td>@Html.LabelFor(model => model.ReqDesc, new { @class = "control-label" })</td>
+                <td>
+                    @Html.TextBoxFor(model => model.ReqDesc, new { @class = "form-control", @placeholder = "支持模糊查询" })
+                    @Html.ValidationMessageFor(model => model.ReqDesc, "", new { @class = "text-danger" })
+                </td>
                 <td>@Html.LabelFor(model => model.AnyReleaseNo, new { @class = "control-label" })</td>
                 <td>
                     @Html.TextBoxFor(model => model.AnyReleaseNo, new { @class = "form-control", @placeholder = "主副下发编号均可，只能填一个" })

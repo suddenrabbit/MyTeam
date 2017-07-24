@@ -126,7 +126,7 @@ namespace MyTeam.Controllers
                 var msg = Constants.AJAX_EDIT_SUCCESS_RETURN;
 
                 // 如果实际下发日期变成空，则要将相关需求的状态修改为【出池】；如果实际下发日期变成非空，则要将相关需求的状态修改为【办结】
-                if(!reqRelease.IsSideRelease)
+                if (!reqRelease.IsSideRelease)
                 {
                     int reqStat = (int)ReqStatEnums.办结;
                     if (reqRelease.ReleaseDate == null)
@@ -211,7 +211,7 @@ namespace MyTeam.Controllers
             {
                 return "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
             }
-        }        
+        }
 
         // 需求管理页面查看下发详情
         [HttpGet]
@@ -220,11 +220,66 @@ namespace MyTeam.Controllers
             var ls = new List<ReqRelease>();
             var r = dbContext.ReqReleases.Find(id);
             ls.Add(r);
-            if(secondId != 0)
+            if (secondId != 0)
             {
                 ls.Add(dbContext.ReqReleases.Find(secondId));
             }
             return View(ls);
+        }
+
+        // 从下发通知中移除需求
+        [HttpGet]
+        public string RemoveReq(int id, bool isSideRelease = false)
+        {
+            try
+            {
+                var sql = string.Format("update ReqDetails set {0}=0, UpdateTime=@p0 where ReqDetailID=@p1", isSideRelease ? "SecondReqReleaseID" : "ReqReleaseID");
+                int num = dbContext.Database.ExecuteSqlCommand(sql, DateTime.Now, id);
+                if(num != 1)
+                {
+                    throw new Exception("操作失败！");
+                }
+            }
+            catch (Exception e1)
+            {
+                return "出错了：" + e1.ToString();
+            }
+
+            return "success";
+        }
+
+        // 在通知中绑定需求
+        [HttpGet]
+        public string BindReq(int id, string reqDetailNo, bool isSideRelease = false)
+        {
+            try
+            {
+                var detail = dbContext.ReqDetails.Where(p => p.ReqDetailNo == reqDetailNo).FirstOrDefault();
+
+                if(detail == null)
+                {
+                    return "不存在这个需求！";
+                }
+
+                if(detail.ReqReleaseID == id || detail.SecondReqReleaseID == id)
+                {
+                    return "不能重复添加！";
+                }
+
+                if (!isSideRelease) { detail.ReqReleaseID = id; }
+                else { detail.SecondReqReleaseID = id; }
+                detail.UpdateTime = DateTime.Now;
+                dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+
+                return string.Format("<tr id=\"tr{0}\"><td><a href=\"###\" onclick=\"doDelete(\'{0}\')\" class=\"text-danger\"><span class=\"glyphicon glyphicon-remove\"></span></a></td><td>{1}</td><td>{2}</td><td>{3}</td></tr>", detail.ReqDetailID, detail.ReqMain.SysName, detail.ReqDetailNo, detail.ShortReqDesc);
+            }
+            catch (Exception e1)
+            {
+                return "出错了：" + e1.ToString();
+            }
+
+            
         }
 
         /// <summary>
@@ -237,15 +292,15 @@ namespace MyTeam.Controllers
             // 检查下发通知编号格式
             string pattern = "(YFZX){1}[0-9]{8}";
             Regex regex = new Regex(pattern);
-            if(!regex.IsMatch(releaseNo))
+            if (!regex.IsMatch(releaseNo))
             {
                 return "下发通知编号" + releaseNo + "格式不正确，必须是YFZX+8位数字";
             }
 
-            if(releaseNo != oldReleaseNo)
+            if (releaseNo != oldReleaseNo)
             {
                 var rls = dbContext.ReqReleases.Where(p => p.ReleaseNo == releaseNo).FirstOrDefault();
-                if(rls != null)
+                if (rls != null)
                 {
                     return "下发通知编号" + releaseNo + "已经存在！";
                 }

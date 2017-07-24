@@ -664,6 +664,11 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.ReqDetailNo.Contains(query.ReqDetailNo.Trim()));
                 }
 
+                if (!string.IsNullOrEmpty(query.ReqDesc))
+                {
+                    ls = ls.Where(p => p.ReqDesc.Contains(query.ReqDesc.Trim()));
+                }
+
                 if (!string.IsNullOrEmpty(query.AnyReleaseNo))
                 {
                     var rls = releaseList.Find(p => p.ReleaseNo == query.AnyReleaseNo);
@@ -1293,6 +1298,9 @@ namespace MyTeam.Controllers
         [HttpGet]
         public ActionResult ShowReqs(int id, bool isSideRelease)
         {
+            ViewBag.IsSideRelease = isSideRelease;
+            ViewBag.ReleaseID = id;
+
             var ls = dbContext.ReqDetails.Where(p => isSideRelease ? p.SecondReqReleaseID == id : p.ReqReleaseID == id).ToList();
             return View(ls);
         }

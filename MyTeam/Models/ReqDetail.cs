@@ -24,7 +24,7 @@ namespace MyTeam.Models
         [StringLength(8, ErrorMessage = "下发版本号不能超过8位")]
         public string Version { get; set; }
 
-        [Display(Name = "需求或问题概述")]
+        [Display(Name = "需求概述")]
         public string ReqDesc { get; set; }
 
         [Display(Name = "需求类型")]        

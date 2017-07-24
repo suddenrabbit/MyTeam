@@ -6,17 +6,62 @@
 
 <script>
     function doDelete(id) {
-        $('#tr' + id).remove();
+        var url = "/ReleaseManage/RemoveReq/" + id + "?isSideRelease=" + $('#isSideRelease').val();
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                if (msg == "success") {
+                    alert("操作成功！");
+                    $('#tr' + id).remove();
+                } else {
+                    aler(msg);
+                }
+            },
+            error: function () {
+                alert('处理失败，请联系管理员！');
+            }
+        });
     }
 
     function doAdd() {
         var reqDetailNo = $('#newReq').val();
+        if (reqDetailNo.length < 1) {
+            alert("请输入维护需求编号");
+            $('#newReq').focus();
+            return;
+        }
+
+        var url = "/ReleaseManage/BindReq/" + $('#releaseID').val() + "?reqDetailNo=" + reqDetailNo + "&isSideRelease=" + $('#isSideRelease').val();
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                if (msg.indexOf('<tr') > -1)
+                {
+                    alert("操作成功！");
+                    $('#detailTable').append(msg);
+                    $('#newReq').val('');
+                }
+                else
+                {
+                    alert(msg);
+                }
+                
+            },
+            error: function () {
+                alert('处理失败，请联系管理员！');
+            }
+        });
     }
 
 </script>
 
 <div class="row">
     <div class="col-md-12">
+
         <table class="table table-striped" style="font-size:12px" id="detailTable">
             <tr>
                 <th width="5"></th>
@@ -24,7 +69,7 @@
                 <th width="30">维护需求编号</th>
                 <th width="35">需求概述</th>
             </tr>
-            @foreach(var item in Model)
+            @foreach (var item in Model)
             {
                 var trid = "tr" + item.ReqDetailID;
                 <tr id="@trid">
@@ -34,11 +79,13 @@
                     <td>@item.ShortReqDesc</td>
                 </tr>
             }
-        </table>   
+        </table>
+
         <div class="form-inline">
-            <input id="newReq" name="newReq" class="form-control" placeholder="输入维护需求编号，只能输入一个" style="max-width:50%;width:50%"/>&nbsp;&nbsp;
+            <input id="newReq" name="newReq" class="form-control" placeholder="输入维护需求编号，只能输入一个" style="max-width:50%;width:50%" />&nbsp;&nbsp;
             <button class="btn btn-primary" onclick="doAdd()">增加</button>&nbsp;&nbsp;
-            <span class="text-danger" id="info"></span>
         </div>
+        <input type="hidden" id="isSideRelease" value="@ViewBag.IsSideRelease.ToString()" />
+        <input type="hidden" id="releaseID" value="@ViewBag.ReleaseID" />
     </div>
 </div>
