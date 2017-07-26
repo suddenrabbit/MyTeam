@@ -91,7 +91,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Details(int id)
         {
-            Proj proj = this.GetProjList().Find(a => a.ProjID == id);
+            Proj proj = dbContext.Projs.Find(id);
 
             if (proj == null)
             {
@@ -164,7 +164,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Edit(int id)
         {
-            Proj proj = this.GetProjList().Find(a => a.ProjID == id);
+            Proj proj = dbContext.Projs.Find(id);
 
             if (proj == null)
             {
@@ -207,7 +207,7 @@ namespace MyTeam.Controllers
                 Proj p = this.GetProjList().Find(a => a.ProjName == proj.ProjName);
                 if (p != null)
                 {
-                    return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目跟踪状态已存在，不允许更新！" + "</p>";
+                    return "<p class='alert alert-danger'>出错了: " + proj.ProjName + "的项目信息已存在，不允许更新！" + "</p>";
                 }
             }
 
