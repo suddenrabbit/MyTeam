@@ -2,185 +2,164 @@
     Layout = null;
 }
 @model MyTeam.Models.ProjPlan
+
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
-<script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#FoundGroupDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#OutlineStartDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#OutlineFinishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#ReqStartDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#ReqFinishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#ReviewStartDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#ReviewFinishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#BusiFeasiStartDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#BusiFeasiFinishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#TechFeasiStartDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#TechFeasiFinishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#TechFeasiReviewStartDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#TechFeasiReviewFinishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#SoftBudgetStartDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#SoftBudgetFinishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#ImplementPlansStartDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-        $("#ImplementPlansFinishDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-    });
-</script>
 <script>
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
             $('#editForm').hide()
     }
-
 </script>
 <div class="row">
     <div class="col-md-12">
-        @using (Ajax.BeginForm("Create", "ProjPlan", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                new { @class = "form-horizontal", role = "form", id = "editForm" }))
+        @using (Ajax.BeginForm("EditPlanFromProjIndex", "ProjPlan", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                new { @class = "form-horizontal", role = "form", id="editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+            @Html.HiddenFor(model => model.PlanID)
+            <input type="hidden" name="opType" value="@ViewBag.OpType" />
+
             <div class="form-group">
                 @Html.LabelFor(model => model.ProjID, new { @class = "col-md-4 control-label" })
-                <!--项目名称列表-->
                 <div class="col-md-8">
-                    @Html.DropDownListFor(model => model.ProjID, ViewBag.ProjList as SelectList, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.ProjName, new { @class = "form-control", @readonly= "readonly" })
+                    @Html.HiddenFor(model=>model.ProjID)
                 </div>
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.PlanYear, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    <input id="PlanYear" name="PlanYear" value="@DateTime.Now.Year" type="number" min="2010" max="2100" class="form-control" />
-                    
+                    <input id="PlanYear" name="PlanYear" value="@Model.PlanYear" type="number" min="2010" max="2100" class="form-control" />
+
                 </div>
             </div>
+
             <div class="form-group">
                 @Html.LabelFor(model => model.FoundGroupDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.FoundGroupDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.FoundGroupDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.FoundGroupDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.OutlineStartDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.OutlineStartDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.OutlineStartDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.OutlineStartDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.OutlineFinishDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.OutlineFinishDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.OutlineFinishDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.OutlineFinishDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.ReqStartDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.ReqStartDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.ReqStartDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ReqStartDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.ReqFinishDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.ReqFinishDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.ReqFinishDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ReqFinishDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.ReviewStartDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.ReviewStartDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.ReviewStartDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ReviewStartDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.ReviewFinishDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.ReviewFinishDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.ReviewFinishDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ReviewFinishDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.BusiFeasiStartDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.BusiFeasiStartDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.BusiFeasiStartDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.BusiFeasiStartDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.BusiFeasiFinishDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.BusiFeasiFinishDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.BusiFeasiFinishDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.BusiFeasiFinishDate, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.TechFeasiStartDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.TechFeasiStartDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.TechFeasiStartDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.TechFeasiStartDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.TechFeasiFinishDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.TechFeasiFinishDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.TechFeasiFinishDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.TechFeasiFinishDate, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.TechFeasiReviewStartDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.TechFeasiReviewStartDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.TechFeasiReviewStartDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.TechFeasiReviewStartDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.TechFeasiReviewFinishDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.TechFeasiReviewFinishDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.TechFeasiReviewFinishDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.TechFeasiReviewFinishDate, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.SoftBudgetStartDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.SoftBudgetStartDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.SoftBudgetStartDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.SoftBudgetStartDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.SoftBudgetFinishDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.SoftBudgetFinishDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.SoftBudgetFinishDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.SoftBudgetFinishDate, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.ImplementPlansStartDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.ImplementPlansStartDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.ImplementPlansStartDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ImplementPlansStartDate, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.ImplementPlansFinishDate, new { @class = "col-md-4 control-label" })
                 <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.ImplementPlansFinishDate, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.ImplementPlansFinishDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ImplementPlansFinishDate, "", new { @class = "text-danger" })
                 </div>
             </div>
+            
             <div class="form-group">
                 <div class="col-md-offset-4 col-md-8">
-                    <input type="submit" value="新增" class="btn btn-primary" />
+                    <input type="submit" value="保存" class="btn btn-primary" />
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
                 </div>
             </div>

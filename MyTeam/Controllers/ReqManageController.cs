@@ -406,7 +406,7 @@ namespace MyTeam.Controllers
                 int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
 
                 // 下载出池计划文档接口
-                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
+                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}&PlanReleaseDate={2}", SysID, realVersion, PlanReleaseDate);
 
                 return string.Format("<p class='alert alert-success'>{0}条需求成功出池！<a href='{1}'>点击</a>导出出池计划文档</p>", updatedNum, downfile);
             }
@@ -1038,7 +1038,7 @@ namespace MyTeam.Controllers
         #region 出池下发计划
         // 出池计划查询与导出
         [HttpGet]
-        public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
+        public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false, string PlanReleaseDate = "")
         {
             string errMsg = "";
 
@@ -1069,6 +1069,10 @@ namespace MyTeam.Controllers
                     try
                     {
                         var rls = dbContext.ReqReleases.Find(req.ReqReleaseID);
+                        if (PlanReleaseDate == "")
+                        {
+                            PlanReleaseDate = rls == null ? "" : rls.PlanReleaseDate.ToShortDateString();
+                        }
 
                         OutPoolTableResult res = new OutPoolTableResult()
                         {
@@ -1083,7 +1087,7 @@ namespace MyTeam.Controllers
                             ReqDevPerson = req.ReqMain.ReqDevPerson,
                             ReqBusiTestPerson = req.ReqMain.ReqBusiTestPerson,
                             ReqType = req.ReqTypeName,
-                            PlanReleaseDate = rls == null ? "" : rls.PlanReleaseDate.ToShortDateString(),
+                            PlanReleaseDate = PlanReleaseDate,
                             ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),
                             Remark = req.Remark
                         };
@@ -1102,7 +1106,7 @@ namespace MyTeam.Controllers
                             ReqDevPerson = req.ReqMain.ReqDevPerson,
                             ReqBusiTestPerson = req.ReqMain.ReqBusiTestPerson,
                             ReqType = req.ReqTypeName,
-                            PlanReleaseDate = rls == null ? "" : rls.PlanReleaseDate.ToShortDateString(),
+                            PlanReleaseDate = PlanReleaseDate,
                             ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),
                             Remark = req.Remark
                         };

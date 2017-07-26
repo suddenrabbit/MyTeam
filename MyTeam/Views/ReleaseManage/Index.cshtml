@@ -14,6 +14,8 @@
     }
 
     function realDelete() {
+        $('#procResult').html("处理中....");
+        $('#myModal2').modal({ backdrop: 'static' });
         var id = $('#toDelId').val();
         var url = "/ReleaseManage/Delete/" + id;
         $.ajax({
@@ -25,9 +27,6 @@
             },
             error: function () {
                 $('#procResult').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal2').modal({ backdrop: 'static' });
             }
         });
 
@@ -36,6 +35,8 @@
     // 在modal中编辑
     function doEdit(id, title) {
         $('#modalTitle').html(title);
+        $('#modalBody').html("读取中...");
+        $('#myModal3').modal({ backdrop: 'static' });
         if (id == 0)
             var url = "/ReleaseManage/Create";
         else
@@ -49,9 +50,6 @@
             },
             error: function () {
                 $('#modalBody').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal3').modal({ backdrop: 'static' });
             }
         });
     }
@@ -59,6 +57,8 @@
     // 在modal中管理下发需求
     function doShowReqs(id, reqNo, isSide) {
         $('#detailName').html("管理" + reqNo + "的下发需求");
+        $('#detailMain').html("读取中...");
+        $('#myModal4').modal({ backdrop: 'static' });
 
         var url = "/ReqManage/ShowReqs/" + id + "?isSideRelease=" + isSide;        
 
@@ -70,9 +70,6 @@
             },
             error: function () {
                 $('#detailMain').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal4').modal({ backdrop: 'static' });
             }
         });
     }

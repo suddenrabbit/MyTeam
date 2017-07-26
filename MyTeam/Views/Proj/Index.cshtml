@@ -14,6 +14,8 @@
     }
 
     function realDelete() {
+        $('#procResult').html("处理中...");
+        $('#myModal2').modal({ backdrop: 'static' });
         var id = $('#toDelId').val();
         var url = "/Proj/Delete/" + id;
         $.ajax({
@@ -21,13 +23,10 @@
             url: url,
             success: function (msg) {
                 $('#procResult').html(msg);
-
+                $('#resultTR' + id).fadeOut('fast', function () { $(this).remove });
             },
             error: function () {
                 $('#procResult').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal2').modal({ backdrop: 'static' });
             }
         });
     }
@@ -42,6 +41,8 @@
     // 在modal中显示详情
     function showDetail(id, name) {
         $('#detailName').html(name);
+        $('#detailMain').html("读取中...");
+        $('#myModal3').modal({ backdrop: 'static' });
         var url = "/Proj/Details/" + id;
         $.ajax({
             type: 'GET',
@@ -51,16 +52,15 @@
             },
             error: function () {
                 $('#detailMain').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal3').modal({ backdrop: 'static' });
             }
         });
     }
 
     // 在modal中编辑
     function doEdit(id, name) {
-        $('#editName').html(name);
+        $('#editName').html("【" + name + "】项目状态编辑");
+        $('#Edit').html("读取中...");
+        $('#myModal4').modal({ backdrop: 'static' });
         var url = "/Proj/Edit/" + id;
         $.ajax({
             type: 'GET',
@@ -70,15 +70,14 @@
             },
             error: function () {
                 $('#Edit').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal4').modal({ backdrop: 'static' });
             }
         });
     }
 
     // 在modal中新增
     function doCreate() {
+        $('#Create').html("读取中...");
+        $('#myModal5').modal({ backdrop: 'static' });
         var url = "/Proj/Create";
         $.ajax({
             type: 'GET',
@@ -88,10 +87,26 @@
             },
             error: function () {
                 $('#Create').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal5').modal({ backdrop: 'static' });
             }
+        });
+    }
+
+    // 在modal中编辑项目计划
+    function editPlan(id, name) {
+        $('#editName').html("【" + name + "】项目计划管理");
+        $('#Edit').html("读取中...");
+        $('#myModal4').modal({ backdrop: 'static' })
+        var url = "/ProjPlan/EditPlanFromProjIndex/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#Edit').html(msg);
+            },
+            error: function () {
+                $('#Edit').html("处理失败，请联系管理员");
+            }
+            
         });
     }
 </script>
@@ -192,7 +207,8 @@
                         <td>
                             <a href="###" onclick="doEdit('@item.ProjID','@item.ProjName')">编辑</a> |
                             <a href="###" onclick="showDetail('@item.ProjID','@item.ProjName')">详情</a> |
-                            <a href="###" onclick="doDelete('@item.ProjID','@item.ProjName')">删除</a>
+                            <a href="###" onclick="doDelete('@item.ProjID','@item.ProjName')">删除</a> |
+                            <a href="###" onclick="editPlan('@item.ProjID','@item.ProjName')">管理项目计划</a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ProjName)
@@ -275,7 +291,7 @@
                 <span id="procResult"></span>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
                     确定
                 </button>
             </div>
@@ -320,7 +336,7 @@
                     &times;
                 </button>
                 <h4 class="modal-title" id="myModalLabel">
-                    【<span id="editName"></span>】项目状态编辑
+                    <span id="editName"></span>
                 </h4>
             </div>
             <div class="modal-body">

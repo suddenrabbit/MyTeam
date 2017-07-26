@@ -28,6 +28,10 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.PlanYear == query.PlanYear);
                 }
+
+                // 排序
+                ls = ls.OrderByDescending(p => p.PlanYear).OrderByDescending(p => p.PlanID);
+
                 var result = ls.ToList();
                 // 分页
                 query.ResultList = result.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
@@ -59,7 +63,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Details(int id)
         {
-            ProjPlan projPlan = dbContext.ProjPlans.ToList().Find(a => a.ProjID == id);
+            ProjPlan projPlan = dbContext.ProjPlans.Where(a => a.ProjID == id).FirstOrDefault();
 
             if (projPlan == null)
             {
@@ -98,7 +102,7 @@ namespace MyTeam.Controllers
         public string Create(ProjPlan projPlan)
         {
             // 判断是否有重复的项目名称，如有重复不允许新增
-            ProjPlan plan = dbContext.ProjPlans.ToList().Find(a => a.ProjID == projPlan.ProjID);
+            ProjPlan plan = dbContext.ProjPlans.Where(a => a.ProjID == projPlan.ProjID).FirstOrDefault();
             if (plan != null)
             {
                 return "<p class='alert alert-danger'>出错了: " + projPlan.ProjName + "的项目计划表已存在，不允许重复添加！" + "</p>";
@@ -122,8 +126,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Edit(int id)
         {
-            List<ProjPlan> ls2 = dbContext.ProjPlans.ToList();
-            ProjPlan projPlan = ls2.Find(a => a.PlanID == id);
+            ProjPlan projPlan = dbContext.ProjPlans.Where(a => a.PlanID == id).FirstOrDefault();
 
             if (projPlan == null)
             {
@@ -177,8 +180,7 @@ namespace MyTeam.Controllers
         {
             try
             {
-                List<ProjPlan> ls = dbContext.ProjPlans.ToList();
-                ProjPlan projPlan = ls.Find(a => a.PlanID == id);
+                ProjPlan projPlan = dbContext.ProjPlans.Where(a => a.PlanID == id).FirstOrDefault();
 
                 dbContext.Entry(projPlan).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
@@ -325,6 +327,54 @@ namespace MyTeam.Controllers
             string fileName = "ProjPlanImportT.xlsx";
             string tmpFilePath = System.Web.HttpContext.Current.Server.MapPath("~/Content/templates/" + fileName);
             return File(tmpFilePath, "application/excel", fileName);
+        }
+
+        /// <summary>
+        /// 项目管理页面直接管理项目计划
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult EditPlanFromProjIndex(int id)
+        {
+            var opType = 1; //0-add 1-edit
+            var projPlan = dbContext.ProjPlans.Where(p=>p.ProjID == id).FirstOrDefault();
+            if(projPlan == null)
+            {
+                projPlan = new ProjPlan { ProjID = id, PlanYear = DateTime.Now.Year.ToString() };
+                opType = 0;
+            }
+
+            // Get ProjName
+            var proj = Constants.ProjList.Find(p => p.ProjID == id);
+            projPlan.ProjName = proj.ProjName;
+
+            ViewBag.OpType = opType;
+
+            return View(projPlan);
+        }
+
+        [HttpPost]
+        public string EditPlanFromProjIndex(ProjPlan projPlan, int opType)
+        {
+            try
+            {
+                if(opType == 0)
+                {
+                    dbContext.ProjPlans.Add(projPlan);
+                }
+                else
+                {
+                    dbContext.Entry(projPlan).State = System.Data.Entity.EntityState.Modified;
+                }
+                
+                dbContext.SaveChanges();
+
+                return "<p class='alert alert-success'>更新成功！<a href='#' data-dismiss='modal'>关闭</a></p>";
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+            }
         }
 
     }

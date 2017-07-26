@@ -17,7 +17,7 @@
     // 隐藏表单
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
-            $('form').hide()
+            $('#editForm').hide()
     }
 
 </script>
@@ -25,7 +25,7 @@
     <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("EditYearMission", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                new { @class = "form-horizontal", role = "form" }))
+                new { @class = "form-horizontal", role = "form", id="editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })

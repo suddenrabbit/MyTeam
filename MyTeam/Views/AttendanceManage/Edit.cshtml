@@ -13,7 +13,7 @@
 <script>
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
-            $('form').hide()
+            $('#editForm').hide()
     }
 </script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
@@ -22,7 +22,7 @@
     <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("Edit", "AttendanceManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                new { @class = "form-horizontal", role = "form" }))
+                new { @class = "form-horizontal", role = "form", id="editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })

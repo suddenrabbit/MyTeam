@@ -14,14 +14,14 @@
 <script>
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
-            $('form').hide()
+            $('#editForm').hide()
     }
 </script>
 
 <div class="row">
     <div class="col-md-12">
         @using (Ajax.BeginForm("Edit", "ProjMeeting", null, new AjaxOptions { UpdateTargetId = "info", OnComplete="hideForm"},
-                new { @class = "form-horizontal", role = "form" }))
+                new { @class = "form-horizontal", role = "form", id="editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })

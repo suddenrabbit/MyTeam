@@ -77,7 +77,7 @@
             url: '/ReqManage/OutPool',
             data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanReleaseDate=" + planReleaseDate + "&SysID=" + sysID + "&IsPatch=" + isPatch,
             success: function (msg) {
-                $('#OutPoolResult').html(msg);
+                $('#OutPoolResult').html(msg + "<p style='color:red'><b>NOTE: </b>记得填写下发通知编号哦！若忘记填写，可在<a href='/ReleaseManage/Index'>下发通知管理</a>中添加下发信息，然后选择「管理下发需求」关联维护需求。</p>");
                 $('#ReleaseNoDiv').show();
                 $('#OutPoolBtn').hide();
             },
@@ -182,7 +182,7 @@
                     <select id="Ver1" class="form-control">
                         <option>--请选择系统--</option>
                     </select>
-                    <span class="text-info">（版本号后方「√」表示该版本已使用过[实际版本日期不为空]）</span>
+                    <span class="text-info">（版本号后方「√」表示该版本已使用过，依据：实际版本日期不为空）</span>
                 </div>
                 
                 <input id="Ver2" type="text" class="form-control" style="display:none" />

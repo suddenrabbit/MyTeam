@@ -415,6 +415,7 @@
     <Content Include="Views\ReleaseManage\Index.cshtml" />
     <Content Include="Views\ReqManage\ShowReqs.cshtml" />
     <Content Include="Views\ReleaseManage\GetDetailsForReqManage.cshtml" />
+    <Content Include="Views\ProjPlan\EditPlanFromProjIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -14,7 +14,7 @@
             success: function (msg) {
                 if (msg == "success") {
                     alert("操作成功！");
-                    $('#tr' + id).remove();
+                    $('#tr' + id).fadeOut('fast', function () { $(this).remove() });
                 } else {
                     aler(msg);
                 }

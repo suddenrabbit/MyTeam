@@ -22,6 +22,8 @@
     }
 
     function realDelete() {
+        $('#procResult').html("处理中...");
+        $('#myModal2').modal({ backdrop: 'static' });
         var type = $('#toDelType').val();
         var id = $('#toDelId').val();
         var url = "/ReqManage/Delete/" + id + "?type=" + type;
@@ -30,13 +32,9 @@
             url: url,
             success: function (msg) {
                 $('#procResult').html(msg);
-
             },
             error: function () {
                 $('#procResult').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal2').modal({ backdrop: 'static' });
             }
         });
 
@@ -279,6 +277,7 @@
                     {
                         var item = Model.ResultList[i];
                         var remarkId = "remark" + item.ReqDetailID;
+
                     <tr>
                         <td>
                             <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')">详情</a> |
