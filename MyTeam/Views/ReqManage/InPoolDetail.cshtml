@@ -3,6 +3,12 @@
     Layout = null;
 }
 
+@if(Model.ReqDetails.Count() < 1)
+{
+    <p class="alert alert-danger">没有获取到相关需求信息，无法进行入池！</p>
+    return;
+}
+
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 
 @using (Html.BeginForm("InPoolResult", "ReqManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post,
@@ -14,18 +20,17 @@
         <table class="table table-condensed query-table">
 
             <tr>
-                <td>@Html.LabelFor(model => model.NewAcptDate, new { @class = "control-label" })</td>
+                <td>@Html.LabelFor(model => model.ReqMain.AcptDate, new { @class = "control-label" })</td>
                 <td>
-                    @Html.EditorFor(model => model.NewAcptDate, "DateTime")
-                    @Html.ValidationMessageFor(model => model.NewAcptDate, "", new { @class = "text-danger" })
-                    <span class="text-info">（留空不更新）</span>
+                    @Html.EditorFor(model => model.ReqMain.AcptDate, "DateTime")
+                    @Html.ValidationMessageFor(model => model.ReqMain.AcptDate, "", new { @class = "text-danger" })
                 </td>
 
-                <td>@Html.LabelFor(model => model.NewReqNo, new { @class = "control-label" })</td>
+                <td>@Html.LabelFor(model => model.ReqMain.ReqNo, new { @class = "control-label" })</td>
                 <td>
-                    @Html.TextBoxFor(model => model.NewReqNo, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.NewReqNo, "", new { @class = "text-danger" })
-                    <span class="text-info">（留空不更新）</span>
+                    @Html.HiddenFor(model => model.ReqMain.OldReqNo)
+                    @Html.TextBoxFor(model => model.ReqMain.ReqNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqMain.ReqNo, "", new { @class = "text-danger" })
                 </td>
 
             </tr>

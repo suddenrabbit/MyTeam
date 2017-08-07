@@ -215,16 +215,11 @@ namespace MyTeam.Controllers
 
         // 需求管理页面查看下发详情
         [HttpGet]
-        public ActionResult GetDetailsForReqManage(int id, int secondId = 0)
+        public ActionResult GetDetailsForReqManage(int id)
         {
-            var ls = new List<ReqRelease>();
             var r = dbContext.ReqReleases.Find(id);
-            ls.Add(r);
-            if (secondId != 0)
-            {
-                ls.Add(dbContext.ReqReleases.Find(secondId));
-            }
-            return View(ls);
+
+            return View(r);
         }
 
         // 从下发通知中移除需求
@@ -235,7 +230,7 @@ namespace MyTeam.Controllers
             {
                 var sql = string.Format("update ReqDetails set {0}=0, UpdateTime=@p0 where ReqDetailID=@p1", isSideRelease ? "SecondReqReleaseID" : "ReqReleaseID");
                 int num = dbContext.Database.ExecuteSqlCommand(sql, DateTime.Now, id);
-                if(num != 1)
+                if (num != 1)
                 {
                     throw new Exception("操作失败！");
                 }
@@ -256,19 +251,27 @@ namespace MyTeam.Controllers
             {
                 var detail = dbContext.ReqDetails.Where(p => p.ReqDetailNo == reqDetailNo).FirstOrDefault();
 
-                if(detail == null)
+                if (detail == null)
                 {
                     return "不存在这个需求！";
                 }
 
-                if(detail.ReqReleaseID == id || detail.SecondReqReleaseID == id)
+                if (detail.ReqReleaseID == id || detail.SecondReqReleaseID == id)
                 {
                     return "不能重复添加！";
                 }
 
-                if (!isSideRelease) { detail.ReqReleaseID = id; }
-                else { detail.SecondReqReleaseID = id; }
+                if (!isSideRelease)
+                {
+                    detail.ReqReleaseID = id;
+                }
+                else
+                {
+                    detail.SecondReqReleaseID = id;
+                }
+
                 detail.UpdateTime = DateTime.Now;
+
                 dbContext.Entry(detail).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
@@ -279,7 +282,7 @@ namespace MyTeam.Controllers
                 return "出错了：" + e1.ToString();
             }
 
-            
+
         }
 
         /// <summary>

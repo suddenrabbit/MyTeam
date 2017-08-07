@@ -200,6 +200,8 @@ namespace MyTeam.Controllers
 
             InPoolReq model = new InPoolReq { ReqMain = main, ReqDetails = main.ReqDetails.ToList() };
 
+            model.ReqMain.OldReqNo = main.ReqNo;
+
             ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), false, true, "2");
 
             return View(model);
@@ -217,22 +219,18 @@ namespace MyTeam.Controllers
                 var main = dbContext.ReqMains.Find(inPoolReq.ReqMain.ReqMainID);
 
                 // 判断是否更新需求申请编号与受理日期
-                if (!string.IsNullOrEmpty(inPoolReq.NewReqNo))
+                if (!string.IsNullOrEmpty(inPoolReq.ReqMain.ReqNo) && inPoolReq.ReqMain.OldReqNo!= inPoolReq.ReqMain.ReqNo)
                 {
                     //判断ReqNo是否重复
-                    var checkMain = dbContext.ReqMains.Where(p => p.ReqNo == inPoolReq.NewReqNo).FirstOrDefault();
+                    var checkMain = dbContext.ReqMains.Where(p => p.ReqNo == inPoolReq.ReqMain.ReqNo).FirstOrDefault();
                     if (checkMain != null)
                     {
-                        throw new Exception(string.Format("需求申请编号{0}已经存在！", inPoolReq.NewReqNo));
-                    }
-                    main.ReqNo = inPoolReq.NewReqNo;
+                        throw new Exception(string.Format("需求申请编号{0}已经存在！", inPoolReq.ReqMain.ReqNo));
+                    }                    
                 }
 
-                if (inPoolReq.NewAcptDate != null)
-                {
-                    main.AcptDate = inPoolReq.NewAcptDate;
-                }
-
+                main.ReqNo = inPoolReq.ReqMain.ReqNo;
+                main.AcptDate = inPoolReq.ReqMain.AcptDate;
                 main.ReqDevPerson = inPoolReq.ReqMain.ReqDevPerson;
                 main.DevAcptDate = inPoolReq.ReqMain.DevAcptDate;
                 main.DevEvalDate = inPoolReq.ReqMain.DevEvalDate;
@@ -292,7 +290,9 @@ namespace MyTeam.Controllers
                 }
                 else
                 {
-                    msg = string.Format("<p class='alert alert-warning'>未能全部入池成功：<br /> 需求编号重复：{0}<br />需求编号格式错误：{1}</p>", repeat, fail);
+                    var err1 = repeat == "" ? "" : string.Format("<br /> 需求编号重复：{0}", repeat);
+                    var err2 = fail == "" ? "" : string.Format("<br />需求编号格式错误：{0}", fail);
+                    msg = string.Format("<p class='alert alert-warning'>未能全部入池成功：{0}{1}</p>", err1, err2);
                 }
                 msg += "<p>您可以：</p><p><ul><li><a href='/ReqManage'>返回</a></li><li><a href='/ReqManage/InPool'>继续入池</a></li></ul></p>";
 
@@ -474,7 +474,7 @@ namespace MyTeam.Controllers
                 return "<option>--请选择系统--</option>";
             }
 
-            List<Ver> list = dbContext.Vers.Where(p => p.SysID == sysID && p.VerYear == DateTime.Now.Year.ToString() && p.VerType == "计划版本").ToList();
+            List<Ver> list = dbContext.Vers.Where(p => p.SysID == sysID && p.VerYear == DateTime.Now.Year.ToString()).ToList();
 
 
             int size = list.Count;
@@ -700,23 +700,19 @@ namespace MyTeam.Controllers
                         var rls = releaseList.Find(p => p.ReqReleaseID == req.ReqReleaseID);
                         if (rls == null)
                         {
-                            req.ReqReleaseNo = "找不到对应下发记录";
+                            req.ReqReleaseNo = "无对应下发记录";
                         }
                         else
                         {
                             req.ReqReleaseNo = rls.ReleaseNo;
                             // 找相关的副下发
-                            var sideRls = releaseList.Find(p => p.ReqReleaseID == req.SecondReqReleaseID);
+                            /*var sideRls = releaseList.Find(p => p.ReqReleaseID == req.SecondReqReleaseID);
                             if (sideRls != null)
                             {
                                 req.ReqReleaseNo += "（主）" + sideRls.ReleaseNo + "（副）";
-                            }
+                            }*/
                         }
-                    }
-
-                    // 维护需求编号
-                    if (string.IsNullOrEmpty(req.ReqDetailNo))
-                        req.ReqDetailNo = "暂无";
+                    }                    
 
                 }
 
@@ -796,10 +792,117 @@ namespace MyTeam.Controllers
             {
                 fullReq.reqDetail = req;
                 fullReq.reqMain = req.ReqMain;
-                fullReq.reqReleases = dbContext.ReqReleases.Where(p => p.ReqReleaseID == req.ReqReleaseID || p.ReqReleaseID == req.SecondReqReleaseID).ToList();
+                fullReq.reqRelease = dbContext.ReqReleases.Where(p => p.ReqReleaseID == req.ReqReleaseID).FirstOrDefault();
             }
 
             return View(fullReq);
+        }
+
+        // 完整Edit
+        public ActionResult Edit(int id)
+        {
+            var req = dbContext.ReqDetails.Find(id);
+            if (req == null)
+            {
+                return View();
+            }            
+
+            // 预处理
+            // main
+            // 1、生成系统列表
+            ViewBag.SysList = new SelectList(this.GetNormalSysList(), "SysID", "SysName", req.ReqMain.SysID);
+
+            // 2、生成需求受理人列表
+            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", req.ReqMain.ReqAcptPerson);
+
+            // 4、需求发起单位 
+            ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
+
+            // 记录原始reqNo
+            req.ReqMain.OldReqNo = req.ReqMain.ReqNo;
+            
+            // detail
+            // 需求状态下拉列表
+            ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), false, true, req.ReqStat.ToString());
+
+            // 记录原始reqDetailNo
+            req.OldReqDetailNo = req.ReqDetailNo;
+
+            ReqEdit reqEdit = new ReqEdit
+            {
+                reqMain = req.ReqMain,
+                reqDetail = req,
+                isUpdateMain = false
+            };
+
+            return View(reqEdit);
+        }
+
+        [HttpPost]
+        public string Edit(ReqEdit reqEdit)
+        {
+            try
+            {
+                // main
+                if (reqEdit.isUpdateMain)
+                {
+                    var reqMain = reqEdit.reqMain;
+                    if (reqMain.ReqNo != reqMain.OldReqNo) // reqNo不可为空
+                    {
+                        var main = dbContext.ReqMains.Where(p => p.ReqNo == reqMain.ReqNo).FirstOrDefault();
+                        if (main != null)
+                        {
+                            return "<p class='alert alert-warning'>需求申请编号" + reqMain.ReqNo + "已存在，无法修改！</p>";
+                        }                        
+                    }
+                    dbContext.Entry(reqMain).State = System.Data.Entity.EntityState.Modified;
+                }
+
+                // detail
+                var reqDetail = reqEdit.reqDetail;
+                reqDetail.ReqMain = reqEdit.reqMain;
+                // 若需求状态为「入池」，需求编号必填
+                if (reqDetail.ReqStat == (int)ReqStatEnums.入池 && string.IsNullOrEmpty(reqDetail.ReqDetailNo))
+                {
+                    return "<p class='alert alert-warning'>需求状态为「入池」时，需求编号不能为空！</p>";
+                }
+
+                // 判断有无重复需求编号
+                if (!string.IsNullOrEmpty(reqDetail.ReqDetailNo) && reqDetail.ReqDetailNo != reqDetail.OldReqDetailNo)
+                {
+                    var r = dbContext.ReqDetails.Where(a => a.ReqDetailNo == reqDetail.ReqDetailNo).FirstOrDefault();
+                    if (r != null)
+                    {
+                        return "<p class='alert alert-warning'>维护需求编号" + r.ReqDetailNo + "已存在，无法修改！</p>";
+                    }
+                }
+
+                // 当需求编号不为空，则根据需求编号确定需求类型
+                reqDetail.ReqType = 0;
+                if (!string.IsNullOrEmpty(reqDetail.ReqDetailNo))
+                {
+                    try
+                    {
+                        reqDetail.ReqType = int.Parse(reqDetail.ReqDetailNo.Split('-')[2]);
+                    }
+                    catch (Exception e1)
+                    {
+                        throw new Exception("维护需求编号" + reqDetail.ReqDetailNo + "格式错误！（错误信息：" + e1.Message + "）");
+                    }
+                }
+
+                // 更新时间
+                reqDetail.UpdateTime = DateTime.Now;
+
+                dbContext.Entry(reqDetail).State = System.Data.Entity.EntityState.Modified;
+                dbContext.SaveChanges();
+
+                return Constants.AJAX_EDIT_SUCCESS_RETURN;
+            }
+            catch (Exception e1)
+            {
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
+            }
         }
 
         // GET:/ReqManage/EditMain

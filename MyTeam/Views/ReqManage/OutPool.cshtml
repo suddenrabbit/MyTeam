@@ -92,7 +92,7 @@
 
     function updateReleaseNo() {
         var reqs = $('#Reqs').val();
-        var releaseNo = $('#ReleaseNo').val();
+        var releaseNo = "";
         var sideReleaseNo = $('#SideReleaseNo').val();
         var planReleaseDate = $('#PlanReleaseDate').val();
 
@@ -182,7 +182,7 @@
                     <select id="Ver1" class="form-control">
                         <option>--请选择系统--</option>
                     </select>
-                    <span class="text-info">（版本号后方「√」表示该版本已使用过，依据：实际版本日期不为空）</span>
+                    <span class="text-info">版本号后方「√」表示该版本已使用过（含补丁版本），依据：实际版本日期不为空</span>
                 </div>
                 
                 <input id="Ver2" type="text" class="form-control" style="display:none" />
@@ -215,17 +215,12 @@
             <!--默认隐藏：出池成功后显示，用以更新下发通知编号-->
             <div id="ReleaseNoDiv" style="display:none">
                 <div class="form-group">
-                    <label for="ReleaseNo" class="col-md-2 control-label">主下发通知编号</label>
+                    <label for="ReleaseNo" class="col-md-2 control-label">下发通知编号</label>
                     <div class="col-md-10">
                         <input id="ReleaseNo" type="text" class="form-control" maxlength="12" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="SideReleaseNo" class="col-md-2 control-label">副下发通知编号</label>
-                    <div class="col-md-10">
-                        <input id="SideReleaseNo" type="text" class="form-control" maxlength="12" />
-                    </div>
-                </div>
+                
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateReleaseNo()" />

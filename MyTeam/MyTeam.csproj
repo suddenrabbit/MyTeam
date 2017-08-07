@@ -187,6 +187,7 @@
     <Compile Include="Models\BusiReqView\BusiReqProj.cs" />
     <Compile Include="Models\HomeView\HomeResult.cs" />
     <Compile Include="Models\ReleaseManageView\ReleaseQuery.cs" />
+    <Compile Include="Models\ReqManageView\ReqEdit.cs" />
     <Compile Include="Models\ReqManageView\FullReq.cs" />
     <Compile Include="Models\UpgradeLog.cs" />
     <Compile Include="Models\Param.cs" />
@@ -416,6 +417,7 @@
     <Content Include="Views\ReqManage\ShowReqs.cshtml" />
     <Content Include="Views\ReleaseManage\GetDetailsForReqManage.cshtml" />
     <Content Include="Views\ProjPlan\EditPlanFromProjIndex.cshtml" />
+    <Content Include="Views\ReqManage\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

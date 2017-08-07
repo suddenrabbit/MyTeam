@@ -17,7 +17,7 @@
     <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("CreateDetail", "ReqManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                        new { @class = "form-horizontal", role = "form", id="editForm" }))
+                            new { @class = "form-horizontal", role = "form", id = "editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -25,24 +25,23 @@
             @Html.HiddenFor(model => model.ReqMainID);
 
             <p class="text-center well well-sm">
-                在维护需求申请<span class="text-info">@ViewBag.ReqNo</span>中添加一条维护需求
+                在维护需求申请<b>@ViewBag.ReqNo</b>中添加一条维护需求
             </p>
 
-            <fieldset>
-                <legend>需求详细信息</legend>
+            <p style="color:red">（仅支持在现有的需求申请中添加一条维护需求，如果需要新增需求申请，请使用<a href="/ReqManage/Reg">需求登记</a>功能！）</p>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReqDetailNo, new { @class = "col-md-3 control-label" })
-                    <div class="col-md-9">
-                        @Html.TextBoxFor(model => model.ReqDetailNo, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.ReqDetailNo, "", new { @class = "text-danger" })
-                    </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqDetailNo, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ReqDetailNo, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqDetailNo, "", new { @class = "text-danger" })
                 </div>
+            </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.ReqDesc, new { @class = "col-md-3 control-label" })
                     <div class="col-md-9">
-                        @Html.TextBoxFor(model => model.ReqDesc, new { @class = "form-control" })
+                        @Html.TextAreaFor(model => model.ReqDesc, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.ReqDesc, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -60,6 +59,30 @@
                     @Html.LabelFor(model => model.ReqStat, new { @class = "col-md-3 control-label" })
                     <div class="col-md-9">
                         @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Version, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Version, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OutDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.OutDate, "DateTime")
+                        @Html.ValidationMessageFor(model => model.OutDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.Remark, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -95,58 +118,13 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
-                    <div class="col-md-9">
-                        @Html.TextAreaFor(model => model.Remark, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
+                    <div class="col-md-offset-3 col-md-9">
+                        <input type="submit" value="新增" class="btn btn-primary" />
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Version, new { @class = "col-md-3 control-label" })
-                    <div class="col-md-9">
-                        @Html.TextBoxFor(model => model.Version, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.Version, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OutDate, new { @class = "col-md-3 control-label" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.OutDate, "DateTime")
-                        @Html.ValidationMessageFor(model => model.OutDate, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </fieldset>
-@*
-            <fieldset>
-                <legend>需求下发信息</legend>
-                <p class="text-center text-info">本部分功能尚在优化中</p>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.ReqReleaseID, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.DropDownListFor(model => model.ReqReleaseID, ViewBag.ReqReleaseList as SelectList, new { @class = "form-control" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.SecondReqReleaseID, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.DropDownListFor(model => model.SecondReqReleaseID, ViewBag.SecondReqReleaseList as SelectList, new { @class = "form-control" })
-        </div>
-    </div>
-
-            </fieldset>
-*@
-            <div class="form-group">
-                <div class="col-md-offset-3 col-md-9">
-                    <input type="submit" value="新增" class="btn btn-primary" />
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        关闭
-                    </button>
-                </div>
-            </div>
 
 
         }

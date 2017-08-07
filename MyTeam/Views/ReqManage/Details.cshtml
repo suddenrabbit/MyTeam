@@ -4,7 +4,7 @@
 
 @model MyTeam.Models.FullReq
 
-@if (Model == null || Model.reqDetail==null)
+@if (Model == null || Model.reqDetail == null)
 {
     <div class="alert alert-warning">无此记录</div>
     @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-default" })
@@ -162,7 +162,7 @@
                 <div class="col-md-9 form-control-static">
                     @Html.DisplayFor(model => model.reqDetail.Remark)
                 </div>
-            </div>           
+            </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.reqDetail.Version, new { @class = "col-md-3 control-label" })
@@ -195,43 +195,37 @@
 
         <fieldset>
             <legend>需求下发信息</legend>
-            @if(Model.reqReleases == null || Model.reqReleases.Count < 1)
+            @if (Model.reqRelease == null)
             {
                 <p class="text text-warning">暂无下发信息</p>
             }
             else
             {
-                <table class="table table-table-condensed">
-                    <tr>
-                        <th>@Html.DisplayNameFor(model => model.reqReleases[0].ReleaseNo)</th>
-                        <th>@Html.DisplayNameFor(model => model.reqReleases[0].PlanReleaseDate)</th>
-                        <th>@Html.DisplayNameFor(model => model.reqReleases[0].ReleaseDate)</th>                        
-                    </tr>
-                    @foreach (var item in Model.reqReleases)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReleaseNo)
-                                @if(item.IsSideRelease)
-                                {
-                                    <span>（副下发）</span>
-                                }
-                            </td>
-                            <td>@Html.DisplayFor(modelItem => item.PlanReleaseDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.ReleaseDate)</td>
-                            
-                        </tr>
-                    }
-                    
-
-                </table>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqRelease.ReleaseNo, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9 form-control-static">
+                        @Html.DisplayFor(model => model.reqRelease.ReleaseNo)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqRelease.PlanReleaseDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9 form-control-static">
+                        @Html.DisplayFor(model => model.reqRelease.PlanReleaseDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqRelease.ReleaseDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9 form-control-static">
+                        @Html.DisplayFor(model => model.reqRelease.ReleaseDate)
+                    </div>
+                </div>
             }
-            
+
         </fieldset>
 
 
 
-        
+
     </div>
 </div>
 

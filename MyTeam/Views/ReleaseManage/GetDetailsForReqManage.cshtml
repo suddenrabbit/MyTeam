@@ -1,4 +1,4 @@
-﻿@model List<MyTeam.Models.ReqRelease>
+﻿@model MyTeam.Models.ReqRelease
 
 @{
     Layout = null;
@@ -6,23 +6,28 @@
 
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-striped text-center" style="font-size:12px">
-            <tr>
-                <th>下发通知编号</th>
-                <th>计划下发时间</th>
-                <th>实际下发时间</th>
-            </tr>
-            @foreach(var item in Model)
-            {
-                var rlsNo = item.IsSideRelease ? item.ReleaseNo + "(副)" : item.ReleaseNo;
-                var rlsDate = item.ReleaseDate == null ? "" : item.ReleaseDate.Value.ToShortDateString();
+        @if(Model == null)
+        {
+            <p class="alert alert-warning">没有相关数据！</p>
+        }
+        else
+        {
+            <table class="table table-striped text-center">
                 <tr>
-                    <td>@rlsNo</td>
-                    <td>@item.PlanReleaseDate.ToShortDateString()</td>
+                    <th>下发通知编号</th>
+                    <th>计划下发时间</th>
+                    <th>实际下发时间</th>
+                </tr>
+                @{var rlsDate = Model.ReleaseDate == null ? "" : Model.ReleaseDate.Value.ToShortDateString(); }
+                <tr>
+                    <td>@Model.ReleaseNo</td>
+                    <td>@Model.PlanReleaseDate.ToShortDateString()</td>
                     <td>@rlsDate</td>
                 </tr>
-            }
-        </table>
+
+            </table>
+                    }
+        
         <p class="well well-sm">如需要管理维护需求与下发编号之间的关系请访问<a href="/ReleaseManage/Index">下发通知管理</a>功能</p>
     </div>
 </div>

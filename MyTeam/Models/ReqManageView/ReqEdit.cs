@@ -2,10 +2,10 @@
 
 namespace MyTeam.Models
 {
-    public class FullReq
+    public class ReqEdit
     {
         public ReqMain reqMain { get; set; }
         public ReqDetail reqDetail { get; set; }
-        public ReqRelease reqRelease { get; set; }
+        public bool isUpdateMain { get; set; }
     }
 }

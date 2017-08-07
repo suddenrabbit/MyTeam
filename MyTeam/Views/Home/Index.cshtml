@@ -120,15 +120,8 @@
                 {
                     string s = "/ReleaseManage/Index?IsQuery=True&ReleaseNo=" + r.ReleaseNo;
 
-                    string rlsNo = r.ReleaseNo;
-
-                    if(r.IsSideRelease)
-                    {
-                        rlsNo += "(副)";
-                    }
-
                     <tr>
-                        <td class="text-center"><a href=@s>@rlsNo</a></td>
+                        <td class="text-center"><a href=@s>@r.ReleaseNo</a></td>
                         <td class="text-center">@r.PlanReleaseDate.ToShortDateString()  </td>
                     </tr>
                 }
