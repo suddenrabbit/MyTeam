@@ -418,6 +418,7 @@
     <Content Include="Views\ReleaseManage\GetDetailsForReqManage.cshtml" />
     <Content Include="Views\ProjPlan\EditPlanFromProjIndex.cshtml" />
     <Content Include="Views\ReqManage\Edit.cshtml" />
+    <Content Include="Views\ReleaseManage\UpdateReleaseInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

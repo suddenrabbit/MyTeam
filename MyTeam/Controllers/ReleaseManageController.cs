@@ -281,9 +281,65 @@ namespace MyTeam.Controllers
             {
                 return "出错了：" + e1.ToString();
             }
-
-
         }
+
+        /// <summary>
+        /// 更新下发编号
+        /// </summary>
+        /// <param name="Reqs"></param>
+        /// <param name="ReleaseNo"></param>
+        /// <param name="SideReleaseNo"></param>
+        /// <param name="PlanReleaseDate"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public string UpdateReleaseNo(string Reqs, string ReleaseNo, string PlanReleaseDate)
+        {
+            return updateReleaseNo(Reqs, ReleaseNo, PlanReleaseDate);
+        }
+
+
+        /// <summary>
+        /// 更新需求下发信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult UpdateReleaseInfo()
+        {
+            // 提供系统列表
+            List<RetailSystem> ls1 = this.GetNormalSysList();
+            // 加上“请选择系统”
+            ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "--请选择系统--" });
+            SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
+            ViewBag.SysList = sl1;
+
+            return View();
+        }
+
+        [HttpPost]
+        public string UpdateReleaseInfo(int SysID, int Ver, string PlanReleaseDate, string ReleaseNo)
+        {
+            // Get Reqs from SysID and Ver
+            var version = dbContext.Vers.Find(Ver);
+            if(version == null)
+            {
+                return "<p class='alert alert-danger'>数据有误，请联系管理员！</p>";
+            }
+            var ls = dbContext.ReqDetails.Where(p => p.ReqMain.SysID == SysID && p.Version == version.VerNo);
+            if(ls == null || ls.Count() < 1)
+            {
+                return "<p class='alert alert-danger'>找不到相关的需求，请确认选择的系统和版本号！</p>";
+            }
+
+            List<string> reqList = new List<string>();
+            foreach(var r in ls)
+            {
+                reqList.Add(r.ReqDetailID.ToString());
+            }
+            string reqs = string.Join(",", reqList.ToArray());
+
+            return updateReleaseNo(reqs, ReleaseNo, PlanReleaseDate);
+        }
+
 
         /// <summary>
         /// 检查下发通知编号
@@ -310,6 +366,69 @@ namespace MyTeam.Controllers
             }
 
             return "";
+        }
+
+        /// <summary>
+        /// 更新维护需求编号的通用代码
+        /// </summary>
+        /// <param name="Reqs"></param>
+        /// <param name="ReleaseNo"></param>
+        /// <param name="PlanReleaseDate"></param>
+        /// <returns></returns>
+        private string updateReleaseNo(string Reqs, string ReleaseNo, string PlanReleaseDate)
+        {
+            string msg = "";
+
+            try
+            {
+                // 首先生成主下发的release记录，得到release ID
+                int reqReleaseID;
+
+                var checkRelease = dbContext.ReqReleases.Where(p => p.ReleaseNo == ReleaseNo).FirstOrDefault();
+                if (checkRelease != null)
+                {
+                    // 已存在则更新
+                    checkRelease.PlanReleaseDate = DateTime.Parse(PlanReleaseDate);
+                    checkRelease.ReleaseNo = ReleaseNo;
+                    checkRelease.DraftPersonID = GetSessionCurrentUser().UID;//默认记录当前人员
+                    dbContext.Entry(checkRelease).State = System.Data.Entity.EntityState.Modified;
+                    dbContext.SaveChanges();
+
+                    reqReleaseID = checkRelease.ReqReleaseID;
+
+                    msg = "<p class='alert alert-warning'>下发编号" + ReleaseNo + "已存在，对现有记录进行了更新！</p>";
+                }
+                else
+                {
+                    // 不存在则新增
+                    var release = new ReqRelease
+                    {
+                        PlanReleaseDate = DateTime.Parse(PlanReleaseDate),
+                        ReleaseNo = ReleaseNo,
+                        DraftPersonID = GetSessionCurrentUser().UID//默认记录当前人员
+                    };
+                    dbContext.ReqReleases.Add(release);
+                    dbContext.SaveChanges();
+
+                    reqReleaseID = release.ReqReleaseID;
+
+                    msg = "<p class='alert alert-success'>添加下发记录" + ReleaseNo + "成功</p>";
+                }
+
+                // 将下发ID更新到req中
+                string sql = string.Format("update ReqDetails set ReqReleaseID = '{0}', UpdateTime='{1}'  where ReqDetailID in ({2})", reqReleaseID, DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), Reqs);
+
+                int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
+
+                msg += "<p class='alert alert-success'>" + updatedNum + "条需求更新成功！</p>";
+
+            }
+            catch (Exception e1)
+            {
+                msg += "<p class='alert alert-danger'>出错了：" + e1.Message + "</p>";
+            }
+
+            return msg;
         }
     }
 }

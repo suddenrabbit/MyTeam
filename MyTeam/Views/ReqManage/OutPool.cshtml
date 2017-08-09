@@ -37,7 +37,7 @@
 
     function quickOutPool() {
         var sysID = $('#SysID').val();
-        var reqs = $('#Reqs').val();       
+        var reqs = $('#Reqs').val();
         var outDate = $('#OutDate').val();
         var planReleaseDate = $('#PlanReleaseDate').val();
         var isPatch = $('#isPatch').prop('checked');
@@ -59,7 +59,7 @@
         }
         if (version.length < 1) {
             showAlertWithDefaultTitle("版本号不能为空！");
-            $('#Version').focus();
+            //$('#Version').focus();
             return;
         }
         if (outDate.length < 1) {
@@ -77,7 +77,7 @@
             url: '/ReqManage/OutPool',
             data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanReleaseDate=" + planReleaseDate + "&SysID=" + sysID + "&IsPatch=" + isPatch,
             success: function (msg) {
-                $('#OutPoolResult').html(msg + "<p style='color:red'><b>NOTE: </b>记得填写下发通知编号哦！若忘记填写，可在<a href='/ReleaseManage/Index'>下发通知管理</a>中添加下发信息，然后选择「管理下发需求」关联维护需求。</p>");
+                $('#OutPoolResult').html(msg + "<p style='color:red'><b>NOTE: </b>记得填写下发通知编号哦！若忘记填写，可在<a href='/ReleaseManage/UpdateReleaseInfo'>更新需求下发信息</a>中添加。</p>");
                 $('#ReleaseNoDiv').show();
                 $('#OutPoolBtn').hide();
             },
@@ -93,7 +93,6 @@
     function updateReleaseNo() {
         var reqs = $('#Reqs').val();
         var releaseNo = $('#ReleaseNo').val();
-        var sideReleaseNo = "";
         var planReleaseDate = $('#PlanReleaseDate').val();
 
         if (reqs == null || reqs.length < 1) {
@@ -104,39 +103,23 @@
         // 下发通知编号格式控制
         var rname = /(YFZX){1}[0-9]{8}/;
         if (releaseNo.length > 0 && !rname.test(releaseNo)) {
-                showAlertWithDefaultTitle("下发通知编号格式必须是YFZX+8位数字");
-                $("#ReleaseNo").focus();
-                return;
-                      
+            showAlertWithDefaultTitle("下发通知编号格式必须是YFZX+8位数字");
+            $("#ReleaseNo").focus();
+            return;
+
         }
-
-        // 副下发通知编号格式控制
-        /*if (sideReleaseNo.length > 0) {
-            if (!rname.test(sideReleaseNo)) {
-                showAlertWithDefaultTitle("副下发通知编号格式必须是YFZX+8位数字");
-                $("#SideReleaseNo").focus();
-                return;
-            }
-           
-            if (releaseNo.length == 0) {
-                showAlertWithDefaultTitle("不能只填副下发编号");
-                $("#ReleaseNo").focus();
-                return;
-            }
-        }*/
-
+        
         $.ajax({
             type: 'POST',
-            url: '/ReqManage/UpdateReleaseNo',
-            data: 'Reqs=' + reqs + "&ReleaseNo=" + releaseNo + "&SideReleaseNo=" + sideReleaseNo + "&PlanReleaseDate=" + planReleaseDate,
+            url: '/ReleaseManage/UpdateReleaseNo',
+            data: 'Reqs=' + reqs + "&ReleaseNo=" + releaseNo + "&PlanReleaseDate=" + planReleaseDate,
             success: function (msg) {
                 $('#OutPoolResult').hide();
-                $('#ReleaseNoResultDiv').html(msg);                
+                $('#ReleaseNoResultDiv').html(msg);
             },
             error: function () {
                 showAlertWithDefaultTitle("出错了，请联系管理员");
             }
-
         });
     }
 
@@ -144,13 +127,13 @@
     function changeVerType() {
         var d1 = $('#Ver1Div');
         var d2 = $('#Ver2');
-        
+
         if ($('#isPatch').prop('checked')) {
             d1.hide();
-            d2.show();            
+            d2.show();
         } else {
             d1.show();
-            d2.hide();            
+            d2.hide();
         }
     }
 
@@ -184,54 +167,56 @@
                     </select>
                     <span class="text-info">版本号后方「√」表示该版本已使用过（含补丁版本），依据：实际版本日期不为空</span>
                 </div>
-                
+
                 <input id="Ver2" type="text" class="form-control" style="display:none" />
 
-                <div style="margin-top:10px;margin-bottom:10px"><input type="checkbox" id="isPatch" onclick="changeVerType()"/>&nbsp;补丁版本</div>
-                
+                <div style="margin-top:10px;margin-bottom:10px"><input type="checkbox" id="isPatch" onclick="changeVerType()" />&nbsp;补丁版本</div>
+
             </div>
-            <div class="form-group">
-                <label for="OutDate" class="col-md-2 control-label">出池日期</label>
-                <div class="col-md-10">
-                    <input id="OutDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
-                </div>
+        </div>
+
+        <div class="form-group">
+            <label for="OutDate" class="col-md-2 control-label">出池日期</label>
+            <div class="col-md-10">
+                <input id="OutDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
             </div>
+        </div>
+        <div class="form-group">
+            <label for="PlanReleaseDate" class="col-md-2 control-label">计划下发日期</label>
+            <div class="col-md-10">
+                <input id="PlanReleaseDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="出池" class="btn btn-primary" onclick="quickOutPool()" id="OutPoolBtn" />
+            </div>
+        </div>
+
+        <div id="OutPoolResult"></div>
+
+
+        <!--默认隐藏：出池成功后显示，用以更新下发通知编号-->
+        <div id="ReleaseNoDiv" style="display:none">
             <div class="form-group">
-                <label for="PlanReleaseDate" class="col-md-2 control-label">计划下发日期</label>
+                <label for="ReleaseNo" class="col-md-2 control-label">下发通知编号</label>
                 <div class="col-md-10">
-                    <input id="PlanReleaseDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
+                    <input id="ReleaseNo" type="text" class="form-control" maxlength="12" />
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="button" value="出池" class="btn btn-primary" onclick="quickOutPool()" id="OutPoolBtn"/>
+                    <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateReleaseNo()" />
                 </div>
             </div>
 
-            <div id="OutPoolResult"></div>
-
-
-            <!--默认隐藏：出池成功后显示，用以更新下发通知编号-->
-            <div id="ReleaseNoDiv" style="display:none">
-                <div class="form-group">
-                    <label for="ReleaseNo" class="col-md-2 control-label">下发通知编号</label>
-                    <div class="col-md-10">
-                        <input id="ReleaseNo" type="text" class="form-control" maxlength="12" />
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateReleaseNo()" />
-                    </div>
-                </div>
-
-                <div id="ReleaseNoResultDiv"></div>
-            </div>
+            <div id="ReleaseNoResultDiv"></div>
         </div>
     </div>
 </div>
+
 
 <script>
     $("#SysID").select2();

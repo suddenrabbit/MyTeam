@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "更新需求下发信息";
+}
+
+<h2>@ViewBag.Title</h2>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+<script>
+
+    function getVers() {
+        var sysID = $('#SysID').val();
+        $.ajax({
+            type: 'GET',
+            url: '/ReqManage/GetVersToOutPool?sysID=' + sysID,
+            success: function (msg) {
+                $('#Ver').html(msg);
+            },
+            error: function () {
+                showAlertWithDefaultTitle("出错了，请联系管理员");
+            }
+
+        });
+    }    
+
+    function updateReleaseNo() {
+        var sysId = $('#SysID').val();
+        var ver = $('#Ver').val();
+        var releaseNo = $('#ReleaseNo').val();
+        var planReleaseDate = $('#PlanReleaseDate').val();
+
+        if (ver == null || ver.length < 1) {
+            showAlertWithDefaultTitle("请先选择系统和版本号！");
+            return;
+        }
+
+        // 下发通知编号格式控制
+        var rname = /(YFZX){1}[0-9]{8}/;
+        if (releaseNo.length > 0 && !rname.test(releaseNo)) {
+            showAlertWithDefaultTitle("下发通知编号格式必须是YFZX+8位数字");
+            $("#ReleaseNo").focus();
+            return;
+
+        }       
+
+        $.ajax({
+            type: 'POST',
+            url: '/ReleaseManage/UpdateReleaseInfo',
+            data: 'SysID=' + sysId + '&Ver=' + ver + "&ReleaseNo=" + releaseNo + "&PlanReleaseDate=" + planReleaseDate,
+            success: function (msg) {
+                $('#ReleaseNoResultDiv').html(msg);
+            },
+            error: function () {
+                showAlertWithDefaultTitle("出错了，请联系管理员");
+            }
+
+        });
+    }
+
+</script>
+<div class="row card">
+    <div class="col-md-10 form-horizontal">
+
+        <div id="ReleaseNoResultDiv"></div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">选择系统与版本号</label>
+            <div class="col-md-5">
+                <!--系统下拉选择-->
+                @Html.DropDownList("SysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getVers()" })
+            </div>
+            <div class="col-md-5">
+                <div id="Ver1Div">
+                    <select id="Ver" class="form-control">
+                        <option>--请选择系统--</option>
+                    </select>
+                    <span class="text-info">版本号后方「√」表示该版本已使用过（含补丁版本），依据：实际版本日期不为空</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="PlanReleaseDate" class="col-md-2 control-label">计划下发日期</label>
+            <div class="col-md-10">
+                <input id="PlanReleaseDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="ReleaseNo" class="col-md-2 control-label">下发通知编号</label>
+            <div class="col-md-10">
+                <input id="ReleaseNo" type="text" class="form-control" maxlength="12" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateReleaseNo()" />
+            </div>
+        </div>        
+    </div>
+</div>
+
+
+<script>
+    $("#SysID").select2();
+    $("#ReleaseNo").val('YFZX'+'@DateTime.Now.Year');
+</script>
