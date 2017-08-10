@@ -27,7 +27,7 @@
         var releaseNo = $('#ReleaseNo').val();
         var planReleaseDate = $('#PlanReleaseDate').val();
 
-        if (ver == null || ver.length < 1) {
+        if (ver == 0) {
             showAlertWithDefaultTitle("请先选择系统和版本号！");
             return;
         }
@@ -70,7 +70,7 @@
             <div class="col-md-5">
                 <div id="Ver1Div">
                     <select id="Ver" class="form-control">
-                        <option>--请选择系统--</option>
+                        <option value="0">--请选择系统--</option>
                     </select>
                     <span class="text-info">版本号后方「√」表示该版本已使用过（含补丁版本），依据：实际版本日期不为空</span>
                 </div>

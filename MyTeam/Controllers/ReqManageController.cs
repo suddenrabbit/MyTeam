@@ -426,7 +426,7 @@ namespace MyTeam.Controllers
         {
             if (sysID == 0)
             {
-                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--请选择系统--</option></select>";
+                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option value=0>--请选择系统--</option></select>";
             }
 
             var list = (from detail in dbContext.ReqDetails
@@ -438,7 +438,7 @@ namespace MyTeam.Controllers
 
             if (size == 0)
             {
-                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option>--无可出池需求--</option></select>";
+                return "<select id=\"Reqs\" name=\"Reqs\" multiple=\"multiple\" class=\"form-control\" size=\"1\"><option value=0>--无可出池需求--</option></select>";
             }
 
             if (size > 10)
@@ -471,7 +471,7 @@ namespace MyTeam.Controllers
         {
             if (sysID == 0)
             {
-                return "<option>--请选择系统--</option>";
+                return "<option value=0>--请选择系统--</option>";
             }
 
             List<Ver> list = dbContext.Vers.Where(p => p.SysID == sysID && p.VerYear == DateTime.Now.Year.ToString()).ToList();

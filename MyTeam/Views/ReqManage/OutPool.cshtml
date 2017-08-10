@@ -53,11 +53,11 @@
             showAlertWithDefaultTitle("请选择系统！");
             return;
         }
-        if (reqs == null || reqs.length < 1) {
+        if (reqs == null || reqs == 0) {
             showAlertWithDefaultTitle("请选择要出池的需求！");
             return;
         }
-        if (version.length < 1) {
+        if (version.length < 1 || version == 0) {
             showAlertWithDefaultTitle("版本号不能为空！");
             //$('#Version').focus();
             return;
@@ -95,7 +95,7 @@
         var releaseNo = $('#ReleaseNo').val();
         var planReleaseDate = $('#PlanReleaseDate').val();
 
-        if (reqs == null || reqs.length < 1) {
+        if (reqs == null || reqs == 0) {
             showAlertWithDefaultTitle("请选择要出池的需求！");
             return;
         }
@@ -149,7 +149,7 @@
             <div class="col-md-5">
                 <div id="ReqsDiv">
                     <select id="Reqs" name="Reqs" multiple="multiple" class="form-control" size="1">
-                        <option>--请选择系统--</option>
+                        <option value="0">--请选择系统--</option>
                     </select>
                 </div>
 
@@ -163,7 +163,7 @@
             <div class="col-md-10">
                 <div id="Ver1Div">
                     <select id="Ver1" class="form-control">
-                        <option>--请选择系统--</option>
+                        <option value="0">--请选择系统--</option>
                     </select>
                     <span class="text-info">版本号后方「√」表示该版本已使用过（含补丁版本），依据：实际版本日期不为空</span>
                 </div>
