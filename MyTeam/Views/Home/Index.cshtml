@@ -121,7 +121,7 @@
                     string s = "/ReleaseManage/Index?IsQuery=True&ReleaseNo=" + r.ReleaseNo;
 
                     <tr>
-                        <td class="text-center"><a href=@s>@r.ReleaseNo</a></td>
+                        <td class="text-center"><a href=@s title="@r.ReleaseDesc" data-toggle="tooltip" data-placement="top">@r.ReleaseNo</a></td>
                         <td class="text-center">@r.PlanReleaseDate.ToShortDateString()  </td>
                     </tr>
                 }

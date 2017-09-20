@@ -17,12 +17,14 @@
                     <th>下发通知编号</th>
                     <th>计划下发时间</th>
                     <th>实际下发时间</th>
+                    <th>下发说明</th>
                 </tr>
                 @{var rlsDate = Model.ReleaseDate == null ? "" : Model.ReleaseDate.Value.ToShortDateString(); }
                 <tr>
                     <td>@Model.ReleaseNo</td>
                     <td>@Model.PlanReleaseDate.ToShortDateString()</td>
                     <td>@rlsDate</td>
+                    <td>@Model.ReleaseDesc</td>
                 </tr>
 
             </table>

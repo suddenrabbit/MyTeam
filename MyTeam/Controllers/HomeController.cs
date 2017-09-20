@@ -253,14 +253,14 @@ namespace MyTeam.Controllers
                         delays.Add(projDelay);
                         continue;
                     }
-                }
+                }                
             }
             hr.ProjDetails = delays;
 
             //////////////////////////////////////////////////////////////////////
 
             // 列出超过计划下发日期仍未下发的
-            string sql2 = "select t.ReleaseNo, t.PlanReleaseDate, t.IsSideRelease from ReqReleases t where t.PlanReleaseDate < getdate()-1 and t.ReleaseDate is NULL";
+            string sql2 = "select t.ReleaseNo, t.PlanReleaseDate, t.ReleaseDesc from ReqReleases t where t.PlanReleaseDate < getdate()-1 and t.ReleaseDate is NULL";
 
             if (!isAdmin)
             {

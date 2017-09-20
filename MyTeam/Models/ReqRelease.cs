@@ -24,19 +24,23 @@ namespace MyTeam.Models
 
         [Display(Name = "实际下发日期")]
         [DataType(DataType.Date)]
-        public DateTime? ReleaseDate { get; set; } 
-        
+        public DateTime? ReleaseDate { get; set; }
+
         [Display(Name = "是否副下发")]
         [System.ComponentModel.DefaultValue(false)]
         public bool IsSideRelease { get; set; }
 
-        [Display(Name ="起草人")]
+        [Display(Name = "起草人")]
         public int DraftPersonID { get; set; }
 
         /*[Display(Name = "对应主下发编号")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
-        public string RelatedMainReleaseNo { get; set; }*/  
-        
+        public string RelatedMainReleaseNo { get; set; }*/
+
+        [Display(Name = "下发说明")]
+        [StringLength(100, ErrorMessage = "不能超过100个字")]
+        public string ReleaseDesc { get; set; }
+
         [NotMapped]
         public string OldReleaseNo { get; set; }
 

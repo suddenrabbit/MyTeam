@@ -80,7 +80,8 @@ namespace MyTeam.Models
     {
         public string ReleaseNo { get; set; }
         public DateTime PlanReleaseDate { get; set; }
-        public bool IsSideRelease { get; set; }
+        //public bool IsSideRelease { get; set; }
+        public string ReleaseDesc { get; set; }
     }
 
     public class HomeNoRlsNo

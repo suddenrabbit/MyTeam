@@ -173,5 +173,30 @@ namespace MyTeam.Controllers
             return "done";
         }
 
+        [AllowAnonymous]
+        public string InitRlsDesc() // 更新下发说明
+        {
+            try
+            {
+                var ls = dbContext.ReqReleases.Where(p => p.IsSideRelease == false).ToList();
+                var reqLs = dbContext.ReqDetails.ToList();
+                foreach (var rls in ls)
+                {
+                    var req = reqLs.Where(p => p.ReqReleaseID == rls.ReqReleaseID).FirstOrDefault();
+                    if (req != null)
+                    {
+                        var rlsDesc = req.ReqMain.SysName + " " + req.Version + " 版本下发";
+                        dbContext.Database.ExecuteSqlCommand("update ReqReleases set ReleaseDesc = @p0 where ReqReleaseID = @p1", rlsDesc, rls.ReqReleaseID);
+                    }
+                }
+                return "success";
+            }
+            catch (Exception e1)
+            {
+                return e1.Message;
+            }
+
+        }
+
     }
 }

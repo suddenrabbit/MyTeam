@@ -169,7 +169,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.OutlineEndDate, new { @class = "col-md-4 control-label" })
+                    <b>@Html.LabelFor(model => model.OutlineEndDate, new { @class = "col-md-4 control-label" })</b>
                     <div class="col-md-8">
                         @Html.EditorFor(model => model.OutlineEndDate, "DateTime")
                         @Html.ValidationMessageFor(model => model.OutlineEndDate, "", new { @class = "text-danger" })
@@ -215,7 +215,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ReviewAcptDate, new { @class = "col-md-4 control-label" })
+                    <b>@Html.LabelFor(model => model.ReviewAcptDate, new { @class = "col-md-4 control-label" })</b>
                     <div class="col-md-8">
                         @Html.EditorFor(model => model.ReviewAcptDate, "DateTime")
                         @Html.ValidationMessageFor(model => model.ReviewAcptDate, "", new { @class = "text-danger" })
@@ -229,7 +229,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ReqPublishDate, new { @class = "col-md-4 control-label" })
+                    <b>@Html.LabelFor(model => model.ReqPublishDate, new { @class = "col-md-4 control-label" })</b>
                     <div class="col-md-8">
                         @Html.EditorFor(model => model.ReqPublishDate, "DateTime")
                         @Html.ValidationMessageFor(model => model.ReqPublishDate, "", new { @class = "text-danger" })
@@ -282,7 +282,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.TechFeasiReviewFinishDate, new { @class = "col-md-4 control-label" })
+                    <b>@Html.LabelFor(model => model.TechFeasiReviewFinishDate, new { @class = "col-md-4 control-label" })</b>
                     <div class="col-md-8">
                         @Html.EditorFor(model => model.TechFeasiReviewFinishDate, "DateTime")
                         @Html.ValidationMessageFor(model => model.TechFeasiReviewFinishDate, "", new { @class = "text-danger" })
@@ -296,7 +296,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.SoftBudgetFinishDate, new { @class = "col-md-4 control-label" })
+                    <b>@Html.LabelFor(model => model.SoftBudgetFinishDate, new { @class = "col-md-4 control-label" })</b>
                     <div class="col-md-8">
                         @Html.EditorFor(model => model.SoftBudgetFinishDate, "DateTime")
                         @Html.ValidationMessageFor(model => model.SoftBudgetFinishDate, "", new { @class = "text-danger" })
@@ -310,7 +310,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.ImplementPlansFinishDate, new { @class = "col-md-4 control-label" })
+                    <b>@Html.LabelFor(model => model.ImplementPlansFinishDate, new { @class = "col-md-4 control-label" })</b>
                     <div class="col-md-8">
                         @Html.EditorFor(model => model.ImplementPlansFinishDate, "DateTime")
                         @Html.ValidationMessageFor(model => model.ImplementPlansFinishDate, "", new { @class = "text-danger" })
@@ -376,13 +376,15 @@
             </fieldset>
 
             <div class="form-group">
-                <div class="col-md-offset-3 col-md-9">
+                <div class="col-md-offset-4 col-md-8">
                     <input type="submit" value="保存" class="btn btn-primary" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         关闭
                     </button>
                 </div>
             </div>
+
+            <span class="text-info col-md-offset-4 col-md-8">TIPS: 加粗的日期用于跟踪是否延期，请务必及时填写</span>
         }
         <div id="info"></div>
     </div>

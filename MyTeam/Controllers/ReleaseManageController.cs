@@ -292,9 +292,9 @@ namespace MyTeam.Controllers
         /// <param name="PlanReleaseDate"></param>
         /// <returns></returns>
         [HttpPost]
-        public string UpdateReleaseNo(string Reqs, string ReleaseNo, string PlanReleaseDate)
+        public string UpdateReleaseNo(string Reqs, string ReleaseNo, string PlanReleaseDate, string ReleaseDesc)
         {
-            return updateReleaseNo(Reqs, ReleaseNo, PlanReleaseDate);
+            return updateReleaseNo(Reqs, ReleaseNo, PlanReleaseDate, ReleaseDesc);
         }
 
 
@@ -316,7 +316,7 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public string UpdateReleaseInfo(int SysID, int Ver, string PlanReleaseDate, string ReleaseNo)
+        public string UpdateReleaseInfo(int SysID, int Ver, string PlanReleaseDate, string ReleaseNo, string ReleaseDesc)
         {
             // Get Reqs from SysID and Ver
             var version = dbContext.Vers.Find(Ver);
@@ -337,7 +337,7 @@ namespace MyTeam.Controllers
             }
             string reqs = string.Join(",", reqList.ToArray());
 
-            return updateReleaseNo(reqs, ReleaseNo, PlanReleaseDate);
+            return updateReleaseNo(reqs, ReleaseNo, PlanReleaseDate, ReleaseDesc);
         }
 
 
@@ -374,8 +374,9 @@ namespace MyTeam.Controllers
         /// <param name="Reqs"></param>
         /// <param name="ReleaseNo"></param>
         /// <param name="PlanReleaseDate"></param>
+        /// <param name="ReleaseDesc"></param>
         /// <returns></returns>
-        private string updateReleaseNo(string Reqs, string ReleaseNo, string PlanReleaseDate)
+        private string updateReleaseNo(string Reqs, string ReleaseNo, string PlanReleaseDate, string ReleaseDesc)
         {
             string msg = "";
 
@@ -391,6 +392,7 @@ namespace MyTeam.Controllers
                     checkRelease.PlanReleaseDate = DateTime.Parse(PlanReleaseDate);
                     checkRelease.ReleaseNo = ReleaseNo;
                     checkRelease.DraftPersonID = GetSessionCurrentUser().UID;//默认记录当前人员
+                    checkRelease.ReleaseDesc = ReleaseDesc;
                     dbContext.Entry(checkRelease).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
 
@@ -405,7 +407,8 @@ namespace MyTeam.Controllers
                     {
                         PlanReleaseDate = DateTime.Parse(PlanReleaseDate),
                         ReleaseNo = ReleaseNo,
-                        DraftPersonID = GetSessionCurrentUser().UID//默认记录当前人员
+                        DraftPersonID = GetSessionCurrentUser().UID,//默认记录当前人员
+                        ReleaseDesc = ReleaseDesc
                     };
                     dbContext.ReqReleases.Add(release);
                     dbContext.SaveChanges();

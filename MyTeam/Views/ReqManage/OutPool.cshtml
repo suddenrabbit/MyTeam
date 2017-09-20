@@ -43,11 +43,18 @@
         var isPatch = $('#isPatch').prop('checked');
 
         var version;
+        var versionText;
         if (isPatch) {
             version = $('#Ver2').val();
+            versionText = $('#Ver2').val();
         } else {
             version = $('#Ver1').val();
+            versionText = $('#Ver1 option:selected').text();
         }
+
+        var releaseDesc = $('#SysID option:selected').text() + " " + versionText + " 版本下发";
+
+        releaseDesc = releaseDesc.replace("√", "");
 
         if (sysID == 0) {
             showAlertWithDefaultTitle("请选择系统！");
@@ -78,6 +85,8 @@
             data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanReleaseDate=" + planReleaseDate + "&SysID=" + sysID + "&IsPatch=" + isPatch,
             success: function (msg) {
                 $('#OutPoolResult').html(msg + "<p style='color:red'><b>NOTE: </b>记得填写下发通知编号哦！若忘记填写，可在<a href='/ReleaseManage/UpdateReleaseInfo'>更新需求下发信息</a>中添加。</p>");
+                // 自动产生下发说明
+                $('#ReleaseDesc').val(releaseDesc);
                 $('#ReleaseNoDiv').show();
                 $('#OutPoolBtn').hide();
             },
@@ -94,6 +103,7 @@
         var reqs = $('#Reqs').val();
         var releaseNo = $('#ReleaseNo').val();
         var planReleaseDate = $('#PlanReleaseDate').val();
+        var releaseDesc = $('#ReleaseDesc').val();
 
         if (reqs == null || reqs == 0) {
             showAlertWithDefaultTitle("请选择要出池的需求！");
@@ -112,7 +122,7 @@
         $.ajax({
             type: 'POST',
             url: '/ReleaseManage/UpdateReleaseNo',
-            data: 'Reqs=' + reqs + "&ReleaseNo=" + releaseNo + "&PlanReleaseDate=" + planReleaseDate,
+            data: 'Reqs=' + reqs + "&ReleaseNo=" + releaseNo + "&PlanReleaseDate=" + planReleaseDate + "&ReleaseDesc=" + releaseDesc,
             success: function (msg) {
                 $('#OutPoolResult').hide();
                 $('#ReleaseNoResultDiv').html(msg);
@@ -207,8 +217,15 @@
             </div>
 
             <div class="form-group">
+                <label for="ReleaseDesc" class="col-md-2 control-label">下发说明</label>
+                <div class="col-md-10">
+                    <input id="ReleaseDesc" type="text" class="form-control" maxlength="100" placeholder="为了便于管理，请填写下发说明"/>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateReleaseNo()" />
+                    <input type="button" value="更新下发通知信息" class="btn btn-primary" onclick="updateReleaseNo()" />
                 </div>
             </div>
 

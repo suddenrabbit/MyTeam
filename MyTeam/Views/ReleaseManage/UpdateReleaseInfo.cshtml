@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "更新需求下发信息";
+    ViewBag.Title = "更新下发通知信息";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -26,6 +26,7 @@
         var ver = $('#Ver').val();
         var releaseNo = $('#ReleaseNo').val();
         var planReleaseDate = $('#PlanReleaseDate').val();
+        var releaseDesc = $('#ReleaseDesc').val();
 
         if (ver == 0) {
             showAlertWithDefaultTitle("请先选择系统和版本号！");
@@ -44,7 +45,7 @@
         $.ajax({
             type: 'POST',
             url: '/ReleaseManage/UpdateReleaseInfo',
-            data: 'SysID=' + sysId + '&Ver=' + ver + "&ReleaseNo=" + releaseNo + "&PlanReleaseDate=" + planReleaseDate,
+            data: 'SysID=' + sysId + '&Ver=' + ver + "&ReleaseNo=" + releaseNo + "&PlanReleaseDate=" + planReleaseDate + "&ReleaseDesc=" + releaseDesc,
             success: function (msg) {
                 $('#ReleaseNoResultDiv').html(msg);
             },
@@ -53,6 +54,21 @@
             }
 
         });
+    }
+
+    function getReleaseDesc() {
+        
+        var ver = $('#Ver').val();
+        if (ver == 0) {
+            showAlertWithDefaultTitle("请先选择系统和版本号！");
+            return;
+        }
+
+        var releaseDesc = $('#SysID option:selected').text() + " " + $('#Ver option:selected').text() + " 版本下发";
+
+        releaseDesc = releaseDesc.replace("√", "");
+
+        $('#ReleaseDesc').val(releaseDesc);
     }
 
 </script>
@@ -93,8 +109,15 @@
         </div>
 
         <div class="form-group">
+            <label for="ReleaseDesc" class="col-md-2 control-label">下发说明</label>
+            <div class="col-md-10">
+                <input id="ReleaseDesc" type="text" class="form-control" maxlength="100" placeholder="点击自动生成下发说明" onclick="getReleaseDesc()" />
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="更新下发通知编号" class="btn btn-primary" onclick="updateReleaseNo()" />
+                <input type="button" value="更新下发通知信息" class="btn btn-primary" onclick="updateReleaseNo()" />
             </div>
         </div>        
     </div>
