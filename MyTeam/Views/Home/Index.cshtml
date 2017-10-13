@@ -66,7 +66,7 @@
     <div class="col-md-2">
         @{string s4 = string.Format(baseUrl, (int)ReqStatEnums.待评估, Model.UID, 0, DateTime.Now.AddDays(-8).ToShortDateString());}
         <div class="card clickable-card" style="border-top:rgb(128,255,128) 3px solid" onclick="window.location.href='@s4'">
-            <p>超8天未入池的需求</p>
+            <p>超4天未入池的需求</p>
             <div class="homeNum">@Model.ReqInpoolDelayLsSum</div>
         </div>
 

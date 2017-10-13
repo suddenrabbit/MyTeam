@@ -140,7 +140,7 @@ namespace MyTeam.Controllers
             }
 
             hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.入池, "and main.AcptDate <= DATEADD(month,-3,GETDATE())")).ToList();
-            hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.待评估, "and main.AcptDate <= DATEADD(day,-8,GETDATE())")).ToList();
+            hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.待评估, "and main.AcptDate <= DATEADD(day,-4,GETDATE())")).ToList();
 
             if (!isNotify) //notify时不需要计算
             {
@@ -152,7 +152,7 @@ namespace MyTeam.Controllers
                 }
                 hr.ReqLsSum = reqLsSum;
 
-                // 统计计算8天未入池的需求总数
+                // 统计计算4天未入池的需求总数
                 int reqInpoolLsSum = 0;
                 foreach (HomeReq q in hr.ReqInpoolLS)
                 {
@@ -169,7 +169,7 @@ namespace MyTeam.Controllers
 
                 hr.ReqDelayLsSum = reqDelayLsSum;
 
-                // 统计计算超过8天未入池的需求总数
+                // 统计计算超过4天未入池的需求总数
                 int reqInpoolDelayLsSum = 0;
                 foreach (HomeReq q in hr.ReqInpoolDelayLS)
                 {
@@ -233,7 +233,7 @@ namespace MyTeam.Controllers
                     {
                         HomeProjDelay projDelay = new HomeProjDelay();
                         projDelay.ProjId = p.ProjID;
-                        projDelay.DelayDetail = "技术可行性分析报告评审结束";
+                        projDelay.DelayDetail = "技术可行性评审结束";
                         delays.Add(projDelay);
                         continue;
                     }
