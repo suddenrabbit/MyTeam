@@ -1015,10 +1015,21 @@ namespace MyTeam.Controllers
                 }
                 else
                 {
+                    // 如果是最后一条detail，同时删除Main
                     var detail = dbContext.ReqDetails.Find(id);
-                    dbContext.Entry(detail).State = System.Data.Entity.EntityState.Deleted;
-                    dbContext.SaveChanges();
+
+                    var reqNum = dbContext.ReqDetails.Where(p => p.ReqMainID == detail.ReqMainID).Count();
+                    if(reqNum < 2)
+                    {
+                        dbContext.Database.ExecuteSqlCommand("delete ReqMains where ReqMainID=@p0", detail.ReqMainID);
+                    }
+                    else
+                    {
+                        dbContext.Database.ExecuteSqlCommand("delete ReqDetails where ReqDetailID=@p0", detail.ReqDetailID);
+                    } 
                 }
+
+                
             }
             catch (Exception e1)
             {
