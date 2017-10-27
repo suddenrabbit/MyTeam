@@ -26,6 +26,8 @@ namespace MyTeam.Models
         [Display(Name = "需求分析师")]
         public int ReqAnalysisID { get; set; }
 
+        public int ProjStat { get; set; }
+
         public string ToQueryString()
         {
             return new StringBuilder("&ProjName=").Append(this.ProjName)
@@ -34,6 +36,7 @@ namespace MyTeam.Models
                 .Append("&RulesPublishDateStart=").Append(this.RulesPublishDateStart)
                 .Append("&RulesPublishDateEnd=").Append(this.RulesPublishDateEnd)
                 .Append("&ReqAnalysisID=").Append(this.ReqAnalysisID)
+                .Append("&ProjStat=").Append(this.ProjStat)
                 .Append("&isQuery=True").ToString();
         }
         

@@ -28,6 +28,7 @@
     <OldToolsVersion>12.0</OldToolsVersion>
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -176,6 +177,7 @@
     <Compile Include="Controllers\UserNewsController.cs" />
     <Compile Include="Controllers\VerController.cs" />
     <Compile Include="Controllers\WeekReportController.cs" />
+    <Compile Include="Enums\ProjEnums.cs" />
     <Compile Include="Enums\UserEnums.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

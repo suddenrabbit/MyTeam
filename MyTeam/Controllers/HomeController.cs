@@ -183,26 +183,30 @@ namespace MyTeam.Controllers
             //////////////////////////////////////////////////////////////////////
 
             // 筛选出各个阶段延期的项目（只统计项目状态为：进行中）
-            // 首先获得所有有时间计划的项目列表，对没有时间计划的项目将不统计其延期的情况
-            List<ProjPlan> plans = dbContext.ProjPlans.ToList();
-            List<Proj> projs = dbContext.Projs.Where(p => p.ProjStat == "进行中").ToList();
+            //List<ProjPlan> plans = dbContext.ProjPlans.ToList();
+
+            // 找到进行中的项目
+            List<Proj> projs = null;
+            if (isAdmin)
+            {
+                projs = dbContext.Projs.Where(p => p.ProjStat == (int)ProjStatEnums.进行中).ToList();
+            }
+            else
+            {
+                projs = dbContext.Projs.Where(p => p.ProjStat == (int)ProjStatEnums.进行中 && p.ReqAnalysisID == uid).ToList();
+            }
+
+            // 顺便统计进行中的项目有多少
+            ViewBag.ProjsInProcessNum = projs.Count;
+
             List<HomeProjDelay> delays = new List<HomeProjDelay>();
 
-            foreach (ProjPlan plan in plans)
+            foreach (Proj p in projs) //从筛选出的项目中，寻找项目计划
             {
-                Proj p = new Proj();
-                if (isAdmin)
-                {
-                    p = projs.Find(a => a.ProjID == plan.ProjID);
-                }
-                // 如果是非管理员登录，显示自己的延期项目
-                else
-                {
-                    p = projs.Find(a => a.ProjID == plan.ProjID && a.ReqAnalysisID == uid);
-                }
+                ProjPlan plan = dbContext.ProjPlans.Where(a => a.ProjID == p.ProjID).FirstOrDefault();                
 
                 // 如果筛选出项目在项目计划列表中，那么判断时间是否延期
-                if (p != null)
+                if (plan != null)
                 {
                     // 判断各个阶段的时间是否延期
                     if (p.OutlineEndDate == null && plan.OutlineFinishDate <= DateTime.Now)
@@ -255,7 +259,7 @@ namespace MyTeam.Controllers
                     }
                 }                
             }
-            hr.ProjDetails = delays;
+            hr.ProjDetails = delays;            
 
             //////////////////////////////////////////////////////////////////////
 

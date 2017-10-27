@@ -147,7 +147,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
+                    <td><label class="control-label">项目状态</label></td>
+                    <td>
+                       @Html.DropDownListFor(model => model.ProjStat, ViewBag.ProjStatList as SelectList, new { @class = "form-control" })
+                    </td>
+                    <td>
                         <input type="submit" value="查询" class="btn btn-primary" />
                         <input type="button" value="导出Excel" class="btn btn-default" onclick="doExport()" />
                         <input type="button" onclick="doCreate()" class="btn btn-default" value="新增一条" />
@@ -232,7 +236,7 @@
                             @Html.DisplayFor(modelItem => item.ReqAnalysisName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ProjStat)
+                            @Html.DisplayFor(modelItem => item.ProjStatName)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ProjTypeName)

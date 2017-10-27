@@ -54,10 +54,18 @@ namespace MyTeam.Controllers
                     ls = ls.Where(p => p.ReqAnalysisID == query.ReqAnalysisID);
                 }
 
-                // 排序
-                ls = ls.OrderByDescending(p => p.ProAcptDate);
+                if (query.ProjStat != 0)
+                {
+                    ls = ls.Where(p => p.ProjStat == query.ProjStat);
+                }
 
-                var result = ls.ToList();
+                // 排序
+                //ls = ls.OrderBy(p=>p.ProjStat).OrderByDescending(p => p.ProAcptDate);
+                var newLs = from a in ls
+                            orderby a.ProjStat, a.ProAcptDate descending
+                            select a;
+
+                var result = newLs.ToList();
                 // 若isExcel为true，导出Excel
                 if (isExcel)
                 {
@@ -83,6 +91,9 @@ namespace MyTeam.Controllers
             // 加上“全部”
             userList.Insert(0, new User() { UID = 0, Realname = "全部" });
             ViewBag.ReqAnalysisList = new SelectList(userList, "UID", "Realname", query.ReqAnalysisID);
+
+            // 项目状态下拉
+            ViewBag.ProjStatList = MyTools.GetSelectListByEnum(typeof(Enums.ProjStatEnums), true, true, query.ProjStat.ToString());
 
             return View(query);
         }
@@ -123,7 +134,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(Enums.ReqFromDeptEnums));
 
             // 项目状态
-            ViewBag.ProjStatList = MyTools.GetSelectList(Constants.ProjStatList);
+            ViewBag.ProjStatList = MyTools.GetSelectListByEnum(typeof(Enums.ProjStatEnums), false, true);
 
             return View();
         }
@@ -189,7 +200,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(Enums.ReqFromDeptEnums));
 
             // 项目状态
-            ViewBag.ProjStatList = MyTools.GetSelectList(Constants.ProjStatList);
+            ViewBag.ProjStatList = MyTools.GetSelectListByEnum(typeof(Enums.ProjStatEnums), false, true, proj.ProjStat.ToString());
 
             proj.OldProjName = proj.ProjName;
             return View(proj);

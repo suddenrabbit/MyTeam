@@ -187,9 +187,8 @@ namespace MyTeam.Models
         [NotMapped]
         public string OldProjName { get; set; }
 
-        [Display(Name = "项目状态")]
-        [StringLength(10)]
-        public string ProjStat { get; set; }
+        [Display(Name = "项目状态")]        
+        public int ProjStat { get; set; }
 
         [Display(Name = "项目类型")] // 0-创新项目 1-专项工作
         public int ProjType { get; set; }
@@ -202,6 +201,19 @@ namespace MyTeam.Models
                 return this.ProjType == 1 ? "专项工作" : "创新项目";
             }
             set { this.ProjTypeName = value; }
+        }
+
+        [NotMapped]
+        public string ProjStatName
+        {
+            get
+            {
+                return Enum.GetName(typeof(Enums.ProjStatEnums), ProjStat);
+            }
+            set
+            {
+                this.ProjStatName = value;
+            }
         }
     }
 }
