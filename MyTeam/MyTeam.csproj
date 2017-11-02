@@ -250,6 +250,7 @@
     <Content Include="Content\logo.png" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\select2.css" />
+    <Content Include="ErrMsg.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

@@ -22,7 +22,7 @@
 </head>
 <body>
     <div class="container body-content" style="width:1300px">
-        <!--[if lt IE 10]> <p class='alert alert-danger text-center'>本系统在旧版IE中可能会出现各种显示问题，建议使用Chrome或其他webkit内核浏览器！</p> <![endif]-->
+        <!--[if lt IE 11]> <script>window.location.href='/ErrMsg.html'</script> <![endif]-->
         @model MyTeam.Models.UserLogin
         <div class="row">
             @if(Request.IsAuthenticated)
