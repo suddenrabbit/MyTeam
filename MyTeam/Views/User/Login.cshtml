@@ -1,4 +1,5 @@
-﻿@{
+﻿<!--[if lt IE 11]> <script>window.location.href='/ErrMsg.html'</script> <![endif]-->
+@{
     Layout = null;
     ViewBag.Title = "登录";
 }
@@ -22,7 +23,7 @@
 </head>
 <body>
     <div class="container body-content" style="width:1300px">
-        <!--[if lt IE 11]> <script>window.location.href='/ErrMsg.html'</script> <![endif]-->
+        
         @model MyTeam.Models.UserLogin
         <div class="row">
             @if(Request.IsAuthenticated)

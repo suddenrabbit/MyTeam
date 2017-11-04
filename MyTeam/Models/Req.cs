@@ -7,6 +7,7 @@ using MyTeam.Enums;
 
 namespace MyTeam.Models
 {
+[Obsolete]
     public class Req
     {
         // main
