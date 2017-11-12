@@ -195,3 +195,5 @@ MyTeam/Web.config
 MyTeam/MyTeam.csproj
 MyTeam/Web.config
 /.vs/MyTeam/v15/sqlite3/storage.ide
+/.vs/MyTeam/v15/Server/sqlite3
+/.vs/MyTeam/v15/sqlite3

@@ -126,6 +126,7 @@ namespace MyTeam.Controllers
                 var msg = Constants.AJAX_EDIT_SUCCESS_RETURN;
 
                 // 如果实际下发日期变成空，则要将相关需求的状态修改为【出池】；如果实际下发日期变成非空，则要将相关需求的状态修改为【办结】
+                // 2017年11月7日：同时更新需求中的计划下发日期和实际下发日期
                 if (!reqRelease.IsSideRelease)
                 {
                     int reqStat = (int)ReqStatEnums.办结;
@@ -133,9 +134,9 @@ namespace MyTeam.Controllers
                     {
                         reqStat = (int)ReqStatEnums.出池;
                     }
-                    var sql = string.Format("Update ReqDetails set ReqStat = {0} where ReqReleaseID = {1}", reqStat, reqRelease.ReqReleaseID);
+                    var sql = string.Format("Update ReqDetails set ReqStat = {0}, PlanReleaseDate='{1}', ReleaseDate='{2}' where ReqReleaseID = {3}", reqStat, reqRelease.PlanReleaseDate, reqRelease.ReleaseDate, reqRelease.ReqReleaseID);
                     int num = dbContext.Database.ExecuteSqlCommand(sql);
-                    msg += "<p class='alert alert-info'>同时已更新" + num + "条相关维护需求的状态为【" + Enum.GetName(typeof(ReqStatEnums), reqStat) + "】</p>";
+                    msg += "<p class='alert alert-info'>同时已更新" + num + "条相关维护需求的状态为【" + Enum.GetName(typeof(ReqStatEnums), reqStat) + "】，计划下发日期和实际下发日期也已同步更新入维护需求信息</p>";
                 }
 
                 return msg;
@@ -160,7 +161,7 @@ namespace MyTeam.Controllers
                 dbContext.SaveChanges();
 
                 // 删除相关维护需求中的下发信息
-                string sql = string.Format("update ReqDetails set ReqReleaseID=0, UpdateTime='{0}' where ReqReleaseID = {1}", DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), id);
+                string sql = string.Format("update ReqDetails set ReqReleaseID=0, PlanReleaseDate='', ReleaseDate='', UpdateTime='{0}' where ReqReleaseID = {1}", DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), id);
                 int num = dbContext.Database.ExecuteSqlCommand(sql);
 
                 return "删除下发通知成功！同时已将" + num + "条维护需求中的相关下发信息清空";
@@ -198,11 +199,12 @@ namespace MyTeam.Controllers
                 string msg = "已更新" + ReleaseNo + "的下发日期";
 
                 // 如果更新了主下发的实际下发日期，则将需求置为已办结
+                // 2017年11月7日：同时更新ReqDetail中的实际下发信息
                 if (!r.IsSideRelease)
                 {
-                    var sql = string.Format("Update ReqDetails set ReqStat = {0} where ReqReleaseID = {1}", (int)ReqStatEnums.办结, r.ReqReleaseID);
-                    int num = dbContext.Database.ExecuteSqlCommand(sql);
-                    msg += "；同时已更新" + num + "条相关维护需求的状态为【办结】";
+                    var sql = "Update ReqDetails set ReqStat = @p0, ReleaseDate=@p1 where ReqReleaseID = @p2";
+                    int num = dbContext.Database.ExecuteSqlCommand(sql, (int)ReqStatEnums.办结, r.ReleaseDate, r.ReqReleaseID);
+                    msg += "；同时已更新" + num + "条相关维护需求的状态为【办结】，并更新了维护需求中的实际下发日期";
                 }
 
                 return "<p class='alert alert-success'>" + msg + "</p>";
@@ -228,7 +230,7 @@ namespace MyTeam.Controllers
         {
             try
             {
-                var sql = string.Format("update ReqDetails set {0}=0, UpdateTime=@p0 where ReqDetailID=@p1", isSideRelease ? "SecondReqReleaseID" : "ReqReleaseID");
+                var sql = string.Format("update ReqDetails set {0}=0, PlanReleaseDate='', ReleaseDate='', UpdateTime=@p0 where ReqDetailID=@p1", isSideRelease ? "SecondReqReleaseID" : "ReqReleaseID");
                 int num = dbContext.Database.ExecuteSqlCommand(sql, DateTime.Now, id);
                 if (num != 1)
                 {

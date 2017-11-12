@@ -62,19 +62,26 @@ namespace MyTeam.Controllers
 
         public ActionResult Create()
         {
-            // 需求受理用户列表
-            var ls1 = GetUserList().Where(p => p.UserType == 1).ToList();
+            var cuser = GetSessionCurrentUser();
 
-            SelectList sl = new SelectList(ls1, "UID", "Realname"); // 选中当前值
+            if(cuser.UserType == (int)Enums.UserTypeEnums.外协)
+            {
+                return Content("<p class='text-danger'>对不起，您没有权限添加新系统信息！</p>");
+            }
+            
+            // 需求受理用户列表
+            var ls1 = GetUserList().Where(p => p.UserType == (int)Enums.UserTypeEnums.行员).ToList();
+
+            SelectList sl = new SelectList(ls1, "UID", "Realname", cuser.UID); 
 
             ViewBag.ReqPersonList = sl;
 
             // 需求编辑用户列表
-            var ls2 = GetUserList().Where(p => p.UserType == 2).ToList();
+            var ls2 = GetUserList().Where(p => p.UserType == (int)Enums.UserTypeEnums.外协).ToList();
 
             ls2.Insert(0, new User() { UID = 0, Realname = "暂无" });
 
-            SelectList s2 = new SelectList(ls2, "UID", "Realname"); // 选中当前值
+            SelectList s2 = new SelectList(ls2, "UID", "Realname"); 
 
             ViewBag.ReqEditPersonList = s2;
 

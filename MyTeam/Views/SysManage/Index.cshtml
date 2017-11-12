@@ -1,7 +1,7 @@
 ﻿@using PagedList.Mvc
 @model MyTeam.Models.SysQuery
 @{
-    ViewBag.Title = "零售条线系统管理";
+    ViewBag.Title = "维护需求系统管理";
 }
 <h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
@@ -100,10 +100,9 @@
                     </td>
                     <td colspan="2">
                         <input type="submit" value="查询" class="btn btn-primary" />
-                        @if (Session["IsAdmin"] != null && (bool)Session["IsAdmin"])
-                        {
-                            <input type="button" onclick="doCreate()" class="btn btn-default" value="添加系统" />
-                        }
+                        
+                        <input type="button" onclick="doCreate()" class="btn btn-default" value="添加系统" />
+                        
                     </td>
                 </tr>
 

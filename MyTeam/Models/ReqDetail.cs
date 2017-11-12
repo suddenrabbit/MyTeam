@@ -121,13 +121,13 @@ namespace MyTeam.Models
         public string ReqReleaseNo { get; set; } //下发通知编号
 
         // TODO:将下发通知中的计划下发日期、实际下发日期也同时存储在ReqDetail中。当更新下发通知中的计划下发日期、实际下发日期，同时更新需求中的信息。
-        /*[Display(Name = "计划下发日期")]
+        [Display(Name = "计划下发日期")]
         [DataType(DataType.Date)]
-        public DateTime? PlanRlsDate { get; set; }
+        public DateTime? PlanReleaseDate { get; set; }
 
         [Display(Name = "实际下发日期")]
         [DataType(DataType.Date)]
-        public DateTime? RlsDate { get; set; }*/
+        public DateTime? ReleaseDate { get; set; }
 
     }
 }

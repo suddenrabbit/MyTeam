@@ -45,7 +45,7 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if(user == null || user.UserType == (int)UserTypeEnums.系统用户)
             {
-                return Content("登录信息失效或您在使用系统用户，不允许填写周报。请重新以普通用户身份登录！");
+                return Content("<p class='text-danger'>当前用户不允许填写周报。请重新以普通用户身份登录！</p>");
             }
 
             // 工作类型下拉列表            

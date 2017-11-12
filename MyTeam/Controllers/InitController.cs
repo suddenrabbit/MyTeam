@@ -198,5 +198,18 @@ namespace MyTeam.Controllers
 
         }
 
+        [AllowAnonymous]
+        public string InitRlsDate() //初始化下发日期到ReqDetail
+        {
+            int num = 0;
+            var ls = dbContext.ReqReleases.Where(p => p.IsSideRelease == false).ToList();
+            foreach(var rls in ls)
+            {
+                num += dbContext.Database.ExecuteSqlCommand("update ReqDetails set PlanReleaseDate=@p0, ReleaseDate=@p1 where ReqReleaseID=@p2", rls.PlanReleaseDate, rls.ReleaseDate, rls.ReqReleaseID);
+            }
+
+            return "success: " + num;
+        }
+
     }
 }

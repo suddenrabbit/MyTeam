@@ -61,7 +61,7 @@ namespace MyTeam.Models
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string OutSource { get; set; }
 
-        [Display(Name = "不再跟踪")]
+        [Display(Name = "不导出周报")]
         public bool DoNotTrack { get; set; }
 
         [NotMapped]

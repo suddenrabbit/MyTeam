@@ -400,13 +400,13 @@ namespace MyTeam.Controllers
                     dbContext.SaveChanges();
                 }
 
-                string sql = string.Format("Update ReqDetails set Version='{0}', OutDate='{1}', ReqStat='{2}', UpdateTime='{3}' where ReqDetailID in ({4})",
-                    realVersion, OutDate, (int)ReqStatEnums.出池, DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), Reqs);
+                string sql = string.Format("Update ReqDetails set Version='{0}', OutDate='{1}', ReqStat='{2}', PlanReleaseDate='{3}', UpdateTime='{4}' where ReqDetailID in ({5})",
+                    realVersion, OutDate, (int)ReqStatEnums.出池, PlanReleaseDate, DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), Reqs);
 
                 int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
 
                 // 下载出池计划文档接口
-                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}&PlanReleaseDate={2}", SysID, realVersion, PlanReleaseDate);
+                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
 
                 return string.Format("<p class='alert alert-success'>{0}条需求成功出池！<a href='{1}'>点击</a>导出出池计划文档</p>", updatedNum, downfile);
             }
@@ -1046,7 +1046,7 @@ namespace MyTeam.Controllers
         #region 出池下发计划
         // 出池计划查询与导出
         [HttpGet]
-        public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false, string PlanReleaseDate = "")
+        public ActionResult OutPoolTable(OutPoolTableQuery query, bool isQuery = false, int pageNum = 1, bool isExcel = false)
         {
             string errMsg = "";
 
@@ -1076,11 +1076,11 @@ namespace MyTeam.Controllers
                 {
                     try
                     {
-                        var rls = dbContext.ReqReleases.Find(req.ReqReleaseID);
+                        /*var rls = dbContext.ReqReleases.Find(req.ReqReleaseID);
                         if (PlanReleaseDate == "")
                         {
                             PlanReleaseDate = rls == null ? "" : rls.PlanReleaseDate.ToShortDateString();
-                        }
+                        }*/
 
                         OutPoolTableResult res = new OutPoolTableResult()
                         {
@@ -1095,8 +1095,10 @@ namespace MyTeam.Controllers
                             ReqDevPerson = req.ReqMain.ReqDevPerson,
                             ReqBusiTestPerson = req.ReqMain.ReqBusiTestPerson,
                             ReqType = req.ReqTypeName,
-                            PlanReleaseDate = PlanReleaseDate,
-                            ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),
+                            /*PlanReleaseDate = PlanReleaseDate,
+                            ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),*/
+                            PlanReleaseDate = req.PlanReleaseDate == null ? "" : req.PlanReleaseDate.Value.ToShortDateString(),
+                            ReleaseDate = req.ReleaseDate == null ? "" : req.ReleaseDate.Value.ToShortDateString(),
                             Remark = req.Remark
                         };
                         resultList.Add(res);
@@ -1114,8 +1116,10 @@ namespace MyTeam.Controllers
                             ReqDevPerson = req.ReqMain.ReqDevPerson,
                             ReqBusiTestPerson = req.ReqMain.ReqBusiTestPerson,
                             ReqType = req.ReqTypeName,
-                            PlanReleaseDate = PlanReleaseDate,
-                            ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),
+                            /*PlanReleaseDate = PlanReleaseDate,
+                            ReleaseDate = rls == null ? "" : rls.ReleaseDate.Value.ToShortDateString(),*/
+                            PlanReleaseDate = req.PlanReleaseDate == null ? "" : req.PlanReleaseDate.Value.ToShortDateString(),
+                            ReleaseDate = req.ReleaseDate == null ? "" : req.ReleaseDate.Value.ToShortDateString(),
                             Remark = req.Remark
                         };
 
