@@ -25,7 +25,7 @@
         var sysId = $('#SysID').val();
         var ver = $('#Ver').val();
         var releaseNo = $('#ReleaseNo').val();
-        //var planReleaseDate = $('#PlanReleaseDate').val();
+        var planReleaseDate = $('#PlanReleaseDate').val();
         var releaseDesc = $('#ReleaseDesc').val();
 
         if (ver == 0) {
@@ -45,7 +45,7 @@
         $.ajax({
             type: 'POST',
             url: '/ReleaseManage/UpdateReleaseInfo',
-            data: 'SysID=' + sysId + '&Ver=' + ver + "&ReleaseNo=" + releaseNo + "&ReleaseDesc=" + releaseDesc,
+            data: 'SysID=' + sysId + '&Ver=' + ver + "&ReleaseNo=" + releaseNo + "&ReleaseDesc=" + releaseDesc + "&PlanReleaseDate=" + planReleaseDate,
             success: function (msg) {
                 $('#ReleaseNoResultDiv').html(msg);
             },
@@ -93,12 +93,12 @@
             </div>
         </div>
 
-        <!--<div class="form-group">
+        <div class="form-group">
             <label for="PlanReleaseDate" class="col-md-2 control-label">计划下发日期</label>
             <div class="col-md-10">
                 <input id="PlanReleaseDate" type="text" class="form-control Wdate datepicker" onclick="WdatePicker({ dateFmt: 'yyyy/M/d' })" placeholder="点击选择日期" />
             </div>
-        </div>-->
+        </div>
 
 
         <div class="form-group">

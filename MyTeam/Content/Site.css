@@ -85,7 +85,7 @@ footer {
     /*font-weight: bold;*/
     font-size: 4em;
     text-align: right;
-    font-family:"Arial Black";
+    font-family:"Arial Black", "Helvetica Neue", arial, sans-serif;
 }
 
 
