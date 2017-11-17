@@ -126,7 +126,7 @@
                     <td>
                         <input id="ProjName" name="ProjName" class="form-control" placeholder="支持模糊查询" />
                     </td>
-                    <td><label class="control-label">需求分析师</label></td>
+                    <td><label class="control-label">需求分析师（主办）</label></td>
                     <td>
                         <!--需求分析师下拉选择-->
                         @Html.DropDownListFor(model => model.ReqAnalysisID, ViewBag.ReqAnalysisList as SelectList, new { @class = "form-control" })
@@ -194,7 +194,7 @@
                         @Html.DisplayNameFor(model => model.ResultList[0].RulesPublishDate)
                     </th>
                     <th width="8">
-                        @Html.DisplayNameFor(model => model.ResultList[0].ReqAnalysisID)
+                        @Html.DisplayNameFor(model => model.ResultList[0].ReqAnalysisName)
                     </th>
                     <th width="6">
                         @Html.DisplayNameFor(model => model.ResultList[0].ProjStat)

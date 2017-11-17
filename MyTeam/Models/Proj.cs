@@ -29,8 +29,12 @@ namespace MyTeam.Models
         [StringLength(8, ErrorMessage = "不能超过8位")]
         public String ProjLevel { get; set; }
 
-        [Display(Name = "需求分析师")]
+        [Display(Name = "需求分析师（主办）")]
         public int ReqAnalysisID { get; set; }
+
+        [Display(Name = "需求分析师（协办）")]
+        [StringLength(64, ErrorMessage = "不能超过64位")]
+        public string SideReqAnalysis { get; set; }
 
         [Display(Name = "主办业务人员")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
@@ -175,11 +179,18 @@ namespace MyTeam.Models
         public String Remark { get; set; }
 
         [NotMapped]
+        [Display(Name = "需求分析师")]
         public string ReqAnalysisName
         {
             get
             {
-                return Utils.MyTools.GetUserName(ReqAnalysisID);
+                var name = MyTools.GetUserName(ReqAnalysisID);
+                if (!string.IsNullOrEmpty(SideReqAnalysis))
+                {
+                    name += "（主办）；" + SideReqAnalysis + "（协办）";
+                }
+
+                return name;
             }
             set { this.ReqAnalysisName = value; }
         }
