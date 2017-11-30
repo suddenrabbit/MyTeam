@@ -9,9 +9,10 @@ namespace MyTeam.Models
         [Display(Name = "系统名称")]
         public int SysID { get; set; }
 
+        [Required]
         [Display(Name = "受理日期")]
         [DataType(DataType.Date)]
-        public DateTime? AcptDate { get; set; }
+        public DateTime AcptDate { get; set; }
 
         [Required]
         [Display(Name = "申请编号")]

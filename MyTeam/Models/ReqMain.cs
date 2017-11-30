@@ -23,9 +23,10 @@ namespace MyTeam.Models
         [StringLength(32, ErrorMessage = "申请编号不能超过32位")]
         public string ReqNo { get; set; } // 唯一索引
 
+        [Required]
         [Display(Name = "受理日期")]
         [DataType(DataType.Date)]
-        public DateTime? AcptDate { get; set; }
+        public DateTime AcptDate { get; set; }
 
         [Required]
         [Display(Name = "需求申请事由")]

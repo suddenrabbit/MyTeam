@@ -69,7 +69,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqAmtList = new SelectList(reqAmtLs);*/
 
             // 5、需求受理日期自动置为今天
-            // regReq.AcptDate = DateTime.Now; //del:现在默认先不填受理日期了
+            regReq.AcptDate = DateTime.Now; 
 
             // 6、预先生成detail部分
             /*regReq.DetailRegReqs = new List<DetailRegReq>();
@@ -532,12 +532,12 @@ namespace MyTeam.Controllers
                 if (!string.IsNullOrEmpty(query.AcptDateStart))
                 {
                     var acptDateStart = DateTime.Parse(query.AcptDateStart);
-                    ls = ls.Where(p => p.ReqMain.AcptDate.Value >= acptDateStart);
+                    ls = ls.Where(p => p.ReqMain.AcptDate >= acptDateStart);
                 }
                 if (!string.IsNullOrEmpty(query.AcptDateEnd))
                 {
                     var acptDateEnd = DateTime.Parse(query.AcptDateEnd);
-                    ls = ls.Where(p => p.ReqMain.AcptDate.Value <= acptDateEnd);
+                    ls = ls.Where(p => p.ReqMain.AcptDate <= acptDateEnd);
                 }
                 if (!string.IsNullOrEmpty(query.ReqNo))
                 {
@@ -1066,7 +1066,7 @@ namespace MyTeam.Controllers
                 }
                 if (!string.IsNullOrEmpty(query.MaintainYear))
                 {
-                    ls = ls.Where(p => p.ReqMain.AcptDate.Value.Year.ToString() == query.MaintainYear);
+                    ls = ls.Where(p => p.ReqMain.AcptDate.Year.ToString() == query.MaintainYear);
                 }
 
                 // 将查询结果转换为OutPoolTableResult和OutPoolTableResultExcel（避免多出来的short字段影响）
@@ -1084,7 +1084,7 @@ namespace MyTeam.Controllers
 
                         OutPoolTableResult res = new OutPoolTableResult()
                         {
-                            AcptMonth = req.ReqMain.AcptDate == null ? "" : req.ReqMain.AcptDate.Value.ToString("yyyy/M"),
+                            AcptMonth = req.ReqMain.AcptDate == null ? "" : req.ReqMain.AcptDate.ToString("yyyy/M"),
                             SysName = req.ReqMain.SysName,
                             Version = req.Version,
                             ReqNo = req.ReqMain.ReqNo,
@@ -1105,7 +1105,7 @@ namespace MyTeam.Controllers
 
                         OutPoolTableResultExcel resExcel = new OutPoolTableResultExcel
                         {
-                            AcptMonth = req.ReqMain.AcptDate == null ? "" : req.ReqMain.AcptDate.Value.ToString("yyyy/M"),
+                            AcptMonth = req.ReqMain.AcptDate == null ? "" : req.ReqMain.AcptDate.ToString("yyyy/M"),
                             SysName = req.ReqMain.SysName,
                             Version = req.Version,
                             ReqNo = req.ReqMain.ReqNo,

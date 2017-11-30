@@ -41,7 +41,7 @@ namespace MyTeam.Controllers
             return "Init Completed. User 'Admin/123456' has been created.";
         }
 
-
+        /*
         [AllowAnonymous]
         public string InitReqs()
         {
@@ -134,7 +134,7 @@ namespace MyTeam.Controllers
             return "done<br />" + errMsg.ToString();
         }
 
-        /*
+        
         * 初始化下发通知信息先使用以下SQL：
         *   TRUNCATE TABLE ReqReleases;
 
@@ -146,7 +146,7 @@ namespace MyTeam.Controllers
             SELECT DISTINCT t.SecondRlsNo AS ReleaseNo, t.PlanRlsDate AS PlanReleaseDate, t.SecondRlsDate AS ReleaseDate, 1 AS IsSideRelease, 1 AS DraftPersonID 
             FROM Reqs t WHERE t.PlanRlsDate IS NOT NULL AND t.SecondRlsNo IS NOT NULL;
 
-        **/
+        *
 
         [AllowAnonymous]
         public string InitRls()
@@ -210,6 +210,6 @@ namespace MyTeam.Controllers
 
             return "success: " + num;
         }
-
+        */
     }
 }
