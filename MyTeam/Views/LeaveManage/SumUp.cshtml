@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<MyTeam.Models.LeaveSumUp>
+
+
+<div class="row" style="padding:30px">
+    @if(Model == null || Model.Count() < 1)
+    {
+        <p>暂无数据</p>
+    }
+    else
+    {
+        <table class="table text-center">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.PersonID)</th>
+                <th>@Html.DisplayNameFor(model => model.LeaveDays)</th>
+            </tr>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => r.PersonName)</td>
+                    <td>@Html.DisplayFor(model => r.LeaveDays)</td>
+                </tr>
+            }
+        </table>
+    }    
+    
+</div>

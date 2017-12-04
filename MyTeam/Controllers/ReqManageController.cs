@@ -368,11 +368,15 @@ namespace MyTeam.Controllers
         {
             try
             {
-                // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理
+                // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理 //del
                 string realVersion = Version;
                 if (!IsPatch) // 常规版本
                 {
                     Ver v = dbContext.Vers.Where(p => p.VerID.ToString() == Version).FirstOrDefault();
+                    if(v == null)
+                    {
+                        throw new Exception("奇怪，系统找不到相应的版本信息，请与管理员联系！");
+                    }
                     realVersion = v.VerNo;
                     // 更新版本计划信息
                     v.DraftTime = DateTime.Parse(PlanReleaseDate); // 制定时间改为计划下发日期

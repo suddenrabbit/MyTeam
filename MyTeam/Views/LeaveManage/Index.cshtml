@@ -1,7 +1,7 @@
 ﻿@using PagedList.Mvc
-@model IEnumerable<MyTeam.Models.Attendance>
+@model IEnumerable<MyTeam.Models.Leave>
 @{
-    ViewBag.Title = "外协人员考勤管理";
+    ViewBag.Title = "外协人员请假管理";
 }
 <h2>@ViewBag.Title</h2>
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
@@ -15,7 +15,7 @@
 
     function realDelete() {
         var id = $('#toDelId').val();
-        var url = "/AttendanceManage/Delete/" + id;
+        var url = "/LeaveManage/Delete/" + id;
         $.ajax({
             type: 'POST',
             url: url,
@@ -35,7 +35,7 @@
     // 在modal中编辑
     function doEdit(id, name) {
         $('#editName').html(name);
-        var url = "/AttendanceManage/Edit/" + id;
+        var url = "/LeaveManage/Edit/" + id;
         $.ajax({
             type: 'GET',
             url: url,
@@ -53,7 +53,7 @@
 
     // 在modal中新增
     function doCreate() {
-        var url = "/AttendanceManage/Create/";
+        var url = "/LeaveManage/Create/";
         $.ajax({
             type: 'GET',
             url: url,
@@ -71,7 +71,7 @@
 
     // 查看合计
     function doSumUp() {
-        var url = "/AttendanceManage/SumUp/";
+        var url = "/LeaveManage/SumUp/";
         $.ajax({
             type: 'GET',
             url: url,
@@ -94,7 +94,7 @@
         {
             <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加记录" />
         }
-        <a href="/AttendanceManage/Export" class="btn btn-default">导出Excel</a>
+        <a href="/LeaveManage/Export" class="btn btn-default">导出Excel</a>
         <input type="button" onclick="doSumUp()" class="btn btn-success" value="查看今年请假统计" />
     </p>
 
@@ -118,13 +118,13 @@
                     @if (ViewBag.CanEdit)
                     {
                         <span>
-                            <a href="###" onclick="doEdit('@item.AID','@item.PersonName')">编辑</a>
-                            | <a href="###" onclick="doDelete('@item.AID','@item.PersonName 在 @item.LeaveDate.ToShortDateString() 的请假记录')">删除</a>
+                            <a href="###" onclick="doEdit('@item.LeaveID','@item.PersonName')">编辑</a>
+                            | <a href="###" onclick="doDelete('@item.LeaveID','@item.PersonName 在 @item.LeaveDate.ToShortDateString() 的请假记录')">删除</a>
                         </span>
                     }
                     else
                     {
-                        <span class="text-info">(您无权限编辑)</span>
+                        <span class="text-info">不可编辑</span>
                     }
                 </td>
                 <td>
@@ -140,7 +140,7 @@
         }
     </table>
     <!--分页-->
-    @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.Attendance>,
+    @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.Leave>,
     generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
 </div>
 

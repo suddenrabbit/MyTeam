@@ -12,15 +12,15 @@ namespace MyTeam.Controllers
     /// <summary>
     /// 外协人员请假管理Controller
     /// </summary>
-    public class AttendanceManageController : BaseController
+    public class LeaveManageController : BaseController
     {
         //
-        // GET: /AttendanceManage/
+        // GET: /LeaveManage/
 
         public ActionResult Index(int pageNum = 1)
         {           
             // 分页
-            var ls = dbContext.Attendances.OrderByDescending(a => a.AID).ToPagedList(pageNum, Constants.PAGE_SIZE);
+            var ls = dbContext.Leaves.OrderByDescending(a => a.LeaveID).ToPagedList(pageNum, Constants.PAGE_SIZE);
 
             // 权限控制：外协人员不可以编辑
             var user = GetSessionCurrentUser();
@@ -30,7 +30,7 @@ namespace MyTeam.Controllers
         }
 
         //
-        // GET: /AttendanceManage/Create
+        // GET: /LeaveManage/Create
 
         public ActionResult Create()
         {
@@ -42,35 +42,35 @@ namespace MyTeam.Controllers
         }
 
         //
-        // POST: /AttendanceManage/Create
+        // POST: /LeaveManage/Create
 
         [HttpPost]
-        public string Create(Attendance attendance)
+        public string Create(Leave Leave)
         {
             try
             {
                 // 若请假天数大于1，则批量处理
-                var days = attendance.LeaveDays;
+                var days = Leave.LeaveDays;
                 if(days > 1)
                 {
                     int multiDays = (int)days;
-                    var leaveDate = attendance.LeaveDate;
+                    var leaveDate = Leave.LeaveDate;
                     for(var i = 0; i<multiDays; i++)
                     {
-                        var eachAttendance = new Attendance
+                        var eachLeave = new Leave
                         {
                             LeaveDate = leaveDate,
-                            PersonID = attendance.PersonID,
+                            PersonID = Leave.PersonID,
                             LeaveDays = 1                            
                         };
-                        dbContext.Attendances.Add(eachAttendance);
+                        dbContext.Leaves.Add(eachLeave);
                         // 日期加一天
                         leaveDate = leaveDate.AddDays(1);
                     }
                 }
                 else
                 {
-                    dbContext.Attendances.Add(attendance);                    
+                    dbContext.Leaves.Add(Leave);                    
                 }
 
                 dbContext.SaveChanges();
@@ -86,34 +86,34 @@ namespace MyTeam.Controllers
         }
 
         //
-        // GET: /AttendanceManage/Edit/5
+        // GET: /LeaveManage/Edit/5
 
         public ActionResult Edit(int id)
         {
-            Attendance attendance = dbContext.Attendances.ToList().Find(a => a.AID == id);
+            Leave Leave = dbContext.Leaves.ToList().Find(a => a.LeaveID == id);
 
-            if (attendance == null)
+            if (Leave == null)
             {
                 return View();
             }
 
             // 用户列表
-            SelectList sl = new SelectList(this.GetUserList().Where(a => a.UserType == (int)UserTypeEnums.外协), "UID", "Realname", attendance.PersonID); // 选中当前值
+            SelectList sl = new SelectList(this.GetUserList().Where(a => a.UserType == (int)UserTypeEnums.外协), "UID", "Realname", Leave.PersonID); // 选中当前值
 
             ViewBag.PersonList = sl;
 
-            return View(attendance);
+            return View(Leave);
         }
 
         //
-        // POST: /AttendanceManage/Edit/5
+        // POST: /LeaveManage/Edit/5
 
         [HttpPost]
-        public string Edit(Attendance attendance)
+        public string Edit(Leave Leave)
         {
             try
             {
-                dbContext.Entry(attendance).State = System.Data.Entity.EntityState.Modified;
+                dbContext.Entry(Leave).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
                 return Constants.AJAX_EDIT_SUCCESS_RETURN;
@@ -125,13 +125,13 @@ namespace MyTeam.Controllers
         }
 
         // AJAX调用
-        // POST: /AttendanceManage/Delete/5
+        // POST: /LeaveManage/Delete/5
         [HttpPost]
         public string Delete(int id)
         {
             try
             {
-                Attendance sys = dbContext.Attendances.ToList().Find(a => a.AID == id);
+                Leave sys = dbContext.Leaves.ToList().Find(a => a.LeaveID == id);
                 dbContext.Entry(sys).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
 
@@ -148,12 +148,12 @@ namespace MyTeam.Controllers
         public ActionResult Export()
         {
             // 转换格式
-            List<AttendanceResult> r = new List<AttendanceResult>();
-            foreach(var a in dbContext.Attendances.ToList<Attendance>() )
+            List<LeaveResult> r = new List<LeaveResult>();
+            foreach(var a in dbContext.Leaves.ToList<Leave>() )
             {
-                r.Add(new AttendanceResult { LeaveDate = a.LeaveDate.ToString("yyyy/M/d"), PersonName = a.PersonName, LeaveDays = a.LeaveDays });
+                r.Add(new LeaveResult { LeaveDate = a.LeaveDate.ToString("yyyy/M/d"), PersonName = a.PersonName, LeaveDays = a.LeaveDays });
             }
-            return this.MakeExcel<AttendanceResult>("AttendanceReportT", "外协人员考勤统计表＿" + DateTime.Now.ToString("yyyyMMddhhmmss"),
+            return this.MakeExcel<LeaveResult>("LeaveReportT", "外协人员请假统计表＿" + DateTime.Now.ToString("yyyyMMddhhmmss"),
                 r);
         }
 
@@ -161,7 +161,7 @@ namespace MyTeam.Controllers
         [HttpGet]
         public ActionResult SumUp()
         {
-            var ls = dbContext.Database.SqlQuery<AttendanceSumUp>("SELECT PersonID, sum(LeaveDays) as LeaveDays FROM Attendances WHERE year(LeaveDate) = @p0  GROUP BY PersonID", DateTime.Now.Year).ToList();
+            var ls = dbContext.Database.SqlQuery<LeaveSumUp>("SELECT PersonID, sum(LeaveDays) as LeaveDays FROM Leaves WHERE year(LeaveDate) = @p0  GROUP BY PersonID", DateTime.Now.Year).ToList();
 
             return View(ls);
         }

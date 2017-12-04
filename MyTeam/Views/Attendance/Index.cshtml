@@ -1,0 +1,50 @@
+﻿@model IEnumerable<MyTeam.Models.AttendanceSumUp>
+@{
+    ViewBag.Title = "外协人员考勤情况统计";
+}
+<h2>@ViewBag.Title</h2>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+<div class="row card">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "Attendance", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            <div class="form-inline">
+                <label>查询年度：</label><input type="number" maxlength="4" name="year" class="form-control" value="@ViewBag.year" />
+                <button class="btn btn-primary" onclick="doQuery()" type="submit">查询</button>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row card">
+    @if (Model == null || Model.Count() < 1)
+    {
+        <p class="alert alert-warning">暂无数据</p>
+    }
+    else
+    {
+        <table class="table text-center">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.PersonID)</th>
+                <th>@Html.DisplayNameFor(model => model.LeaveDays)</th>
+                <th>@Html.DisplayNameFor(model => model.OTHours)</th>
+                <th>@Html.DisplayNameFor(model => model.OTAsDays)</th>
+            </tr>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => r.PersonName)</td>
+                    <td>@Html.DisplayFor(model => r.LeaveDays)</td>
+                    <td>@Html.DisplayFor(model => r.OTHours)</td>
+                    <td>@Html.DisplayFor(model => r.OTAsDays)</td>
+                </tr>
+            }
+            
+        </table>
+
+        <p class="alert alert-info">备注：加班小时数每满4个小时，可折抵0.5天请假</p>
+    }
+</div>
+

@@ -62,6 +62,9 @@
         public DbSet<ReqMain> ReqMains { get; set; }
         public DbSet<ReqDetail> ReqDetails { get; set; }
         public DbSet<ReqRelease> ReqReleases { get; set; }
+
+        public DbSet<Leave> Leaves { get; set; }
+        public DbSet<OT> OTs { get; set; }
     }
    
 }

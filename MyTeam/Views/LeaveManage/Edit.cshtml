@@ -1,7 +1,15 @@
 ﻿@{
     Layout = null;
 }
-@model MyTeam.Models.Attendance
+@model MyTeam.Models.Leave
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        关闭
+    </button>
+    return;
+}
 <script>
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
@@ -9,27 +17,23 @@
     }
 </script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
-<script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#LeaveDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
-    });
-</script>
+
 <div class="row">
     <div class="col-md-12">
         <div id="info"></div>
-        @using (Ajax.BeginForm("Create", "AttendanceManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                    new { @class = "form-horizontal", role = "form", id="editForm" }))
+        @using (Ajax.BeginForm("Edit", "LeaveManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                new { @class = "form-horizontal", role = "form", id="editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
+            @Html.HiddenFor(model => model.LeaveID);
+
             <div class="form-group">
                 @Html.LabelFor(model => model.LeaveDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.LeaveDate)
+                    @Html.EditorFor(model => model.LeaveDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.LeaveDate, "", new { @class = "text-danger" })
-                    <span class="text-info">（若连续请假多日，只需要填第一天的日期）</span>
                 </div>
             </div>
 
@@ -43,16 +47,17 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.LeaveDays, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.LeaveDays, new { @class = "form-control", @type = "number", @required = "required" })
-                    @Html.ValidationMessageFor(model => model.LeaveDays, "", new { @class = "text-danger" })
-                    <span class="text-info">（请假半天请填写0.5；若填写大于1的数字，系统会自动生成多条记录，但可能会包含节假日、并且会忽略小数部分，请注意后续手工调整）</span>
+                    <select id="LeaveDays" name="LeaveDays" class="form-control">
+                        <option value="1">1</option>
+                        <option value="0.5">0.5</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
-                    <input type="submit" value="新增" class="btn btn-primary" />
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
                 </div>
             </div>
         }
@@ -60,3 +65,6 @@
 </div>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $('#LeaveDays').val('@Model.LeaveDays');
+</script>

@@ -103,6 +103,13 @@ namespace MyTeam.Controllers
         {
             try
             {
+                // 同一个系统的版本号不能重复
+                var checkVer = dbContext.Vers.Where(p => p.SysID == ver.SysID && p.VerNo == ver.VerNo).FirstOrDefault();
+                if(checkVer != null)
+                {
+                    throw new Exception("同一个系统的版本号不能重复创建！");
+                }
+
                 dbContext.Vers.Add(ver);
                 dbContext.SaveChanges();
 

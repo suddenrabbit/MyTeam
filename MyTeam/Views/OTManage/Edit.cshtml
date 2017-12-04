@@ -1,0 +1,70 @@
+﻿@{
+    Layout = null;
+}
+@model MyTeam.Models.OT
+@if (Model == null)
+{
+    <div class="alert alert-warning">无此记录</div>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        关闭
+    </button>
+    return;
+}
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('#editForm').hide()
+    }
+</script>
+<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Edit", "OTManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                new { @class = "form-horizontal", role = "form", id="editForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.HiddenFor(model => model.OTID);
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.OTDate, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.OTDate, "DateTime")
+                    @Html.ValidationMessageFor(model => model.OTDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PersonID, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.PersonID, ViewBag.PersonList as SelectList, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.OTHours, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <select id="OTHours" name="OTHours" class="form-control">
+                        <option value="1">1</option>
+                        <option value="0.5">0.5</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $('#OTHours').val('@Model.OTHours');
+</script>

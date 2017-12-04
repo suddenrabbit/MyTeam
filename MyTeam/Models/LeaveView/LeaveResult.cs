@@ -2,8 +2,8 @@
 
 namespace MyTeam.Models
 {
-    // 外协人员考勤（请假）情况
-    public class AttendanceResult
+    // 外协人员请假情况
+    public class LeaveResult
     {
        
         [Display(Name = "请假日期")]

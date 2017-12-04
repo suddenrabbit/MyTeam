@@ -156,6 +156,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AttendanceController.cs" />
+    <Compile Include="Controllers\OTManageController.cs" />
+    <Compile Include="Controllers\LeaveManageController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusiReqController.cs" />
     <Compile Include="Controllers\BusiReqProjController.cs" />
@@ -169,7 +172,6 @@
     <Compile Include="Controllers\ReleaseManageController.cs" />
     <Compile Include="Controllers\ReqManageController.cs" />
     <Compile Include="Controllers\ReqTrackController.cs" />
-    <Compile Include="Controllers\AttendanceManageController.cs" />
     <Compile Include="Controllers\TargetMissionController.cs" />
     <Compile Include="Controllers\TargetManageController.cs" />
     <Compile Include="Controllers\SysManageController.cs" />
@@ -183,9 +185,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AttendanceView\AttendanceSumUp.cs" />
+    <Compile Include="Models\OTView\OTResult.cs" />
+    <Compile Include="Models\OTView\OTSumUp.cs" />
+    <Compile Include="Models\OT.cs" />
+    <Compile Include="Models\Leave.cs" />
     <Compile Include="Models\Attendace.cs" />
-    <Compile Include="Models\AttendanceView\AttendaceSumUp.cs" />
-    <Compile Include="Models\AttendanceView\AttendaceResult.cs" />
+    <Compile Include="Models\LeaveView\LeaveSumUp.cs" />
+    <Compile Include="Models\LeaveView\LeaveResult.cs" />
     <Compile Include="Models\BusiReqView\BusiReqProj.cs" />
     <Compile Include="Models\HomeView\HomeResult.cs" />
     <Compile Include="Models\ReleaseManageView\ReleaseQuery.cs" />
@@ -282,9 +289,10 @@
     <Content Include="Content\templates\VerReportT.xlsx" />
     <Content Include="Content\templates\ReqTrackImportT.xlsx" />
     <Content Include="Content\templates\ProjPlanImportT.xlsx" />
-    <Content Include="Content\templates\AttendanceReportT.xlsx" />
+    <Content Include="Content\templates\LeaveReportT.xlsx" />
     <Content Include="fonts\Roboto-Bold.ttf" />
     <Content Include="fonts\Roboto-Regular.ttf" />
+    <Content Include="Content\templates\OTReportT.xlsx" />
     <None Include="Properties\PublishProfiles\MZ.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -393,13 +401,13 @@
     <Content Include="Views\WeekReport\YearMissionIndex.cshtml" />
     <Content Include="Views\WeekReport\EditYearMission.cshtml" />
     <Content Include="Views\WeekReport\AddYearMission.cshtml" />
-    <Content Include="Views\AttendanceManage\Create.cshtml" />
-    <Content Include="Views\AttendanceManage\Edit.cshtml" />
-    <Content Include="Views\AttendanceManage\Index.cshtml" />
+    <Content Include="Views\LeaveManage\Create.cshtml" />
+    <Content Include="Views\LeaveManage\Edit.cshtml" />
+    <Content Include="Views\LeaveManage\Index.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Notify.cshtml" />
     <Content Include="Views\Home\LoginPartial.cshtml" />
-    <Content Include="Views\AttendanceManage\SumUp.cshtml" />
+    <Content Include="Views\LeaveManage\SumUp.cshtml" />
     <Content Include="Views\ReqManage\Bat.cshtml" />
     <Content Include="Views\ReqManage\Details.cshtml" />
     <Content Include="Views\ReqManage\EditDetail.cshtml" />
@@ -422,6 +430,11 @@
     <Content Include="Views\ProjPlan\EditPlanFromProjIndex.cshtml" />
     <Content Include="Views\ReqManage\Edit.cshtml" />
     <Content Include="Views\ReleaseManage\UpdateReleaseInfo.cshtml" />
+    <Content Include="Views\OTManage\Create.cshtml" />
+    <Content Include="Views\OTManage\Edit.cshtml" />
+    <Content Include="Views\OTManage\Index.cshtml" />
+    <Content Include="Views\OTManage\SumUp.cshtml" />
+    <Content Include="Views\Attendance\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
