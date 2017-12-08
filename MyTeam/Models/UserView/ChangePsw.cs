@@ -13,7 +13,7 @@ namespace MyTeam.Models
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "确认新密码")]
-        [System.Web.Mvc.Compare("NewPsw", ErrorMessage = "密码必须一致")]
+        [Compare("NewPsw", ErrorMessage = "密码必须一致")]
         public string NewPswRep { get; set; }
     }
 }
