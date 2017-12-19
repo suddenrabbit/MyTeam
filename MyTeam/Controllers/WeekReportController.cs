@@ -43,7 +43,7 @@ namespace MyTeam.Controllers
         public ActionResult AddMain()
         {
             User user = this.GetSessionCurrentUser();
-            if(user == null || user.UserType == (int)UserTypeEnums.系统用户)
+            if (user == null || user.UserType == (int)UserTypeEnums.系统用户)
             {
                 return Content("<p class='text-danger'>当前用户不允许填写周报。请重新以普通用户身份登录！</p>");
             }
@@ -55,7 +55,7 @@ namespace MyTeam.Controllers
             ViewBag.RptPersonIDList = new SelectList(GetStaffList(), "UID", "Realname");
 
             // 默认加上当前的用户UID和姓名          
-            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID=user.UID, Person = user.Realname, WorkYear = DateTime.Now.Year.ToString() };
+            WeekReportMain main = new WeekReportMain() { WorkTime = 0, RptPersonID = user.UID, Person = user.Realname, WorkYear = DateTime.Now.Year.ToString() };
             return View(main);
         }
 
@@ -618,8 +618,8 @@ namespace MyTeam.Controllers
         private void makeWeekDetails(ref int cursor, string week, ref ExcelWorksheet sheet, List<WeekReportMain> mainList)
         {
             var weekDetailListInit = from a in dbContext.WeekReportDetails
-                                      where a.RptDate == week                                     
-                                      select a;
+                                     where a.RptDate == week
+                                     select a;
 
             var weekDetailList = new List<WeekReportDetail>();
 
@@ -633,7 +633,7 @@ namespace MyTeam.Controllers
                 {
                     weekDetailList.AddRange(weekDetailListInit.Where(p => p.RptPersonID == tempu.UID));
                 }
-                
+
             }
 
             var size = weekDetailList.Count();
@@ -757,6 +757,128 @@ namespace MyTeam.Controllers
             {
                 return "出错了: " + e1.Message;
             }
+        }
+
+        // 2017.12.18 新增：按照年度和个人导出周报
+        public ActionResult ExportByYear()
+        {
+            var ls = new List<string>();
+            foreach (var u in GetStaffList())
+            {
+                ls.Add(u.Realname);
+            }
+            SelectList sl = MyTools.GetSelectList(ls);
+            ViewBag.PersonList = sl;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ExportByYear(string year, string person)
+        {
+            try
+            {
+                // 读取模板
+                string tmpFilePath = System.Web.HttpContext.Current.Server.MapPath("~/Content/templates/WeekReportByYearT.xlsx");
+                // POIFSFileSystem fs = new POIFSFileSystem(new FileStream(tmpFilePath, FileMode.OpenOrCreate));
+                using (ExcelPackage ep = new ExcelPackage(new FileInfo(tmpFilePath)))
+                {
+                    ExcelWorkbook wb = ep.Workbook;
+
+                    ExcelWorksheet sheet = wb.Worksheets[1];
+                    int cursor = 3; //从第3行开始操作
+                                    // 重点工作
+
+                    var mainList = (from a in dbContext.WeekReportMains
+                                    where a.WorkYear == year
+                                    && (a.Person.Contains(person) || a.OutSource.Contains(person))
+                                    orderby a.PlanDeadLine
+                                    select a).ToList();
+
+                    var mainSize = mainList.Count;
+                    var num = 1;
+                    // 在cursor+1位置插入size-1行
+                    sheet.InsertRow(cursor + 1, mainSize - 1, cursor);
+
+                    // 插入数据
+                    foreach (var s in mainList)
+                    {
+                        // 第一列是序号
+                        sheet.Cells[cursor, 1].Value = num;
+                        sheet.Cells[cursor, 2].Value = s.WorkTypeName;
+                        sheet.Cells[cursor, 3].Value = s.WorkName;
+                        sheet.Cells[cursor, 4].Value = s.WorkMission;
+                        sheet.Cells[cursor, 5].Value = s.WorkStage;
+                        sheet.Cells[cursor, 6].Value = s.Person;
+                        sheet.Cells[cursor, 7].Value = s.OutSource;
+                        sheet.Cells[cursor, 8].Value = s.Progress + "%";
+                        sheet.Cells[cursor, 9].Value = s.PlanDeadLine == null ? "" : s.PlanDeadLine.Value.ToString("yyyy/M/d");
+                        sheet.Cells[cursor, 10].Value = s.Remark;
+
+                        // 下移一行
+                        cursor++;
+
+                        num++;
+                    }
+
+                    // 游标下移3行
+                    cursor += 3;
+
+                    // 每周工作
+                    var weekDetailList = (from a in dbContext.WeekReportDetails
+                                          where a.RptDate.StartsWith(year)
+                                          && (a.Person.Contains(person) || a.OutSource.Contains(person))
+                                          orderby a.RptDate ascending
+                                          select a).ToList();
+
+                    var detailSize = weekDetailList.Count;
+                    // 在cursor+1位置插入size-1行
+                    sheet.InsertRow(cursor + 1, detailSize - 1, cursor);
+
+                    // 插入数据
+                    foreach (var s in weekDetailList)
+                    {
+                        string workName = "";
+                        if (s.IsWithMain)
+                        {
+                            WeekReportMain main = mainList.Find(a => a.WRMainID.ToString() == s.WorkName);
+                            if (main != null)
+                            {
+                                workName = main.WorkName;
+                            }
+                        }
+                        else
+                        {
+                            workName = s.WorkName;
+                        }
+
+                        sheet.Cells[cursor, 1].Value = s.RptDate;
+                        sheet.Cells[cursor, 2].Value = s.WorkTypeName;
+                        sheet.Cells[cursor, 3].Value = workName;
+                        sheet.Cells[cursor, 4].Value = s.WorkMission;
+                        sheet.Cells[cursor, 5].Value = s.WorkTarget;
+                        sheet.Cells[cursor, 6].Value = s.Person;
+                        sheet.Cells[cursor, 7].Value = s.OutSource;
+                        sheet.Cells[cursor, 8].Value = s.Progress + "%";
+                        sheet.Cells[cursor, 9].Value = s.PlanDeadLine == null ? "" : s.PlanDeadLine.Value.ToString("yyyy/M/d");
+                        sheet.Cells[cursor, 10].Value = s.Remark;
+
+                        // 下移一行
+                        cursor++;
+                    }
+
+                    // 下载
+                    // 文件名中文处理
+                    string targetFileName = HttpUtility.UrlEncode("年度与个人工作周报_" + year + "_" + person);
+
+                    return File(ep.GetAsByteArray(), "application/excel", targetFileName + ".xlsx");
+                }
+            }
+            catch (Exception e1)
+            {
+                return Content("导出失败，错误信息：" + e1.Message);
+            }
+
         }
 
     }

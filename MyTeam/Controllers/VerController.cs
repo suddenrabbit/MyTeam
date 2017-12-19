@@ -40,7 +40,7 @@ namespace MyTeam.Controllers
                     string targetFileName = "年度版本下发记录查询_" + DateTime.Now.ToString("yyyyMMddHHmmss");
 
                     // 需要对list修改以适应Excel模板
-                    List<VerResult> excelList = this.GetExcelList(ls);
+                    List<VerResult> excelList = this.GetExcelList(result);
                     return this.MakeExcel<VerResult>("VerReportT", targetFileName, excelList, 1);
                 }
                 else
@@ -203,28 +203,23 @@ namespace MyTeam.Controllers
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        private List<VerResult> GetExcelList(IQueryable<Ver> list)
+        private List<VerResult> GetExcelList(List<Ver> list)
         {
             List<VerResult> rl = new List<VerResult>();
 
             List<RetailSystem> rs = GetNormalSysList();
-            string sysNO = "";
+            
 
             foreach (Ver s in list)
             {
-                foreach (RetailSystem r in rs)
-                {
-                    if (s.SysID == r.SysID)
-                    {
-                        s.SysName = r.SysName;
-                        sysNO = r.SysNO;
-                    }
-                }
+                var sys = rs.Where(p => p.SysID == s.SysID).FirstOrDefault();
+                var sysNO = sys == null ? "未知" : sys.SysNO;
+                var sysName = sys == null ? "未知" : sys.SysName;
 
                 VerResult VerExcel = new VerResult()
                 {
                     SysNO = sysNO,
-                    SysName = s.SysName,
+                    SysName = sysName,
                     ReleaseFreq = s.ReleaseFreq,
                     PublishTime = s.PublishTime,
                     VerNo = s.VerNo

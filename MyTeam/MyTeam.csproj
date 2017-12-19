@@ -324,6 +324,7 @@
     <Content Include="fonts\Roboto-Bold.ttf" />
     <Content Include="fonts\Roboto-Regular.ttf" />
     <Content Include="Content\templates\OTReportT.xlsx" />
+    <Content Include="Content\templates\WeekReportByYearT.xlsx" />
     <None Include="Properties\PublishProfiles\MZ.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -480,6 +481,7 @@
     <Content Include="Views\OTManage\Index.cshtml" />
     <Content Include="Views\OTManage\SumUp.cshtml" />
     <Content Include="Views\Attendance\Index.cshtml" />
+    <Content Include="Views\WeekReport\ExportByYear.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
