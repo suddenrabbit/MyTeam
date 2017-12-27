@@ -33,7 +33,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.RptDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-5">
-                    @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control", @minlength="6" })
                     @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
                 </div>
                 <div class="col-md-3">

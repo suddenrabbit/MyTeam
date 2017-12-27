@@ -18,6 +18,13 @@
 </script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 
+<script>
+    // 日期控件
+    $(document).ready(function () {
+        $("#OTDate").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M' })", placeholder: "点击选择日期" });
+    });
+</script>
+
 <div class="row">
     <div class="col-md-12">
         <div id="info"></div>
@@ -32,7 +39,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.OTDate, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    @Html.EditorFor(model => model.OTDate, "DateTime")
+                    @Html.TextBoxFor(model => model.OTDate)
                     @Html.ValidationMessageFor(model => model.OTDate, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -47,10 +54,8 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.OTHours, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
-                    <select id="OTHours" name="OTHours" class="form-control">
-                        <option value="1">1</option>
-                        <option value="0.5">0.5</option>
-                    </select>
+                    @Html.TextBoxFor(model => model.OTHours, new { @class = "form-control", @type = "number", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.OTHours, "", new { @class = "text-danger" })
                 </div>
             </div>
 

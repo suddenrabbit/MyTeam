@@ -53,11 +53,12 @@ namespace MyTeam.Controllers
         // 根据加班小时计算加班抵扣天数，满4小时为半天
         private double calOtAsDays(double otHours)
         {
-            while(otHours % 4 > 0)
+            int otHoursInt = (int)otHours;
+            while(otHoursInt % 4 > 0)
             {
-                otHours--;
+                otHoursInt--;
             }
-            return otHours / 4 * 0.5;
+            return otHoursInt / 4 * 0.5;
         }
     }
 }

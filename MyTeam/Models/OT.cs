@@ -35,6 +35,17 @@ namespace MyTeam.Models
             }
         } //用于显示UID对应的名字
 
-       
+        [NotMapped]
+        public string OTDateString
+        {
+            get
+            {
+                return OTDate.ToString("yyyy/MM");
+            }
+            set
+            {
+                OTDateString = value;
+            }
+        }
     }
 }
