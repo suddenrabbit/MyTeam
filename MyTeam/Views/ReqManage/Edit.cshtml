@@ -18,7 +18,7 @@
             $('#editForm').hide()
     }
 
-    function onClickUpdateMain() {        
+    function onClickUpdateMain() {
         if ($('#isUpdateMain').prop('checked')) {
             $("[id^=reqMain_]").removeAttr("disabled");
             $("#sysIdSelect").removeAttr("disabled");
@@ -27,7 +27,7 @@
             $("#reqMain_AcptDate").attr("class", "form-control  Wdate datepicker");
             $("#reqMain_DevAcptDate").attr("class", "form-control  Wdate datepicker");
             $("#reqMain_DevEvalDate").attr("class", "form-control  Wdate datepicker");
-            
+
         } else {
             $("#reqMain_AcptDate").attr("class", "form-control");
             $("#reqMain_DevAcptDate").attr("class", "form-control");
@@ -35,7 +35,7 @@
 
             $("[id^=reqMain_]").attr("disabled", "disabled");
             $("#sysIdSelect").attr("disabled", "disabled");
-            $("#ReqFromDeptList").attr("disabled", "disabled");  
+            $("#ReqFromDeptList").attr("disabled", "disabled");
 
         }
     }
@@ -46,14 +46,14 @@
     <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("Edit", "ReqManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                                new { @class = "form-horizontal", role = "form", id = "editForm" }))
+                                    new { @class = "form-horizontal", role = "form", id = "editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <fieldset>
                 <legend>需求申请信息</legend>
-                <p class="text-warning"><b>注意：</b>此部分信息修改会影响到所有隶属于本申请编号的需求，请勾选后修改：@Html.CheckBoxFor(model => model.isUpdateMain, new {@onclick="onClickUpdateMain()"})</p>
+                <p class="text-warning"><b>注意：</b>此部分信息修改会影响到所有隶属于本申请编号的需求，请勾选后修改：@Html.CheckBoxFor(model => model.isUpdateMain, new { @onclick = "onClickUpdateMain()" })</p>
                 @Html.HiddenFor(model => model.reqMain.ReqMainID)
                 @Html.HiddenFor(model => model.reqMain.OldReqNo)
 
@@ -62,7 +62,7 @@
                     @Html.LabelFor(model => model.reqMain.SysID, new { @class = "col-md-3 control-label" })
                     <div class="col-md-9">
                         @Html.HiddenFor(model => model.reqMain.SysID)
-                        @Html.DropDownList("sysIdSelect",ViewBag.SysList as SelectList, new { @class = "form-control", @onchange="$('#reqMain_SysID').val($(this).val())" })
+                        @Html.DropDownList("sysIdSelect", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "$('#reqMain_SysID').val($(this).val())" })
                     </div>
                 </div>
 
@@ -159,6 +159,10 @@
                 @Html.HiddenFor(model => model.reqDetail.OldReqDetailNo)
                 @Html.HiddenFor(model => model.reqDetail.CreateTime)
                 @Html.HiddenFor(model => model.reqDetail.ReqMainID)
+                @Html.HiddenFor(model => model.reqDetail.ReqReleaseID)
+                @Html.HiddenFor(model => model.reqDetail.SecondReqReleaseID)
+                @Html.HiddenFor(model => model.reqDetail.PlanReleaseDate)
+                @Html.HiddenFor(model => model.reqDetail.ReleaseDate)
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.reqDetail.ReqDetailNo, new { @class = "col-md-3 control-label" })
@@ -215,7 +219,7 @@
                         @Html.EditorFor(model => model.reqDetail.OutDate, "DateTime")
                         @Html.ValidationMessageFor(model => model.reqDetail.OutDate, "", new { @class = "text-danger" })
                     </div>
-                </div>                
+                </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.reqDetail.Remark, new { @class = "col-md-3 control-label" })
@@ -223,7 +227,7 @@
                         @Html.TextAreaFor(model => model.reqDetail.Remark, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.reqDetail.Remark, "", new { @class = "text-danger" })
                     </div>
-                </div>                
+                </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.reqDetail.IsSysAsso, new { @class = "col-md-3 control-label" })
@@ -259,10 +263,6 @@
                 <p class="text-info"><b>提示：</b>下发通知编号、计划下发日期、实际下发日期的信息在<a href="/ReleaseManage/Index">下发通知管理</a>中修改！</p>
             </fieldset>
 
-
-            @Html.HiddenFor(model => model.reqDetail.ReqReleaseID)
-            @Html.HiddenFor(model => model.reqDetail.SecondReqReleaseID)
-            
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                     <input type="submit" value="保存" class="btn btn-primary" />
