@@ -134,8 +134,9 @@ namespace MyTeam.Controllers
                     {
                         reqStat = (int)ReqStatEnums.出池;
                     }
-                    var sql = string.Format("Update ReqDetails set ReqStat = {0}, PlanReleaseDate='{1}', ReleaseDate='{2}' where ReqReleaseID = {3}", reqStat, reqRelease.PlanReleaseDate, reqRelease.ReleaseDate, reqRelease.ReqReleaseID);
-                    int num = dbContext.Database.ExecuteSqlCommand(sql);
+
+                    var sql = "Update ReqDetails set ReqStat = @p0, PlanReleaseDate=@p1, ReleaseDate=@p2 where ReqReleaseID=@p3";
+                    int num = dbContext.Database.ExecuteSqlCommand(sql, reqStat, reqRelease.PlanReleaseDate, reqRelease.ReleaseDate, reqRelease.ReqReleaseID);
                     msg += "<p class='alert alert-info'>同时已更新" + num + "条相关维护需求的状态为【" + Enum.GetName(typeof(ReqStatEnums), reqStat) + "】，计划下发日期和实际下发日期也已同步更新入维护需求信息</p>";
                 }
 
