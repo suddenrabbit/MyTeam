@@ -22,6 +22,11 @@ namespace MyTeam.Models
         [Display(Name = "加班小时数")]
         public double OTHours { get; set; }
 
+        [Display(Name = "备注")]
+        public string Remark { get; set; }
+
+        public bool IsReserved { get; set; } // 请假抵扣产生的记录则为true，不允许编辑或删除
+
         [NotMapped]
         public string PersonName
         {
@@ -35,7 +40,7 @@ namespace MyTeam.Models
             }
         } //用于显示UID对应的名字
 
-        [NotMapped]
+        /*[NotMapped]
         public string OTDateString
         {
             get
@@ -46,6 +51,6 @@ namespace MyTeam.Models
             {
                 OTDateString = value;
             }
-        }
+        }*/
     }
 }

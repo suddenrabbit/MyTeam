@@ -22,6 +22,9 @@ namespace MyTeam.Models
         [Display(Name = "请假天数")]
         public double LeaveDays { get; set; }
 
+        [Display(Name = "已抵扣")] //仅半天可以抵扣
+        public bool IsDeducted { get; set; }
+
         [NotMapped]
         public string PersonName
         {

@@ -49,12 +49,8 @@ namespace MyTeam.Controllers
         {
             try
             {
-                // 若请假天数大于1，则批量处理
-                var hours = ot.OTHours;
-                
-                dbContext.OTs.Add(ot);                    
-                
-
+                ot.IsReserved = false;
+                dbContext.OTs.Add(ot); 
                 dbContext.SaveChanges();
 
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
@@ -91,10 +87,28 @@ namespace MyTeam.Controllers
         // POST: /OTManage/Edit/5
 
         [HttpPost]
-        public string Edit(OT ot)
+        public string Edit(OT ot, double OldOtHours)
         {
             try
             {
+                if(ot.OTHours != OldOtHours)
+                {
+                    // 需要判断修改后，加班时间是否能够满足抵扣条件
+                    var leaveList = dbContext.Leaves.Where(p => p.PersonID == ot.PersonID && p.IsDeducted == true);
+                    var deductedHours = leaveList.Count() * 4;
+
+                    var otList = dbContext.OTs.Where(p => p.PersonID == ot.PersonID && p.OTID != ot.OTID);
+                    var otHoursSum = 0.0;
+                    if (otList != null && otList.Count() >= 1)
+                    {
+                        otHoursSum = otList.Sum(p => p.OTHours);
+                    }
+                    if (otHoursSum + ot.OTHours < deductedHours)
+                    {
+                        throw new Exception("修改后加班时间不足以满足现有的请假抵扣");
+                    }
+                }               
+
                 dbContext.Entry(ot).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 
@@ -113,15 +127,31 @@ namespace MyTeam.Controllers
         {
             try
             {
-                OT sys = dbContext.OTs.ToList().Find(a => a.OTID == id);
-                dbContext.Entry(sys).State = System.Data.Entity.EntityState.Deleted;
+                OT ot = dbContext.OTs.ToList().Find(a => a.OTID == id);
+
+                // 需要判断删除后，加班时间是否能够满足抵扣条件
+                var leaveList = dbContext.Leaves.Where(p => p.PersonID == ot.PersonID && p.IsDeducted == true);
+                var deductedHours = leaveList.Count() * 4;
+
+                var otList = dbContext.OTs.Where(p => p.PersonID == ot.PersonID && p.OTID != ot.OTID);
+                var otHoursSum = 0.0;
+                if (otList != null && otList.Count() >= 1)
+                {
+                    otHoursSum = otList.Sum(p => p.OTHours);
+                }
+                if (otHoursSum < deductedHours)
+                {
+                    throw new Exception("删除后加班时间不足以满足现有的请假抵扣");
+                }
+                
+                dbContext.Entry(ot).State = System.Data.Entity.EntityState.Deleted;
                 dbContext.SaveChanges();
 
-                return "删除成功";
+                return "<p class='alert alert-success'>删除成功</p>";
             }
             catch (Exception e1)
             {
-                return "出错了: " + e1.Message;
+                return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
             }
         }
 

@@ -43,7 +43,7 @@ namespace MyTeam.Models
         [Display(Name = "需求数量")]
         public int ReqAmt { get; set; }
 
-        public string[] ReqDescs { get; set; } 
+        public string ReqDescs { get; set; } 
     }
 
     /*public class DetailRegReq

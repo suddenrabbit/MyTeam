@@ -88,10 +88,13 @@ namespace MyTeam.Controllers
             string r = ""; //记录处理结果
             try
             {
+                // 2018年1月22日：ReqDescs按照换行自动生成需求
+                var reqSplits = regReq.ReqDescs.Split(Environment.NewLine.ToCharArray());
+
                 // 把需求概述为空的剔除
                 List<string> reqDescList = new List<string>(); ;
                 var reqAmt = 0;
-                foreach (var s in regReq.ReqDescs)
+                foreach (var s in reqSplits)
                 {
                     if (!string.IsNullOrEmpty(s))
                     {
@@ -103,7 +106,7 @@ namespace MyTeam.Controllers
                 // 需求申请数量不能为0
                 if (reqAmt < 1)
                 {
-                    throw new Exception(string.Format("需求数量不能小于1！"));
+                    throw new Exception("需求数量不能小于1！");
                 }
 
                 var reqDescs = reqDescList.ToArray();

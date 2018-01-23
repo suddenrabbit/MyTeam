@@ -110,12 +110,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.OTHours)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remark)
+            </th>
         </tr>
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @if (ViewBag.CanEdit)
+                    @if (ViewBag.CanEdit && !item.IsReserved)
                     {
                         <span>
                             <a href="###" onclick="doEdit('@item.OTID','@item.PersonName')">编辑</a>
@@ -124,11 +127,11 @@
                     }
                     else
                     {
-                        <span class="text-info">不可编辑</span>
+                        <span>不可编辑</span>
                     }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OTDateString)
+                    @Html.DisplayFor(modelItem => item.OTDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PersonName)
@@ -136,12 +139,15 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.OTHours)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remark)
+                </td>
             </tr>
         }
     </table>
     <!--分页-->
     @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.OT>,
-    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+        generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
 </div>
 
 <!-- 对话框1：确认删除 -->

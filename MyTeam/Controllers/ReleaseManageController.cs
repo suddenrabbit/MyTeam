@@ -231,8 +231,8 @@ namespace MyTeam.Controllers
         {
             try
             {
-                var sql = string.Format("update ReqDetails set {0}=0, PlanReleaseDate='', ReleaseDate='', UpdateTime=@p0 where ReqDetailID=@p1", isSideRelease ? "SecondReqReleaseID" : "ReqReleaseID");
-                int num = dbContext.Database.ExecuteSqlCommand(sql, DateTime.Now, id);
+                var sql = string.Format("update ReqDetails set {0}=0, Version='', ReqStat=@p2, PlanReleaseDate=NULL, ReleaseDate=NULL, UpdateTime=@p0 where ReqDetailID=@p1", isSideRelease ? "SecondReqReleaseID" : "ReqReleaseID");
+                int num = dbContext.Database.ExecuteSqlCommand(sql, DateTime.Now, id, (int)ReqStatEnums.入池);
                 if (num != 1)
                 {
                     throw new Exception("操作失败！");
