@@ -1,9 +1,5 @@
 ﻿using MyTeam.Models;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using MyTeam.Utils;
 using System.Web.Mvc;
 
 namespace MyTeam.Controllers
@@ -27,7 +23,8 @@ namespace MyTeam.Controllers
             User u = new User()
             {
                 Username = "Admin",
-                Password = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("123456", "MD5"),
+                //Password = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("123456", "MD5"),
+                Password = FormsAuthenticationHelper.HashPasswordForStoringInConfigFile("123456", "MD5"),
                 UserType = 9,
                 Realname = "管理员",
                 Phone = "000000",

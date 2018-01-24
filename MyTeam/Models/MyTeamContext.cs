@@ -65,6 +65,8 @@
 
         public DbSet<Leave> Leaves { get; set; }
         public DbSet<OT> OTs { get; set; }
+
+        public DbSet<MyFile> MyFiles { get; set; }
     }
    
 }

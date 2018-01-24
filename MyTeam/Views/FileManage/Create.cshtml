@@ -1,0 +1,69 @@
+﻿@{
+    Layout = null;
+}
+@model MyTeam.Models.MyFile
+<script>
+    function doSubmit() {
+        if ($("#file").val() == "") {
+            alert("请选择文件！");
+            return;
+        }
+        var maxSize = 10 * 1024;
+        var fileSize = $('#file')[0].files[0].size;
+        if (maxSize < fileSize / 1024) {
+            alert("上传文件不能超过10M！");
+            return;
+        }
+
+        var fd = new FormData();
+        var name = $("#file").val();
+        fd.append("file", $('#file')[0].files[0]);
+        fd.append("name", name);
+        $.ajax({
+            url: "/FileManage/Create",
+            type: "POST",
+            data: fd,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $('#info').html("<p class='alert alert-info'>正在上传文件...</p>");
+            },
+            //success: hideForm(),
+            success: function (msg) {
+                $("#info").html(msg);
+            },
+            error: function () {
+                $('#info').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                if ($('#info > p').attr('class') == 'alert alert-success') {
+                    $("#editForm").hide();
+                }                    
+            }
+            
+        });
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="info"></div>
+        <div class="form-horizontal" id="editForm">
+            <div class="form-group">
+                <label class="col-md-3 control-label">上传文件</label>
+                <div class="col-md-9">
+                    <input type="file" class="form-control" name="file" id="file" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="button" value="上传" class="btn btn-primary" onclick="doSubmit()" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

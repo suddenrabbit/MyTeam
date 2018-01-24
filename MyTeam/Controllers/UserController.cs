@@ -32,7 +32,8 @@ namespace MyTeam.Controllers
             try
             {
                 // Password要MD5加密
-                password = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "MD5");
+                //password = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "MD5");
+                password = FormsAuthenticationHelper.HashPasswordForStoringInConfigFile(password, "MD5");
                 // 检测登录信息
                 // 根据用户名、密码获取User信息
                 User user = this.GetUserList().Find(a => a.Username == username && a.Password == password);
@@ -93,7 +94,8 @@ namespace MyTeam.Controllers
         {
             User user = this.GetSessionCurrentUser();
 
-            user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(changePsw.NewPsw, "MD5");
+            //user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(changePsw.NewPsw, "MD5");
+            user.Password = FormsAuthenticationHelper.HashPasswordForStoringInConfigFile(changePsw.NewPsw, "MD5");
             dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
             dbContext.SaveChanges();
 
@@ -135,7 +137,8 @@ namespace MyTeam.Controllers
             try
             {
                 // Password要MD5加密
-                user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "MD5");
+                // user.Password = FormsAuthentication.HashPasswordForStoringInConfigFile(user.Password, "MD5");
+                user.Password = FormsAuthenticationHelper.HashPasswordForStoringInConfigFile(user.Password, "MD5");
                 // 检验是否已经存在该用户
                 var ls = this.GetUserList().Where(a => a.Username == user.Username);
                 if (ls.Count() > 0)
