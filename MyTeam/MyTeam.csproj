@@ -487,9 +487,8 @@
     <Content Include="Views\Attendance\Index.cshtml" />
     <Content Include="Views\WeekReport\ExportByYear.cshtml" />
     <Content Include="Views\FileManage\Create.cshtml" />
-    <Content Include="Views\FileManage\Edit.cshtml" />
     <Content Include="Views\FileManage\Index.cshtml" />
-    <Content Include="Views\FileManage\SumUp.cshtml" />
+    <Content Include="Views\FileManage\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

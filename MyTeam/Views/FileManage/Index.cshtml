@@ -15,6 +15,10 @@
 
     function realDelete() {
         var id = $('#toDelId').val();
+
+        $('#procResult').html("载入中...");
+        $('#myModal2').modal({ backdrop: 'static' });
+
         var url = "/FileManage/Delete/" + id;
         $.ajax({
             type: 'POST',
@@ -25,9 +29,6 @@
             },
             error: function () {
                 $('#procResult').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal2').modal({ backdrop: 'static' });
             }
         });
     }
@@ -97,9 +98,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.CreateTime)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdateTime)
-            </th>
+            
         </tr>
         @foreach (var item in Model)
         {
@@ -107,12 +106,14 @@
                 <td>
                     @if (ViewBag.IsAdmin || ViewBag.CurrentID == item.PersonID)
                     {
-                        <span>
-                            <a href="###" onclick="doEdit('@item.FileID','@item.FileName')">编辑</a>
-                            | <a href="###" onclick="doDelete('@item.FileID','@item.FileName')">删除</a> |
-                        </span>
+                    <span>
+                        <!--<a href="###" onclick="doEdit('@item.FileID', '更新文件')">更新文件</a>
+        | <a href="###" onclick="doRename('@item.FileID')">修改文件名</a> -->
+                        <a href="###" onclick="doDelete('@item.FileID','@item.FileName')">删除</a> |
+                        
+                    </span>
                     }
-                    <a href="###">下载</a>
+                    @Html.ActionLink("下载", "Download", new {id = item.FileID })
 
                 </td>
                 <td>
@@ -122,7 +123,7 @@
                     @Html.DisplayFor(modelItem => item.FileType)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FileSize)
+                    @Html.DisplayFor(modelItem => item.FriendlyFileSize)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PersonName)
@@ -133,9 +134,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CreateTime)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateTime)
-                </td>
+                
             </tr>
         }
     </table>
@@ -143,7 +142,7 @@
     @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.MyFile>,
                             generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
     
-    <p class="well well-sm">TIPS: 只能编辑或删除自己上传的文件</p>
+    <p class="well well-sm">TIPS: 只能删除自己上传的文件</p>
 </div>
 
 <!-- 对话框1：确认删除 -->
@@ -208,7 +207,7 @@
                     &times;
                 </button>
                 <h4 class="modal-title" id="myModalLabel">
-                    【<span id="editName"></span>】编辑
+                    <span id="editName"></span>
                 </h4>
             </div>
             <div class="modal-body">

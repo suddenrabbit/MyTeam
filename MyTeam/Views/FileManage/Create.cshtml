@@ -33,7 +33,7 @@
                 $("#info").html(msg);
             },
             error: function () {
-                $('#info').html("处理失败，请联系管理员");
+                $('#info').html("<p class='alert alert-danger'>处理失败，请联系管理员</p>");
             },
             complete: function () {
                 if ($('#info > p').attr('class') == 'alert alert-success') {

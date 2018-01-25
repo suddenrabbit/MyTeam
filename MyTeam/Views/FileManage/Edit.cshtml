@@ -1,80 +1,86 @@
 ﻿@{
     Layout = null;
 }
-@model MyTeam.Models.OT
-@if (Model == null)
+@model MyTeam.Models.MyFile
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrMsg))
 {
-    <div class="alert alert-warning">无此记录</div>
-    <button type="button" class="btn btn-default" data-dismiss="modal">
-        关闭
-    </button>
+    <p class="alert alert-danger">@ViewBag.ErrMsg</p>
     return;
 }
+
 <script>
-    function hideForm() {
-        if ($('#info > p').attr('class') == 'alert alert-success')
-            $('#editForm').hide()
+    function doSubmit() {
+        if ($("#file").val() == "") {
+            alert("请选择文件！");
+            return;
+        }
+        var maxSize = 10 * 1024;
+        var fileSize = $('#file')[0].files[0].size;
+        if (maxSize < fileSize / 1024) {
+            alert("上传文件不能超过10M！");
+            return;
+        }
+
+        var fd = new FormData();
+        var name = $("#file").val();
+        fd.append("file", $('#file')[0].files[0]);
+        fd.append("name", name);
+        $.ajax({
+            url: "/FileManage/Edit?id=" + $('#id').val() + "&keepFileName=" + $('#keepFileName').val(),
+            type: "POST",
+            data: fd,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $('#info').html("<p class='alert alert-info'>正在上传文件...</p>");
+            },
+            //success: hideForm(),
+            success: function (msg) {
+                $("#info").html(msg);
+            },
+            error: function () {
+                $('#info').html("<p class='alert alert-danger'>处理失败，请联系管理员</p>");
+            },
+            complete: function () {
+                if ($('#info > p').attr('class') == 'alert alert-success') {
+                    $("#editForm").hide();
+                }
+            }
+
+        });
     }
 </script>
-<script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 
 <div class="row">
     <div class="col-md-12">
         <div id="info"></div>
-        @using (Ajax.BeginForm("Edit", "OTManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-        new { @class = "form-horizontal", role = "form", id = "editForm" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-horizontal" id="editForm">
+            <div class="form-group">
+                <label class="col-md-3 control-label">上传文件</label>
+                <div class="col-md-9">
+                    <input type="file" class="form-control" name="file" id="file" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">是否自动更新文件名</label>
+                <div class="col-md-9">
+                    <select id="keepFileName" class="form-control">
+                        <option value="true" selected="selected">否</option>
+                        <option value="false">是</option>
+                    </select>
+                    <input type="hidden" id="id" value="@ViewBag.FileID" />
+                </div>
+            </div>
 
-        @Html.HiddenFor(model => model.OTID);
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.OTDate, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.EditorFor(model => model.OTDate, "DateTime")
-            @Html.ValidationMessageFor(model => model.OTDate, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="button" value="上传" class="btn btn-primary" onclick="doSubmit()" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.PersonID, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.DropDownListFor(model => model.PersonID, ViewBag.PersonList as SelectList, new { @class = "form-control" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.OTHours, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.TextBoxFor(model => model.OTHours, new { @class = "form-control", @type = "number", @required = "required" })
-            @Html.ValidationMessageFor(model => model.OTHours, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
-        <div class="col-md-9">
-            @Html.TextBoxFor(model => model.Remark, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Remark, "", new { @class = "text-danger" })
-
-        </div>
-    </div>
-
-    <input type="hidden" name="OldOTHours" value="@Model.OTHours" />
-    <input type="hidden" name="IsReserved" value="@Model.IsReserved" />
-
-    <div class="form-group">
-        <div class="col-md-offset-3 col-md-9">
-            <input type="submit" value="保存" class="btn btn-primary" />
-            <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
-        </div>
-    </div>
-}
     </div>
 </div>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script>
-    $('#OTHours').val('@Model.OTHours');
-</script>

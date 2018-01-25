@@ -1342,7 +1342,7 @@ namespace MyTeam.Controllers
             }
             catch (Exception e1)
             {
-                return e1.ToString();
+                return e1.Message;
             }
             return "success";
         }

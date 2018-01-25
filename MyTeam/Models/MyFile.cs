@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyTeam.Models
 {
-    // 外协人员考勤（加班）情况
+    // 文档库
     public class MyFile
     {
         [Key]
@@ -50,6 +50,24 @@ namespace MyTeam.Models
             {
                 this.PersonName = value;
             }
-        } //用于显示UID对应的名字        
+        } //用于显示UID对应的名字 
+
+        [NotMapped]
+        public string FriendlyFileSize // 文件大小处理
+        {
+            get
+            {
+                if (FileSize < 1024)
+                    return FileSize + " B";
+                if (FileSize >= 1024 && FileSize < 1024 * 1024)
+                    return (FileSize / 1024.00).ToString("f2") + " KB";
+                else
+                    return (FileSize / 1024.00 / 1024.00).ToString("f2") + " MB";
+            }
+            set
+            {
+                this.FriendlyFileSize = value;
+            }
+        }
     }
 }

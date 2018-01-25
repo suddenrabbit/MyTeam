@@ -82,10 +82,10 @@ footer {
 }
 
 .homeNum {
-    /*font-weight: bold;*/
+    font-weight: bold;
     font-size: 4em;
     text-align: right;
-    font-family:"Arial Black", "Helvetica Neue", arial, sans-serif;
+    font-family: "Helvetica Neue", "Segoe Script", Arial, sans-serif;
 }
 
 
