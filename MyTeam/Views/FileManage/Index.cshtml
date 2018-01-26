@@ -1,0 +1,238 @@
+﻿@using PagedList.Mvc
+@model IEnumerable<MyTeam.Models.MyFile>
+@{
+    ViewBag.Title = "文档库";
+}
+<h2>@ViewBag.Title</h2>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+<script>
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal({ backdrop: 'static' });
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+
+        $('#procResult').html("载入中...");
+        $('#myModal2').modal({ backdrop: 'static' });
+
+        var url = "/FileManage/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            }
+        });
+    }
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        $('#EditMain').html("载入中...");
+        $('#myModal3').modal({ backdrop: 'static' });
+        var url = "/FileManage/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            }
+        });
+    }
+
+    // 在modal中新增
+    function doCreate() {
+        var url = "/FileManage/Create/";
+        $('#CreateMain').html("载入中...");
+        $('#myModal4').modal({ backdrop: 'static' });
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateMain').html(msg);
+            },
+            error: function () {
+                $('#CreateMain').html("处理失败，请联系管理员");
+            }
+        });
+    }
+
+
+</script>
+
+<div class="row card">
+    <p>
+        <button onclick="doCreate()" class="btn btn-primary">上传新文件</button>
+    </p>
+
+
+    <table class="table table-condensed table-bordered" style="font-size:12px;table-layout:fixed">
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PersonID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DownloadTimes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateTime)
+            </th>
+            
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (ViewBag.IsAdmin || ViewBag.CurrentID == item.PersonID)
+                    {
+                    <span>
+                        <!--<a href="###" onclick="doEdit('@item.FileID', '更新文件')">更新文件</a>
+        | <a href="###" onclick="doRename('@item.FileID')">修改文件名</a> -->
+                        <a href="###" onclick="doDelete('@item.FileID','@item.FileName')">删除</a> |
+                        
+                    </span>
+                    }
+                    @Html.ActionLink("下载", "Download", new {id = item.FileID })
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FriendlyFileSize)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PersonName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DownloadTimes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateTime)
+                </td>
+                
+            </tr>
+        }
+    </table>
+    <!--分页-->
+    @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.MyFile>,
+                            generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+    
+    <p class="well well-sm">TIPS: 只能删除自己上传的文件</p>
+</div>
+
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 对话框3：编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <span id="editName"></span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    上传新文件
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="CreateMain"></div>
+            </div>
+        </div>
+    </div>
+</div>

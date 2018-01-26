@@ -10,7 +10,7 @@ html {
 }
 body {
   margin: 0;
-  font-family:  -apple-system, arial, "Microsoft YaHei", simsun, sans-serif;
+  font-family:  -apple-system, BlinkMacSystemFont, Arial, "Microsoft YaHei", SimSun, sans-serif;
 }
 article,
 aside,

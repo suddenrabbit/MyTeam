@@ -147,6 +147,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AttendanceController.cs" />
+    <Compile Include="Controllers\FileManageController.cs" />
     <Compile Include="Controllers\OTManageController.cs" />
     <Compile Include="Controllers\LeaveManageController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -176,6 +177,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceView\AttendanceSumUp.cs" />
+    <Compile Include="Models\MyFile.cs" />
     <Compile Include="Models\OTView\OTResult.cs" />
     <Compile Include="Models\OTView\OTSumUp.cs" />
     <Compile Include="Models\OT.cs" />
@@ -236,6 +238,8 @@
     <Compile Include="Models\YearMission.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\FormsAuthenticationHelper.cs" />
+    <Compile Include="Utils\HashHelper.cs" />
     <Compile Include="Utils\MyTools.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -482,6 +486,9 @@
     <Content Include="Views\OTManage\SumUp.cshtml" />
     <Content Include="Views\Attendance\Index.cshtml" />
     <Content Include="Views\WeekReport\ExportByYear.cshtml" />
+    <Content Include="Views\FileManage\Create.cshtml" />
+    <Content Include="Views\FileManage\Index.cshtml" />
+    <Content Include="Views\FileManage\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
