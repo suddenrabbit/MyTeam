@@ -1,9 +1,11 @@
 ﻿@model MyTeam.Models.InPoolReq
 @{
+    /**/
+
     Layout = null;
 }
 
-@if(Model.ReqDetails.Count() < 1)
+@if (Model.ReqDetails.Count() < 1)
 {
     <p class="alert alert-danger">没有获取到相关需求信息，无法进行入池！</p>
     return;
@@ -29,7 +31,7 @@
                 <td>@Html.LabelFor(model => model.ReqMain.ReqNo, new { @class = "control-label" })</td>
                 <td>
                     @Html.HiddenFor(model => model.ReqMain.OldReqNo)
-                    @Html.TextBoxFor(model => model.ReqMain.ReqNo, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.ReqMain.ReqNo, new { @class = "form-control", @required = "required" })
                     @Html.ValidationMessageFor(model => model.ReqMain.ReqNo, "", new { @class = "text-danger" })
                 </td>
 
@@ -39,13 +41,15 @@
 
                 <td>@Html.LabelFor(model => model.ReqMain.DevAcptDate, new { @class = "control-label" })</td>
                 <td>
-                    @Html.EditorFor(model => model.ReqMain.DevAcptDate, "DateTime")
+                    <!--Html.EditorFor(model => model.ReqMain.DevAcptDate, "DateTime")-->
+                    @Html.TextBoxFor(model => model.ReqMain.DevAcptDate, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })", @required = "required" })
                     @Html.ValidationMessageFor(model => model.ReqMain.DevAcptDate, "", new { @class = "text-danger" })
                 </td>
 
                 <td>@Html.LabelFor(model => model.ReqMain.DevEvalDate, new { @class = "control-label" })</td>
                 <td>
-                    @Html.EditorFor(model => model.ReqMain.DevEvalDate, "DateTime")
+                    <!--Html.EditorFor(model => model.ReqMain.DevEvalDate, "DateTime")-->
+                    @Html.TextBoxFor(model => model.ReqMain.DevEvalDate, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })", @required = "required" })
                     @Html.ValidationMessageFor(model => model.ReqMain.DevEvalDate, "", new { @class = "text-danger" })
                 </td>
             </tr>
@@ -53,14 +57,14 @@
             <tr>
                 <td>@Html.LabelFor(model => model.ReqMain.ReqDevPerson, new { @class = "control-label" })</td>
                 <td>
-                    @Html.TextBoxFor(model => model.ReqMain.ReqDevPerson, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.ReqMain.ReqDevPerson, new { @class = "form-control", @required = "required" })
                     @Html.ValidationMessageFor(model => model.ReqMain.ReqDevPerson, "", new { @class = "text-danger" })
                 </td>
             </tr>
 
 
         </table>
-        @Html.HiddenFor(model=>model.ReqMain.ReqMainID)
+        @Html.HiddenFor(model => model.ReqMain.ReqMainID)
         <hr />
         <!-- detail part -->
         <table class="table table-condensed query-table">
@@ -69,28 +73,34 @@
                     @Html.DisplayNameFor(model => model.ReqDetails[0].ReqDetailNo)
                 </th>
 
-                <th width="50%">
+                <th width="30%">
                     @Html.DisplayNameFor(model => model.ReqDetails[0].ReqDesc)
                 </th>
 
                 <th width="10%">
                     @Html.DisplayNameFor(model => model.ReqDetails[0].DevWorkload)
                 </th>
-                <th width="20%">
+                <th width="8%">
                     @Html.DisplayNameFor(model => model.ReqDetails[0].ReqStat)
+                </th>
+                <th width="14%">
+                    @Html.DisplayNameFor(model => model.ReqDetails[0].AssoSysName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReqDetails[0].AssoReqNo)
                 </th>
             </tr>
 
 
             @for (int i = 0; i < Model.ReqDetails.Count(); i++)
-                {
+            {
                 <tr>
                     <td>
                         @Html.HiddenFor(model => model.ReqDetails[i].ReqDetailID)
-                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDetailNo, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important", @required= "required" })
+                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDetailNo, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important", @required = "required" })
                     </td>
                     <td>
-                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDesc, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important", @readonly="readonly" })
+                        @Html.TextBoxFor(model => model.ReqDetails[i].ReqDesc, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important", @readonly = "readonly" })
                     </td>
                     <td>
                         @Html.TextBoxFor(model => model.ReqDetails[i].DevWorkload, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })
@@ -98,16 +108,85 @@
                     <td>
                         @Html.DropDownListFor(model => model.ReqDetails[i].ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
                     </td>
+                    <td>
+                        @{ var assoSysID = "assoSysName" + i;}
+                        @Html.TextBoxFor(model => model.ReqDetails[i].AssoSysName, new { @id = assoSysID, @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })
+                    </td>
+                    <td>
+                        @{ var s = "getReqsToAsso('" + i + "')"; var assoReqNoID = "assoReqNo" + i;}
+                        @Html.TextBoxFor(model => model.ReqDetails[i].AssoReqNo, new { @id = assoReqNoID, @class = "form-control", @style = "margin:0 auto; max-width:100%!important", @ondblclick = s, @placeholder = "双击可选择已入池需求" })
+                    </td>
                 </tr>
             }
 
+            <tr>
+                <td colspan="4"></td>
+                <td colspan="2" class="alert alert-info">
+                    <b>TIPS: </b>双击「关联系统需求编号」输入框可选择团队系统内已入池的需求进行关联（系统会自动填写「关联系统名称」）；若非本团队系统需求，则请直接手动输入
+                </td>
+            </tr>
 
         </table>
 
         <input type="submit" value="提交" class="btn btn-primary" />
+
+        <input type="hidden" id="target" />
+
     </div>
+
+
 }
 
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    function getReqsToAsso(i) {
+        $('#modalTitle').html("关联已入池维护需求");
+        $('#modalBody').html("读取中...");
+        $('#myModal').modal({ backdrop: 'static' });
+
+        $('#target').val(i);
+
+        var url = "/ReqManage/GetReqsToAsso";
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#modalBody').html(msg);
+            },
+            error: function () {
+                $('#modalBody').html("处理失败，请联系管理员");
+            }
+        });
+    }
+
+    function doConfirm(reqNo) {
+        var i = $('#target').val();
+        $('#assoReqNo' + i).val(reqNo);
+        $('#assoSysName' + i).val($('#selectedAssoName').val());
+        $('#myModal').modal('hide');
+    }
+</script>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <span id="modalTitle"></span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="modalBody"></div>
+            </div>
+        </div>
+    </div>
+</div>

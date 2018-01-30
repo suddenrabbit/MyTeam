@@ -84,7 +84,7 @@
             url: '/ReqManage/OutPool',
             data: 'Reqs=' + reqs + "&Version=" + version + "&OutDate=" + outDate + "&PlanReleaseDate=" + planReleaseDate + "&SysID=" + sysID + "&IsPatch=" + isPatch,
             success: function (msg) {
-                $('#OutPoolResult').html(msg + "<div class='alert alert-info'><p><b>温馨提示：</b></p><ul><li>若忘记填写发通知编号，可在【<a href='/ReleaseManage/UpdateReleaseInfo'>更新需求下发信息</a>】中添加。</li><li>若忘记下载出池计划表，可在【<a href='/ReqManage/OutPoolTable'>出池计划报表</a>】功能中下载。</li></ul></div>");
+                $('#OutPoolResult').html(msg + "<div class='alert alert-info'><p><b>温馨提示：</b></p><ul><li>若忘记填写下发通知编号，可在【<a href='/ReleaseManage/UpdateReleaseInfo'>更新需求下发信息</a>】中添加。</li><li>若忘记下载出池计划表，可在【<a href='/ReqManage/OutPoolTable'>出池计划报表</a>】功能中下载。</li></ul></div>");
                 // 自动产生下发说明
                 $('#ReleaseDesc').val(releaseDesc);
                 $('#ReleaseNoDiv').show();

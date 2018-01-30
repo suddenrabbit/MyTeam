@@ -69,7 +69,7 @@ namespace MyTeam.Controllers
             ViewBag.ReqAmtList = new SelectList(reqAmtLs);*/
 
             // 5、需求受理日期自动置为今天
-            regReq.AcptDate = DateTime.Now; 
+            regReq.AcptDate = DateTime.Now;
 
             // 6、预先生成detail部分
             /*regReq.DetailRegReqs = new List<DetailRegReq>();
@@ -102,7 +102,7 @@ namespace MyTeam.Controllers
                         reqAmt++;
                     }
                 }
-                 
+
                 // 需求申请数量不能为0
                 if (reqAmt < 1)
                 {
@@ -141,7 +141,7 @@ namespace MyTeam.Controllers
                     ReqDetail newReq = new ReqDetail()
                     {
                         DevWorkload = 0,
-                        ReqDesc = reqDescs[i],
+                        ReqDesc = reqDescs[i].Trim(),
                         //Remark = regReq.DetailRegReqs[i].Remark,
                         // 状态默认「待评估」
                         ReqStat = (int)ReqStatEnums.待评估,
@@ -222,14 +222,14 @@ namespace MyTeam.Controllers
                 var main = dbContext.ReqMains.Find(inPoolReq.ReqMain.ReqMainID);
 
                 // 判断是否更新需求申请编号与受理日期
-                if (!string.IsNullOrEmpty(inPoolReq.ReqMain.ReqNo) && inPoolReq.ReqMain.OldReqNo!= inPoolReq.ReqMain.ReqNo)
+                if (!string.IsNullOrEmpty(inPoolReq.ReqMain.ReqNo) && inPoolReq.ReqMain.OldReqNo != inPoolReq.ReqMain.ReqNo)
                 {
                     //判断ReqNo是否重复
                     var checkMain = dbContext.ReqMains.Where(p => p.ReqNo == inPoolReq.ReqMain.ReqNo).FirstOrDefault();
                     if (checkMain != null)
                     {
                         throw new Exception(string.Format("需求申请编号{0}已经存在！", inPoolReq.ReqMain.ReqNo));
-                    }                    
+                    }
                 }
 
                 main.ReqNo = inPoolReq.ReqMain.ReqNo;
@@ -239,7 +239,7 @@ namespace MyTeam.Controllers
                 main.DevEvalDate = inPoolReq.ReqMain.DevEvalDate;
 
                 dbContext.Entry(main).State = System.Data.Entity.EntityState.Modified;
-                dbContext.SaveChanges();
+                //dbContext.SaveChanges();
 
                 var reqList = inPoolReq.ReqDetails;
 
@@ -277,6 +277,27 @@ namespace MyTeam.Controllers
                     model.ReqStat = detail.ReqStat;
                     model.DevWorkload = detail.DevWorkload;
 
+                    // 2018年1月26日新增： 增加关联系统需求编号填写                    
+                    if(!string.IsNullOrEmpty(detail.AssoReqNo))
+                    {
+                        model.IsSysAsso = true;
+                        model.AssoReqNo = detail.AssoReqNo;
+                        model.AssoSysName = detail.AssoSysName;
+
+                        if(string.IsNullOrEmpty(detail.AssoSysName))
+                        {
+                            var assoReq = dbContext.ReqDetails.Where(p => p.ReqDetailNo == detail.AssoReqNo).FirstOrDefault();
+
+                            if (assoReq != null)
+                            {
+                                model.AssoSysName = assoReq.ReqMain.SysName;
+                            }
+                            else
+                            {
+                                model.AssoSysName = "未知，请补充";
+                            }
+                        }                       
+                    }                    
 
                     // 更新时间
                     model.UpdateTime = DateTime.Now;
@@ -376,7 +397,7 @@ namespace MyTeam.Controllers
                 if (!IsPatch) // 常规版本
                 {
                     Ver v = dbContext.Vers.Where(p => p.VerID.ToString() == Version).FirstOrDefault();
-                    if(v == null)
+                    if (v == null)
                     {
                         throw new Exception("奇怪，系统找不到相应的版本信息，请与管理员联系！");
                     }
@@ -406,16 +427,53 @@ namespace MyTeam.Controllers
                     dbContext.Vers.Add(v);
                     dbContext.SaveChanges();
                 }
+                
+                var reqDetails = Reqs.Split(',');
+                List<int> reqDetailIDs = new List<int>();
+                foreach(var r in reqDetails)
+                {
+                    reqDetailIDs.Add(int.Parse(r));
+                }
+                var reqList = dbContext.ReqDetails.Where(p => reqDetailIDs.Contains(p.ReqDetailID));
 
-                string sql = string.Format("Update ReqDetails set Version='{0}', OutDate='{1}', ReqStat='{2}', PlanReleaseDate='{3}', UpdateTime='{4}' where ReqDetailID in ({5})",
-                    realVersion, OutDate, (int)ReqStatEnums.出池, PlanReleaseDate, DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), Reqs);
+                var assoInfo = new StringBuilder();
 
-                int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
+                // 2018年1月29日调整： 更新req各类信息，同时检验是否含有关联需求
+                foreach(var r in reqList)
+                {
+                    r.Version = realVersion;
+                    r.OutDate = DateTime.Parse(OutDate);
+                    r.ReqStat = (int)ReqStatEnums.出池;
+                    r.PlanReleaseDate = DateTime.Parse(PlanReleaseDate);
+                    r.UpdateTime = DateTime.Now;
+
+                    dbContext.Entry(r).State = System.Data.Entity.EntityState.Modified;
+
+                    if(r.IsSysAsso)
+                    {
+                        assoInfo.Append(string.Format("<li>{0}： 【{1}】 {2}</li>", r.ReqDetailNo, r.AssoSysName, r.AssoReqNo));
+                    }
+                }
+
+                int updatedNum = dbContext.SaveChanges();
+
+                //string sql = string.Format("Update ReqDetails set Version='{0}', OutDate='{1}', ReqStat='{2}', PlanReleaseDate='{3}', UpdateTime='{4}' where ReqDetailID in ({5})",
+                //    realVersion, OutDate, (int)ReqStatEnums.出池, PlanReleaseDate, DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), Reqs);
+
+                //int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
 
                 // 下载出池计划文档接口
                 string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
 
-                return string.Format("<p class='alert alert-success'>{0}条需求成功出池！<a href='{1}'>点击</a>导出出池计划文档</p>", updatedNum, downfile);
+                var result = string.Format("<p class='alert alert-success'>{0}条需求成功出池！<a href='{1}'>点击</a>导出出池计划文档</p>", updatedNum, downfile);
+
+                // 2018年1月29日 新增： 检测是否有关联需求，如有则提示
+                if(assoInfo!=null && assoInfo.Length>1)
+                {
+                    result += string.Format("<div class='alert alert-info'><p>本次下发存在如下关联需求，请注意：</p><ul>{0}</ul></div>", assoInfo);
+                }
+
+                return result;
             }
             catch (Exception e1)
             {
@@ -613,7 +671,7 @@ namespace MyTeam.Controllers
                                 req.ReqReleaseNo += "（主）" + sideRls.ReleaseNo + "（副）";
                             }*/
                         }
-                    }                    
+                    }
 
                 }
 
@@ -706,7 +764,7 @@ namespace MyTeam.Controllers
             if (req == null)
             {
                 return View();
-            }            
+            }
 
             // 预处理
             // main
@@ -721,7 +779,7 @@ namespace MyTeam.Controllers
 
             // 记录原始reqNo
             req.ReqMain.OldReqNo = req.ReqMain.ReqNo;
-            
+
             // detail
             // 需求状态下拉列表
             ViewBag.ReqStatList = MyTools.GetSelectListByEnum(typeof(ReqStatEnums), false, true, req.ReqStat.ToString());
@@ -754,7 +812,7 @@ namespace MyTeam.Controllers
                         if (main != null)
                         {
                             return "<p class='alert alert-warning'>需求申请编号" + reqMain.ReqNo + "已存在，无法修改！</p>";
-                        }                        
+                        }
                     }
                     dbContext.Entry(reqMain).State = System.Data.Entity.EntityState.Modified;
                 }
@@ -789,6 +847,31 @@ namespace MyTeam.Controllers
                     catch (Exception e1)
                     {
                         throw new Exception("维护需求编号" + reqDetail.ReqDetailNo + "格式错误！（错误信息：" + e1.Message + "）");
+                    }
+                }
+
+                // 2018年1月26日新增：关联系统需求编号相关处理逻辑
+                var assoReqNo = reqDetail.AssoReqNo;
+                if (string.IsNullOrEmpty(assoReqNo))
+                {
+                    reqDetail.IsSysAsso = false;
+                    reqDetail.AssoSysName = "";
+                    reqDetail.AssoReleaseDesc = "";
+                }
+                else
+                {
+                    assoReqNo = assoReqNo.Trim(); // 保证数据质量，去掉头尾空格
+
+                    // 若新填写的ReqNo存在于本系统，则自动更新相关信息
+                    reqDetail.IsSysAsso = true;
+                    var assoReq = dbContext.ReqDetails.Where(p => p.ReqDetailNo == assoReqNo).FirstOrDefault();
+                    if (assoReq != null)
+                    {
+                        reqDetail.AssoSysName = assoReq.ReqMain.SysName;
+                    }
+                    else if (string.IsNullOrEmpty(reqDetail.AssoSysName))
+                    {
+                        reqDetail.AssoSysName = "未知，请补充";
                     }
                 }
 
@@ -957,20 +1040,20 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public string CreateDetail(ReqDetail req)
+        public string CreateDetail(ReqDetail reqDetail)
         {
             try
             {
                 // 若需求状态为「入池」，需求编号必填
-                if (req.ReqStat == (int)ReqStatEnums.入池 && string.IsNullOrEmpty(req.ReqDetailNo))
+                if (reqDetail.ReqStat == (int)ReqStatEnums.入池 && string.IsNullOrEmpty(reqDetail.ReqDetailNo))
                 {
                     throw new Exception("需求状态为「入池」时，需求编号不能为空！");
                 }
 
                 // 判断有无重复需求编号
-                if (!string.IsNullOrEmpty(req.ReqDetailNo))
+                if (!string.IsNullOrEmpty(reqDetail.ReqDetailNo))
                 {
-                    var r = dbContext.ReqDetails.Where(a => a.ReqDetailNo == req.ReqDetailNo).FirstOrDefault();
+                    var r = dbContext.ReqDetails.Where(a => a.ReqDetailNo == reqDetail.ReqDetailNo).FirstOrDefault();
                     if (r != null)
                     {
                         throw new Exception("维护需求编号" + r.ReqDetailNo + "已存在，不允许新增！");
@@ -978,24 +1061,49 @@ namespace MyTeam.Controllers
                 }
 
                 // 当需求编号不为空，则根据需求编号确定需求类型
-                req.ReqType = 0;
-                if (!string.IsNullOrEmpty(req.ReqDetailNo))
+                reqDetail.ReqType = 0;
+                if (!string.IsNullOrEmpty(reqDetail.ReqDetailNo))
                 {
                     try
                     {
-                        req.ReqType = int.Parse(req.ReqDetailNo.Split('-')[2]);
+                        reqDetail.ReqType = int.Parse(reqDetail.ReqDetailNo.Split('-')[2]);
                     }
                     catch (Exception e1)
                     {
-                        throw new Exception("维护需求编号" + req.ReqDetailNo + "格式错误！（错误信息：" + e1.Message + "）");
+                        throw new Exception("维护需求编号" + reqDetail.ReqDetailNo + "格式错误！（错误信息：" + e1.Message + "）");
+                    }
+                }
+
+                // 2018年1月26日新增：关联系统需求编号相关处理逻辑
+                var assoReqNo = reqDetail.AssoReqNo;
+                if (string.IsNullOrEmpty(assoReqNo))
+                {
+                    reqDetail.IsSysAsso = false;
+                    reqDetail.AssoSysName = "";
+                    reqDetail.AssoReleaseDesc = "";
+                }
+                else
+                {
+                    assoReqNo = assoReqNo.Trim(); // 保证数据质量，去掉头尾空格
+
+                    // 若新填写的ReqNo存在于本系统，则自动更新相关信息
+                    reqDetail.IsSysAsso = true;
+                    var assoReq = dbContext.ReqDetails.Where(p => p.ReqDetailNo == assoReqNo).FirstOrDefault();
+                    if (assoReq != null)
+                    {
+                        reqDetail.AssoSysName = assoReq.ReqMain.SysName;
+                    }
+                    else if (string.IsNullOrEmpty(reqDetail.AssoSysName))
+                    {
+                        reqDetail.AssoSysName = "未知，请补充";
                     }
                 }
 
                 // 更新时间
-                req.CreateTime = DateTime.Now;
-                req.UpdateTime = DateTime.Now;
+                reqDetail.CreateTime = DateTime.Now;
+                reqDetail.UpdateTime = DateTime.Now;
 
-                dbContext.ReqDetails.Add(req);
+                dbContext.ReqDetails.Add(reqDetail);
                 dbContext.SaveChanges();
 
                 return Constants.AJAX_CREATE_SUCCESS_RETURN;
@@ -1026,17 +1134,17 @@ namespace MyTeam.Controllers
                     var detail = dbContext.ReqDetails.Find(id);
 
                     var reqNum = dbContext.ReqDetails.Where(p => p.ReqMainID == detail.ReqMainID).Count();
-                    if(reqNum < 2)
+                    if (reqNum < 2)
                     {
                         dbContext.Database.ExecuteSqlCommand("delete ReqMains where ReqMainID=@p0", detail.ReqMainID);
                     }
                     else
                     {
                         dbContext.Database.ExecuteSqlCommand("delete ReqDetails where ReqDetailID=@p0", detail.ReqDetailID);
-                    } 
+                    }
                 }
 
-                
+
             }
             catch (Exception e1)
             {
@@ -1345,6 +1453,23 @@ namespace MyTeam.Controllers
                 return e1.Message;
             }
             return "success";
+        }
+
+        // 2018年1月29日 新增： 获取需求以关联
+        public ActionResult GetReqsToAsso()
+        {
+            var ls = GetNormalSysList();
+            ls.Insert(0, new RetailSystem() { SysID = 0, SysName = "--请选择系统--" });
+            ViewBag.SysList = new SelectList(ls, "SysID", "SysName");
+
+            return View();
+        }
+
+        public ActionResult GetReqsToAssoBySysID(int id)
+        {
+            var detailList = dbContext.ReqDetails.Where(p => p.ReqMain.SysID == id && p.ReqStat == (int)ReqStatEnums.入池).ToList();
+
+            return View(detailList);
         }
 
         #region Helper

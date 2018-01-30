@@ -489,6 +489,8 @@
     <Content Include="Views\FileManage\Create.cshtml" />
     <Content Include="Views\FileManage\Index.cshtml" />
     <Content Include="Views\FileManage\Edit.cshtml" />
+    <Content Include="Views\ReqManage\GetReqsToAsso.cshtml" />
+    <Content Include="Views\ReqManage\GetReqsToAssoBySysID.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

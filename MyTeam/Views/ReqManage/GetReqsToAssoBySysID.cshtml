@@ -1,0 +1,57 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<MyTeam.Models.ReqDetail>
+
+<script>
+    
+    
+    function confirm() {
+        var val = $('input:radio[name=assoReq]:checked').val();
+        if (val.length < 1) {
+            alert("请选择一个需求！")
+            return;
+        }
+
+        doConfirm(val); // 此方法在InPoolDetail页面执行
+    }
+
+    function selectLine(i) {
+        $('input:radio[name=assoReq]')[i].checked = true;
+        $('#tr'+i).find("td").addClass("selected")
+            .end().siblings().find("td").removeClass("selected");
+    }
+</script>
+
+<style type="text/css">
+    td.selected {
+        background-color: #c9edff
+    }
+   
+</style>
+
+@if (Model == null || Model.Count() < 1)
+{
+    <p class='text-warning'>未找到可关联需求</p>
+    return;
+}
+
+<p class='text-info'>找到 @Model.Count() 条已入池需求，请选择要关联的需求：</p>
+
+@{ int i = 0; }
+<table class="table table-condensed table-hover" style="font-size:12px" id="assoTable">
+    @foreach (var r in Model)
+    {
+        var trid = "tr" + i;
+        <tr onclick="selectLine('@i')" ondblclick="confirm()" id="@trid">
+            <td><input type='radio' name='assoReq' value='@r.ReqDetailNo' /></td>
+            <td>@r.ReqDesc</td>
+        </tr>
+
+        i++;
+    }
+
+</table>
+
+<div id="opt"><button onclick="confirm()" class="btn btn-primary">确定</button></div>
+<p style="font-size:10px;margin-top:10px" class="text-info">TIPS：直接双击需求也可以:)</p>

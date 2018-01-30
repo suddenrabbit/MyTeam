@@ -249,6 +249,7 @@
                     <div class="col-md-9">
                         @Html.TextBoxFor(model => model.reqDetail.AssoReqNo, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.reqDetail.AssoReqNo, "", new { @class = "text-danger" })
+                        <span class="text-info">（填写本团队系统内的需求编号，系统可以自动补全关联系统名称信息）</span>
                     </div>
                 </div>
 

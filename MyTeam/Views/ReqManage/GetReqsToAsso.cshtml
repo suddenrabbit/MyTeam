@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+
+<script>
+    function getReqsToAssoBySysID() {       
+
+        var sysID = $('#AssoSysID').val();
+
+        if (sysID == 0) {
+            $('#result').html('');
+            $('#selectedAssoName').val('');
+            return;
+        }
+
+        $('#selectedAssoName').val($('#AssoSysID').find("option:selected").text());
+
+        $('#result').html("读取中...");
+
+        var url = "/ReqManage/GetReqsToAssoBySysID/" + sysID;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#result').html(msg);
+            },
+            error: function () {
+                $('#result').html('<p class="text-danger">处理失败，请联系管理员！</p>');
+            }
+        });
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+
+        @Html.DropDownList("AssoSysID", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "getReqsToAssoBySysID()" })
+
+        <div id="result"  style='margin-top:20px'></div>        
+        <input type="hidden" id="selectedAssoName" />
+    </div>
+</div>
