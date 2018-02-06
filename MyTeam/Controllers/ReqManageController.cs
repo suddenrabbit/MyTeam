@@ -392,7 +392,7 @@ namespace MyTeam.Controllers
         {
             try
             {
-                // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理 //del
+                // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理 
                 string realVersion = Version;
                 if (!IsPatch) // 常规版本
                 {
@@ -463,7 +463,7 @@ namespace MyTeam.Controllers
                 //int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
 
                 // 下载出池计划文档接口
-                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysID={0}&Version={1}", SysID, realVersion);
+                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&Reqs={0}", Reqs);
 
                 var result = string.Format("<p class='alert alert-success'>{0}条需求成功出池！<a href='{1}'>点击</a>导出出池计划文档</p>", updatedNum, downfile);
 
@@ -638,8 +638,8 @@ namespace MyTeam.Controllers
                 // 统一按照创建日期倒序
                 ls = ls.OrderByDescending(p => p.CreateTime);
 
-                // 若系统不为「全部」且需求状态为「办结」，增加按照版本号倒序
-                if (query.SysID != 0 && query.ReqStat == (int)ReqStatEnums.办结)
+                // 若系统不为「全部」且需求状态为「已下发」，增加按照版本号倒序
+                if (query.SysID != 0 && query.ReqStat == (int)ReqStatEnums.已下发)
                 {
                     ls = ls.OrderByDescending(p => p.Version);
                 }
@@ -794,6 +794,23 @@ namespace MyTeam.Controllers
                 isUpdateMain = false
             };
 
+            // 2018年2月6日新增：若有下发信息也补充：
+            if(0 != req.ReqReleaseID)
+            {
+                var rls = dbContext.ReqReleases.Find(req.ReqReleaseID);
+
+                ReleaseForReqEdit rlsEdit = new ReleaseForReqEdit();
+                if (rls != null)
+                {
+                    rlsEdit.ReleaseNo = rls.ReleaseNo;
+                    rlsEdit.OldReleaseNo = rls.ReleaseNo;
+                    rlsEdit.PlanReleaseDate = rls.PlanReleaseDate;
+                    rlsEdit.ReleaseDate = rls.ReleaseDate;
+                }
+
+                reqEdit.reqRelease = rlsEdit;
+            }
+            
             return View(reqEdit);
         }
 
@@ -877,6 +894,31 @@ namespace MyTeam.Controllers
 
                 // 更新时间
                 reqDetail.UpdateTime = DateTime.Now;
+
+                // 2018年2月6日 新增：下发信息更新
+                var reqRelease = reqEdit.reqRelease;
+                if(reqRelease.OldReleaseNo != reqRelease.ReleaseNo)
+                { 
+                    if(string.IsNullOrEmpty(reqRelease.ReleaseNo))
+                    {
+                        // 去除下发信息
+                        reqDetail.ReqReleaseID = 0;
+                        reqDetail.PlanReleaseDate = null;
+                        reqDetail.ReleaseDate = null;
+                    }
+                    else
+                    {
+                        var findRls = dbContext.ReqReleases.Where(p => p.ReleaseNo == reqRelease.ReleaseNo).FirstOrDefault();
+                        if(findRls == null)
+                        {
+                            throw new Exception("系统内未找到下发通知编号" + reqRelease.ReleaseNo + "的记录！");
+                        }
+                        // 更新下发信息
+                        reqDetail.ReqReleaseID = findRls.ReqReleaseID;
+                        reqDetail.PlanReleaseDate = findRls.PlanReleaseDate;
+                        reqDetail.ReleaseDate = findRls.ReleaseDate;
+                    }
+                }
 
                 dbContext.Entry(reqDetail).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
@@ -1183,6 +1225,11 @@ namespace MyTeam.Controllers
                 {
                     ls = ls.Where(p => p.ReqMain.AcptDate.Year.ToString() == query.MaintainYear);
                 }
+                if (!string.IsNullOrEmpty(query.Reqs))
+                {
+                    var rs = query.Reqs.Split(',');
+                    ls = ls.Where(p => rs.Contains(p.ReqDetailID.ToString()));
+                }
 
                 // 将查询结果转换为OutPoolTableResult和OutPoolTableResultExcel（避免多出来的short字段影响）
                 List<OutPoolTableResult> resultList = new List<OutPoolTableResult>();
@@ -1301,10 +1348,10 @@ namespace MyTeam.Controllers
         public string BatProc(string reqs, string version, string outDate, string planReleaseDate, string ReleaseNo, string SideReleaseNo, string ReleaseDate, string secondReleaseDate,
             string remark, string reqStat, string acptDate, bool clearAcptDate)
         {
-            // 若填写了下发日期，则下发状态应该为「办结」
-            if ((!string.IsNullOrEmpty(ReleaseDate) || !string.IsNullOrEmpty(secondReleaseDate)) && reqStat != ReqStatEnums.办结.ToString())
+            // 若填写了下发日期，则下发状态应该为「已下发」
+            if ((!string.IsNullOrEmpty(ReleaseDate) || !string.IsNullOrEmpty(secondReleaseDate)) && reqStat != ReqStatEnums.已下发.ToString())
             {
-                return "<p class='alert alert-danger'>出错了：填写了下发日期的情况下，需求状态必须为「办结」</p>";
+                return "<p class='alert alert-danger'>出错了：填写了下发日期的情况下，需求状态必须为「已下发」</p>";
             }
 
             // 拼出sql中的in条件

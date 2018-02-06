@@ -19,7 +19,7 @@
             }
 
         });
-    }    
+    }
 
     function updateReleaseNo() {
         var sysId = $('#SysID').val();
@@ -34,13 +34,13 @@
         }
 
         // 下发通知编号格式控制
-        var rname = /(YFZX){1}[0-9]{8}/;
+        /*var rname = /(YFZX){1}[0-9]{8}/;
         if (releaseNo.length > 0 && !rname.test(releaseNo)) {
             showAlertWithDefaultTitle("下发通知编号格式必须是YFZX+8位数字");
             $("#ReleaseNo").focus();
             return;
 
-        }       
+        }  */
 
         $.ajax({
             type: 'POST',
@@ -57,7 +57,7 @@
     }
 
     function getReleaseDesc() {
-        
+
         var ver = $('#Ver').val();
         if (ver == 0) {
             showAlertWithDefaultTitle("请先选择系统和版本号！");
@@ -119,7 +119,13 @@
             <div class="col-md-offset-2 col-md-10">
                 <input type="button" value="更新下发通知信息" class="btn btn-primary" onclick="updateReleaseNo()" />
             </div>
-        </div>        
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <p class="text-info">备注：仅更新尚未绑定下发通知编号的需求</p>
+            </div>
+        </div>
     </div>
 </div>
 

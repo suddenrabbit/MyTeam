@@ -44,9 +44,9 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div id="info"></div>
+
         @using (Ajax.BeginForm("Create", "Proj", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                new { @class = "form-horizontal", role = "form", id= "editForm" }))
+        new { @class = "form-horizontal", role = "form", id = "editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -111,7 +111,7 @@
 
                     <div class="col-md-8">
                         @Html.TextBoxFor(model => model.HostBusiPerson, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.HostBusiPerson, "", new { @class = "text-danger", @placeholder="只需要填1-2个人即可" })
+                        @Html.ValidationMessageFor(model => model.HostBusiPerson, "", new { @class = "text-danger", @placeholder = "只需要填1-2个人即可" })
                     </div>
                 </div>
                 <div class="form-group">
@@ -299,79 +299,79 @@
                 </div>
             </fieldset>
 
-    <fieldset>
-        <legend>可行性分析</legend>
-        <div class="form-group">
-            @Html.LabelFor(model => model.BusiFeasiStartDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.BusiFeasiStartDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.BusiFeasiStartDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.BusiFeasiFinishDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.BusiFeasiFinishDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.BusiFeasiFinishDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.TechFeasiStartDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.TechFeasiStartDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TechFeasiStartDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.TechFeasiFinishDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.TechFeasiFinishDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TechFeasiFinishDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.TechFeasiReviewStartDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.TechFeasiReviewStartDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TechFeasiReviewStartDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.TechFeasiReviewFinishDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.TechFeasiReviewFinishDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TechFeasiReviewFinishDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.SoftBudgetStartDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.SoftBudgetStartDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.SoftBudgetStartDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.SoftBudgetFinishDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.SoftBudgetFinishDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.SoftBudgetFinishDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.ImplementPlansStartDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.ImplementPlansStartDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ImplementPlansStartDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.ImplementPlansFinishDate, new { @class = "col-md-4 control-label" })
-            <div class="col-md-8">
-                @Html.TextBoxFor(model => model.ImplementPlansFinishDate, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ImplementPlansFinishDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    </fieldset>
+            <fieldset>
+                <legend>可行性分析</legend>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BusiFeasiStartDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BusiFeasiStartDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BusiFeasiStartDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BusiFeasiFinishDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BusiFeasiFinishDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BusiFeasiFinishDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TechFeasiStartDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TechFeasiStartDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TechFeasiStartDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TechFeasiFinishDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TechFeasiFinishDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TechFeasiFinishDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TechFeasiReviewStartDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TechFeasiReviewStartDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TechFeasiReviewStartDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TechFeasiReviewFinishDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TechFeasiReviewFinishDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TechFeasiReviewFinishDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SoftBudgetStartDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.SoftBudgetStartDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SoftBudgetStartDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SoftBudgetFinishDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.SoftBudgetFinishDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SoftBudgetFinishDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ImplementPlansStartDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ImplementPlansStartDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ImplementPlansStartDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ImplementPlansFinishDate, new { @class = "col-md-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ImplementPlansFinishDate, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ImplementPlansFinishDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </fieldset>
 
             <fieldset>
                 <legend>项目章程发布</legend>
@@ -444,6 +444,8 @@
                 </div>
             </div>
         }
+
+        <div id="info"></div>
     </div>
 </div>
 

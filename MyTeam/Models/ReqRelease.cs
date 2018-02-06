@@ -16,6 +16,7 @@ namespace MyTeam.Models
         [Required]
         [Display(Name = "下发通知编号")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
+        [RegularExpression(@"^[0-9a-zA-Z]+$", ErrorMessage = "下发通知编号只能是英文和数字")]
         public string ReleaseNo { get; set; } // 唯一索引
 
         [Display(Name = "计划下发日期")]

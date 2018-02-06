@@ -6,7 +6,7 @@
 
 <script>
     function doDelete(id) {
-        var url = "/ReleaseManage/RemoveReq/" + id + "?isSideRelease=" + $('#isSideRelease').val();
+        var url = "/ReleaseManage/RemoveReq/" + id;
 
         $.ajax({
             type: 'GET',
@@ -33,7 +33,7 @@
             return;
         }
 
-        var url = "/ReleaseManage/BindReq/" + $('#releaseID').val() + "?reqDetailNo=" + reqDetailNo + "&isSideRelease=" + $('#isSideRelease').val();
+        var url = "/ReleaseManage/BindReq/" + $('#releaseID').val() + "?reqDetailNo=" + reqDetailNo;
 
         $.ajax({
             type: 'GET',
@@ -73,7 +73,7 @@
             {
                 var trid = "tr" + item.ReqDetailID;
                 <tr id="@trid">
-                    <td><a href="###" onclick="doDelete('@item.ReqDetailID')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a></td>
+                    <td><a href="###" onclick="doDelete('@item.ReqDetailID')" class="text-danger" title="移除需求"><span class="glyphicon glyphicon-remove"></span></a></td>
                     <td>@item.ReqMain.SysName</td>
                     <td>@item.ReqDetailNo</td>
                     <td>@item.ShortReqDesc</td>
@@ -85,7 +85,6 @@
             <input id="newReq" name="newReq" class="form-control" placeholder="输入维护需求编号，只能输入一个" style="max-width:50%;width:50%" />&nbsp;&nbsp;
             <button class="btn btn-primary" onclick="doAdd()">增加</button>&nbsp;&nbsp;
         </div>
-        <input type="hidden" id="isSideRelease" value="@ViewBag.IsSideRelease.ToString()" />
         <input type="hidden" id="releaseID" value="@ViewBag.ReleaseID" />
     </div>
 </div>

@@ -23,6 +23,12 @@ namespace MyTeam.Models
         [Display(Name = "实际下发日期起始")]
         public string ReleaseDateEnd { get; set; }
 
+        [Display(Name = "模糊查询")]
+        public bool IsFuzzySearch { get; set; }
+
+        [Display(Name = "起草人")]
+        public int DraftPersonID { get; set; }
+
         public IPagedList<ReqRelease> ResultList { get; set; }
 
         public string ToQueryString()
@@ -31,7 +37,9 @@ namespace MyTeam.Models
                 .Append("&PlanReleaseDateStart=").Append(this.PlanReleaseDateStart)
                 .Append("&PlanReleaseDateEnd=").Append(this.PlanReleaseDateEnd)
                 .Append("&ReleaseDateStart=").Append(this.ReleaseDateStart)
-                .Append("&ReleaseDateEnd=").Append(this.ReleaseDateEnd)               
+                .Append("&ReleaseDateEnd=").Append(this.ReleaseDateEnd)
+                .Append("&DraftPersonID=").Append(this.DraftPersonID)
+                .Append("&IsFuzzySearch=").Append(this.IsFuzzySearch)
                 .ToString();
         }
     }

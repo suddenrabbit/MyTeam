@@ -15,6 +15,8 @@ namespace MyTeam.Models
         [Display(Name = "维护年度")]
         public string MaintainYear { get; set; }
 
+        public string Reqs { get; set; } // 仅供下发页面使用
+
         public IPagedList<OutPoolTableResult> ResultList { get; set; }
 
         public string ToQueryString()

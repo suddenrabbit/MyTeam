@@ -19,13 +19,21 @@ namespace MyTeam.Controllers
         // GET: /ReleaseManage/
 
         public ActionResult Index(ReleaseQuery query, int pageNum = 1, bool isQuery = false)
-        {
+        {  
             if (isQuery && query != null)
             {
                 var ls = from a in dbContext.ReqReleases select a;
                 if (!string.IsNullOrEmpty(query.ReleaseNo))
                 {
-                    ls = ls.Where(p => p.ReleaseNo.Contains(query.ReleaseNo));
+                    if (!query.IsFuzzySearch)
+                    {
+                        ls = ls.Where(p => p.ReleaseNo == query.ReleaseNo);
+                    }
+                    else
+                    {
+                        ls = ls.Where(p => p.ReleaseNo.Contains(query.ReleaseNo));
+                    }
+                    
                 }
                 if (!string.IsNullOrEmpty(query.PlanReleaseDateStart))
                 {
@@ -47,15 +55,24 @@ namespace MyTeam.Controllers
                     var ReleaseDateEnd = DateTime.Parse(query.ReleaseDateEnd);
                     ls = ls.Where(p => p.ReleaseDate <= ReleaseDateEnd);
                 }
+                if (0 != query.DraftPersonID)
+                {
+                    ls = ls.Where(p => p.DraftPersonID == query.DraftPersonID);
+                }
 
                 ls = ls.OrderByDescending(p => p.PlanReleaseDate);
 
-                query.ResultList = ls.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE); ;
+                query.ResultList = ls.ToPagedList(pageNumber: pageNum, pageSize: Constants.PAGE_SIZE);
             }
             else
             {
                 query = new ReleaseQuery();
             }
+
+            var userList = GetStaffList();
+            userList.Insert(0, new User { UID = 0, Realname = "全部" });
+            ViewBag.UserList = new SelectList(userList, "UID", "Realname");
+
             return View(query);
         }
 
@@ -64,7 +81,7 @@ namespace MyTeam.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "Realname", GetSessionCurrentUser().UID);
+            ViewBag.UserList = new SelectList(GetStaffList(), "UID", "Realname", GetSessionCurrentUser().UID);
             return View();
         }
 
@@ -101,7 +118,7 @@ namespace MyTeam.Controllers
             var rls = dbContext.ReqReleases.Find(id);
             rls.OldReleaseNo = rls.ReleaseNo;
 
-            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "Realname", rls.DraftPersonID);
+            ViewBag.UserList = new SelectList(GetStaffList(), "UID", "Realname", rls.DraftPersonID);
 
             return View(rls);
         }
@@ -125,11 +142,11 @@ namespace MyTeam.Controllers
 
                 var msg = Constants.AJAX_EDIT_SUCCESS_RETURN;
 
-                // 如果实际下发日期变成空，则要将相关需求的状态修改为【出池】；如果实际下发日期变成非空，则要将相关需求的状态修改为【办结】
+                // 如果实际下发日期变成空，则要将相关需求的状态修改为【出池】；如果实际下发日期变成非空，则要将相关需求的状态修改为【已下发】
                 // 2017年11月7日：同时更新需求中的计划下发日期和实际下发日期
                 if (!reqRelease.IsSideRelease)
                 {
-                    int reqStat = (int)ReqStatEnums.办结;
+                    int reqStat = (int)ReqStatEnums.已下发;
                     if (reqRelease.ReleaseDate == null)
                     {
                         reqStat = (int)ReqStatEnums.出池;
@@ -199,13 +216,13 @@ namespace MyTeam.Controllers
 
                 string msg = "已更新" + ReleaseNo + "的下发日期";
 
-                // 如果更新了主下发的实际下发日期，则将需求置为已办结
+                // 如果更新了主下发的实际下发日期，则将需求置为已已下发
                 // 2017年11月7日：同时更新ReqDetail中的实际下发信息
                 if (!r.IsSideRelease)
                 {
                     var sql = "Update ReqDetails set ReqStat = @p0, ReleaseDate=@p1 where ReqReleaseID = @p2";
-                    int num = dbContext.Database.ExecuteSqlCommand(sql, (int)ReqStatEnums.办结, r.ReleaseDate, r.ReqReleaseID);
-                    msg += "；同时已更新" + num + "条相关维护需求的状态为【办结】，并更新了维护需求中的实际下发日期";
+                    int num = dbContext.Database.ExecuteSqlCommand(sql, (int)ReqStatEnums.已下发, r.ReleaseDate, r.ReqReleaseID);
+                    msg += "；同时已更新" + num + "条相关维护需求的状态为【已下发】，并更新了维护需求中的实际下发日期";
                 }
 
                 return "<p class='alert alert-success'>" + msg + "</p>";
@@ -227,11 +244,11 @@ namespace MyTeam.Controllers
 
         // 从下发通知中移除需求
         [HttpGet]
-        public string RemoveReq(int id, bool isSideRelease = false)
+        public string RemoveReq(int id)
         {
             try
             {
-                var sql = string.Format("update ReqDetails set {0}=0, Version='', ReqStat=@p2, PlanReleaseDate=NULL, ReleaseDate=NULL, UpdateTime=@p0 where ReqDetailID=@p1", isSideRelease ? "SecondReqReleaseID" : "ReqReleaseID");
+                var sql = "update ReqDetails set ReqReleaseID=0, ReqStat=@p2, PlanReleaseDate=NULL, ReleaseDate=NULL, UpdateTime=@p0 where ReqDetailID=@p1";
                 int num = dbContext.Database.ExecuteSqlCommand(sql, DateTime.Now, id, (int)ReqStatEnums.入池);
                 if (num != 1)
                 {
@@ -248,7 +265,7 @@ namespace MyTeam.Controllers
 
         // 在通知中绑定需求
         [HttpGet]
-        public string BindReq(int id, string reqDetailNo, bool isSideRelease = false)
+        public string BindReq(int id, string reqDetailNo)
         {
             try
             {
@@ -259,19 +276,16 @@ namespace MyTeam.Controllers
                     return "不存在这个需求！";
                 }
 
-                if (detail.ReqReleaseID == id || detail.SecondReqReleaseID == id)
+                if (detail.ReqReleaseID == id)
                 {
                     return "不能重复添加！";
                 }
 
-                if (!isSideRelease)
-                {
-                    detail.ReqReleaseID = id;
-                }
-                else
-                {
-                    detail.SecondReqReleaseID = id;
-                }
+                var rls = dbContext.ReqReleases.Find(id);
+                                
+                detail.ReqReleaseID = id;
+                detail.PlanReleaseDate = rls.PlanReleaseDate;
+                detail.ReleaseDate = rls.ReleaseDate;
 
                 detail.UpdateTime = DateTime.Now;
 
@@ -327,7 +341,7 @@ namespace MyTeam.Controllers
             {
                 return "<p class='alert alert-danger'>数据有误，请联系管理员！</p>";
             }
-            var ls = dbContext.ReqDetails.Where(p => p.ReqMain.SysID == SysID && p.Version == version.VerNo);
+            var ls = dbContext.ReqDetails.Where(p => p.ReqMain.SysID == SysID && p.Version == version.VerNo && p.ReqStat == (int)ReqStatEnums.出池); // 仅更新出池的需求
             if(ls == null || ls.Count() < 1)
             {
                 return "<p class='alert alert-danger'>找不到相关的需求，请确认选择的系统和版本号！</p>";
@@ -350,15 +364,7 @@ namespace MyTeam.Controllers
         /// <param name="releaseNo"></param>
         /// <returns></returns>
         private string checkReleaseNo(string releaseNo, string oldReleaseNo = "")
-        {
-            // 检查下发通知编号格式
-            string pattern = "(YFZX){1}[0-9]{8}";
-            Regex regex = new Regex(pattern);
-            if (!regex.IsMatch(releaseNo))
-            {
-                return "下发通知编号" + releaseNo + "格式不正确，必须是YFZX+8位数字";
-            }
-
+        { 
             if (releaseNo != oldReleaseNo)
             {
                 var rls = dbContext.ReqReleases.Where(p => p.ReleaseNo == releaseNo).FirstOrDefault();
@@ -387,6 +393,8 @@ namespace MyTeam.Controllers
             {
                 // 首先生成主下发的release记录，得到release ID
                 int reqReleaseID;
+                DateTime realPlanReleaseDate;
+                DateTime? realReleaseDate;
 
                 var checkRelease = dbContext.ReqReleases.Where(p => p.ReleaseNo == ReleaseNo).FirstOrDefault();
                 if (checkRelease != null)
@@ -400,6 +408,8 @@ namespace MyTeam.Controllers
                     dbContext.SaveChanges();
 
                     reqReleaseID = checkRelease.ReqReleaseID;
+                    realPlanReleaseDate = checkRelease.PlanReleaseDate;
+                    realReleaseDate = checkRelease.ReleaseDate;
 
                     msg = "<p class='alert alert-warning'>下发编号" + ReleaseNo + "已存在，对现有记录进行了更新！</p>";
                 }
@@ -417,14 +427,16 @@ namespace MyTeam.Controllers
                     dbContext.SaveChanges();
 
                     reqReleaseID = release.ReqReleaseID;
+                    realPlanReleaseDate = release.PlanReleaseDate;
+                    realReleaseDate = release.ReleaseDate;
 
                     msg = "<p class='alert alert-success'>添加下发记录" + ReleaseNo + "成功</p>";
                 }
 
                 // 将下发ID更新到req中
-                string sql = string.Format("update ReqDetails set ReqReleaseID = '{0}', UpdateTime='{1}'  where ReqDetailID in ({2})", reqReleaseID, DateTime.Now.ToString("yyyy/M/d hh:mm:ss"), Reqs);
+                string sql = string.Format("update ReqDetails set ReqReleaseID = @p0, PlanReleaseDate=@p1, ReleaseDate=@p2, UpdateTime=@p3  where ReqDetailID in ({0})", Reqs);
 
-                int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
+                int updatedNum = dbContext.Database.ExecuteSqlCommand(sql, reqReleaseID, realPlanReleaseDate, realReleaseDate, DateTime.Now);
 
                 msg += "<p class='alert alert-success'>" + updatedNum + "条需求更新成功！</p>";
 

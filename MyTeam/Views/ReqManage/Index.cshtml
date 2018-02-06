@@ -14,6 +14,26 @@
         $('#myModal').modal({ backdrop: 'static' });
     }
 
+    function doRemove(id) {
+        var url = "/ReleaseManage/RemoveReq/" + id;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                if (msg == "success") {
+                    alert("操作成功！");
+                    $('#release' + id).html('');
+                } else {
+                    aler(msg);
+                }
+            },
+            error: function () {
+                alert('处理失败，请联系管理员！');
+            }
+        });
+    }
+
     function realDelete(type) {
 
         if (!confirm("删除以后不能恢复，您确定要继续操作吗？")) {
@@ -28,7 +48,7 @@
         if (type == 1) {
             id = $('#toDelMainId').val();
         }
-        
+
         var url = "/ReqManage/Delete/" + id + "?type=" + type;
         $.ajax({
             type: 'POST',
@@ -74,7 +94,7 @@
         $('#modalTitle').html(title);
         $('#modalBody').html("获取数据中...");
         $('#myModal4').modal({ backdrop: 'static' });
-        if (type == 1)            
+        if (type == 1)
             var url = "/ReqManage/Edit/" + id;
         else
             var url = "/ReqManage/CreateDetail/" + id;
@@ -96,7 +116,7 @@
         $('#detailMain').html("获取数据中...");
         $('#myModal3').modal({ backdrop: 'static' });
 
-        var url = "/ReleaseManage/GetDetailsForReqManage/" + id;       
+        var url = "/ReleaseManage/GetDetailsForReqManage/" + id;
 
         $.ajax({
             type: 'GET',
@@ -133,7 +153,7 @@
                     updateRemarkBody.html('<p class="alert alert-success">更新成功！</p>');
                     $('#remark' + id).html(str);
                 } else {
-                    updateRemarkBody.html('<p class="alert alert-danger">'+msg+'</p>');
+                    updateRemarkBody.html('<p class="alert alert-danger">' + msg + '</p>');
                 }
             },
             error: function () {
@@ -189,7 +209,7 @@
                 <td class="form-inline">
                     <!--需求状态下拉选择-->
                     @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
-                    @{ string info = "<b>出池</b> - 完成出池操作，已有「计划下发日期」<br /><b>办结</b> - 更新「实际下发日期」后需求变为办结状态<br /><br /><p class=\"text-info\">【提示】当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列</p>";}
+                    @{ string info = "<b>出池</b> - 完成出池操作，已有「计划下发日期」<br /><b>已下发</b> - 更新「实际下发日期」后需求变为已下发状态<br /><br /><p class=\"text-info\">【提示】当选择特定系统且查询的需求状态为「已下发」时，查询结果将自动按照「下发版本号」倒序排列</p>";}
                     <a class="text-info" href="###" onclick="showAlert('@info', '需求状态说明')">（点击查看需求状态说明）</a>
                 </td>
             </tr>
@@ -213,11 +233,11 @@
                 </td>
             </tr>
         </table>
-                        }
+    }
 </div>
 @if (Model.ResultList != null)
 {
-    var tipinfo = "1、维护需求分为「申请」与「明细」两部分，两者为1对N的关系，「申请」部分信息公用；<br />2、当选择特定系统且查询的需求状态为「办结」时，查询结果将自动按照「下发版本号」倒序排列；<br />3、点击下发通知编号可以查看下发时间信息";
+    var tipinfo = "1、维护需求分为「申请」与「明细」两部分，两者为1对N的关系，「申请」部分信息公用；<br />2、当选择特定系统且查询的需求状态为「已下发」时，查询结果将自动按照「下发版本号」倒序排列；<br />3、点击下发通知编号可以查看下发时间信息";
     <h3>查询结果<a style="font-size:12px; font-weight:normal" id="goToTips" href="###" onclick="showAlert('@tipinfo', 'TIPS')">（点击查看TIPS）</a></h3>
     <div class="row card">
 
@@ -266,9 +286,10 @@
                     </th>
                 </tr>
                 @for (int i = 0; i < Model.ResultList.Count; i++)
-                    {
-                        var item = Model.ResultList[i];
-                        var remarkId = "remark" + item.ReqDetailID;
+                {
+                    var item = Model.ResultList[i];
+                    var remarkId = "remark" + item.ReqDetailID;
+                    var rlsId = "release" + item.ReqDetailID;
 
                     <tr>
                         <td>
@@ -287,7 +308,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqMain.ReqNo)
                             @*<a href="###" onclick="doEdit('@item.ReqMainID', '编辑维护需求申请信息', 1)"><span class="glyphicon glyphicon-edit"></span></a>
-    <a href="###" onclick="doDelete('@item.ReqMainID','1')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a>*@
+                                <a href="###" onclick="doDelete('@item.ReqMainID','1')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a>*@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqMain.ShortReqReason)
@@ -300,7 +321,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqDetailNo)
                             @*<a href="###" onclick="doEdit('@item.ReqDetailID', '编辑维护需求信息', 2)"><span class="glyphicon glyphicon-edit"></span></a>
-    <a href="###" onclick="doDelete('@item.ReqDetailID','2')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a>*@
+                                <a href="###" onclick="doDelete('@item.ReqDetailID','2')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a>*@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ShortReqDesc)
@@ -314,10 +335,17 @@
 
                         <td>
                             <span id='@remarkId'>@Html.DisplayFor(modelItem => item.Remark)</span>
-                            <a href="###" onclick="doUpdateRemark('@item.ReqDetailID')"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a href="###" onclick="doUpdateRemark('@item.ReqDetailID')" title="更新备注" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-edit"></span></a>
                         </td>
                         <td>
-                            <a href="###" onclick="showRelease('@item.ReqReleaseID')">@Html.DisplayFor(modelItem => item.ReqReleaseNo)</a>
+                            @if (item.ReqReleaseID != 0)
+                            {
+                                <span id="@rlsId">
+                                    <a href="###" onclick="showRelease('@item.ReqReleaseID')" title="查看下发详情" data-toggle="tooltip" data-placement="top">@Html.DisplayFor(modelItem => item.ReqReleaseNo)</a>
+                                    <a href="###" onclick="doRemove('@item.ReqDetailID')" class="text-danger" title="移除下发信息" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-remove"></span></a>
+                                </span>
+                            }
+
                         </td>
                     </tr>
                 }
@@ -344,11 +372,11 @@
             </div>
             <div class="modal-body">
                 请选择您要删除的内容：
-                
+
                 <input type="hidden" id="toDelMainId" /><input type="hidden" id="toDelDetailId" />
 
                 <button type="button" class="btn btn-warning" onclick="realDelete(2)">删除本条维护需求</button>
-                <button type="button" class="btn btn-danger" onclick="realDelete(1)">删除维护需求申请</button>                
+                <button type="button" class="btn btn-danger" onclick="realDelete(1)">删除维护需求申请</button>
 
                 <p class='alert alert-info' style="margin-top:10px"><b>NOTICE: </b>选择「删除维护需求申请」将连带删除该申请下的所有维护需求。若只需要删除当前这一条，请使用「删除本条维护需求」按钮。</p>
             </div>
@@ -357,7 +385,7 @@
                         data-dismiss="modal">
                     关闭
                 </button>
-               
+
             </div>
         </div>
     </div>
@@ -448,7 +476,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12" id="updateRemarkBody">                       
+                    <div class="col-md-12" id="updateRemarkBody">
                     </div>
                 </div>
             </div>

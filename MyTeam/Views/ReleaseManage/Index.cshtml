@@ -60,7 +60,7 @@
         $('#detailMain').html("读取中...");
         $('#myModal4').modal({ backdrop: 'static' });
 
-        var url = "/ReqManage/ShowReqs/" + id + "?isSideRelease=" + isSide;        
+        var url = "/ReqManage/ShowReqs/" + id + "?isSideRelease=" + isSide;
 
         $.ajax({
             type: 'GET',
@@ -86,8 +86,9 @@
         <table class="table table-condensed query-table">
             <tr>
                 <td>@Html.LabelFor(model => model.ReleaseNo, new { @class = "control-label" })</td>
-                <td>
-                    @Html.TextBoxFor(model => model.ReleaseNo, new { @class = "form-control", @placeholder = "支持模糊查询" })
+                <td class="form-inline">
+                    @Html.TextBoxFor(model => model.ReleaseNo, new { @class = "form-control" })
+                    @Html.EditorFor(model => model.IsFuzzySearch) 模糊查询
                 </td>
                 <td><label class="control-label">计划下发时间(起止)</label></td>
                 <td class="form-inline">
@@ -105,6 +106,10 @@
                     @Html.TextBoxFor(model => model.ReleaseDateEnd, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择结束日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
 
                 </td>
+                <td> @Html.LabelFor(model => model.DraftPersonID, new { @class = "control-label" })</td>
+                <td> @Html.DropDownListFor(model => model.DraftPersonID, ViewBag.UserList as SelectList, new { @class = "form-control" }) </td>
+            </tr>
+            <tr>
                 <td>
                     <input type="submit" value="查询" class="btn btn-primary" />
                     <input type="button" value="新增一条" class="btn btn-default" onclick="doEdit(0, '新增下发信息')" />
@@ -154,7 +159,7 @@
                     <tr id="@trid">
                         <td>
                             <a href="###" onclick="doEdit('@item.ReqReleaseID','编辑下发信息')">编辑</a> |
-                            <a href="###" onclick="doDelete('@item.ReqReleaseID')">删除</a> | 
+                            <a href="###" onclick="doDelete('@item.ReqReleaseID')">删除</a> |
                             <a href="###" onclick="doShowReqs('@item.ReqReleaseID', '@item.ReleaseNo', '@item.IsSideRelease.ToString()')">管理下发需求</a>
 
                         </td>
