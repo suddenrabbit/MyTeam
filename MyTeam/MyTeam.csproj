@@ -148,6 +148,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AttendanceController.cs" />
     <Compile Include="Controllers\FileManageController.cs" />
+    <Compile Include="Controllers\UpgradeLogController.cs" />
     <Compile Include="Controllers\OTManageController.cs" />
     <Compile Include="Controllers\LeaveManageController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -454,7 +455,7 @@
     <Content Include="Views\LeaveManage\Create.cshtml" />
     <Content Include="Views\LeaveManage\Edit.cshtml" />
     <Content Include="Views\LeaveManage\Index.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\UpgradeLog\Index.cshtml" />
     <Content Include="Views\Home\Notify.cshtml" />
     <Content Include="Views\Home\LoginPartial.cshtml" />
     <Content Include="Views\LeaveManage\SumUp.cshtml" />
@@ -491,6 +492,7 @@
     <Content Include="Views\FileManage\Edit.cshtml" />
     <Content Include="Views\ReqManage\GetReqsToAsso.cshtml" />
     <Content Include="Views\ReqManage\GetReqsToAssoBySysID.cshtml" />
+    <Content Include="Views\UpgradeLog\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

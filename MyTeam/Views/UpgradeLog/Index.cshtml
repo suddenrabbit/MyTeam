@@ -1,0 +1,76 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IPagedList<MyTeam.Models.UpgradeLog>
+@{
+    ViewBag.Title = "版本更新记录";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<script>
+    // 在modal中新增
+    function doCreate() {
+        $('#Create').html("读取中...");
+        $('#myModal').modal({ backdrop: 'static' });
+        var url = "/UpgradeLog/Create";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#Create').html(msg);
+            },
+            error: function () {
+                $('#Create').html("处理失败，请联系管理员");
+            }
+        });
+    }
+</script>
+
+<div class="row card">
+    @if (ViewBag.IsAdminNow)
+    {
+        <p><button class="btn btn-primary" onclick="doCreate()">添加记录</button></p>
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th width="20%" class="text-left">@Html.DisplayNameFor(model => model[0].SysVersion)</th>
+                <th width="30%" class="text-left">@Html.DisplayNameFor(model => model[0].ReleaseDate)</th>
+                <th width="50%" class="text-left">@Html.DisplayNameFor(model => model[0].Description)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.SysVersion)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ReleaseDate)</td>
+                    <td>@Html.Raw(item.Description)</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.UpgradeLog>, generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    新增记录
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="Create"></div>
+            </div>
+        </div>
+    </div>
+</div>

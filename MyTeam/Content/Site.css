@@ -152,3 +152,8 @@ h2 {
     box-shadow:none;
     cursor:pointer;
 }
+
+.table-query-result {
+    font-size: 12px;
+    table-layout: fixed;
+}

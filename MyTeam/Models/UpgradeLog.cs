@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace MyTeam.Models
 {
@@ -12,18 +9,21 @@ namespace MyTeam.Models
     public class UpgradeLog
     {
         [Key]
-        public int LogID { get; internal set; }
+        public int LogID { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime ReleaseDate { get; internal set; }
+        [Display(Name = "发布日期")]
+        public DateTime ReleaseDate { get; set; }
 
         [Required]
-        [StringLength(8, ErrorMessage = "The SysVersion is too long!")]
-        public string SysVersion { get; internal set; }
+        [Display(Name = "版本号")]
+        [StringLength(8, ErrorMessage = "版本号不能超过8位")]
+        public string SysVersion { get; set; }
 
         [Required]
-        [StringLength(500, ErrorMessage = "The Description is too long!")]
-        public string Description { get; internal set; }
+        [Display(Name = "更新说明")]
+        [StringLength(500, ErrorMessage = "更新说明不能超过500字")]
+        public string Description { get; set; }
     }
 }

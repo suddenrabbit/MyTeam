@@ -58,7 +58,7 @@
 
     // 在modal中编辑
     function doEdit(id, name) {
-        $('#editName').html("【" + name + "】项目状态编辑");
+        $('#editName').html("【" + name + "】项目信息编辑");
         $('#Edit').html("读取中...");
         $('#myModal4').modal({ backdrop: 'static' });
         var url = "/Proj/Edit/" + id;
@@ -172,7 +172,7 @@
         }
         else
         {
-            <table class="table table-condensed table-bordered" style="font-size:12px;table-layout:fixed" width="100">
+            <table class="table table-condensed table-bordered table-query-result" width="100">
                 <tr>
                     <th width="12"></th>
                     <th width="20">
@@ -361,7 +361,7 @@
                     &times;
                 </button>
                 <h4 class="modal-title" id="myModalLabel">
-                    项目状态新增
+                    新增记录
                 </h4>
             </div>
             <div class="modal-body">

@@ -45,266 +45,264 @@
 <div class="row">
     <div class="col-md-12">
 
-        @using (Ajax.BeginForm("Edit", "ReqManage", null, new AjaxOptions { UpdateTargetId="info", OnComplete = "hideForm" },
-                            new { @class = "form-horizontal", role = "form", id = "editForm" }))
-    {
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @using (Ajax.BeginForm("Edit", "ReqManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                        new { @class = "form-horizontal", role = "form", id = "editForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <fieldset>
-            <legend>需求申请信息</legend>
-            <p class="text-warning"><b>注意：</b>此部分信息修改会影响到所有隶属于本申请编号的需求，请勾选后修改：@Html.CheckBoxFor(model => model.isUpdateMain, new { @onclick = "onClickUpdateMain()" })</p>
-            @Html.HiddenFor(model => model.reqMain.ReqMainID)
-            @Html.HiddenFor(model => model.reqMain.OldReqNo)
+            <fieldset>
+                <legend>需求申请信息</legend>
+                <p class="text-warning"><b>注意：</b>此部分信息修改会影响到所有隶属于本申请编号的需求，请勾选后修改：@Html.CheckBoxFor(model => model.isUpdateMain, new { @onclick = "onClickUpdateMain()" })</p>
+                @Html.HiddenFor(model => model.reqMain.ReqMainID)
+                @Html.HiddenFor(model => model.reqMain.OldReqNo)
 
-            <!--系统下拉选择-->
+                <!--系统下拉选择-->
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.SysID, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.HiddenFor(model => model.reqMain.SysID)
+                        @Html.DropDownList("sysIdSelect", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "$('#reqMain_SysID').val($(this).val())" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.AcptDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.reqMain.AcptDate, "DateTime")
+                        @Html.ValidationMessageFor(model => model.reqMain.AcptDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.ReqNo, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqMain.ReqNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqMain.ReqNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.ReqReason, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqMain.ReqReason, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqMain.ReqReason, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!--需求发起单位下拉选择-->
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.ReqFromDept, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-5">
+                        @Html.TextBoxFor(model => model.reqMain.ReqFromDept, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqMain.ReqFromDept, "", new { @class = "text-danger" })
+                        <span class="text-info">（请优先在右侧下拉框选择）</span>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.DropDownList("ReqFromDeptList", ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control", @onchange = "$('#reqMain_ReqFromDept').val($(this).val())" })
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.ReqFromPerson, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqMain.ReqFromPerson, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqMain.ReqFromPerson, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!--需求受理人下拉选择-->
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.ReqAcptPerson, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.reqMain.ReqAcptPerson, ViewBag.UserList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.ReqDevPerson, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqMain.ReqDevPerson, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqMain.ReqDevPerson, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.ReqBusiTestPerson, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqMain.ReqBusiTestPerson, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqMain.ReqBusiTestPerson, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.DevAcptDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.reqMain.DevAcptDate, "DateTime")
+                        @Html.ValidationMessageFor(model => model.reqMain.DevAcptDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqMain.DevEvalDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.reqMain.DevEvalDate, "DateTime")
+                        @Html.ValidationMessageFor(model => model.reqMain.DevEvalDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>需求详细信息</legend>
+                @Html.HiddenFor(model => model.reqDetail.ReqDetailID)
+                @Html.HiddenFor(model => model.reqDetail.OldReqDetailNo)
+                @Html.HiddenFor(model => model.reqDetail.CreateTime)
+                @Html.HiddenFor(model => model.reqDetail.ReqMainID)
+                @Html.HiddenFor(model => model.reqDetail.ReqReleaseID)
+                @Html.HiddenFor(model => model.reqDetail.SecondReqReleaseID)
+                @Html.HiddenFor(model => model.reqDetail.PlanReleaseDate)
+                @Html.HiddenFor(model => model.reqDetail.ReleaseDate)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.ReqDetailNo, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqDetail.ReqDetailNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqDetail.ReqDetailNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.ReqDesc, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.reqDetail.ReqDesc, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqDetail.ReqDesc, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.ReqType, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        <input type="text" value="@Model.reqDetail.ReqTypeName" disabled="disabled" class="form-control" />
+                        <span class="text-info">（需求类型将根据需求编号自动生成）</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.DevWorkload, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqDetail.DevWorkload, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqDetail.DevWorkload, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!--需求状态下拉选择-->
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.ReqStat, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.reqDetail.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.Version, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqDetail.Version, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqDetail.Version, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.OutDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.reqDetail.OutDate, "DateTime")
+                        @Html.ValidationMessageFor(model => model.reqDetail.OutDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.Remark, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.reqDetail.Remark, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqDetail.Remark, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.IsSysAsso, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.CheckBoxFor(model => model.reqDetail.IsSysAsso, new { @class = "checkbox" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.AssoSysName, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqDetail.AssoSysName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqDetail.AssoSysName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.AssoReqNo, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqDetail.AssoReqNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqDetail.AssoReqNo, "", new { @class = "text-danger" })
+                        <span class="text-info">（填写本团队系统内的需求编号，系统可以自动补全关联系统名称信息）</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqDetail.AssoReleaseDesc, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqDetail.AssoReleaseDesc, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqDetail.AssoReleaseDesc, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>需求下发信息</legend>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqRelease.ReleaseNo, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.reqRelease.ReleaseNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.reqRelease.ReleaseNo, "", new { @class = "text-danger" })
+                        <span class="text-info">（1、必须填写已存在的下发通知编号；2、留空则表示删除所有下发信息）</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqRelease.PlanReleaseDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9 form-control-static">
+                        @Html.DisplayFor(model => model.reqRelease.PlanReleaseDate)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.reqRelease.ReleaseDate, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9 form-control-static">
+                        @Html.DisplayFor(model => model.reqRelease.ReleaseDate)
+                    </div>
+                </div>
+
+                @Html.HiddenFor(model => model.reqRelease.OldReleaseNo)
+
+                <p style="color:red" class="well well-sm">计划下发日期、实际下发日期请在<a href="/ReleaseManage/Index">下发通知管理</a>中修改！</p>
+
+            </fieldset>
+
             <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.SysID, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.HiddenFor(model => model.reqMain.SysID)
-                    @Html.DropDownList("sysIdSelect", ViewBag.SysList as SelectList, new { @class = "form-control", @onchange = "$('#reqMain_SysID').val($(this).val())" })
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="保存" class="btn btn-primary" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
                 </div>
             </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.AcptDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.EditorFor(model => model.reqMain.AcptDate, "DateTime")
-                    @Html.ValidationMessageFor(model => model.reqMain.AcptDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.ReqNo, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqMain.ReqNo, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqMain.ReqNo, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.ReqReason, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqMain.ReqReason, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqMain.ReqReason, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <!--需求发起单位下拉选择-->
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.ReqFromDept, new { @class = "col-md-3 control-label" })
-                <div class="col-md-5">
-                    @Html.TextBoxFor(model => model.reqMain.ReqFromDept, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqMain.ReqFromDept, "", new { @class = "text-danger" })
-                    <span class="text-info">（请优先在右侧下拉框选择）</span>
-                </div>
-                <div class="col-md-3">
-                    @Html.DropDownList("ReqFromDeptList", ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control", @onchange = "$('#reqMain_ReqFromDept').val($(this).val())" })
-                </div>
-                <div class="col-md-1"></div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.ReqFromPerson, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqMain.ReqFromPerson, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqMain.ReqFromPerson, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <!--需求受理人下拉选择-->
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.ReqAcptPerson, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.reqMain.ReqAcptPerson, ViewBag.UserList as SelectList, new { @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.ReqDevPerson, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqMain.ReqDevPerson, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqMain.ReqDevPerson, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.ReqBusiTestPerson, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqMain.ReqBusiTestPerson, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqMain.ReqBusiTestPerson, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.DevAcptDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.EditorFor(model => model.reqMain.DevAcptDate, "DateTime")
-                    @Html.ValidationMessageFor(model => model.reqMain.DevAcptDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqMain.DevEvalDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.EditorFor(model => model.reqMain.DevEvalDate, "DateTime")
-                    @Html.ValidationMessageFor(model => model.reqMain.DevEvalDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>需求详细信息</legend>
-            @Html.HiddenFor(model => model.reqDetail.ReqDetailID)
-            @Html.HiddenFor(model => model.reqDetail.OldReqDetailNo)
-            @Html.HiddenFor(model => model.reqDetail.CreateTime)
-            @Html.HiddenFor(model => model.reqDetail.ReqMainID)
-            @Html.HiddenFor(model => model.reqDetail.ReqReleaseID)
-            @Html.HiddenFor(model => model.reqDetail.SecondReqReleaseID)
-            @Html.HiddenFor(model => model.reqDetail.PlanReleaseDate)
-            @Html.HiddenFor(model => model.reqDetail.ReleaseDate)
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.ReqDetailNo, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqDetail.ReqDetailNo, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqDetail.ReqDetailNo, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.ReqDesc, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextAreaFor(model => model.reqDetail.ReqDesc, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqDetail.ReqDesc, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.ReqType, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    <input type="text" value="@Model.reqDetail.ReqTypeName" disabled="disabled" class="form-control" />
-                    <span class="text-info">（需求类型将根据需求编号自动生成）</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.DevWorkload, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqDetail.DevWorkload, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqDetail.DevWorkload, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <!--需求状态下拉选择-->
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.ReqStat, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.reqDetail.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.Version, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqDetail.Version, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqDetail.Version, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.OutDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.EditorFor(model => model.reqDetail.OutDate, "DateTime")
-                    @Html.ValidationMessageFor(model => model.reqDetail.OutDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.Remark, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextAreaFor(model => model.reqDetail.Remark, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqDetail.Remark, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.IsSysAsso, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.CheckBoxFor(model => model.reqDetail.IsSysAsso, new { @class = "checkbox" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.AssoSysName, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqDetail.AssoSysName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqDetail.AssoSysName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.AssoReqNo, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqDetail.AssoReqNo, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqDetail.AssoReqNo, "", new { @class = "text-danger" })
-                    <span class="text-info">（填写本团队系统内的需求编号，系统可以自动补全关联系统名称信息）</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqDetail.AssoReleaseDesc, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqDetail.AssoReleaseDesc, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqDetail.AssoReleaseDesc, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>需求下发信息</legend>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqRelease.ReleaseNo, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.reqRelease.ReleaseNo, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.reqRelease.ReleaseNo, "", new { @class = "text-danger" })
-                    <span class="text-info">（1、必须填写已存在的下发通知编号；2、留空则表示删除所有下发信息）</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqRelease.PlanReleaseDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9 form-control-static">
-                    @Html.DisplayFor(model => model.reqRelease.PlanReleaseDate)
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.reqRelease.ReleaseDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9 form-control-static">
-                    @Html.DisplayFor(model => model.reqRelease.ReleaseDate)
-                </div>
-            </div>
-
-            @Html.HiddenFor(model => model.reqRelease.OldReleaseNo)
-
-            <p style="color:red" class="well well-sm">计划下发日期、实际下发日期请在<a href="/ReleaseManage/Index">下发通知管理</a>中修改！</p>
-
-        </fieldset>
-
+        }
         <div id="info"></div>
-
-        <div class="form-group">
-            <div class="col-md-offset-3 col-md-9">
-                <input type="submit" value="保存" class="btn btn-primary" />
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    关闭
-                </button>
-            </div>
-        </div>
-}
-
     </div>
 </div>
 <script src="~/Scripts/jquery.validate.min.js"></script>

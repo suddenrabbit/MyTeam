@@ -85,7 +85,15 @@
         <div class="card" style="border-top:rgb(140,198,255) 3px solid">
             <p>延期项目</p>
             <div class="homeNum">@Model.ProjDetails.Count</div>
-        </div>       
+        </div>
+
+        <div class="list-group infolist">
+            @{ string findProj = "/Proj/Index?isQuery=True&isExcel=False&ProjStat=1&ReqAnalysisID=" + Model.UID; }
+            <a class="list-group-item" href=@findProj>
+                <span class="badge">@ViewBag.ProjsInProcessNum</span>
+                当前进行中的项目数
+            </a>
+        </div>
 
         @if (Model.ProjDetails.Count > 0)
         {
@@ -102,15 +110,8 @@
                 }
 
             </table>
-        }   
-        
-        <div class="list-group infolist">
-            @{ string findProj = "/Proj/Index?isQuery=True&isExcel=False&ProjStat=1&ReqAnalysisID=" + Model.UID; }
-            <a class="list-group-item" href=@findProj>
-                <span class="badge">@ViewBag.ProjsInProcessNum</span>
-                当前进行中的项目数
-            </a>
-        </div>
+        }
+
 
     </div>
     <div class="col-md-2">

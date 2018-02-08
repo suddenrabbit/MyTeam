@@ -142,7 +142,7 @@
     <footer class="container">
         <p class="text-center">
             &copy; 2015-@DateTime.Now.Year  兴业银行信息科技部需求中心零售团队<br />
-            <span style="font-size:12px;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span> | <a href="~/Home/About" title="版本更新记录" data-toggle="tooltip" data-placement="top">about</a></span>
+            <span style="font-size:12px;">Made by <span style="font-family:'Segoe Script'">ZhouMeng</span> | @Html.ActionLink("版本更新记录", "Index", "UpgradeLog")</span>
             <!--
             <span style="font-size:1.2em;">
                 <a href="###" onclick="changeTheme('default')" title="切换主题（浅色）" style="color:#337ab7!important" data-toggle="tooltip" data-placement="top">□</a>
