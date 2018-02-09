@@ -120,24 +120,32 @@
             <div class="homeNum">@Model.RlsDelayLS.Count</div>
         </div>
 
-        @if (Model.RlsDelayLS.Count > 0)
-        {
-            <table class="table table-condensed table-striped infolist" style="background-color:#FFF;">
-                <tr>
-                    <th>下发通知编号</th>
-                    <th>计划下发日期</th>
-                </tr>
-                @foreach (HomeReleaseDelay r in Model.RlsDelayLS)
-                {
-                    string s = "/ReleaseManage/Index?IsQuery=True&ReleaseNo=" + r.ReleaseNo;
+        <div class="list-group infolist">
+            @{ string findRelease = "/ReleaseManage/Index?isQuery=True&isExcel=False&IsInProcess=True&DraftPersonID=" + Model.UID; }
+            <a class="list-group-item" href=@findRelease>
+                <span class="badge">@ViewBag.ReleasesInProcessNum</span>
+                当前进行中的下发
+            </a>
+        </div>
 
-                    <tr>
-                        <td class="text-center"><a href=@s title="@r.ReleaseDesc" data-toggle="tooltip" data-placement="top">@r.ReleaseNo</a></td>
-                        <td class="text-center">@r.PlanReleaseDate.ToShortDateString()  </td>
-                    </tr>
-                }
-            </table>
-        }
+        @if (Model.RlsDelayLS.Count > 0)
+    {
+        <table class="table table-condensed table-striped infolist" style="background-color:#FFF;">
+            <tr>
+                <th>下发通知编号</th>
+                <th>计划下发日期</th>
+            </tr>
+            @foreach (ReqRelease r in Model.RlsDelayLS)
+        {
+            string s = "/ReleaseManage/Index?IsQuery=True&ReleaseNo=" + r.ReleaseNo;
+
+            <tr>
+                <td class="text-center"><a href=@s title="@r.ReleaseDesc" data-toggle="tooltip" data-placement="top">@r.ReleaseNo</a></td>
+                <td class="text-center">@r.PlanReleaseDate.ToShortDateString()  </td>
+            </tr>
+    }
+        </table>
+}
     </div>
 </div>
 

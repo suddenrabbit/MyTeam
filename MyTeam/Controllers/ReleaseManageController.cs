@@ -45,19 +45,28 @@ namespace MyTeam.Controllers
                     var planReleaseDateEnd = DateTime.Parse(query.PlanReleaseDateEnd);
                     ls = ls.Where(p => p.PlanReleaseDate <= planReleaseDateEnd);
                 }
-                if (!string.IsNullOrEmpty(query.ReleaseDateStart))
-                {
-                    var ReleaseDateStart = DateTime.Parse(query.ReleaseDateStart);
-                    ls = ls.Where(p => p.ReleaseDate >= ReleaseDateStart);
-                }
-                if (!string.IsNullOrEmpty(query.ReleaseDateEnd))
-                {
-                    var ReleaseDateEnd = DateTime.Parse(query.ReleaseDateEnd);
-                    ls = ls.Where(p => p.ReleaseDate <= ReleaseDateEnd);
-                }
+                
                 if (0 != query.DraftPersonID)
                 {
                     ls = ls.Where(p => p.DraftPersonID == query.DraftPersonID);
+                }
+
+                if (query.IsInProcess)
+                {
+                    ls = ls.Where(p => p.ReleaseDate == null);
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(query.ReleaseDateStart))
+                    {
+                        var ReleaseDateStart = DateTime.Parse(query.ReleaseDateStart);
+                        ls = ls.Where(p => p.ReleaseDate >= ReleaseDateStart);
+                    }
+                    if (!string.IsNullOrEmpty(query.ReleaseDateEnd))
+                    {
+                        var ReleaseDateEnd = DateTime.Parse(query.ReleaseDateEnd);
+                        ls = ls.Where(p => p.ReleaseDate <= ReleaseDateEnd);
+                    }
                 }
 
                 ls = ls.OrderByDescending(p => p.PlanReleaseDate);

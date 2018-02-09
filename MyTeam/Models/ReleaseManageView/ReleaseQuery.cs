@@ -31,6 +31,8 @@ namespace MyTeam.Models
 
         public IPagedList<ReqRelease> ResultList { get; set; }
 
+        public bool IsInProcess { get; set; } // 为true时，查询所有实际下发日期为空的
+
         public string ToQueryString()
         {
             return new StringBuilder("&isQuery=True&ReleaseNo=").Append(this.ReleaseNo)
@@ -40,6 +42,7 @@ namespace MyTeam.Models
                 .Append("&ReleaseDateEnd=").Append(this.ReleaseDateEnd)
                 .Append("&DraftPersonID=").Append(this.DraftPersonID)
                 .Append("&IsFuzzySearch=").Append(this.IsFuzzySearch)
+                .Append("&IsInProcess=").Append(this.IsInProcess)
                 .ToString();
         }
     }

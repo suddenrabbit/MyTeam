@@ -7,6 +7,8 @@
 <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
 <script>
+    $(document).ready(function () { changeRlsDate(); });
+
     function doDelete(id, type) {
         $('#toDelId').val(id);
 
@@ -74,6 +76,23 @@
         });
     }
 
+    function changeRlsDate() {
+        if ($('#IsInProcess').prop("checked")) {
+            $('#ReleaseDateStart').val("").attr("disabled", "disabled");
+            $('#ReleaseDateEnd').val("").attr("disabled", "disabled");
+
+            $('#ReleaseDateStart').attr("class", "form-control");
+            $('#ReleaseDateEnd').attr("class", "form-control");
+        }
+        else {
+            $('#ReleaseDateStart').removeAttr("disabled");
+            $('#ReleaseDateEnd').removeAttr("disabled");
+
+            $('#ReleaseDateStart').attr("class", "form-control  Wdate datepicker");
+            $('#ReleaseDateEnd').attr("class", "form-control  Wdate datepicker");
+        }
+    }
+
 </script>
 <div class="row card">
     @using (Html.BeginForm("Index", "ReleaseManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
@@ -88,7 +107,7 @@
                 <td>@Html.LabelFor(model => model.ReleaseNo, new { @class = "control-label" })</td>
                 <td class="form-inline">
                     @Html.TextBoxFor(model => model.ReleaseNo, new { @class = "form-control" })
-                    @Html.EditorFor(model => model.IsFuzzySearch) 模糊查询
+                    @Html.CheckBoxFor(model => model.IsFuzzySearch) 模糊查询
                 </td>
                 <td><label class="control-label">计划下发时间(起止)</label></td>
                 <td class="form-inline">
@@ -104,7 +123,7 @@
                     @Html.TextBoxFor(model => model.ReleaseDateStart, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择起始日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
                     -
                     @Html.TextBoxFor(model => model.ReleaseDateEnd, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择结束日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })" })
-
+                    @Html.CheckBoxFor(model => model.IsInProcess, new { @onclick = "changeRlsDate()" }) 所有待下发
                 </td>
                 <td> @Html.LabelFor(model => model.DraftPersonID, new { @class = "control-label" })</td>
                 <td> @Html.DropDownListFor(model => model.DraftPersonID, ViewBag.UserList as SelectList, new { @class = "form-control" }) </td>
@@ -131,7 +150,7 @@
         }
         else
         {
-            <table class="table table-condensed table-bordered table-query-result" width="100">
+            <table class="table table-condensed table-bordered table-query-result">
                 <tr>
                     <th></th>
                     <th>
@@ -191,6 +210,7 @@
     </div>
 
 }
+
 <!-- 对话框1：确认删除 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">

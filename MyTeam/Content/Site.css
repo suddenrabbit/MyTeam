@@ -85,7 +85,7 @@ footer {
     font-weight: bold;
     font-size: 4em;
     text-align: right;
-    font-family: "Helvetica Neue", "Segoe Script", Arial, sans-serif;
+    font-family: Roboto, Arial, sans-serif;
 }
 
 
@@ -156,4 +156,15 @@ h2 {
 .table-query-result {
     font-size: 12px;
     table-layout: fixed;
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('../fonts/OpenSans-Bold.ttf');
+    font-weight: bold;
 }

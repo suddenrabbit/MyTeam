@@ -248,40 +248,40 @@
         }
         else
         {
-            <table class="table table-condensed table-bordered table-query-result" width="100">
+            <table class="table table-condensed table-bordered table-query-result">
                 <tr>
-                    <th width="2"></th>
-                    <th width="13">
+                    <th width="6%"></th>
+                    <th width="9%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.SysID)
                     </th>
-                    <th width="3">
+                    <th width="6%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.AcptDate)
                     </th>
-                    <th width="5">
+                    <th width="8%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqNo)
                     </th>
-                    <th width="18">
+                    <th width="12%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.ReqReason)
                     </th>
-                    <th width="1">
+                    <th width="5%">
                         受理人
                     </th>
-                    <th width="5">
+                    <th width="10%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
                     </th>
-                    <th width="23">
+                    <th width="15%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqDesc)
                     </th>
-                    <th width="3">
-                        @Html.DisplayNameFor(model => model.ResultList[0].Version)
+                    <th width="5%">
+                        版本号
                     </th>
-                    <th width="1">
+                    <th width="5%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqStat)
                     </th>
-                    <th width="12">
+                    <th width="10%">
                         @Html.DisplayNameFor(model => model.ResultList[0].Remark)
                     </th>
-                    <th width="14">
+                    <th>
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqReleaseID)
                     </th>
                 </tr>
@@ -293,10 +293,10 @@
 
                     <tr>
                         <td>
-                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')">详情</a> |
-                            <a href="###" onclick="doEdit('@item.ReqMainID','新增一条维护需求信息', 2)">新增</a> |
-                            <a href="###" onclick="doEdit('@item.ReqDetailID','编辑维护需求', 1)">编辑</a> |
-                            <a href="###" onclick="doDelete('@item.ReqMainID','@item.ReqDetailID')">删除</a>
+                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')" title="查看详情" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-info-sign"></span></a>
+                            <a href="###" onclick="doEdit('@item.ReqMainID','新增一条维护需求信息', 2)" title="新增一条" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-plus text-success"></span></a>
+                            <a href="###" onclick="doEdit('@item.ReqDetailID','编辑维护需求', 1)" title="编辑" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-pencil text-warning"></span></a>
+                            <a href="###" onclick="doDelete('@item.ReqMainID','@item.ReqDetailID')" title="删除" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-remove text-danger"></span></a>
                         </td>
 
                         <td>
@@ -305,10 +305,8 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqMain.AcptDate)
                         </td>
-                        <td>
+                        <td style="word-wrap:break-word;word-break:break-word">
                             @Html.DisplayFor(modelItem => item.ReqMain.ReqNo)
-                            @*<a href="###" onclick="doEdit('@item.ReqMainID', '编辑维护需求申请信息', 1)"><span class="glyphicon glyphicon-edit"></span></a>
-                                <a href="###" onclick="doDelete('@item.ReqMainID','1')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a>*@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqMain.ShortReqReason)
@@ -317,11 +315,8 @@
                             @Html.DisplayFor(modelItem => item.ReqMain.ReqAcptPersonName)
                         </td>
 
-
-                        <td>
+                        <td style="word-wrap:break-word;word-break:break-word">
                             @Html.DisplayFor(modelItem => item.ReqDetailNo)
-                            @*<a href="###" onclick="doEdit('@item.ReqDetailID', '编辑维护需求信息', 2)"><span class="glyphicon glyphicon-edit"></span></a>
-                                <a href="###" onclick="doDelete('@item.ReqDetailID','2')" class="text-danger"><span class="glyphicon glyphicon-remove"></span></a>*@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ShortReqDesc)

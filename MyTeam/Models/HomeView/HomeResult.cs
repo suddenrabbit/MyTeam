@@ -17,7 +17,7 @@ namespace MyTeam.Models
 
         public List<HomeProjDelay> ProjDetails { get; set; }
 
-        public List<HomeReleaseDelay> RlsDelayLS { get; set; }
+        public List<ReqRelease> RlsDelayLS { get; set; }
 
         public List<HomeReq> ReqInpoolLS { get; set; }
 

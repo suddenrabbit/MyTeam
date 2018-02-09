@@ -15,19 +15,7 @@ namespace MyTeam.Controllers
         {
             User user = this.GetSessionCurrentUser();
 
-            HomeResult hr = GetHomeResult(user);
-
-            // 通过UserNews查看当前是否有需要提醒的用户
-            var un = dbContext.UserNews.Where(p => p.UID == user.UID && p.NotifyStat == 1).FirstOrDefault();
-
-            if (un != null)
-            {
-                var l = dbContext.UpgradeLogs.Where(p => p.LogID == un.LogID).FirstOrDefault();
-
-                hr.NewsLog = l;
-
-                ViewBag.NewsID = un.NewsID;
-            }           
+            HomeResult hr = GetHomeResult(user);                         
 
             return View(hr);
         }
@@ -258,21 +246,23 @@ namespace MyTeam.Controllers
                     }
                 }                
             }
-            hr.ProjDetails = delays;            
+            hr.ProjDetails = delays;
 
             //////////////////////////////////////////////////////////////////////
 
             // 列出超过计划下发日期仍未下发的
-            string sql2 = "select t.ReleaseNo, t.PlanReleaseDate, t.ReleaseDesc from ReqReleases t where t.PlanReleaseDate < getdate()-1 and t.ReleaseDate is NULL";
-
-            if (!isAdmin)
+            // 2018年2月9日修改：同时统计所有正在进行中的下发
+            var rlsLs = dbContext.ReqReleases.Where(p => p.ReleaseDate == null);
+            if(!isAdmin)
             {
-                sql2 += " and t.DraftPersonID = " + uid;
+                rlsLs = rlsLs.Where(p => p.DraftPersonID == uid);
             }
 
-            sql2 += " order by t.PlanReleaseDate";
+            ViewBag.ReleasesInProcessNum = rlsLs.Count();
 
-            hr.RlsDelayLS = dbContext.Database.SqlQuery<HomeReleaseDelay>(sql2).ToList();         
+            var d = DateTime.Now.AddDays(-1);
+
+            hr.RlsDelayLS = rlsLs.Where(p => p.PlanReleaseDate < d).ToList();        
 
             return hr;
         }

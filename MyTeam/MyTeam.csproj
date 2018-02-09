@@ -330,6 +330,8 @@
     <Content Include="fonts\Roboto-Regular.ttf" />
     <Content Include="Content\templates\OTReportT.xlsx" />
     <Content Include="Content\templates\WeekReportByYearT.xlsx" />
+    <Content Include="fonts\OpenSans-Bold.ttf" />
+    <Content Include="fonts\OpenSans-Regular.ttf" />
     <None Include="Properties\PublishProfiles\MZ.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
