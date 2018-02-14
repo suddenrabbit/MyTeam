@@ -74,7 +74,7 @@
                     @Html.LabelFor(model => model.HostDept, new { @class = "col-md-4 control-label" })
                     <div class="col-md-8">
                         <!--主办部门下拉选择-->
-                        @Html.DropDownListFor(model => model.HostDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.HostDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control", @placeholder = "点击选择或直接填写" })
                     </div>
 
                 </div>
@@ -451,3 +451,7 @@
 
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    $("#HostDept").editableSelect({ filter: false });
+</script>

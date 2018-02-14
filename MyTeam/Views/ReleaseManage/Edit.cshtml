@@ -51,7 +51,7 @@
                 <div class="col-md-9">
                     @Html.EditorFor(model => model.ReleaseDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
-                    <span class="text-info">（<b>请注意！</b>若填写了实际下发日期，将自动更新相关需求状态为【已下发】；若清空了实际下发日期，将自动更新相关需求状态为【出池】）</span>
+                    <span class="text-info" style="font-size:12px">* 若填写了实际下发日期，将自动更新相关需求状态为【已下发】；若清空了实际下发日期，将自动更新相关需求状态为【出池】</span>
                 </div>
             </div>
 

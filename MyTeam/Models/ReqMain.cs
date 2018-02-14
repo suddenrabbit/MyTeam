@@ -33,24 +33,24 @@ namespace MyTeam.Models
         public string ReqReason { get; set; }
 
         [Required]
-        [Display(Name = "需求发起单位")]
+        [Display(Name = "申请单位")]
         [StringLength(16)]
         public string ReqFromDept { get; set; }
 
         [Required]
-        [Display(Name = "需求发起人/联系电话")]
+        [Display(Name = "需求发起人")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string ReqFromPerson { get; set; }
 
         [Required]
-        [Display(Name = "需求受理人/联系电话")]
+        [Display(Name = "需求受理人")]
         public int ReqAcptPerson { get; set; } //数据库存储UID，页面显示根据User表
 
-        [Display(Name = "研发联系人/联系电话")]
+        [Display(Name = "研发联系人")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string ReqDevPerson { get; set; }
 
-        [Display(Name = "业务测试人/联系电话")]
+        [Display(Name = "业务测试人")]
         [StringLength(32, ErrorMessage = "不能超过32位")]
         public string ReqBusiTestPerson { get; set; }
 
@@ -63,6 +63,10 @@ namespace MyTeam.Models
         public DateTime? DevEvalDate { get; set; }     
         
         public virtual ICollection<ReqDetail> ReqDetails { get; set; } //与ReqDetail形成外键关系
+
+        // 2018年2月13日 新增： 需求流程状态： 1-拟稿人办理 2-研发评估 3-已入池
+        [Display(Name = "需求流程状态")]
+        public int ProcessStat { get; set; }
 
         [NotMapped]
         public string SysName
@@ -124,5 +128,18 @@ namespace MyTeam.Models
         
         [NotMapped]
         public string OldReqNo { get; set; }
+
+        [NotMapped]
+        public string ProcessStatName
+        {
+            get
+            {
+                return Enum.GetName(typeof(Enums.ReqProcessStatEnums), ProcessStat);
+            }
+            set
+            {
+                this.ProcessStatName = value;
+            }
+        }
     }
 }

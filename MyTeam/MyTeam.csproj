@@ -344,6 +344,8 @@
     <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.2.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Content\jquery-editable-select.min.css" />
+    <Content Include="Scripts\jquery-editable-select.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
@@ -463,7 +465,6 @@
     <Content Include="Views\LeaveManage\SumUp.cshtml" />
     <Content Include="Views\ReqManage\Bat.cshtml" />
     <Content Include="Views\ReqManage\Details.cshtml" />
-    <Content Include="Views\ReqManage\EditDetail.cshtml" />
     <Content Include="Views\ReqManage\Index.cshtml" />
     <Content Include="Views\ReqManage\InPool.cshtml" />
     <Content Include="Views\ReqManage\InPoolResult.cshtml" />
@@ -473,7 +474,6 @@
     <Content Include="Views\ReqManage\RegResult.cshtml" />
     <Content Include="Views\ReleaseManage\UpdateReleaseDate.cshtml" />
     <Content Include="Views\ReqManage\InPoolDetail.cshtml" />
-    <Content Include="Views\ReqManage\EditMain.cshtml" />
     <Content Include="Views\ReqManage\CreateDetail.cshtml" />
     <Content Include="Views\ReleaseManage\Create.cshtml" />
     <Content Include="Views\ReleaseManage\Edit.cshtml" />

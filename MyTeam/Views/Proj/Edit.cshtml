@@ -45,15 +45,10 @@
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.HostDept, new { @class = "col-md-4 control-label" })
-                    <div class="col-md-4">
-                        @Html.TextBoxFor(model => model.HostDept, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.HostDept, "", new { @class = "text-danger" })
-                        <span class="text-info">（请优先在右侧下拉框选择）</span>
+                    <div class="col-md-8"> 
+                        @Html.DropDownListFor(model => model.HostDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control", @placeholder="点击选择或直接填写" })
                     </div>
-                    <div class="col-md-3">
-                        @Html.DropDownList("HostDeptList", ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control", @onchange = "changeHostDept()" })
-                    </div>
-                    <div class="col-md-1"></div>
+                    
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.ProjLevel, new { @class = "col-md-4 control-label" })
@@ -393,7 +388,7 @@
                 </div>
             </div>
 
-            <span class="text-info col-md-offset-4 col-md-8">TIPS: 加粗的日期用于跟踪是否延期，请务必及时填写</span>
+            <span class="text-info col-md-offset-4 col-md-8" style="font-size:12px">* 加粗的日期用于跟踪是否延期，请务必及时填写</span>
         }
         <div id="info"></div>
     </div>
@@ -403,7 +398,6 @@
 <script>
     $('#ProjType').val('@Model.ProjType');
 
-    function changeHostDept() {
-        $('#HostDept').val($('#HostDeptList').val());
-    }
+    $("#HostDept").editableSelect({ filter: false });
+    $("#HostDept").val('@Model.HostDept');
 </script>

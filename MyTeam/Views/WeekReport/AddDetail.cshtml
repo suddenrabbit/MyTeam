@@ -25,22 +25,17 @@
     <div class="col-md-12">
         <div id="info"></div>
         @using (Ajax.BeginForm("AddDetail", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                        new { @class = "form-horizontal", role = "form", id="editForm" }))
+                        new { @class = "form-horizontal", role = "form", id = "editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
             <div class="form-group">
                 @Html.LabelFor(model => model.RptDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-5">
-                    @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control", @minlength="6" })
-                    @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.RptDate, ViewBag.RptDateList as SelectList, new { @class = "form-control" })
+                    <span class="text-info" style="font-size:12px">点击之后，可以选择已有日期或直接填写新的日期</span>
                 </div>
-                <div class="col-md-3">
-                    @Html.DropDownList("chooseRptDate", ViewBag.RptDateList as SelectList, new { @class = "form-control", id = "chooseRptDate", onchange = "changeRptDate()" })
-                    <span class="text-info">（选择已经存在的周报日期）</span>
-                </div>
-                <div class="col-md-1"></div>
             </div>
 
             <div class="form-group">
@@ -61,10 +56,9 @@
 
             <!-- WorkName 若勾选「重点项目工作」则下拉选择重点项目，不勾选则为文本框输入-->
             <div class="form-group">
-                <div class="col-md-3 "></div>
-                <div class="col-md-9">
+                <div class="col-md-offset-3 col-md-9">
                     @Html.CheckBoxFor(model => model.IsWithMain, new { @onclick = "ChangeWorkName()" })
-                    &nbsp;重点项目工作 <div class="text-info">（勾选后，「任务名称」可下拉选择未完成的重点项目）</div>
+                    &nbsp;重点项目工作 <div class="text-info" style="font-size:12px">勾选后，「任务名称」可下拉选择未完成的重点项目</div>
                 </div>
             </div>
 
@@ -113,7 +107,7 @@
                 @Html.LabelFor(model => model.Progress, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Progress, new { @class = "form-control", @type = "number" })
-                    <div class="text-info">（只需要填写0-100的数字，不需要百分号）</div>
+                    <div class="text-info" style="font-size:12px">只需要填写0-100的数字，不需要百分号</div>
                     @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -144,7 +138,7 @@
                 <div class="col-md-3 "></div>
                 <div class="col-md-9">
                     <input type="checkbox" onclick="NotPlanned()" id="noplan" />
-                    &nbsp;计划外 <div class="text-info">（额外记录上周工作时请勾选！）</div>
+                    &nbsp;计划外 <div class="text-info" style="font-size:12px">额外记录上周工作时请勾选</div>
                 </div>
             </div>
 
@@ -168,6 +162,7 @@
 
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 
 <script>
     $('#WorkNameDiv2').hide();
@@ -205,12 +200,18 @@
         }
     }
 
-    $(function () {
-        $('#Priority').val('@Model.Priority');
+</script>
 
-        ChangeWorkName(); // 先根据IsWithMain处理好页面的WorkName
+<script>
 
-        $('#WorkName1').val('@Model.WorkName');
-        $('#WorkName2').val('@Model.WorkName');
-    })
+    $('#Priority').val('@Model.Priority');
+
+    ChangeWorkName(); // 先根据IsWithMain处理好页面的WorkName
+
+    $('#WorkName1').val('@Model.WorkName');
+    $('#WorkName2').val('@Model.WorkName');
+
+    $('#RptDate').editableSelect({ filter: false });
+    $('#RptDate').val('@Model.RptDate');
+
 </script>

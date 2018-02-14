@@ -82,7 +82,7 @@
                         @Html.LabelFor(model => model.BelongTo, new { @class = "col-md-2 control-label" })
                         <div class="col-md-10">
                             @Html.DropDownListFor(model => model.BelongTo, ViewBag.BelongToList as SelectList, new { @class = "form-control" })
-                            <span class="text-info">（暂时只支持外协人员添加对口行员）</span>
+                            <span class="text-info" style="font-size:12px">暂时只支持外协人员添加对口行员</span>
                         </div>
                     </div>
                 }

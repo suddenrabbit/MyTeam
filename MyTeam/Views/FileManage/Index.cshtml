@@ -142,7 +142,7 @@
     @Html.PagedListPager(list: Model as PagedList.IPagedList<MyTeam.Models.MyFile>,
                             generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }))
     
-    <p class="well well-sm">TIPS: 只能删除自己上传的文件</p>
+    <p class="text-info" style="font-size:12px">* 只能删除自己上传的文件</p>
 </div>
 
 <!-- 对话框1：确认删除 -->

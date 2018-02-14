@@ -17,6 +17,9 @@
     }
 
     function realDelete() {
+        $('#procResult').html("读取中...");
+        $('#myModal2').modal({ backdrop: 'static' });
+
         var id = $('#toDelId').val();
         var url = "/WeekReport/DeleteDetail/" + id;
         $.ajax({
@@ -28,9 +31,6 @@
             },
             error: function () {
                 $('#procResult').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal2').modal({ backdrop: 'static' });
             }
         });
     }
@@ -38,6 +38,9 @@
     // 在modal中编辑
     function doEdit(id, name) {
         $('#editName').html(name);
+        $('#procResult').html("读取中...");
+        $('#myModal3').modal({ backdrop: 'static' });
+        
         var url = "/WeekReport/EditDetail/" + id;
         $.ajax({
             type: 'GET',
@@ -47,14 +50,14 @@
             },
             error: function () {
                 $('#EditDetail').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal3').modal({ backdrop: 'static' });
             }
         });
     }
     // 在modal中新增    
     function doCreate() {
+        $('#procResult').html("读取中...");
+        $('#myModal4').modal({ backdrop: 'static' });
+
         var url = "/WeekReport/AddDetail/";
         $.ajax({
             type: 'GET',
@@ -64,15 +67,15 @@
             },
             error: function () {
                 $('#CreateDetail').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal4').modal({ backdrop: 'static' });
             }
         });
     }
 
     // // 2016.7.28新增：复制
     function doCopy(id) {
+        $('#procResult').html("读取中...");
+        $('#myModal4').modal({ backdrop: 'static' });
+
         var url = "/WeekReport/AddDetail?isCopy=true&id="+id;
         $.ajax({
             type: 'GET',
@@ -82,9 +85,6 @@
             },
             error: function () {
                 $('#CreateDetail').html("处理失败，请联系管理员");
-            },
-            complete: function () {
-                $('#myModal4').modal({ backdrop: 'static' });
             }
         });
     }
@@ -123,7 +123,7 @@
                 @Html.DisplayNameFor(model => model.Person)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OutSource)
+                现场服务人员
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Progress)
@@ -149,10 +149,10 @@
             }
 
             <tr @splitLine>
-                <td width="8%">
-                    <a href="###" onclick="doEdit('@item.WRDetailID','@item.RptDate')">编辑</a> |
-                    <a href="###" onclick="doDelete('@item.WRDetailID','@item.RptDate 的工作任务')">删除</a> |
-                    <a href="###" onclick="doCopy('@item.WRDetailID')">复制</a>
+                <td width="6%">
+                    <a href="###" onclick="doEdit('@item.WRDetailID','@item.RptDate')" title="编辑" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-pencil text-warning"></span></a>&nbsp;
+                    <a href="###" onclick="doDelete('@item.WRDetailID','@item.RptDate 的工作任务')" title="删除" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-remove text-danger"></span></a>&nbsp;
+                    <a href="###" onclick="doCopy('@item.WRDetailID')" title="复制" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-new-window"></span></a>
                 </td>
                 <td width="10%">
                     @Html.DisplayFor(modelItem => item.RptDate)
@@ -160,21 +160,21 @@
                 @*<td width="6%">
                     @Html.DisplayFor(modelItem => item.Priority)
                 </td>*@
-                <td width="8%">
+                <td width="7%">
                     @Html.DisplayFor(modelItem => item.WorkTypeName)
                 </td>
-                <td width="8%">
+                <td width="10%">
                     @Html.DisplayFor(modelItem => item.WorkName)
                 </td>
 
-                <td width="20%">
+                <td width="18%">
                     @Html.DisplayFor(modelItem => item.WorkMission)
                 </td>
 
                 <td width="10%">
                     @Html.DisplayFor(modelItem => item.WorkTarget)
                 </td>
-                <td width="5%">
+                <td width="7%">
                     @Html.DisplayFor(modelItem => item.Person)
                 </td>
                 <td width="8%">
@@ -189,7 +189,7 @@
                 <td width="6%">
                     @Html.DisplayFor(modelItem => item.RptPersonName)
                 </td>
-                <td width="5%">
+                <td>
                     @Html.DisplayFor(modelItem => item.Remark)
                 </td>
 

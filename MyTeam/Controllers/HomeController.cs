@@ -105,7 +105,7 @@ namespace MyTeam.Controllers
 
             hr.UID = uid;
 
-            string sql = "SELECT main.SysID, count(1) as ReqNum, {0} as ReqAcptPerson FROM ReqMains main LEFT JOIN ReqDetails detail ON main.ReqMainID = detail.ReqMainID WHERE detail.ReqStat = {1}" ; //组织SQL语句
+            string sql = "SELECT main.SysID, count(1) as ReqNum, {0} as ReqAcptPerson FROM ReqMains main LEFT JOIN ReqDetails detail ON main.ReqMainID = detail.ReqMainID WHERE detail.ReqStat = {1} {3}" ; //组织SQL语句
 
             if (!isAdmin)
             {
@@ -122,12 +122,12 @@ namespace MyTeam.Controllers
             }
             else
             {
-                hr.ReqLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.入池, "")).ToList();
-                hr.ReqInpoolLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.待评估, "")).ToList();
+                hr.ReqLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.入池, "", "")).ToList();
+                hr.ReqInpoolLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.待评估, "", "")).ToList();
             }
 
-            hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.入池, "and main.AcptDate <= DATEADD(month,-3,GETDATE())")).ToList();
-            hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.待评估, "and main.AcptDate <= DATEADD(day,-4,GETDATE())")).ToList();
+            hr.ReqDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.入池, "and main.AcptDate <= DATEADD(month,-3,GETDATE())", "")).ToList();
+            hr.ReqInpoolDelayLS = dbContext.Database.SqlQuery<HomeReq>(string.Format(sql, uid, (int)ReqStatEnums.待评估, "and main.AcptDate <= DATEADD(day,-4,GETDATE())", "and main.ProcessStat = "+(int)ReqProcessStatEnums.研发评估)).ToList(); // 对于拟稿人办理的不跟踪
 
             if (!isNotify) //notify时不需要计算
             {

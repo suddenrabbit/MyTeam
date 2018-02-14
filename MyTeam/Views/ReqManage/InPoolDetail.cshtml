@@ -20,7 +20,6 @@
         @Html.AntiForgeryToken()
         <div class="well well-sm"><b>需求申请事由：</b>@Html.DisplayFor(model => model.ReqMain.ReqReason)</div>
         <table class="table table-condensed query-table">
-
             <tr>
                 <td>@Html.LabelFor(model => model.ReqMain.AcptDate, new { @class = "control-label" })</td>
                 <td>
@@ -34,11 +33,9 @@
                     @Html.TextBoxFor(model => model.ReqMain.ReqNo, new { @class = "form-control", @required = "required" })
                     @Html.ValidationMessageFor(model => model.ReqMain.ReqNo, "", new { @class = "text-danger" })
                 </td>
-
             </tr>
 
             <tr>
-
                 <td>@Html.LabelFor(model => model.ReqMain.DevAcptDate, new { @class = "control-label" })</td>
                 <td>
                     <!--Html.EditorFor(model => model.ReqMain.DevAcptDate, "DateTime")-->
@@ -57,7 +54,7 @@
             <tr>
                 <td>@Html.LabelFor(model => model.ReqMain.ReqDevPerson, new { @class = "control-label" })</td>
                 <td>
-                    @Html.TextBoxFor(model => model.ReqMain.ReqDevPerson, new { @class = "form-control", @required = "required" })
+                    @Html.TextBoxFor(model => model.ReqMain.ReqDevPerson, new { @class = "form-control", @required = "required", @placeholder="直接写姓名即可" })
                     @Html.ValidationMessageFor(model => model.ReqMain.ReqDevPerson, "", new { @class = "text-danger" })
                 </td>
             </tr>
@@ -121,8 +118,8 @@
 
             <tr>
                 <td colspan="4"></td>
-                <td colspan="2" class="alert alert-info">
-                    <b>TIPS: </b>双击「关联系统需求编号」输入框可选择团队系统内已入池的需求进行关联（系统会自动填写「关联系统名称」）；若非本团队系统需求，则请直接手动输入
+                <td colspan="2" class="text-info" style="font-size:12px">
+                    * 双击「关联系统需求编号」输入框可选择团队系统内已入池的需求进行关联（系统会自动填写「关联系统名称」）；若非本团队系统需求，则请直接手动输入
                 </td>
             </tr>
 

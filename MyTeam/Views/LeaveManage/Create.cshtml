@@ -64,7 +64,7 @@
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.LeaveDate)
                     @Html.ValidationMessageFor(model => model.LeaveDate, "", new { @class = "text-danger" })
-                    <span class="text-info">（若连续请假多日，只需要填第一天的日期）</span>
+                    <span class="text-info" style="font-size:12px">若连续请假多日，只需要填第一天的日期</span>
                 </div>
             </div>
 
@@ -80,7 +80,7 @@
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.LeaveDays, new { @class = "form-control", @type = "number", @required = "required" })
                     @Html.ValidationMessageFor(model => model.LeaveDate, "", new { @class = "text-danger" })
-                    <span class="text-info">（半天请填写0.5；大于1天系统会自动生成多条记录，请记得手动删除节假日）</span>
+                    <span class="text-info" style="font-size:12px">半天请填写0.5；大于1天系统会自动生成多条记录，请记得手动删除节假日</span>
                 </div>
             </div>
 
@@ -90,9 +90,8 @@
 
                     <input id="IsDeductedBox" onclick="checkDays()" type="checkbox" />
                     <input id="IsDeducted" name="IsDeducted" type="hidden" value="false" />
-                    <span class="text-info">
-                        （仅请假半天可以用加班时间抵扣，加班满4小时可以抵扣一次，当前剩余可抵扣次数：<span id="restTimesLabel" style="color:red; font-weight:bold"></span>
-                        ）
+                    <span class="text-info" style="font-size:12px">
+                        &nbsp;仅请假半天可以用加班时间抵扣，加班满4小时可以抵扣一次，当前剩余可抵扣次数：<span id="restTimesLabel" style="color:red; font-weight:bold"></span>                        
                     </span>
                     <input type="hidden" name="RestTimes" id="RestTimes" />
                 </div>

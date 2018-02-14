@@ -84,7 +84,7 @@
                 @Html.LabelFor(model => model.Progress, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Progress, new { @class = "form-control", @type = "number" })
-                    <div class="text-info">（只需要填写0-100的数字，不需要百分号）</div>
+                    <div class="text-info" style="font-size:12px">只需要填写0-100的数字，不需要百分号</div>
                     @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -95,16 +95,7 @@
                     @Html.TextBoxFor(model => model.PlanDeadLine)
                     @Html.ValidationMessageFor(model => model.PlanDeadLine, "", new { @class = "text-danger" })
                 </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.WorkTime, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.TextBoxFor(model => model.WorkTime, new { @class = "form-control", @readonly = "readonly" })
-                    <div class="text-info">（工时会自动按照每周工作计算，不可填写）</div>
-                    @Html.ValidationMessageFor(model => model.WorkTime, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            </div>            
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Remark, new { @class = "col-md-3 control-label" })
@@ -118,7 +109,7 @@
                 @Html.LabelFor(model => model.DoNotTrack, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.EditorFor(model => model.DoNotTrack, new { @class = "form-control" })
-                    <span class="text-info">（勾选后不再导出到周报excel中）</span>
+                    <span class="text-info" style="font-size:12px">勾选后不再导出到周报excel中</span>
                     @Html.ValidationMessageFor(model => model.DoNotTrack, "", new { @class = "text-danger" })
                 </div>
             </div>

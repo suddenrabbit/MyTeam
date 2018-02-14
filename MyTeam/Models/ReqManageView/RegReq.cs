@@ -27,16 +27,16 @@ namespace MyTeam.Models
         public string ReqFromDept { get; set; }
 
         [Required]
-        [Display(Name = "需求发起人/联系电话")]
+        [Display(Name = "需求发起/测试联系人")]
         public string ReqFromPerson { get; set; }
 
         [Required]
-        [Display(Name = "需求受理人/联系电话")]
+        [Display(Name = "需求受理人")]
         public int ReqAcptPerson { get; set; }
 
-        [Required]
-        [Display(Name = "业务测试人/联系电话")]
-        public string ReqBusiTestPerson { get; set; }         
+        /*[Required]
+        [Display(Name = "业务测试人")]
+        public string ReqBusiTestPerson { get; set; }   */      
 
         [Required]
         [Range(1,50, ErrorMessage="需求数量必须是1-50之间的数字")]

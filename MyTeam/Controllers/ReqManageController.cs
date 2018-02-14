@@ -8,6 +8,7 @@ using System.Text;
 using System.Web.Mvc;
 using PagedList;
 using System.Collections;
+using System.Data.Entity.Validation;
 
 namespace MyTeam.Controllers
 {
@@ -44,39 +45,22 @@ namespace MyTeam.Controllers
             User user = this.GetSessionCurrentUser();
             if (user != null)
             {
-                //sl = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", user.UID);
+                //sl = new SelectList(this.GetFormalUserList(), "UID", "Realname", user.UID);
                 regReq.ReqAcptPerson = user.UID;
             }
             else
             {
-                //sl = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
+                //sl = new SelectList(this.GetFormalUserList(), "UID", "Realname");
                 regReq.ReqAcptPerson = 1;
             }
 
-            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "NamePhone");
+            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "Realname");
 
             // 3、需求发起单位 
             ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
 
-            // 4、需求数量
-            //regReq.ReqAmt = 1; //初始置为1
-            /*List<int> reqAmtLs = new List<int>();
-            for (int i = 1; i <= 10; i++)
-            {
-                reqAmtLs.Add(i);
-            }
-
-            ViewBag.ReqAmtList = new SelectList(reqAmtLs);*/
-
-            // 5、需求受理日期自动置为今天
-            regReq.AcptDate = DateTime.Now;
-
-            // 6、预先生成detail部分
-            /*regReq.DetailRegReqs = new List<DetailRegReq>();
-            for (int i = 0; i < 10; i++)
-            {
-                regReq.DetailRegReqs.Add(new DetailRegReq());
-            }*/
+            // 4、需求受理日期自动置为今天
+            regReq.AcptDate = DateTime.Now;                       
 
             return View(regReq);
         }
@@ -128,7 +112,8 @@ namespace MyTeam.Controllers
                     ReqFromDept = regReq.ReqFromDept,
                     ReqFromPerson = regReq.ReqFromPerson,
                     ReqAcptPerson = regReq.ReqAcptPerson,
-                    ReqBusiTestPerson = regReq.ReqBusiTestPerson
+                    ReqBusiTestPerson = regReq.ReqFromPerson, // 业务测试和需求发起人保持一致
+                    ProcessStat = (int)ReqProcessStatEnums.研发评估 // 登记时即默认将状态置为研发评估
                 };
                 dbContext.ReqMains.Add(reqMain);
 
@@ -187,7 +172,7 @@ namespace MyTeam.Controllers
             // 加上“请选择系统”
             ls1.Insert(0, new RetailSystem() { SysID = 0, SysName = "--请选择系统--" });
             SelectList sl1 = new SelectList(ls1, "SysID", "SysName");
-            ViewBag.SysList = sl1;
+            ViewBag.SysList = sl1;            
 
             return View();
         }
@@ -237,6 +222,8 @@ namespace MyTeam.Controllers
                 main.ReqDevPerson = inPoolReq.ReqMain.ReqDevPerson;
                 main.DevAcptDate = inPoolReq.ReqMain.DevAcptDate;
                 main.DevEvalDate = inPoolReq.ReqMain.DevEvalDate;
+
+                main.ProcessStat = (int)ReqProcessStatEnums.已完成; // 自动更新为已完成
 
                 dbContext.Entry(main).State = System.Data.Entity.EntityState.Modified;
                 //dbContext.SaveChanges();
@@ -345,7 +332,7 @@ namespace MyTeam.Controllers
             }
 
 
-            List<string> list = dbContext.ReqMains.Where(p => p.SysID == sysID && p.DevEvalDate == null).Select(p => p.ReqNo).ToList();
+            List<string> list = dbContext.ReqMains.Where(p => p.SysID == sysID && p.ProcessStat == (int)ReqProcessStatEnums.研发评估).Select(p => p.ReqNo).ToList(); // 2018年2月13日 调整：只获取状态为研发评估中的
 
             int size = list.Count;
 
@@ -772,10 +759,13 @@ namespace MyTeam.Controllers
             ViewBag.SysList = new SelectList(this.GetNormalSysList(), "SysID", "SysName", req.ReqMain.SysID);
 
             // 2、生成需求受理人列表
-            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", req.ReqMain.ReqAcptPerson);
+            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "Realname", req.ReqMain.ReqAcptPerson);
 
             // 4、需求发起单位 
             ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
+
+            // 5、需求流程状态
+            ViewBag.ProcessStatList = MyTools.GetSelectListByEnum(enumType: typeof(ReqProcessStatEnums), forEdit: true, toEditValue: req.ReqMain.ProcessStat.ToString());
 
             // 记录原始reqNo
             req.ReqMain.OldReqNo = req.ReqMain.ReqNo;
@@ -925,6 +915,15 @@ namespace MyTeam.Controllers
 
                 return Constants.AJAX_EDIT_SUCCESS_RETURN;
             }
+            catch (DbEntityValidationException dbEx)
+            {
+                var msg = string.Empty;
+                var errors = (from u in dbEx.EntityValidationErrors select u.ValidationErrors).ToList();
+                foreach (var item in errors)
+                    msg += item.FirstOrDefault().ErrorMessage;
+
+                return "<p class='alert alert-danger'>校验出错: " + msg + "</p>";
+            }
             catch (Exception e1)
             {
                 return "<p class='alert alert-danger'>出错了: " + e1.Message + "</p>";
@@ -947,7 +946,7 @@ namespace MyTeam.Controllers
             ViewBag.SysList = new SelectList(this.GetNormalSysList(), "SysID", "SysName", req.SysID);
 
             // 2、生成需求受理人列表
-            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "NamePhone", req.ReqAcptPerson);
+            ViewBag.UserList = new SelectList(this.GetFormalUserList(), "UID", "Realname", req.ReqAcptPerson);
 
             // 4、需求发起单位 
             ViewBag.ReqFromDeptList = MyTools.GetSelectListBySimpleEnum(typeof(ReqFromDeptEnums));
@@ -1538,7 +1537,7 @@ namespace MyTeam.Controllers
                     ReqReason = s.reqMain.ReqReason,
                     ReqFromDept = s.reqMain.ReqFromDept,
                     ReqFromPerson = s.reqMain.ReqFromPerson,
-                    ReqAcptPerson = s.reqMain.ReqAcptPersonNamePhone,
+                    ReqAcptPerson = s.reqMain.ReqAcptPersonName,
                     ReqDevPerson = s.reqMain.ReqDevPerson,
                     ReqBusiTestPerson = s.reqMain.ReqBusiTestPerson,
                     DevAcptDate = s.reqMain.DevAcptDate,

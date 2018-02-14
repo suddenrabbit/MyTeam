@@ -132,7 +132,7 @@
 
     // 更新备注
     function doUpdateRemark(id) {
-        var pageContent = " <div class='form-group form-inline'><input type='hidden' id='toEditRemarkId' /><input type='text' id='newRemark' class='form-control' style='max-width:100%;width:80%' />&nbsp;<input type='button' class='btn btn-primary' value='更新' onclick='realUpdateRemark()' /></div><p class='text-info'>（如果留空也会将备注更新为空）</p>";
+        var pageContent = " <div class='form-group form-inline'><input type='hidden' id='toEditRemarkId' /><input type='text' id='newRemark' class='form-control' style='max-width:100%;width:80%' />&nbsp;<input type='button' class='btn btn-primary' value='更新' onclick='realUpdateRemark()' /></div><p class='text-info'  style='font-size:12px'>如果留空也会将备注更新为空</p>";
         $('#updateRemarkBody').html(pageContent);
         var defaultValue = $('#remark' + id).html();
         $('#newRemark').val(defaultValue);
@@ -209,7 +209,7 @@
                 <td class="form-inline">
                     <!--需求状态下拉选择-->
                     @Html.DropDownListFor(model => model.ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })
-                    @{ string info = "<b>出池</b> - 完成出池操作，已有「计划下发日期」<br /><b>已下发</b> - 更新「实际下发日期」后需求变为已下发状态<br /><br /><p class=\"text-info\">【提示】当选择特定系统且查询的需求状态为「已下发」时，查询结果将自动按照「下发版本号」倒序排列</p>";}
+                    @{ string info = "<b>出池</b> - 完成出池操作，已有「计划下发日期」<br /><b>已下发</b> - 更新「实际下发日期」后需求变为已下发状态<br /><br /><p class=\"text-info\"  style=\"font-size:12px\">* 当选择特定系统且查询的需求状态为「已下发」时，查询结果将自动按照「下发版本号」倒序排列</p>";}
                     <a class="text-info" href="###" onclick="showAlert('@info', '需求状态说明')">（点击查看需求状态说明）</a>
                 </td>
             </tr>
@@ -250,7 +250,7 @@
         {
             <table class="table table-condensed table-bordered table-query-result">
                 <tr>
-                    <th width="6%"></th>
+                    <th width="7%"></th>
                     <th width="9%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqMain.SysID)
                     </th>
@@ -266,7 +266,7 @@
                     <th width="5%">
                         受理人
                     </th>
-                    <th width="10%">
+                    <th width="9%">
                         @Html.DisplayNameFor(model => model.ResultList[0].ReqDetailNo)
                     </th>
                     <th width="15%">
@@ -293,9 +293,9 @@
 
                     <tr>
                         <td>
-                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')" title="查看详情" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-info-sign"></span></a>
-                            <a href="###" onclick="doEdit('@item.ReqMainID','新增一条维护需求信息', 2)" title="新增一条" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-plus text-success"></span></a>
-                            <a href="###" onclick="doEdit('@item.ReqDetailID','编辑维护需求', 1)" title="编辑" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-pencil text-warning"></span></a>
+                            <a href="###" onclick="showDetail('@item.ReqDetailID','查看维护需求详情')" title="查看详情" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-info-sign"></span></a>&nbsp;
+                            <a href="###" onclick="doEdit('@item.ReqMainID','新增一条维护需求信息', 2)" title="新增一条" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-plus text-success"></span></a>&nbsp;
+                            <a href="###" onclick="doEdit('@item.ReqDetailID','编辑维护需求', 1)" title="编辑" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-pencil text-warning"></span></a>&nbsp;
                             <a href="###" onclick="doDelete('@item.ReqMainID','@item.ReqDetailID')" title="删除" data-toggle="tooltip" data-placement="top"><span class="glyphicon glyphicon-remove text-danger"></span></a>
                         </td>
 

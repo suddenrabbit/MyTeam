@@ -27,7 +27,7 @@
                 <td>
                     @Html.TextBoxFor(model => model.ReqNo, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.ReqNo, "", new { @class = "text-danger" })
-                    <input type="checkbox" onclick="noReqNo()" /><span class="text-info">暂无（将以当前时间戳代替）</span>
+                    <input type="checkbox" onclick="noReqNo()" /><span class="text-info" style="font-size:12px">暂无（将以当前时间戳代替）</span>
                 </td>
                 <td>@Html.LabelFor(model => model.ReqReason, new { @class = "control-label" })</td>
 
@@ -41,14 +41,14 @@
             <tr>
                 <td>@Html.LabelFor(model => model.ReqFromDept, new { @class = "control-label" })</td>
                 <td>
-                    @Html.DropDownListFor(model => model.ReqFromDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.ReqFromDept, ViewBag.ReqFromDeptList as SelectList, new { @class = "form-control", @placeholder = "点击选择或直接填写" })
                 </td>
 
                 <td>
                     @Html.LabelFor(model => model.ReqFromPerson, new { @class = "control-label" })
                 </td>
                 <td>
-                    @Html.TextBoxFor(model => model.ReqFromPerson, new { @class = "form-control" })
+                    @Html.TextBoxFor(model => model.ReqFromPerson, new { @class = "form-control", @required = "required" })
                     @Html.ValidationMessageFor(model => model.ReqFromPerson, "", new { @class = "text-danger" })
                 </td>
             </tr>
@@ -59,12 +59,8 @@
                     @Html.DropDownListFor(model => model.ReqAcptPerson, ViewBag.UserList as SelectList, new { @class = "form-control" })
                 </td>
 
-                <td>
-                    @Html.LabelFor(model => model.ReqBusiTestPerson, new { @class = "control-label" })
-                </td>
-                <td>
-                    @Html.TextBoxFor(model => model.ReqBusiTestPerson, new { @class = "form-control", @placeholder = "点击自动填写需求发起人", @onclick = "$('#ReqBusiTestPerson').val($('#ReqFromPerson').val())" })
-                    @Html.ValidationMessageFor(model => model.ReqBusiTestPerson, "", new { @class = "text-danger" })
+                <td colspan="2">
+                    <span style="font-size:12px" class="text-info">* 根据实际情况，没必要写联系方式，建议直接填姓名即可</span>                                    
                 </td>
             </tr>
 
@@ -116,6 +112,7 @@
     $(function () {
         $("#ReqAcptPerson").val('@Model.ReqAcptPerson');
         $("#SysID").select2();
+        $("#ReqFromDept").editableSelect({ filter: false });
     });
 
     // 检查业务发起人、业务测试人的格式

@@ -80,8 +80,7 @@
                 <tr>
                     <td>@Html.LabelFor(model => model.SysName, new { @class = "control-label" })</td>
                     <td>
-                        @Html.TextBoxFor(model => model.SysName, new { @class = "form-control" })
-                        <span class="text-info">（支持模糊查询）</span>
+                        @Html.TextBoxFor(model => model.SysName, new { @class = "form-control", @placeholder= "支持模糊查询" })
                     </td>
                     <td>@Html.LabelFor(model => model.ReqPersonID, new { @class = "control-label" })</td>
                     <td>

@@ -19,7 +19,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqLS)
             {
-                string s = string.Format(baseUrl, (int)ReqStatEnums.入池, Model.UID, r.SysID, "");
+                string s = string.Format(baseUrl, (int)ReqStatEnums.入池, 0, r.SysID, "");
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -37,7 +37,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqDelayLS)
             {
-                string s = string.Format(baseUrl, (int)ReqStatEnums.入池, Model.UID, r.SysID, DateTime.Now.AddMonths(-3).ToShortDateString());
+                string s = string.Format(baseUrl, (int)ReqStatEnums.入池, 0, r.SysID, DateTime.Now.AddMonths(-3).ToShortDateString());
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -55,7 +55,7 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolLS)
             {
-                string s = string.Format(baseUrl, (int)ReqStatEnums.待评估, Model.UID, r.SysID, "");
+                string s = string.Format(baseUrl, (int)ReqStatEnums.待评估, 0, r.SysID, "");
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
@@ -73,13 +73,14 @@
         <div class="list-group infolist">
             @foreach (HomeReq r in Model.ReqInpoolDelayLS)
             {
-                string s = string.Format(baseUrl, (int)ReqStatEnums.待评估, Model.UID, r.SysID, DateTime.Now.AddDays(-4).ToShortDateString());
+                string s = string.Format(baseUrl, (int)ReqStatEnums.待评估, 0, r.SysID, DateTime.Now.AddDays(-4).ToShortDateString());
                 <a class="list-group-item" href=@s>
                     <span class="badge">@r.ReqNum</span>
                     @r.SysName
                 </a>
             }
         </div>
+        <p class="text-info" style="font-size:12px">* 将需求流程状态置为「拟稿人办理」就不会在此处提醒</p>
     </div>
     <div class="col-md-2">
         <div class="card" style="border-top:rgb(140,198,255) 3px solid">
