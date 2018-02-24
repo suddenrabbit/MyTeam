@@ -3,28 +3,60 @@
 }
 @model MyTeam.Models.WeekReportDetail
 <script language="javascript" type="text/javascript" src="~/Scripts/My97DatePicker/WdatePicker.js"></script>
-<script>
-    // 日期控件
-    $(document).ready(function () {
-        $("#PlanDeadLine").attr({ class: "form-control Wdate datepicker", onclick: "WdatePicker({ dateFmt: 'yyyy/M/d' })", placeholder: "点击选择日期" });
 
-    });
-</script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
 <script>
-    function changeRptDate() {
-        $('#RptDate').val($('#chooseRptDate').val());
+
+    function ChangeWorkName() {
+        var d1 = $('#WorkNameDiv1');
+        var d2 = $('#WorkNameDiv2');
+
+        var n1 = $('#WorkName1');
+        var n2 = $('#WorkName2');
+
+        if ($('#IsWithMain').prop('checked')) {
+            d1.hide();
+            d2.show();
+            n1.attr("name", "WorkNameFalse");
+            n2.attr("name", "WorkName");
+        } else {
+            d1.show();
+            d2.hide();
+            n1.attr("name", "WorkName");
+            n2.attr("name", "WorkNameFalse");
+        }
     }
-</script>
-<script>
+
+    function NotPlanned() {
+        var originRemark = $("#Remark").val();
+
+        var word = "(计划外新增)";
+
+        if ($('#noplan').prop('checked')) {
+            $("#Remark").val(originRemark + word);
+        }
+        else {
+            $("#Remark").val(originRemark.replace(word, ""));
+        }
+    }
+
     function hideForm() {
         if ($('#info > p').attr('class') == 'alert alert-success')
             $('#editForm').hide()
     }
+
+    function beforeSubmit() {
+        $('#submitBtn').attr("disabled", "disabled");
+    }
+
 </script>
 <div class="row">
     <div class="col-md-12">
         <div id="info"></div>
-        @using (Ajax.BeginForm("AddDetail", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+        @using (Ajax.BeginForm("AddDetail", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm", OnBegin = "beforeSubmit" },
                         new { @class = "form-horizontal", role = "form", id = "editForm" }))
         {
             @Html.AntiForgeryToken()
@@ -151,7 +183,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
-                    <input type="submit" value="新增" class="btn btn-primary" />
+                    <input type="submit" value="新增" class="btn btn-primary" id="submitBtn"/>
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
                 </div>
             </div>
@@ -160,58 +192,16 @@
     </div>
 </div>
 
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-
 <script>
-    $('#WorkNameDiv2').hide();
+  $('#WorkNameDiv2').hide();
 
-    function ChangeWorkName() {
-        var d1 = $('#WorkNameDiv1');
-        var d2 = $('#WorkNameDiv2');
+            $('#Priority').val('@Model.Priority');
 
-        var n1 = $('#WorkName1');
-        var n2 = $('#WorkName2');
+            ChangeWorkName(); // 先根据IsWithMain处理好页面的WorkName
 
-        if ($('#IsWithMain').prop('checked')) {
-            d1.hide();
-            d2.show();
-            n1.attr("name", "WorkNameFalse");
-            n2.attr("name", "WorkName");
-        } else {
-            d1.show();
-            d2.hide();
-            n1.attr("name", "WorkName");
-            n2.attr("name", "WorkNameFalse");
-        }
-    }
+            $('#WorkName1').val('@Model.WorkName');
+            $('#WorkName2').val('@Model.WorkName');
 
-    function NotPlanned() {
-        var originRemark = $("#Remark").val();
-
-        var word = "(计划外新增)";
-
-        if ($('#noplan').prop('checked')) {
-            $("#Remark").val(originRemark + word);
-        }
-        else {
-            $("#Remark").val(originRemark.replace(word, ""));
-        }
-    }
-
-</script>
-
-<script>
-
-    $('#Priority').val('@Model.Priority');
-
-    ChangeWorkName(); // 先根据IsWithMain处理好页面的WorkName
-
-    $('#WorkName1').val('@Model.WorkName');
-    $('#WorkName2').val('@Model.WorkName');
-
-    $('#RptDate').editableSelect({ filter: false });
-    $('#RptDate').val('@Model.RptDate');
-
+            $('#RptDate').editableSelect({ filter: false });
+            $('#RptDate').val('@Model.RptDate');
 </script>
