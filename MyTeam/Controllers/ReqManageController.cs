@@ -375,13 +375,13 @@ namespace MyTeam.Controllers
         }
 
         [HttpPost]
-        public string OutPool(string Reqs, string Version, string OutDate, string PlanReleaseDate, int SysID, bool IsPatch)
+        public string OutPool(string Reqs, string Version, string OutDate, string PlanReleaseDate, int SysID, bool IsNew)
         {
             try
             {
                 // 2016年8月10日修改：需要根据IsPatch分别进行不同的处理 
                 string realVersion = Version;
-                if (!IsPatch) // 常规版本
+                if (!IsNew) // 常规版本
                 {
                     Ver v = dbContext.Vers.Where(p => p.VerID.ToString() == Version).FirstOrDefault();
                     if (v == null)
@@ -395,8 +395,13 @@ namespace MyTeam.Controllers
                     dbContext.Entry(v).State = System.Data.Entity.EntityState.Modified;
                     dbContext.SaveChanges();
                 }
-                else // 补丁版本
+                else // 新增版本
                 {
+                    // 2018年3月5日：不再限定是补丁版本，根据输入的版本号格式判断是否为补丁版本
+                    var verChar = realVersion.ToCharArray();
+                    var dotNum = verChar.Count(s => s == '.');
+                    var verType = dotNum == 1 ? "计划版本" : "补丁版本";
+                    var rlsFreq = dotNum == 1 ? 1 : 0;
 
                     // 新增一条记录
                     DateTime newTime = DateTime.Parse(PlanReleaseDate);
@@ -405,11 +410,11 @@ namespace MyTeam.Controllers
                         SysID = SysID,
                         VerNo = realVersion,
                         VerYear = DateTime.Now.Year.ToString(),
-                        ReleaseFreq = 0, // 补丁版本的频率记为0
+                        ReleaseFreq = rlsFreq, 
                         DraftTime = newTime,
                         PublishTime = newTime,// 发布时间、制定时间均为计划下发日期
                         DraftPersonID = this.GetSessionCurrentUser() == null ? 0 : this.GetSessionCurrentUser().UID,
-                        VerType = "补丁版本"
+                        VerType = verType
                     };
                     dbContext.Vers.Add(v);
                     dbContext.SaveChanges();
@@ -450,7 +455,7 @@ namespace MyTeam.Controllers
                 //int updatedNum = dbContext.Database.ExecuteSqlCommand(sql);
 
                 // 下载出池计划文档接口
-                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&Reqs={0}", Reqs);
+                string downfile = string.Format("/ReqManage/OutPoolTable?isQuery=True&isExcel=True&SysId={0}&Version={1}&Reqs={2}", SysID, realVersion, Reqs);
 
                 var result = string.Format("<p class='alert alert-success'>{0}条需求成功出池！<a href='{1}'>点击</a>导出出池计划文档</p>", updatedNum, downfile);
 
@@ -542,8 +547,6 @@ namespace MyTeam.Controllers
             {
                 sb.Append(string.Format("<option value='{0}'>{1}</option>", r.VerID, r.VerNoWithMark));
             }
-
-            sb.Append("</select>");
 
             return sb.ToString();
 
@@ -1211,25 +1214,30 @@ namespace MyTeam.Controllers
                 // 根据query条件查询结果
                 var ls = from a in dbContext.ReqDetails
                          select a;
-                if (query.SysID != 0)
-                {
-                    ls = ls.Where(p => p.ReqMain.SysID == query.SysID);
-                }
-                if (!string.IsNullOrEmpty(query.Version))
-                {
-                    // 版本号
-                    ls = ls.Where(p => p.Version == query.Version);
-                }
-                if (!string.IsNullOrEmpty(query.MaintainYear))
-                {
-                    ls = ls.Where(p => p.ReqMain.AcptDate.Year.ToString() == query.MaintainYear);
-                }
+
+                // 当传输的是Reqs是，只按照Reqs查找，不考虑其他条件
                 if (!string.IsNullOrEmpty(query.Reqs))
                 {
                     var rs = query.Reqs.Split(',');
                     ls = ls.Where(p => rs.Contains(p.ReqDetailID.ToString()));
                 }
-
+                else
+                {
+                    if (query.SysID != 0)
+                    {
+                        ls = ls.Where(p => p.ReqMain.SysID == query.SysID);
+                    }
+                    if (!string.IsNullOrEmpty(query.Version))
+                    {
+                        // 版本号
+                        ls = ls.Where(p => p.Version == query.Version);
+                    }
+                    if (!string.IsNullOrEmpty(query.MaintainYear))
+                    {
+                        ls = ls.Where(p => p.ReqMain.AcptDate.Year.ToString() == query.MaintainYear);
+                    }
+                }              
+                
                 // 将查询结果转换为OutPoolTableResult和OutPoolTableResultExcel（避免多出来的short字段影响）
                 List<OutPoolTableResult> resultList = new List<OutPoolTableResult>();
                 List<OutPoolTableResultExcel> resultExcelList = new List<OutPoolTableResultExcel>();
