@@ -218,8 +218,13 @@ namespace MyTeam.Controllers
                 };
             }
 
-            // 重点项目下拉
-            var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack == false);
+            // 重点项目下拉：如果是copy的，就显示所有的下拉列表；如果是完全新建的，则不显示「不导出周报」的部分 
+            var mainList = dbContext.WeekReportMains.OrderByDescending(p=>p.WRMainID).ToList();
+            if (!isCopy)
+            {
+                mainList = mainList.Where(p => p.DoNotTrack != true).ToList();
+            }          
+
             SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
             ViewBag.WorkNameList = sl3;
 
@@ -270,7 +275,7 @@ namespace MyTeam.Controllers
             ViewBag.RptDateList = sl2;
 
             // 重点项目下拉
-            var mainList = dbContext.WeekReportMains.Where(a => a.DoNotTrack == false);
+            var mainList = dbContext.WeekReportMains.OrderByDescending(p => p.WRMainID); // 2018年4月9日 调整：编辑的时候显示所有的
             SelectList sl3 = new SelectList(mainList, "WRMainID", "WorkName");
             ViewBag.WorkNameList = sl3;
 
@@ -529,13 +534,13 @@ namespace MyTeam.Controllers
             // 【2】重点工作（取所有「不跟踪」为FALSE的）
             // 2017年2月27日 新增：按照计划完成日期远近排序，已完成和未完成的分别排序
             var mainListFull = from a in dbContext.WeekReportMains
-                               where a.DoNotTrack == false
+                               //where a.DoNotTrack == false
                                orderby a.PlanDeadLine
                                select a;
             var inProgressList = mainListFull.Where(p => p.Progress < 100).ToList();
             var completeList = mainListFull.Where(p => p.Progress == 100).ToList();
 
-            var mainList = inProgressList.Concat(completeList).ToList();
+            var mainList = inProgressList.Concat(completeList).Where(p => p.DoNotTrack == false).ToList(); 
 
             var size = mainList.Count;
             var num = 1;
@@ -605,13 +610,13 @@ namespace MyTeam.Controllers
             }
 
             // 【4】本周工作
-            this.makeWeekDetails(ref cursor, thisWeek, ref sheet, mainList);
+            this.makeWeekDetails(ref cursor, thisWeek, ref sheet, mainListFull.ToList());
 
             // 游标下移3行，因为有3个标题行
             cursor += 3;
 
             // 【4】下周计划
-            this.makeWeekDetails(ref cursor, nextWeek, ref sheet, mainList);
+            this.makeWeekDetails(ref cursor, nextWeek, ref sheet, mainListFull.ToList());
         }
 
         // 每周工作的通用方法
