@@ -309,7 +309,7 @@
                             @Html.DisplayFor(modelItem => item.ReqMain.ReqNo)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ReqMain.ShortReqReason)
+                            <span title='@item.ReqMain.ReqReason'>@item.ReqMain.ShortReqReason</span>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ReqMain.ReqAcptPersonName)
@@ -319,7 +319,7 @@
                             @Html.DisplayFor(modelItem => item.ReqDetailNo)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ShortReqDesc)
+                            <span title='@item.ReqDesc'>@item.ShortReqDesc</span>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Version)
