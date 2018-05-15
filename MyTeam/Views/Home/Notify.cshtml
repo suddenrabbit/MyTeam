@@ -1,54 +1,76 @@
 ﻿@using MyTeam.Models
 
-@model MyTeam.Models.HomeResult
+@model NotifyInfo
+
 @{
     Layout = null;
 
     // 如果没有需要提醒的内容，则返回空白，邮件提醒发送程序则不会发送邮件
-    var reqInpoolDelayCount = Model.ReqInpoolDelayLS.Count;
-    var projDelayCount = Model.ProjDetails.Count;
+    var inpoolDelayCount = Model.InPoolDelay.Count;
+    var projDelayCount = Model.ProjDelay.Count;
 
-    if (reqInpoolDelayCount + projDelayCount == 0)
+    if (inpoolDelayCount + projDelayCount == 0)
     {
         return;
     }
 }
 
+<style type="text/css">
+    table {
+        border-collapse:collapse;
+        font-size:10px;
+    }
+    table,td,th{
+        border: 1px solid #000000;
+        padding:5px;
+    }
+</style>
 
-@if (reqInpoolDelayCount != 0)
+@if (inpoolDelayCount != 0)
 {
     <p style="font-weight:bold">【超4天未入池的需求】</p>
-        <table>
-            @foreach (HomeReq r in Model.ReqInpoolDelayLS)
-            {
-
-                <tr>
-                    <td>
-                        @r.SysName
-                    </td>
-                    <td style="text-align:right; padding-left:20px;">
-                        @r.ReqNum
-                    </td>
-                </tr>
-            }
-        </table>
+    <table>
+        <tr>
+            <th>系统名称</th>
+            <th>申请编号</th>
+            <th>申请事由</th>
+        </tr>
+        @foreach (var r in Model.InPoolDelay)
+        {
+            <tr>
+                <td>
+                    @r.SysName
+                </td>
+                <td>
+                    @r.ReqNo
+                </td>
+                <td>
+                    @r.ReqReason
+                </td>
+            </tr>
+        }
+    </table>
 }
 
 @if (projDelayCount != 0 && DateTime.Now.DayOfWeek == DayOfWeek.Monday) //只有周一才提醒
 {
     <p style="font-weight:bold">【延期项目】</p>
-        <table>
-            @foreach (HomeProjDelay r in Model.ProjDetails)
-            {
-                <tr>
-                    <td>
-                        @r.ProjName：
-                    </td>
-                    <td>
-                        @r.DelayDetail
-                    </td>
-                </tr>
-            }
-        </table>
+    <table>
+        <tr>
+            <th>项目名称</th>
+            <th>延期阶段</th>
+        </tr>
+        @foreach (var r in Model.ProjDelay)
+        {
+            <tr>
+                <td>
+                    @r.ProjName：
+                </td>
+                <td>
+                    @r.DelayDetail
+                </td>
+            </tr>
+        }
+    </table>
 }
 

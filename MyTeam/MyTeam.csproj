@@ -178,6 +178,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AttendanceView\AttendanceSumUp.cs" />
+    <Compile Include="Models\HomeView\NotifyInfo.cs" />
     <Compile Include="Models\MyFile.cs" />
     <Compile Include="Models\OTView\OTResult.cs" />
     <Compile Include="Models\OTView\OTSumUp.cs" />
