@@ -68,6 +68,11 @@
 
         public DbSet<MyFile> MyFiles { get; set; }
 
+        public DbSet<TrackRelatedParty> TrackRelatedParties { get; set; }
+        public DbSet<TrackTask> TrackTasks { get; set; }
+        public DbSet<TrackDetail> TrackDetails { get; set; }
+        public DbSet<TrackReq> TrackReqs { get; set; }
+
     }
    
 }

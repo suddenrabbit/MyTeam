@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+}
+@model MyTeam.Models.TrackRelatedParty
+<script>
+    function hideForm() {
+        if ($('#info > p').attr('class') == 'alert alert-success')
+            $('#editForm').hide()
+    }
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div id="info"></div>
+        @using (Ajax.BeginForm("Create", "TrackRelatedPartyManage", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
+                new { @class = "form-horizontal", role = "form", id = "editForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.RelatedPartyName, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.RelatedPartyName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.RelatedPartyName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BusiPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.BusiPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BusiPerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BusiPersonPhone, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.BusiPersonPhone, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BusiPersonPhone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DevPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.DevPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DevPerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DevPersonPhone, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.DevPersonPhone, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DevPersonPhone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqPerson, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ReqPerson, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqPerson, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReqPersonPhone, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ReqPersonPhone, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ReqPersonPhone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.RelatedPartyType, new { @class = "col-md-3 control-label" })
+                <div class="col-md-9">
+                    <select id="RelatedPartyType" name="RelatedPartyType" class="form-control">
+                        <option value="1" selected="selected">总行系统</option>
+                        <option value="2">分行</option>
+                        <option value="3">集团子公司</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="新增" class="btn btn-primary" />
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

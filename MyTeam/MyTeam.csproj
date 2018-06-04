@@ -148,6 +148,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AttendanceController.cs" />
     <Compile Include="Controllers\FileManageController.cs" />
+    <Compile Include="Controllers\TrackTaskManageController.cs" />
+    <Compile Include="Controllers\TrackRelatedPartyManageController.cs" />
     <Compile Include="Controllers\UpgradeLogController.cs" />
     <Compile Include="Controllers\OTManageController.cs" />
     <Compile Include="Controllers\LeaveManageController.cs" />
@@ -192,6 +194,11 @@
     <Compile Include="Models\ReleaseManageView\ReleaseQuery.cs" />
     <Compile Include="Models\ReqManageView\ReqEdit.cs" />
     <Compile Include="Models\ReqManageView\FullReq.cs" />
+    <Compile Include="Models\TrackRelatedPartyManageView\TrackRelatedPartyQuery.cs" />
+    <Compile Include="Models\TrackReq.cs" />
+    <Compile Include="Models\TrackRelatedParty.cs" />
+    <Compile Include="Models\TrackDetail.cs" />
+    <Compile Include="Models\TrackTask.cs" />
     <Compile Include="Models\UpgradeLog.cs" />
     <Compile Include="Models\Param.cs" />
     <Compile Include="Models\ProjView\ProjPlanQuery.cs" />
@@ -496,6 +503,9 @@
     <Content Include="Views\ReqManage\GetReqsToAsso.cshtml" />
     <Content Include="Views\ReqManage\GetReqsToAssoBySysID.cshtml" />
     <Content Include="Views\UpgradeLog\Create.cshtml" />
+    <Content Include="Views\TrackRelatedPartyManage\Index.cshtml" />
+    <Content Include="Views\TrackRelatedPartyManage\Create.cshtml" />
+    <Content Include="Views\TrackRelatedPartyManage\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
