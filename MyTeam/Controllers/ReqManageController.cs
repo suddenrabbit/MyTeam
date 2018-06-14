@@ -386,7 +386,7 @@ namespace MyTeam.Controllers
                     Ver v = dbContext.Vers.Where(p => p.VerID.ToString() == Version).FirstOrDefault();
                     if (v == null)
                     {
-                        throw new Exception("奇怪，系统找不到相应的版本信息，请与管理员联系！");
+                        throw new Exception("找不到相应的版本信息，请与管理员联系！");
                     }
                     realVersion = v.VerNo;
                     // 更新版本计划信息

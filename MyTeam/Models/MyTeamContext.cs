@@ -70,6 +70,7 @@
 
         public DbSet<TrackRelatedParty> TrackRelatedParties { get; set; }
         public DbSet<TrackTask> TrackTasks { get; set; }
+        public DbSet<TrackTaskPerson> TrackTaskPersons { get; set; }
         public DbSet<TrackDetail> TrackDetails { get; set; }
         public DbSet<TrackReq> TrackReqs { get; set; }
 

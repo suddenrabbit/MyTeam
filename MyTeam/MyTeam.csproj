@@ -194,6 +194,9 @@
     <Compile Include="Models\ReleaseManageView\ReleaseQuery.cs" />
     <Compile Include="Models\ReqManageView\ReqEdit.cs" />
     <Compile Include="Models\ReqManageView\FullReq.cs" />
+    <Compile Include="Models\TrackTaskManageView\TrackTaskCreateEdit.cs" />
+    <Compile Include="Models\TrackTaskPerson.cs" />
+    <Compile Include="Models\TrackTaskManageView\TrackTaskQuery.cs" />
     <Compile Include="Models\TrackRelatedPartyManageView\TrackRelatedPartyQuery.cs" />
     <Compile Include="Models\TrackReq.cs" />
     <Compile Include="Models\TrackRelatedParty.cs" />
@@ -506,6 +509,9 @@
     <Content Include="Views\TrackRelatedPartyManage\Index.cshtml" />
     <Content Include="Views\TrackRelatedPartyManage\Create.cshtml" />
     <Content Include="Views\TrackRelatedPartyManage\Edit.cshtml" />
+    <Content Include="Views\TrackTaskManage\Create.cshtml" />
+    <Content Include="Views\TrackTaskManage\Edit.cshtml" />
+    <Content Include="Views\TrackTaskManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

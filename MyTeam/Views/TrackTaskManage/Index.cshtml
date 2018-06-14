@@ -1,0 +1,284 @@
+﻿@using PagedList.Mvc
+@model MyTeam.Models.TrackTaskQuery
+@{
+    ViewBag.Title = "跟踪任务管理";
+}
+<h2>@ViewBag.Title</h2>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+<script>
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal({ backdrop: 'static' });
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/TrackTaskManage/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal({ backdrop: 'static' });
+            }
+        });
+    }
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        $('#EditMain').html("加载中...");
+        var url = "/TrackTaskManage/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal({ backdrop: 'static' });
+            }
+        });
+    }
+
+    // 在modal中新增
+    function doCreate() {
+        $('#CreateMain').html("加载中...");
+        var url = "/TrackTaskManage/Create/";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateMain').html(msg);
+            },
+            error: function () {
+                $('#CreateMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal({ backdrop: 'static' });
+            }
+        });
+    }
+</script>
+
+<div class="row card">
+    <div class="col-md-8">
+        @using (Html.BeginForm("Index", "TrackTaskManage", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get,
+                                                        new { @class = "form-horizontal", role = "form", id = "myForm" }))
+        {
+            <input type="hidden" name="isQuery" value="true" />
+            <table class="table table-condensed query-table">
+                <tr>
+                    <td>@Html.LabelFor(model => model.TrackTaskName, new { @class = "control-label" })</td>
+                    <td>@Html.TextBoxFor(model => model.TrackTaskName, new { @class = "form-control", @placeholder = "支持模糊搜索" })</td>
+
+                    <td>@Html.LabelFor(model => model.TaskPersonID, new { @class = "control-label" })</td>
+                    <td>
+                        @Html.DropDownListFor(model => model.TaskPersonID, ViewBag.PersonList as SelectList, new { @class = "form-control" })
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>@Html.LabelFor(model => model.TrackTaskStat, new { @class = "control-label" })</td>
+                    <td>
+                        <select id="TrackTaskStat" name="TrackTaskStat" class="form-control">
+                            <option value="0">全部</option>
+                            <option value="1">进行中</option>
+                            <option value="2">已完成</option>
+                            <option value="3">已暂停</option>
+                        </select>
+                    </td>
+
+                    <td colspan="2">
+                        <input type="submit" value="查询" class="btn btn-default" />
+                        <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加" />
+                    </td>
+                </tr>
+
+            </table>
+        }
+
+    </div>
+</div>
+
+@if (Model.ResultList != null)
+{
+    <h3>查询结果</h3>
+    <div class="row card">
+        @if (Model.ResultList.Count < 1)
+        {
+            <p class="alert alert-warning">没有符合条件的结果！</p>
+        }
+        else
+        {
+            <table class="table table-striped text-center">
+                <tr>
+                    <th style="width:20%"></th>
+                    <th style="width:20%">
+                        @Html.DisplayNameFor(model => model.ResultList[0].TrackTaskName)
+                    </th>
+                    <th style="width:10%">
+                        @Html.DisplayNameFor(model => model.ResultList[0].CreateDate)
+                    </th>
+                    <th style="width:10%">
+                        @Html.DisplayNameFor(model => model.ResultList[0].TaskPersonNames)
+                    </th>
+                    <th style="width:10%">
+                        @Html.DisplayNameFor(model => model.ResultList[0].TrackTaskStat)
+                    </th>
+                    <th style="width:30%">
+                        @Html.DisplayNameFor(model => model.ResultList[0].Remark)
+                    </th>
+
+
+                </tr>
+
+                @foreach (var item in Model.ResultList)
+                {
+                <tr>
+                    <td class="text-left" >
+                        <a href="###" onclick="doEdit('@item.TrackTaskID','@item.TrackTaskName' )" class="btn btn-sm btn-default">编辑</a>
+                        <a href="###" onclick="doDelete('@item.TrackTaskID','@item.TrackTaskName')" class="btn btn-sm btn-danger">删除</a>
+                        @Html.ActionLink("管理任务详情", "Index","TrackDetailManage", new { id = item.TrackTaskID }, new{ @class = "btn btn-primary btn-sm" })
+                        
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TrackTaskName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreateDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TaskPersonNames)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TrackTaskStatName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Remark)
+                    </td>
+
+                </tr>
+                }
+            </table>
+            <!--分页-->
+            @Html.PagedListPager(list: Model.ResultList as PagedList.IPagedList<MyTeam.Models.TrackTask>,
+    generatePageUrl: Page => Url.Action("Index", new { pageNum = Page }) + Model.ToQueryString())
+        }
+    </div>
+}
+
+
+
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框3：编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="CreateMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 选中 
+    $(function () {
+        $("#TrackTaskStat").val('@Model.TrackTaskStat');
+    });
+</script>
