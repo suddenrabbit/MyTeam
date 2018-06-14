@@ -1,0 +1,282 @@
+﻿@model List<MyTeam.Models.TrackDetail>
+@{
+    ViewBag.Title = "任务详情";
+}
+<h2>@ViewBag.Title</h2>
+
+@if (Model == null || Model.Count() < 1)
+{
+    <p style="font-size:18px">该任务还没有详情，请立刻<a href="###">添加数据</a>吧！</p>
+    
+    return;
+}
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+<script>
+    function doDelete(id, name) {
+        $('#toDelName').html(name);
+        $('#toDelId').val(id);
+        $('#myModal').modal({ backdrop: 'static' });
+    }
+
+    function realDelete() {
+        var id = $('#toDelId').val();
+        var url = "/TrackDetailManage/Delete/" + id;
+        $.ajax({
+            type: 'POST',
+            url: url,
+            success: function (msg) {
+                $('#procResult').html(msg);
+
+            },
+            error: function () {
+                $('#procResult').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal2').modal({ backdrop: 'static' });
+            }
+        });
+    }
+
+    // 在modal中编辑
+    function doEdit(id, name) {
+        $('#editName').html(name);
+        $('#EditMain').html("加载中...");
+        var url = "/TrackDetailManage/Edit/" + id;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#EditMain').html(msg);
+            },
+            error: function () {
+                $('#EditMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal3').modal({ backdrop: 'static' });
+            }
+        });
+    }
+
+    // 在modal中新增
+    function doCreate() {
+        $('#CreateMain').html("加载中...");
+        var url = "/TrackDetailManage/Create/";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (msg) {
+                $('#CreateMain').html(msg);
+            },
+            error: function () {
+                $('#CreateMain').html("处理失败，请联系管理员");
+            },
+            complete: function () {
+                $('#myModal4').modal({ backdrop: 'static' });
+            }
+        });
+    }
+</script>
+
+
+<div class="row card">
+
+    <table class="table table-condensed table-bordered table-query-result">
+        <tr>
+            <th style="width:20%"></th>
+            <th style="width:10%">
+                @Html.DisplayNameFor(model => model[0].RelatedPartyName)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].BusiPerson)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].BusiPersonPhone)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].DevPerson)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].DevPersonPhone)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].ReqPerson)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].ReqPersonPhone)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].ChangeType)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].RelatedType)
+            </th>
+            <th style="width:10%">
+                @Html.DisplayNameFor(model => model[0].ChangeDesc)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].TestStartDate)
+            </th>
+            <th style="width:5%">
+                @Html.DisplayNameFor(model => model[0].HasSubmitedTestCase)
+            </th>
+            <th style="width:10%">
+                @Html.DisplayNameFor(model => model[0].Remark)
+            </th>
+
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-left">
+                    <a href="###" onclick="doEdit('@item.TrackDetailID','' )">编辑</a> |
+                    <a href="###" onclick="doDelete('@item.TrackDetailID','')">删除</a> |
+                    <a href="###" onclick="doDelete('@item.TrackDetailID','')">查看相关维护需求</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RelatedPartyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BusiPerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BusiPersonPhone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DevPerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DevPersonPhone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReqPerson)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReqPersonPhone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RelatedType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeDesc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TestStartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HasSubmitedTestCase)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remark)
+                </td>
+
+            </tr>
+        }
+    </table>
+
+</div>
+
+
+
+
+<!-- 对话框1：确认删除 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除？
+                </h4>
+            </div>
+            <div class="modal-body">
+                确定要删除【<span id="toDelName"></span>】吗？
+                <input type="hidden" id="toDelId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="realDelete()" data-dismiss="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框2：删除完成 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog"
+     aria-labelledby="myModal2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">
+                    处理结果
+                </h4>
+            </div>
+            <div class="modal-body">
+                <span id="procResult"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:window.location.reload()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框3：编辑页面 -->
+<div class="modal fade" id="myModal3" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    【<span id="editName"></span>】编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="EditMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 对话框4：新增页面 -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    新增
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="CreateMain"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

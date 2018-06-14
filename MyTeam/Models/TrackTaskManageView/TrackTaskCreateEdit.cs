@@ -1,6 +1,4 @@
-﻿using PagedList;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyTeam.Models
 {
@@ -11,6 +9,8 @@ namespace MyTeam.Models
 
         [Display(Name = "项目干系人")]
         public string[] TaskPersons { get; set; }
-       
+
+        public string OldTaskPersons { get; set; } // 用以编辑的时候比较新旧值
+
     }
 }

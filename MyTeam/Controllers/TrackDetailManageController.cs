@@ -8,58 +8,19 @@ using System.Web.Mvc;
 
 namespace MyTeam.Controllers
 {
-    public class TrackTaskManageController : BaseController
+    public class TrackDetailManageController : BaseController
     {
-        public ActionResult Index(TrackTaskQuery query, bool isQuery = false, int pageNum = 1)
+        public ActionResult Index(int id)
         {
-            if (isQuery)
-            {
-                var ls = from a in dbContext.TrackTasks
-                         select a;
-
-                if (!string.IsNullOrEmpty(query.TrackTaskName))
-                {
-                    ls = ls.Where(p => p.TrackTaskName.Contains(query.TrackTaskName));
-                }
-
-                if (query.TaskPersonID != 0)
-                {
-                    var persons = dbContext.TrackTaskPersons.Where(q => q.PersonID == query.TaskPersonID).Select(p => p.TrackTaskID);
-                    ls = ls.Where(p => persons.Contains(p.TrackTaskID));
-                }
-
-                if (query.TrackTaskStat != 0)
-                {
-                    ls = ls.Where(p => p.TrackTaskStat == query.TrackTaskStat);
-                }
-
-                query.ResultList = ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE);
-            }
-            else
-            {
-                query = new TrackTaskQuery { TaskPersonID = 0, TrackTaskStat = 0 };
-            }
-
-            // 人员下拉
-            var ls1 = GetStaffList();
-
-            ls1.Insert(0, new User() { UID = 0, Realname = "全部" });
-
-            SelectList sl = new SelectList(ls1, "UID", "Realname", query.TaskPersonID); // 选中当前值
-
-            ViewBag.PersonList = sl;
-
-            return View(query);
+            // 根据传入的ID查找对应的任务详情，若无，则提示新建
+            var details = dbContext.TrackDetails.Where(p => p.TrackTaskID == id).ToList();
+           
+            return View(details);
         }
 
         public ActionResult Create()
         {
-            // 人员下拉
-            var ls1 = GetStaffList();
-
-            MultiSelectList sl = new MultiSelectList(ls1, "UID", "Realname", new string[] { GetSessionCurrentUser().UID.ToString() }); // 选中当前值
-
-            ViewBag.PersonList = sl;
+           
 
             return View();
         }
@@ -67,13 +28,6 @@ namespace MyTeam.Controllers
         [HttpPost]
         public string Create(TrackTaskCreateEdit model)
         {
-            // 判断有无名称重复的 （暂时不做）
-            /*var check = dbContext.TrackRelatedParties.Where(p => p.RelatedPartyName == model.RelatedPartyName).FirstOrDefault();
-            if(check != null)
-            {
-                return "<p class='alert alert-danger'>" + model.RelatedPartyName + "已存在，请勿重复添加！" + "</p>";
-            }
-            */
             try
             {
                 dbContext.TrackTasks.Add(model.TrackTask); // Task部分
