@@ -9,7 +9,7 @@
     var inpoolDelayCount = Model.InPoolDelay.Count;
     var projDelayCount = Model.ProjDelay.Count;
 
-    if (inpoolDelayCount + projDelayCount == 0)
+    if (inpoolDelayCount == 0 && (projDelayCount == 0 || DateTime.Now.DayOfWeek != DayOfWeek.Monday))
     {
         return;
     }

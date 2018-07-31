@@ -1,7 +1,5 @@
 ﻿@model MyTeam.Models.InPoolReq
 @{
-    /**/
-
     Layout = null;
 }
 
@@ -38,15 +36,13 @@
             <tr>
                 <td>@Html.LabelFor(model => model.ReqMain.DevAcptDate, new { @class = "control-label" })</td>
                 <td>
-                    <!--Html.EditorFor(model => model.ReqMain.DevAcptDate, "DateTime")-->
-                    @Html.TextBoxFor(model => model.ReqMain.DevAcptDate, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })", @required = "required" })
+                    @Html.EditorFor(model => model.ReqMain.DevAcptDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ReqMain.DevAcptDate, "", new { @class = "text-danger" })
                 </td>
 
                 <td>@Html.LabelFor(model => model.ReqMain.DevEvalDate, new { @class = "control-label" })</td>
                 <td>
-                    <!--Html.EditorFor(model => model.ReqMain.DevEvalDate, "DateTime")-->
-                    @Html.TextBoxFor(model => model.ReqMain.DevEvalDate, new { @class = "form-control Wdate datepicker", @placeholder = "点击选择日期", @onclick = "WdatePicker({ dateFmt: 'yyyy/M/d' })", @required = "required" })
+                    @Html.EditorFor(model => model.ReqMain.DevEvalDate, "DateTime")
                     @Html.ValidationMessageFor(model => model.ReqMain.DevEvalDate, "", new { @class = "text-danger" })
                 </td>
             </tr>
@@ -166,6 +162,12 @@
         $('#assoSysName' + i).val($('#selectedAssoName').val());
         $('#myModal').modal('hide');
     }
+
+
+    $(function () {
+        $("#ReqMain_DevAcptDate").attr('required', 'required');
+        $("#ReqMain_DevEvalDate").attr('required', 'required');
+    });
 </script>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
