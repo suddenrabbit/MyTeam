@@ -26,6 +26,9 @@
                     @Html.DisplayNameFor(model => model.Realname)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.NotesID)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Phone)
                 </th>
                 <th>
@@ -40,29 +43,32 @@
             </tr>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.ActionLink("编辑", "Edit/"+item.UID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Username)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Realname)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Phone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsAdmin)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserTypeName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.BelongToName)
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink("编辑", "Edit/" + item.UID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Realname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NotesID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAdmin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserTypeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BelongToName)
+                </td>
+            </tr>
             }
         </table>
     </div>

@@ -10,7 +10,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - MyTeam</title>
-    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    <link href="~/Content/bootstrap.css?v=@DateTime.Now.ToString("yyyyMMdd")" rel="stylesheet">
     <link href="~/Content/site.css" rel="stylesheet">
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
     <script src="~/Scripts/jquery-1.10.2.js"></script>
@@ -51,7 +51,7 @@
                                 <div style="margin-top:10px;margin-bottom:25px">
                                     @if (string.IsNullOrEmpty(ViewBag.ErrMsg))
                                     {
-                                        <span>WELCOME. SIGN IN TO CONTINUE.</span>
+                                        <span>今天是 @DateTime.Now.ToString("yyyy年M月d日 dddd")</span>
                                     }
                                     else
                                     {
@@ -66,7 +66,7 @@
                                     <div class="form-group">
                                         <div class="col-md-1"></div>
                                         <div class="col-md-10">
-                                            @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @style = "display:inline", @placeholder = "NotesID", @required = "required", @maxlength = "20" })
+                                            @Html.TextBoxFor(model => model.Username, new { @class = "form-control", @style = "display:inline", @placeholder = "用户名", @required = "required", @maxlength = "20" })
                                             @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
                                         </div>
                                         <div class="col-md-1"></div>

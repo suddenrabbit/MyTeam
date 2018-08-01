@@ -85,21 +85,7 @@ footer {
     font-weight: bold;
     font-size: 4em;
     text-align: right;
-    font-family: Roboto, Arial, sans-serif;
 }
-
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-Regular.ttf');
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-Bold.ttf');
-    font-weight: bold;
-}
-
 
 footer a, footer a:hover, footer a:active{
     color:darkgray;
@@ -158,6 +144,7 @@ h2 {
     table-layout: fixed;
 }
 
+/*
 @font-face {
     font-family: 'OpenSans';
     src: url('../fonts/OpenSans-Regular.ttf');
@@ -168,3 +155,15 @@ h2 {
     src: url('../fonts/OpenSans-Bold.ttf');
     font-weight: bold;
 }
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Bold.ttf');
+    font-weight: bold;
+}
+    */

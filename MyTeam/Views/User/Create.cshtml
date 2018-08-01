@@ -22,7 +22,7 @@
     <div class="col-md-8">
         <div id="info"></div>
         @using (Ajax.BeginForm("Create", "User", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
-                 new { @class = "form-horizontal", role = "form", id="editForm" }))
+                 new { @class = "form-horizontal", role = "form", id = "editForm" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -52,9 +52,17 @@
                     @Html.ValidationMessageFor(model => model.Realname, "", new { @class = "text-danger" })
                 </div>
             </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.NotesID, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.NotesID, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.NotesID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
             <div class="form-group">
                 @Html.LabelFor(model => model.Phone, new { @class = "col-md-2 control-label" })
-
                 <div class="col-md-10">
                     @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
@@ -71,7 +79,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.UserType, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
-                     @Html.DropDownListFor(model => model.UserType, ViewBag.UserTypeList as SelectList, new { @class = "form-control" , @onchange="changeBelongTo(this.value)"})
+                    @Html.DropDownListFor(model => model.UserType, ViewBag.UserTypeList as SelectList, new { @class = "form-control", @onchange = "changeBelongTo(this.value)" })
                 </div>
             </div>
             <div class="form-group">

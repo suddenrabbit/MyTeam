@@ -17,8 +17,6 @@ namespace MyTeam.Controllers
         {          
             ViewBag.ReturnUrl = ReturnUrl;
 
-            //var userLogin = new UserLogin() { RememberMe = true };
-
             return View();
         }
 
@@ -36,6 +34,7 @@ namespace MyTeam.Controllers
                 password = FormsAuthenticationHelper.HashPasswordForStoringInConfigFile(password, "MD5");
                 // 检测登录信息
                 // 根据用户名、密码获取User信息
+                // 2018年7月31日新增：支持NotesID或用户名登陆
                 User user = this.GetUserList().Find(a => a.Username == username && a.Password == password);
                 if (user != null)
                 {
@@ -51,8 +50,6 @@ namespace MyTeam.Controllers
 
                     // 控制部分菜单显示，session记录是否为管理员
                     Session["IsAdmin"] = user.IsAdmin;
-
-                    //FormsAuthentication.SetAuthCookie(username+"|"+password, true);
 
                     FormsAuthentication.RedirectFromLoginPage(user.UID.ToString(), userLogin.RememberMe);
                 }
@@ -145,6 +142,16 @@ namespace MyTeam.Controllers
                 {
                     return "<p class='alert alert-danger'>该用户名已存在，无法添加！</p>";
                 }
+
+                // 2018年7月31日新增：如果有NotesID，则不能重复
+                if(!string.IsNullOrEmpty(user.NotesID))
+                {
+                    ls = this.GetUserList().Where(a => a.NotesID == user.NotesID);
+                    if (ls.Count() > 0)
+                    {
+                        return "<p class='alert alert-danger'>该NotesID已存在，无法添加！</p>";
+                    }
+                }
                 
                 dbContext.Users.Add(user);
                 dbContext.SaveChanges();
@@ -205,7 +212,7 @@ namespace MyTeam.Controllers
         public string Edit(User user)
         {
             try
-            {
+            {             
                 dbContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
                 dbContext.SaveChanges();
 

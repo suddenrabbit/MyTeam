@@ -39,7 +39,11 @@ namespace MyTeam.Models
         public bool IsAdmin { get; set; }
 
         [Display(Name = "用户类别")]
-        public int UserType { get; set; } 
+        public int UserType { get; set; }
+
+        [Display(Name = "NotesID")]
+        [StringLength(6, ErrorMessage = "NotesID不能超过6位")]
+        public string NotesID { get; set; }
 
         [NotMapped]
         public string NamePhone { 

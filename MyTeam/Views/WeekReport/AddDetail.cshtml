@@ -52,6 +52,10 @@
         $('#submitBtn').attr("disabled", "disabled");
     }
 
+    function changeRptDate() {
+        $('#RptDate').val($('#chooseRptDate').val());
+    }
+
 </script>
 <div class="row">
     <div class="col-md-12">
@@ -64,10 +68,16 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.RptDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.RptDate, ViewBag.RptDateList as SelectList, new { @class = "form-control" })
-                    <span class="text-info" style="font-size:12px">点击之后，可以选择已有日期或直接填写新的日期</span>
+                <div class="col-md-5">
+                    @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control", @minlength = "6" })
+                    @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
+                    <span class="text-info" style="font-size:12px">* 可在右侧选择已经存在的周报日期</span>
                 </div>
+                <div class="col-md-3">
+                    @Html.DropDownList("chooseRptDate", ViewBag.RptDateList as SelectList, new { @class = "form-control", id = "chooseRptDate", onchange = "changeRptDate()" })
+                    
+                </div>
+                <div class="col-md-1"></div>
             </div>
 
             <div class="form-group">
@@ -90,7 +100,7 @@
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                     @Html.CheckBoxFor(model => model.IsWithMain, new { @onclick = "ChangeWorkName()" })
-                    &nbsp;重点项目工作 <div class="text-info" style="font-size:12px">勾选后，「任务名称」可下拉选择未完成的重点项目</div>
+                    &nbsp;重点项目工作 <div class="text-info" style="font-size:12px">* 勾选后，「任务名称」可下拉选择未完成的重点项目</div>
                 </div>
             </div>
 
@@ -139,7 +149,7 @@
                 @Html.LabelFor(model => model.Progress, new { @class = "col-md-3 control-label" })
                 <div class="col-md-9">
                     @Html.TextBoxFor(model => model.Progress, new { @class = "form-control", @type = "number" })
-                    <div class="text-info" style="font-size:12px">只需要填写0-100的数字，不需要百分号</div>
+                    <span class="text-info" style="font-size:12px">* 只需要填写0-100的数字，不需要百分号</span>
                     @Html.ValidationMessageFor(model => model.Progress, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -167,10 +177,10 @@
             </div>
 
             <div class="form-group">
-                <div class="col-md-3 "></div>
+                <div class="col-md-3"></div>
                 <div class="col-md-9">
-                    <input type="checkbox" onclick="NotPlanned()" id="noplan" />
-                    &nbsp;计划外 <div class="text-info" style="font-size:12px">额外记录上周工作时请勾选</div>
+                    <input type="checkbox" onclick="NotPlanned()" id="noplan" />&nbsp;计划外
+                    <div class="text-info" style="font-size:12px"> * 额外记录上周工作时请勾选</div>
                 </div>
             </div>
 
@@ -183,7 +193,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
-                    <input type="submit" value="新增" class="btn btn-primary" id="submitBtn"/>
+                    <input type="submit" value="新增" class="btn btn-primary" id="submitBtn" />
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
                 </div>
             </div>
@@ -200,8 +210,6 @@
             ChangeWorkName(); // 先根据IsWithMain处理好页面的WorkName
 
             $('#WorkName1').val('@Model.WorkName');
-            $('#WorkName2').val('@Model.WorkName');
-
-            $('#RptDate').editableSelect({ filter: false });
-            $('#RptDate').val('@Model.RptDate');
+            $('#WorkName2').val('@Model.WorkName');           
+            
 </script>

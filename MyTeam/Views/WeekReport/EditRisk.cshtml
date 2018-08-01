@@ -34,10 +34,16 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.RptDate, new { @class = "col-md-3 control-label" })
-                <div class="col-md-9">
-                    @Html.DropDownListFor(model => model.RptDate, ViewBag.RptDateList as SelectList, new { @class = "form-control" })
-                    <span class="text-info" style="font-size:12px">点击之后，可以选择已有日期或直接填写新的日期</span>
+                <div class="col-md-5">
+                    @Html.TextBoxFor(model => model.RptDate, new { @class = "form-control", @minlength = "6" })
+                    @Html.ValidationMessageFor(model => model.RptDate, "", new { @class = "text-danger" })
+                    <span class="text-info" style="font-size:12px">* 可在右侧选择已经存在的周报日期</span>
                 </div>
+                <div class="col-md-3">
+                    @Html.DropDownList("chooseRptDate", ViewBag.RptDateList as SelectList, new { @class = "form-control", id = "chooseRptDate", onchange = "changeRptDate()" })
+
+                </div>
+                <div class="col-md-1"></div>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.RiskDetail, new { @class = "col-md-3 control-label" })
@@ -70,6 +76,5 @@
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
 <script>
-    $('#RptDate').editableSelect({ filter: false });
     $('#RptDate').val('@Model.RptDate');
 </script>
