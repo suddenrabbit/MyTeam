@@ -234,6 +234,7 @@
     <Compile Include="Models\VerView\VerResult.cs" />
     <Compile Include="Models\VerView\VerQuery.cs" />
     <Compile Include="Models\Ver.cs" />
+    <Compile Include="Models\WorkReport.cs" />
     <Compile Include="Models\WeekReportDetail.cs" />
     <Compile Include="Models\WeekReportMain.cs" />
     <Compile Include="Models\WeekReportRisk.cs" />
@@ -333,6 +334,7 @@
     <Content Include="Content\templates\WeekReportByYearT.xlsx" />
     <Content Include="fonts\OpenSans-Bold.ttf" />
     <Content Include="fonts\OpenSans-Regular.ttf" />
+    <Content Include="Content\templates\WorkReportT.xlsx" />
     <None Include="Properties\PublishProfiles\MZ.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -496,6 +498,9 @@
     <Content Include="Views\ReqManage\GetReqsToAsso.cshtml" />
     <Content Include="Views\ReqManage\GetReqsToAssoBySysID.cshtml" />
     <Content Include="Views\UpgradeLog\Create.cshtml" />
+    <Content Include="Views\WeekReport\WorkReportIndex.cshtml" />
+    <Content Include="Views\WeekReport\AddWorkReport.cshtml" />
+    <Content Include="Views\WeekReport\EditWorkReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

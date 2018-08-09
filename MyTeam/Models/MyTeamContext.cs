@@ -68,6 +68,7 @@
 
         public DbSet<MyFile> MyFiles { get; set; }
 
+        public DbSet<WorkReport> WorkReports { get; set; }
     }
    
 }

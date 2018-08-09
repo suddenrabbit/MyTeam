@@ -72,7 +72,7 @@ footer {
 }
 
 .splitLine td {
-    /*border-bottom-style:double!important;*/
+    border-top-color: #7D9EC0 !important;
     border-bottom-color: #7D9EC0 !important;
 }
 
