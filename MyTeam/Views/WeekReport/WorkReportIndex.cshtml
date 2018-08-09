@@ -93,8 +93,15 @@
 <div class="row card">
     <p>
         <input type="button" onclick="doCreate()" class="btn btn-primary" value="添加工作" />
-        @Html.ActionLink("风险提示", "RiskIndex", null, new { @class = "btn btn-default" })
 
+        @if (!(bool)ViewBag.showAll)
+        {
+            <a href="/WeekReport/WorkReportIndex?showAll=true" class="btn btn-default">看所有人</a>
+        }
+        else
+        {
+            <a href="/WeekReport/WorkReportIndex?showAll=false" class="btn btn-default">只看自己</a>
+        }
     </p>
 
     <table class="table table-condensed table-bordered" style="font-size:12px">
@@ -168,7 +175,7 @@
                 <td width="5%">
                     @Html.DisplayFor(modelItem => item.WorkType)
                 </td>
-                <td width="8%">
+                <td width="10%">
                     @Html.DisplayFor(modelItem => item.WorkMission) @Html.Raw(mainBold)
                 </td>
                 <td width="10%">
@@ -177,28 +184,28 @@
                 <td width="4%">
                     @Html.DisplayFor(modelItem => item.Person)
                 </td>
-                <td width="4%">
+                <td width="5%">
                     @Html.DisplayFor(modelItem => item.OutSource)
                 </td>
                 <td width="8%">
                     @Html.DisplayFor(modelItem => item.WorkStage)
                 </td>
-                <td width="5%">
+                <td width="6%">
                     @Html.DisplayFor(modelItem => item.Progress)
                 </td>
-                <td width="8%">
+                <td width="9%">
                     @Html.DisplayFor(modelItem => item.WorkOfThisWeek)
                 </td>
-                <td width="8%">
+                <td width="9%">
                     @Html.DisplayFor(modelItem => item.DeliveryOfThisWeek)
                 </td>
-                <td width="8%">
+                <td width="9%">
                     @Html.DisplayFor(modelItem => item.WorkOfNextWeek)
                 </td>
-                <td width="8%">
+                <td width="9%">
                     @Html.DisplayFor(modelItem => item.DeliveryOfNextWeek)
                 </td>
-                <td width="6%">
+                <td width="7%">
                     @Html.DisplayFor(modelItem => item.PlanDeadLine)
                 </td>
 

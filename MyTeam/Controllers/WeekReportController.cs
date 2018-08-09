@@ -667,22 +667,31 @@ namespace MyTeam.Controllers
         /// 新周报页面
         /// </summary>
         /// <param name="pageNum"></param>
+        /// <param name="showAll"></param>
         /// <returns></returns>
-        public ActionResult WorkReportIndex(int pageNum = 1)
+        public ActionResult WorkReportIndex(int pageNum = 1, bool showAll = false)
         {
             var ls = from a in dbContext.WorkReports select a;
-            // 若非管理员只显示负责人中含有自己姓名的记录
-            if (!this.IsAdminNow())
+            if(!showAll) // 若非showAll，则只显示本人的
             {
-                User user = this.GetSessionCurrentUser();
-                if (user == null)
+                var currentUser = GetSessionCurrentUser();
+                if(currentUser == null)
                 {
                     return RedirectToAction("Login", "User", new { ReturnUrl = "/WeekReport/WorkReportIndex" });
                 }
-                ls = ls.Where(a => a.Person.Contains(user.Realname) || a.OutSource.Contains(user.Realname));
-            }
+                if(currentUser.UserType == (int)Enums.UserTypeEnums.外协)
+                {
+                    ls = ls.Where(a => a.OutSource.Contains(currentUser.Realname));
+                }
+                else
+                {
+                    ls = ls.Where(a => a.Person.Contains(currentUser.Realname));
+                }
+            }                     
 
             ls = ls.OrderByDescending(a => a.RptDate);
+
+            ViewBag.showAll = showAll;
 
             return View(ls.ToList().ToPagedList(pageNum, Constants.PAGE_SIZE));
         }
@@ -696,9 +705,9 @@ namespace MyTeam.Controllers
         public ActionResult AddWorkReport(int id = 0, bool isCopy = false)
         {
             User user = this.GetSessionCurrentUser();
-            if (user == null || user.UserType == (int)UserTypeEnums.系统用户)
+            if (user == null)
             {
-                return Content("登录信息失效或您在使用系统用户，不允许填写周报。请重新以普通用户身份登录！");
+                return Content("登录信息失效，请重新登录！");
             }
 
             // RptDate备选（取最近的5个）            

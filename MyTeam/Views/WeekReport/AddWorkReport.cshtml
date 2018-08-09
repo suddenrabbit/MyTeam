@@ -11,12 +11,16 @@
 <script>
 
     function hideForm() {
+        $('#submitBtn').removeAttr("disabled");
+
         if ($('#info > p').attr('class') == 'alert alert-success')
             $('#editForm').hide()
     }
 
     function beforeSubmit() {
         $('#submitBtn').attr("disabled", "disabled");
+
+        $("#editForm").submit();
     }
 
     function changeRptDate() {
@@ -27,7 +31,7 @@
 <div class="row">
     <div class="col-md-12">
         <div id="info"></div>
-        @using (Ajax.BeginForm("AddWorkReport", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm", OnBegin = "beforeSubmit" },
+        @using (Ajax.BeginForm("AddWorkReport", "WeekReport", null, new AjaxOptions { UpdateTargetId = "info", OnComplete = "hideForm" },
                         new { @class = "form-horizontal", role = "form", id = "editForm" }))
         {
             @Html.AntiForgeryToken()
@@ -173,7 +177,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
-                    <input type="submit" value="新增" class="btn btn-primary" id="submitBtn" />
+                    <input type="button" value="新增" class="btn btn-primary" id="submitBtn" onclick="beforeSubmit()"/>
                     <input type="button" class="btn btn-default" data-dismiss="modal" value="关闭">
                 </div>
             </div>
