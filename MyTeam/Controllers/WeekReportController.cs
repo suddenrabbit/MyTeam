@@ -863,7 +863,10 @@ namespace MyTeam.Controllers
 
                 // 下载
                 // 文件名中文处理
-                string targetFileName = HttpUtility.UrlEncode("零售团队工作周报_" + DateTime.Now.ToString("yyyyMMdd"));
+                string rptDateName = rptDate.Substring(12);
+                rptDateName = rptDateName.Replace("年", "").Replace("月", "").Replace("日", "");
+                
+                string targetFileName = HttpUtility.UrlEncode("零售团队工作周报_" + rptDateName);
 
                 return File(ep.GetAsByteArray(), "application/excel", targetFileName + ".xlsx");
             }
