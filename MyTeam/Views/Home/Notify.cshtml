@@ -31,12 +31,13 @@
 
 @if (inpoolDelayCount != 0)
 {
-    <p style="font-weight:bold">【超4天未入池的需求】</p>
+    <p style="font-weight:bold">【当前未入池的需求】</p>
     <table>
         <tr>
             <th>系统名称</th>
             <th>申请编号</th>
             <th>申请事由</th>
+            <th>评估天数</th>
         </tr>
         @foreach (var r in Model.InPoolDelay)
         {
@@ -49,6 +50,21 @@
                 </td>
                 <td>
                     @r.ReqReason
+                </td>
+                <td>
+                    @{
+                        var now = new TimeSpan(DateTime.Now.Ticks);
+                        var acpt = new TimeSpan(r.AcptDate.Ticks);
+                        var st = now.Subtract(acpt).Duration();
+                        var delayDays = st.Days;
+                        var warn = "";
+                        if(delayDays >= 4)
+                        {
+                            warn = "style=color:red";
+                        }
+                    <span @warn> @delayDays</span>
+                    }
+                   
                 </td>
             </tr>
         }

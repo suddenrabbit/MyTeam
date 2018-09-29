@@ -59,8 +59,8 @@ namespace MyTeam.Controllers
             var uid = u.UID;
 
             // 未入池的详细信息
-            var delayDate = DateTime.Now.AddDays(INPOOL_DELAY_DAYS);
-            var inPoolDelay = dbContext.ReqMains.Where(p => p.ProcessStat == (int)ReqProcessStatEnums.研发评估 && p.AcptDate < delayDate && p.ReqAcptPerson == uid).ToList();
+            // var delayDate = DateTime.Now.AddDays(INPOOL_DELAY_DAYS);
+            var inPoolDelay = dbContext.ReqMains.Where(p => p.ProcessStat == (int)ReqProcessStatEnums.研发评估 && p.ReqAcptPerson == uid).ToList();
             
             // 延期的项目
             var projs = dbContext.Projs.Where(p => p.ProjStat == (int)ProjStatEnums.进行中 && p.ReqAnalysisID == uid).ToList();
