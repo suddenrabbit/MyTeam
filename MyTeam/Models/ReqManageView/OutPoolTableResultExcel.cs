@@ -26,8 +26,8 @@ namespace MyTeam.Models
         [Display(Name = "需求或问题概述")]
         public string ReqDesc { get; set; }
 
-        [Display(Name = "研发评估工作量（人天）")]
-        public double? DevWorkload { get; set; }
+        [Display(Name = "需求规模")]
+        public string DevWorkload { get; set; }
 
         [Display(Name = "研发联系人/联系电话")]
         public string ReqDevPerson { get; set; }

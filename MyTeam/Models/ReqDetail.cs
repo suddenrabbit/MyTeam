@@ -30,8 +30,9 @@ namespace MyTeam.Models
         [Display(Name = "需求类型")]        
         public int ReqType { get; set; }
 
-        [Display(Name = "研发评估工作量")]
-        public double? DevWorkload { get; set; }
+        [Display(Name = "需求规模")]
+        [StringLength(10, ErrorMessage = "需求规模不能超过10位")]
+        public string DevWorkload { get; set; }
 
         [Display(Name = "需求状态")]
         public int ReqStat { get; set; }

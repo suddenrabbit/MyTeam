@@ -96,7 +96,13 @@
                         @Html.TextBoxFor(model => model.ReqDetails[i].ReqDesc, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important", @readonly = "readonly" })
                     </td>
                     <td>
-                        @Html.TextBoxFor(model => model.ReqDetails[i].DevWorkload, new { @class = "form-control", @style = "margin:0 auto; max-width:100%!important" })
+                        @{var name = "ReqDetails[" + i + "].DevWorkload"; }
+                        <select class="form-control" name="@name">
+                            <option value="">--下拉选择--</option>
+                            <option>小</option>
+                            <option>中</option>
+                            <option>大</option>
+                        </select>
                     </td>
                     <td>
                         @Html.DropDownListFor(model => model.ReqDetails[i].ReqStat, ViewBag.ReqStatList as SelectList, new { @class = "form-control" })

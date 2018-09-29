@@ -125,7 +125,6 @@ namespace MyTeam.Controllers
                 {
                     ReqDetail newReq = new ReqDetail()
                     {
-                        DevWorkload = 0,
                         ReqDesc = reqDescs[i].Trim(),
                         //Remark = regReq.DetailRegReqs[i].Remark,
                         // 状态默认「待评估」
